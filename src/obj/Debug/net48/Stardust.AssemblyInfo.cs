@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Stardust")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+65c3635eaf705f637e357a67982f054a774831d3")]
 [assembly: System.Reflection.AssemblyProductAttribute("Stardust")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Stardust")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

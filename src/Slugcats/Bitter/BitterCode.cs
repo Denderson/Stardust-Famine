@@ -38,7 +38,7 @@ namespace Stardust
 {
     public static class BitterCode
     {
-        public static void Grasp_ctor(On.Creature.Grasp.orig_ctor orig, Creature.Grasp self, Creature grabber, PhysicalObject grabbed, int graspUsed, int chunkGrabbed, Creature.Grasp.Shareability shareability, float dominance, bool pacifying)
+        public static void BitterGraspImmunity(On.Creature.Grasp.orig_ctor orig, Creature.Grasp self, Creature grabber, PhysicalObject grabbed, int graspUsed, int chunkGrabbed, Creature.Grasp.Shareability shareability, float dominance, bool pacifying)
         {
             orig(self, grabber, grabbed, graspUsed, chunkGrabbed, shareability, dominance, pacifying);
             if (grabbed != null && grabbed is Player player && player?.SlugCatClass != null && player.SlugCatClass == Enums.SlugcatStatsName.bitter)
@@ -48,7 +48,7 @@ namespace Stardust
             }
         }
 
-        public static bool Swarm_TryAttach(On.LocustSystem.Swarm.orig_TryAttach orig, LocustSystem.Swarm self)
+        public static bool BitterLocustImmunity(On.LocustSystem.Swarm.orig_TryAttach orig, LocustSystem.Swarm self)
         {
             bool success = orig(self);
             if (success && self.target is Player && (self.target as Player).SlugCatClass == Enums.SlugcatStatsName.bitter)
@@ -59,7 +59,7 @@ namespace Stardust
 
         }
 
-        public static void SlugcatStats_ctor(On.SlugcatStats.orig_ctor orig, SlugcatStats self, SlugcatStats.Name slugcat, bool malnourished)
+        public static void OldFoodMeterCode(On.SlugcatStats.orig_ctor orig, SlugcatStats self, SlugcatStats.Name slugcat, bool malnourished)
         {
             orig(self, slugcat, malnourished);
             if (slugcat == Enums.SlugcatStatsName.bitter)
@@ -69,7 +69,7 @@ namespace Stardust
             }
         }
 
-        public static float Player_DeathByBiteMultiplier(On.Player.orig_DeathByBiteMultiplier orig, Player self)
+        public static float BitterBiteResistance(On.Player.orig_DeathByBiteMultiplier orig, Player self)
         {
             if (self?.SlugCatClass != null && self.SlugCatClass == Enums.SlugcatStatsName.bitter)
             {

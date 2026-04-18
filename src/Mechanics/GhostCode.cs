@@ -12,7 +12,7 @@ namespace Stardust
 {
     public static class GhostCode
     {
-        public static bool GhostWorldPresence_SpawnGhost(On.GhostWorldPresence.orig_SpawnGhost orig, GhostWorldPresence.GhostID ghostID, int karma, int karmaCap, int ghostPreviouslyEncountered, bool playingAsRed)
+        public static bool NoEchoPriming(On.GhostWorldPresence.orig_SpawnGhost orig, GhostWorldPresence.GhostID ghostID, int karma, int karmaCap, int ghostPreviouslyEncountered, bool playingAsRed)
         {
             if (SharedMechanics(Custom.rainWorld.progression.currentSaveState.saveStateNumber))
             {
@@ -21,7 +21,7 @@ namespace Stardust
             return orig(ghostID, karma, karmaCap, ghostPreviouslyEncountered, playingAsRed);
         }
 
-        public static int GoldFlakes_NumberOfFlakes(On.GoldFlakes.orig_NumberOfFlakes orig, GoldFlakes self, float ghostMode)
+        public static int DynamicNumberOfFlakes(On.GoldFlakes.orig_NumberOfFlakes orig, GoldFlakes self, float ghostMode)
         {
             if (SharedMechanics(self?.room?.game?.StoryCharacter))
             {
@@ -30,7 +30,7 @@ namespace Stardust
             return orig(self, ghostMode);
         }
 
-        public static void GhostEncounterScreen_GetDataFromGame(On.Menu.GhostEncounterScreen.orig_GetDataFromGame orig, Menu.GhostEncounterScreen self, Menu.KarmaLadderScreen.SleepDeathScreenDataPackage package)
+        public static void MinKarmaOnEchoScreen(On.Menu.GhostEncounterScreen.orig_GetDataFromGame orig, Menu.GhostEncounterScreen self, Menu.KarmaLadderScreen.SleepDeathScreenDataPackage package)
         {
             if (SharedMechanics(package.saveState.saveStateNumber))
             {
@@ -42,7 +42,7 @@ namespace Stardust
             orig(self, package);
         }
 
-        public static void Room_Loaded(On.Room.orig_Loaded orig, Room self)
+        public static void RippleDepthsNearEchoes(On.Room.orig_Loaded orig, Room self)
         {
             orig(self);
             if (SharedMechanics(self.game?.StoryCharacter))
@@ -62,7 +62,7 @@ namespace Stardust
             }
         }
 
-        public static void Ghost_FadeOutFinished(On.Ghost.orig_FadeOutFinished orig, Ghost self)
+        public static void CheckpointAfterEcho(On.Ghost.orig_FadeOutFinished orig, Ghost self)
         {
             if (self?.room?.game?.GetStorySession?.saveStateNumber == Enums.SlugcatStatsName.sfscholar)
             {

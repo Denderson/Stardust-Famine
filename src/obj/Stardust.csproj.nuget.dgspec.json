@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ivano\\Downloads\\MODDING\\Porting\\stardust\\src\\Stardust.csproj": {}
+    "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Stardust.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ivano\\Downloads\\MODDING\\Porting\\stardust\\src\\Stardust.csproj": {
+    "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Stardust.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ivano\\Downloads\\MODDING\\Porting\\stardust\\src\\Stardust.csproj",
+        "projectUniqueName": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Stardust.csproj",
         "projectName": "Stardust",
-        "projectPath": "C:\\Users\\ivano\\Downloads\\MODDING\\Porting\\stardust\\src\\Stardust.csproj",
+        "projectPath": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Stardust.csproj",
         "packagesPath": "C:\\Users\\ivano\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ivano\\Downloads\\MODDING\\Porting\\stardust\\src\\obj\\",
+        "outputPath": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

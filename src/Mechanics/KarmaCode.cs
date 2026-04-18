@@ -146,7 +146,7 @@ namespace Stardust
             }
         }
 
-        public static void SaveState_GhostEncounter(On.SaveState.orig_GhostEncounter orig, SaveState self, GhostWorldPresence.GhostID ghost, RainWorld rainWorld)
+        public static void GetTriggersAfterEcho(On.SaveState.orig_GhostEncounter orig, SaveState self, GhostWorldPresence.GhostID ghost, RainWorld rainWorld)
         {
             orig(self, ghost, rainWorld);
             Log.LogMessage("Ghost encounter reached");
@@ -202,7 +202,7 @@ namespace Stardust
             }
         }
 
-        public static void KarmaLadder_GoToKarma(On.Menu.KarmaLadder.orig_GoToKarma orig, Menu.KarmaLadder self, int newGoalKarma, bool displayMetersOnRest)
+        public static void ChangeDestinationKarma(On.Menu.KarmaLadder.orig_GoToKarma orig, Menu.KarmaLadder self, int newGoalKarma, bool displayMetersOnRest)
         {
             if (self.menu is Menu.KarmaLadderScreen && newGoalKarma <= (self.menu as Menu.KarmaLadderScreen).MinKarma())
             {

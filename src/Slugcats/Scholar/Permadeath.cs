@@ -29,7 +29,7 @@ namespace Stardust.Slugcats.Scholar
             return CyclesRemaining(currentCycle) <= 0;
         }
 
-        public static void TextPrompt_Update(On.HUD.TextPrompt.orig_Update orig, HUD.TextPrompt self)
+        public static void TextPromptCycleFix(On.HUD.TextPrompt.orig_Update orig, HUD.TextPrompt self)
         {
             orig(self);
             if (self?.hud?.owner != null && self.hud.owner is Player && (self.hud.owner as Player).room?.game?.StoryCharacter == Enums.SlugcatStatsName.sfscholar && !self.gameOverMode && self.cycleTick > -1)
@@ -38,7 +38,7 @@ namespace Stardust.Slugcats.Scholar
             }
         }
 
-        public static void CycleLabel_UpdateCycleText(On.HUD.Map.CycleLabel.orig_UpdateCycleText orig, HUD.Map.CycleLabel self)
+        public static void CycleLabelCycleFix(On.HUD.Map.CycleLabel.orig_UpdateCycleText orig, HUD.Map.CycleLabel self)
         {
             orig(self);
             Player player = self.owner.hud.owner as Player;
@@ -57,7 +57,7 @@ namespace Stardust.Slugcats.Scholar
             }
         }
 
-        public static void SlugcatPageContinue_ctor(On.Menu.SlugcatSelectMenu.SlugcatPageContinue.orig_ctor orig, SlugcatSelectMenu.SlugcatPageContinue self, Menu.Menu menu, MenuObject owner, int pageIndex, SlugcatStats.Name slugcatNumber)
+        public static void PermadeathContinueScreen(On.Menu.SlugcatSelectMenu.SlugcatPageContinue.orig_ctor orig, SlugcatSelectMenu.SlugcatPageContinue self, Menu.Menu menu, MenuObject owner, int pageIndex, SlugcatStats.Name slugcatNumber)
         {
             orig(self, menu, owner, pageIndex, slugcatNumber);
             if (slugcatNumber == Enums.SlugcatStatsName.sfscholar)
@@ -89,7 +89,7 @@ namespace Stardust.Slugcats.Scholar
             }
         }
 
-        public static void MenuScene_BuildScene(On.Menu.MenuScene.orig_BuildScene orig, MenuScene self)
+        public static void SupernovaMenuScene(On.Menu.MenuScene.orig_BuildScene orig, MenuScene self)
         {
             orig(self);
             if (self.sceneID == Enums.MenuSceneIDs.threadsScene)
@@ -105,7 +105,7 @@ namespace Stardust.Slugcats.Scholar
                 }
             }
         }
-        public static void SlugcatSelectMenu_UpdateStartButtonText(On.Menu.SlugcatSelectMenu.orig_UpdateStartButtonText orig, SlugcatSelectMenu self)
+        public static void PermadeathStartButton(On.Menu.SlugcatSelectMenu.orig_UpdateStartButtonText orig, SlugcatSelectMenu self)
         {
             orig(self);
             if (self.slugcatPages[self.slugcatPageIndex].slugcatNumber == Enums.SlugcatStatsName.sfscholar && self.manager.rainWorld.progression.GetOrInitiateSaveState(Enums.SlugcatStatsName.sfscholar, null, self.manager.menuSetup, false) is SaveState save && save.deathPersistentSaveData.ScholarPermadeath())
@@ -114,7 +114,7 @@ namespace Stardust.Slugcats.Scholar
             }
         }
 
-        public static void SlugcatSelectMenu_ContinueStartedGame(On.Menu.SlugcatSelectMenu.orig_ContinueStartedGame orig, SlugcatSelectMenu self, SlugcatStats.Name storyGameCharacter)
+        public static void GoToThreadsScreenFromMainMenu(On.Menu.SlugcatSelectMenu.orig_ContinueStartedGame orig, SlugcatSelectMenu self, SlugcatStats.Name storyGameCharacter)
         {
             if (storyGameCharacter == Enums.SlugcatStatsName.sfscholar)
             {
@@ -131,13 +131,13 @@ namespace Stardust.Slugcats.Scholar
             orig(self, storyGameCharacter);
         }
 
-        public static void SlugcatSelectMenu_ctor(On.Menu.SlugcatSelectMenu.orig_ctor orig, SlugcatSelectMenu self, ProcessManager manager)
+        public static void AddThreadsCheckbox(On.Menu.SlugcatSelectMenu.orig_ctor orig, SlugcatSelectMenu self, ProcessManager manager)
         {
             orig(self, manager);
             self.pages[0].subObjects.Add(new ThreadsCheckbox(self, self.startButton.pos.x - 200f - SlugcatSelectMenu.GetRestartTextOffset(self.CurrLang)));
         }
 
-        public static void SlugcatSelectMenu_StartGame(On.Menu.SlugcatSelectMenu.orig_StartGame orig, SlugcatSelectMenu self, SlugcatStats.Name storyGameCharacter)
+        public static void GoToThreadsScreenFromStartScreen(On.Menu.SlugcatSelectMenu.orig_StartGame orig, SlugcatSelectMenu self, SlugcatStats.Name storyGameCharacter)
         {
             if (storyGameCharacter == Enums.SlugcatStatsName.sfscholar)
             {
@@ -154,7 +154,7 @@ namespace Stardust.Slugcats.Scholar
             orig(self, storyGameCharacter);
         }
 
-        public static void ProcessManager_PostSwitchMainProcess(On.ProcessManager.orig_PostSwitchMainProcess orig, ProcessManager self, ProcessManager.ProcessID ID)
+        public static void SwitchToThreadsScreen(On.ProcessManager.orig_PostSwitchMainProcess orig, ProcessManager self, ProcessManager.ProcessID ID)
         {
             if (ID == Enums.ProcessIDs.threadsProcess)
             {
@@ -163,11 +163,12 @@ namespace Stardust.Slugcats.Scholar
             orig(self, ID);
         }
 
-        public static void RainWorldGame_GameOver(On.RainWorldGame.orig_GameOver orig, RainWorldGame self, Creature.Grasp dependentOnGrasp)
+        public static void CheckForPermadeath(On.RainWorldGame.orig_GameOver orig, RainWorldGame self, Creature.Grasp dependentOnGrasp)
         {
             if (self.IsStorySession && self.GetStorySession.saveStateNumber == Enums.SlugcatStatsName.sfscholar)
             {
                 bool causePermadeath = (self.session as StoryGameSession).saveState.cycleNumber > 5;
+                // just a placeholder
                 if (causePermadeath)
                 {
                     self.GoToRedsGameOver();
@@ -177,7 +178,7 @@ namespace Stardust.Slugcats.Scholar
             orig(self, dependentOnGrasp);
         }
 
-        public static void RainWorldGame_GoToRedsGameOver(On.RainWorldGame.orig_GoToRedsGameOver orig, RainWorldGame self)
+        public static void ScholarPermadeathTrigger(On.RainWorldGame.orig_GoToRedsGameOver orig, RainWorldGame self)
         {
             if (self?.StoryCharacter != Enums.SlugcatStatsName.sfscholar)
             {

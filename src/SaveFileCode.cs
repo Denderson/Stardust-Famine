@@ -50,7 +50,7 @@ namespace Stardust
         public const string gates = prefix + "Gates";
         public const string backupToUse = prefix + "BackupToUse";
 
-        public static void SaveState_LoadGame(On.SaveState.orig_LoadGame orig, SaveState self, string str, RainWorldGame game)
+        public static void CustomSavedataInit(On.SaveState.orig_LoadGame orig, SaveState self, string str, RainWorldGame game)
         {
             orig(self, str, game);
             if (self.saveStateNumber == Enums.SlugcatStatsName.sfscholar && self.deathPersistentSaveData.GetSlugBaseData().TryGet<int>(SaveFileCode.backupToUse, out int backup) && backup >= 0)

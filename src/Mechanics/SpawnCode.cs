@@ -20,7 +20,7 @@ namespace Stardust.Mechanics
             return value;
         }
 
-        public static void Player_Update1(On.Player.orig_Update orig, Player self, bool eu)
+        public static void StarspawnKillCode(On.Player.orig_Update orig, Player self, bool eu)
         {
             orig(self, eu);
             if (SharedMechanics(self?.room?.game.StoryCharacter))

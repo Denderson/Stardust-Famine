@@ -68,7 +68,7 @@ namespace Stardust.Slugcats
             return value;
         }
 
-        public static bool SlugcatStats_PearlsGivePassageProgress(On.SlugcatStats.orig_PearlsGivePassageProgress orig, StoryGameSession session)
+        public static bool NoScholarPassage(On.SlugcatStats.orig_PearlsGivePassageProgress orig, StoryGameSession session)
         {
             bool value = orig(session);
             if (SharedMechanics(session.saveStateNumber))
@@ -108,7 +108,7 @@ namespace Stardust.Slugcats
             return value;
         }
 
-        public static bool SlugcatStats_SlugcatUnlocked(On.SlugcatStats.orig_SlugcatUnlocked orig, SlugcatStats.Name i, RainWorld rainWorld)
+        public static bool LockScholar(On.SlugcatStats.orig_SlugcatUnlocked orig, SlugcatStats.Name i, RainWorld rainWorld)
         {
             bool value = orig(i, rainWorld);
             if (i == Enums.SlugcatStatsName.sfscholar)
@@ -132,7 +132,7 @@ namespace Stardust.Slugcats
             }
         }
 
-        public static void SleepAndDeathScreen_AddPassageButton(On.Menu.SleepAndDeathScreen.orig_AddPassageButton orig, SleepAndDeathScreen self, bool buttonBlack)
+        public static void NoPassageButton(On.Menu.SleepAndDeathScreen.orig_AddPassageButton orig, SleepAndDeathScreen self, bool buttonBlack)
         {
             if (SharedMechanics(self?.saveState?.saveStateNumber)) return;
             orig(self, buttonBlack);

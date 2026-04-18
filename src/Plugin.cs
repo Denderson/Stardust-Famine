@@ -102,30 +102,31 @@ namespace Stardust
 
                 // conditionals code
                 {
-                    On.SaveState.SaveToString += ConditionalsCode.SaveState_SaveToString;
-                    On.WorldLoader.GeneratePopulation += ConditionalsCode.WorldLoader_GeneratePopulation;
+                    On.SaveState.SaveToString += ConditionalsCode.DeleteRespawnList;
+                    On.WorldLoader.GeneratePopulation += ConditionalsCode.RefreshSpawns;
                 }
 
                 // spawn code
                 {
-                    On.Player.Update += SpawnCode.Player_Update1;
+                    On.Player.Update += SpawnCode.StarspawnKillCode;
                 }
 
                 // slugcat code
                 {
                     On.Menu.SlugcatSelectMenu.SlugcatPageNewGame.ctor += SlugcatCode.SlugcatPageNewGame_ctor;
-                    On.Menu.SlugcatSelectMenu.ContinueStartedGame += Permadeath.SlugcatSelectMenu_ContinueStartedGame;
-                    On.Menu.SlugcatSelectMenu.StartGame += Permadeath.SlugcatSelectMenu_StartGame;
-                    On.Menu.SlugcatSelectMenu.UpdateStartButtonText += Permadeath.SlugcatSelectMenu_UpdateStartButtonText;
+                    On.Menu.SlugcatSelectMenu.ContinueStartedGame += Permadeath.GoToThreadsScreenFromMainMenu;
+                    On.Menu.SlugcatSelectMenu.StartGame += Permadeath.GoToThreadsScreenFromStartScreen;
+                    On.Menu.SlugcatSelectMenu.UpdateStartButtonText += Permadeath.PermadeathStartButton;
                     On.Menu.SlugcatSelectMenu.SlugcatPage.AddImage += SlugcatCode.SlugcatPage_AddImage;
                 }
 
                 // bitter code
                 {
-                    On.Creature.Grasp.ctor += BitterCode.Grasp_ctor;
-                    On.LocustSystem.Swarm.TryAttach += BitterCode.Swarm_TryAttach;
-                    On.SlugcatStats.ctor += BitterCode.SlugcatStats_ctor;
-                    On.Player.DeathByBiteMultiplier += BitterCode.Player_DeathByBiteMultiplier;
+                    On.Creature.Grasp.ctor += BitterCode.BitterGraspImmunity;
+                    On.LocustSystem.Swarm.TryAttach += BitterCode.BitterLocustImmunity;
+                    On.SlugcatStats.ctor += BitterCode.OldFoodMeterCode; // NEED CHANGE
+                    On.Player.DeathByBiteMultiplier += BitterCode.BitterBiteResistance; // NEEDS CHANGE
+
                     //On.HUD.FoodMeter.ctor += EmergencyFoodMeter.FoodMeter_ctor;
                 }
 
@@ -137,8 +138,10 @@ namespace Stardust
                 // karma code
                 {
                     
-                    On.SaveState.GhostEncounter += KarmaCode.SaveState_GhostEncounter;
-                    On.Menu.KarmaLadder.GoToKarma += KarmaCode.KarmaLadder_GoToKarma;
+                    On.SaveState.GhostEncounter += KarmaCode.GetTriggersAfterEcho;
+                    On.Menu.KarmaLadder.GoToKarma += KarmaCode.ChangeDestinationKarma;
+
+                    // all of these just edit the karma meter the same way in different triggers
                     On.HUD.KarmaMeter.ctor += KarmaCode.KarmaMeter_ctor;
                     On.HUD.KarmaMeter.UpdateGraphic += KarmaCode.KarmaMeter_UpdateGraphic;
                     On.HUD.KarmaMeter.UpdateGraphic_int_int += KarmaCode.KarmaMeter_UpdateGraphic_int_int;
@@ -149,10 +152,10 @@ namespace Stardust
 
                 // ghost code
                 {
-                    On.GoldFlakes.NumberOfFlakes += GhostCode.GoldFlakes_NumberOfFlakes;
-                    On.Menu.GhostEncounterScreen.GetDataFromGame += GhostCode.GhostEncounterScreen_GetDataFromGame;
-                    On.GhostWorldPresence.SpawnGhost += GhostCode.GhostWorldPresence_SpawnGhost;
-                    On.Room.Loaded += GhostCode.Room_Loaded;
+                    On.GoldFlakes.NumberOfFlakes += GhostCode.DynamicNumberOfFlakes;
+                    On.Menu.GhostEncounterScreen.GetDataFromGame += GhostCode.MinKarmaOnEchoScreen;
+                    On.GhostWorldPresence.SpawnGhost += GhostCode.NoEchoPriming;
+                    On.Room.Loaded += GhostCode.RippleDepthsNearEchoes;
                 }
 
                 // save file code
@@ -190,38 +193,38 @@ namespace Stardust
 
                 
 
-                On.Menu.SlugcatSelectMenu.SlugcatPageContinue.ctor += Permadeath.SlugcatPageContinue_ctor;
+                On.Menu.SlugcatSelectMenu.SlugcatPageContinue.ctor += Permadeath.PermadeathContinueScreen;
 
-                On.Menu.SlugcatSelectMenu.ctor += Permadeath.SlugcatSelectMenu_ctor;
+                On.Menu.SlugcatSelectMenu.ctor += Permadeath.AddThreadsCheckbox;
                 //On.Menu.MenuScene.BuildScene += MenuScene_BuildScene;
 
-                On.Ghost.FadeOutFinished += GhostCode.Ghost_FadeOutFinished;
+                On.Ghost.FadeOutFinished += GhostCode.CheckpointAfterEcho;
 
 
-                On.SlugcatStats.SlugcatUnlocked += SlugcatCode.SlugcatStats_SlugcatUnlocked;
+                On.SlugcatStats.SlugcatUnlocked += SlugcatCode.LockScholar;
                 On.SlugcatStats.SpearSpawnElectricRandomChance_Timeline += SlugcatCode.SlugcatStats_SpearSpawnElectricRandomChance_Timeline;
                 On.SlugcatStats.SpearSpawnExplosiveRandomChance_Timeline += SlugcatCode.SlugcatStats_SpearSpawnExplosiveRandomChance_Timeline;
                 On.SlugcatStats.SpearSpawnModifier_Timeline_float += SlugcatCode.SlugcatStats_SpearSpawnModifier_Timeline_float;
-                On.SlugcatStats.PearlsGivePassageProgress += SlugcatCode.SlugcatStats_PearlsGivePassageProgress;
+                On.SlugcatStats.PearlsGivePassageProgress += SlugcatCode.NoScholarPassage;
 
-                On.ProcessManager.PostSwitchMainProcess += Permadeath.ProcessManager_PostSwitchMainProcess;
+                On.ProcessManager.PostSwitchMainProcess += Permadeath.SwitchToThreadsScreen;
 
-                On.Menu.SleepAndDeathScreen.AddPassageButton += SlugcatCode.SleepAndDeathScreen_AddPassageButton;
+                On.Menu.SleepAndDeathScreen.AddPassageButton += SlugcatCode.NoPassageButton;
                 IL.Menu.SleepAndDeathScreen.GetDataFromGame += Permadeath.SleepAndDeathScreen_GetDataFromGame;
 
-                On.RainWorldGame.GoToRedsGameOver += Permadeath.RainWorldGame_GoToRedsGameOver;
-                On.RainWorldGame.GameOver += Permadeath.RainWorldGame_GameOver;
+                On.RainWorldGame.GoToRedsGameOver += Permadeath.ScholarPermadeathTrigger;
+                On.RainWorldGame.GameOver += Permadeath.CheckForPermadeath;
 
-                On.SaveState.LoadGame += SaveFileCode.SaveState_LoadGame;
+                On.SaveState.LoadGame += SaveFileCode.CustomSavedataInit;
 
-                On.RegionGate.KarmaBlinkRed += RegionGate_KarmaBlinkRed;
-                On.RegionGate.ctor += RegionGate_ctor;
+                On.RegionGate.KarmaBlinkRed += NoBlinkingKarmaOnExhaustedGates;
+                On.RegionGate.ctor += ExhaustGates;
 
                 On.GateKarmaGlyph.Update += GateKarmaGlyph_Update;
 
-                On.HUD.TextPrompt.Update += Permadeath.TextPrompt_Update;
+                On.HUD.TextPrompt.Update += Permadeath.TextPromptCycleFix;
 
-                On.HUD.Map.CycleLabel.UpdateCycleText += Permadeath.CycleLabel_UpdateCycleText;
+                On.HUD.Map.CycleLabel.UpdateCycleText += Permadeath.CycleLabelCycleFix;
 
                 On.Menu.MenuScene.BuildScene += MenuScene_BuildScene;
 
@@ -297,7 +300,7 @@ namespace Stardust
             }
         }
 
-        private void RegionGate_ctor(On.RegionGate.orig_ctor orig, RegionGate self, Room room)
+        private void ExhaustGates(On.RegionGate.orig_ctor orig, RegionGate self, Room room)
         {
             orig(self, room);
             if (SharedMechanics(room?.game?.StoryCharacter) && room.IsGateLocked())
@@ -315,7 +318,7 @@ namespace Stardust
             }
         }
 
-        private bool RegionGate_KarmaBlinkRed(On.RegionGate.orig_KarmaBlinkRed orig, RegionGate self)
+        private bool NoBlinkingKarmaOnExhaustedGates(On.RegionGate.orig_KarmaBlinkRed orig, RegionGate self)
         {
             if (CWTs.RegionGateCWT.TryGetData(self, out var data) && data.exhausted)
             {

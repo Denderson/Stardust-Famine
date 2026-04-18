@@ -111,7 +111,7 @@ namespace Stardust
             return false;
         }
 
-        public static void WorldLoader_GeneratePopulation(On.WorldLoader.orig_GeneratePopulation orig, WorldLoader self, bool fresh)
+        public static void RefreshSpawns(On.WorldLoader.orig_GeneratePopulation orig, WorldLoader self, bool fresh)
         {
             if (SharedMechanics(self.game?.StoryCharacter))
             {
@@ -133,15 +133,17 @@ namespace Stardust
                     abstractRoom.entitiesInDens.Clear();
                 }
                 orig(self, true);
+                // setting fresh to always be true, to make spawns load
                 return;
             }
             orig(self, fresh);
         }
 
-        public static string SaveState_SaveToString(On.SaveState.orig_SaveToString orig, SaveState self)
+        public static string DeleteRespawnList(On.SaveState.orig_SaveToString orig, SaveState self)
         {
             if (SharedMechanics(self.saveStateNumber))
             {
+                // makes a new empty list to remove the old one
                 self.respawnCreatures = new List<int> { };
                 self.waitRespawnCreatures = new List<int> { };
             }
