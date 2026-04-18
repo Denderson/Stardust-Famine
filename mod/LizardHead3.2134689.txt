@@ -1,0 +1,32 @@
+{
+	"frames": {
+		"LizardHead3.2134689.png": {
+			"frame": {
+				"x": 0,
+				"y": 0,
+				"w": 33,
+				"h": 46
+			},
+			"rotated": false,
+			"trimmed": false,
+			"sourceSize": {
+				"w": 33,
+				"h": 46
+			},
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 33,
+				"h": 46
+			}
+		}
+	},
+	"meta": {
+		"app": "https://goofybox-studios.github.io/tools/texture_packer",
+		"image": "LizardHead3.2134689",
+		"size": {
+			"w": 33,
+			"h": 46
+		}
+	}
+}

@@ -1,0 +1,32 @@
+{
+	"frames": {
+		"sfsmallKarma10.png": {
+			"frame": {
+				"x": 0,
+				"y": 0,
+				"w": 45,
+				"h": 45
+			},
+			"rotated": false,
+			"trimmed": false,
+			"sourceSize": {
+				"w": 45,
+				"h": 45
+			},
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 45,
+				"h": 45
+			}
+		}
+	},
+	"meta": {
+		"app": "https://goofybox-studios.github.io/tools/texture_packer",
+		"image": "sfsmallKarma10",
+		"size": {
+			"w": 45,
+			"h": 45
+		}
+	}
+}
