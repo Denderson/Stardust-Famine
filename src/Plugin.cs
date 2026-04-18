@@ -47,7 +47,7 @@ using static Watcher.RippleHybridVFX;
 
 namespace Stardust
 {
-
+    [BepInDependency("lsfUtils", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("slime-cubed.slugbase", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("io.github.dual.fisobs", BepInDependency.DependencyFlags.HardDependency)]
     [BepInPlugin("stardustFamine", "Stardust Famine", "0.1")]
@@ -212,8 +212,6 @@ namespace Stardust
                 On.RainWorldGame.GoToRedsGameOver += Permadeath.RainWorldGame_GoToRedsGameOver;
                 On.RainWorldGame.GameOver += Permadeath.RainWorldGame_GameOver;
 
-                On.RoomSettings.LoadPlacedObjects_StringArray_Timeline += RoomSettings_LoadPlacedObjects_StringArray_Timeline;
-
                 On.SaveState.LoadGame += SaveFileCode.SaveState_LoadGame;
 
                 On.RegionGate.KarmaBlinkRed += RegionGate_KarmaBlinkRed;
@@ -253,7 +251,7 @@ namespace Stardust
                 {
                     isInit = true;
 
-                    Pom.Pom.RegisterManagedObject<ConditionFilterUAD, ConditionFilterData, ManagedRepresentation>("ConditionalFilter", "Stardust Famine");
+                    Pom.Pom.RegisterManagedObject<AnchorUAD, AnchorData, ManagedRepresentation>("AnchorSpot", "Stardust Famine");
                     Logger.LogMessage("Filter registered!!!!");
 
                     WorldLoader.Preprocessing.preprocessorConditions.Add(ConditionalsCode.StardustConditions);
@@ -324,37 +322,6 @@ namespace Stardust
                 return false;
             }
             return orig(self);
-        }
-
-        
-
-        public static void RoomSettings_LoadPlacedObjects_StringArray_Timeline(On.RoomSettings.orig_LoadPlacedObjects_StringArray_Timeline orig, RoomSettings self, string[] s, SlugcatStats.Timeline timelinePoint)
-        {
-            orig(self, s, timelinePoint);
-            if (timelinePoint == null) return;
-            List<ConditionFilterData> list = [];
-            foreach (PlacedObject placedObject in self.placedObjects)
-            {
-                if (placedObject.data is ConditionFilterData filter && !filter.Active(ref self.room.game))
-                {
-                    list.Add(filter);
-                }
-            }
-            for (int j = 0; j < self.placedObjects.Count; j++)
-            {
-                if (!self.placedObjects[j].deactivattable)
-                {
-                    continue;
-                }
-                for (int k = 0; k < list.Count; k++)
-                {
-                    if (Custom.DistLess(self.placedObjects[j].pos, list[k].owner.pos, list[k].radius.magnitude))
-                    {
-                        list[k].DeactivatePlacedObject(self.placedObjects[j]);
-                        break;
-                    }
-                }
-            }
         }
 
         public void OnDisable()
