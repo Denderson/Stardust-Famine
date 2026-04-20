@@ -12,7 +12,7 @@ public class StarNosedLizardCritob : Critob
     public StarNosedLizardCritob() : base(Enums.CreatureTemplateType.StarNosedLizard)
     {
         Debug.Log("Creating a StarNosed Lizard");
-        Icon = new SimpleIcon("Kill_Standard_Lizard", Color.gray);
+        Icon = new SimpleIcon("Kill_Black_Lizard", new Color(0.16f, 0.16f, 0.19f));
         LoadedPerformanceCost = 50f;
         SandboxPerformanceCost = new(.25f, .25f);
         RegisterUnlock(KillScore.Configurable(1), Enums.SandboxUnlockID.StarNosedLizard, MultiplayerUnlocks.SandboxUnlockID.Slugcat);
@@ -20,7 +20,7 @@ public class StarNosedLizardCritob : Critob
 
     public override int ExpeditionScore() => 10;
 
-    public override Color DevtoolsMapColor(AbstractCreature acrit) => Color.gray;
+    public override Color DevtoolsMapColor(AbstractCreature acrit) => new Color(0.16f, 0.16f, 0.19f);
 
     public override string DevtoolsMapName(AbstractCreature acrit) => "SLz";
     public override IEnumerable<string> WorldFileAliases() => ["starnosedlizard", "starnosed lizard"];

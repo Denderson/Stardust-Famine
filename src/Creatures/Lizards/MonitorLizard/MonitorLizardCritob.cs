@@ -11,7 +11,7 @@ public class MonitorLizardCritob : Critob
 {
     public MonitorLizardCritob() : base(Enums.CreatureTemplateType.MonitorLizard)
     {
-        Icon = new SimpleIcon("Kill_Standard_Lizard", Color.yellow);
+        Icon = new SimpleIcon("atlases/Kill_MonitorLizard", new Color(0.89f, 0.98f, 0.37f));
         LoadedPerformanceCost = 50f;
         SandboxPerformanceCost = new(.25f, .25f);
         RegisterUnlock(KillScore.Configurable(1), Enums.SandboxUnlockID.MonitorLizard, MultiplayerUnlocks.SandboxUnlockID.Slugcat);
@@ -19,7 +19,7 @@ public class MonitorLizardCritob : Critob
 
     public override int ExpeditionScore() => 10;
 
-    public override Color DevtoolsMapColor(AbstractCreature acrit) => Color.yellow;
+    public override Color DevtoolsMapColor(AbstractCreature acrit) => new Color(0.89f, 0.98f, 0.37f);
 
     public override string DevtoolsMapName(AbstractCreature acrit) => "MLz";
 
