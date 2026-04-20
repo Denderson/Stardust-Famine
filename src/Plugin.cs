@@ -200,7 +200,6 @@ namespace Stardust
 
                 On.Ghost.FadeOutFinished += GhostCode.CheckpointAfterEcho;
 
-
                 On.SlugcatStats.SlugcatUnlocked += SlugcatCode.LockScholar;
                 On.SlugcatStats.SpearSpawnElectricRandomChance_Timeline += SlugcatCode.SlugcatStats_SpearSpawnElectricRandomChance_Timeline;
                 On.SlugcatStats.SpearSpawnExplosiveRandomChance_Timeline += SlugcatCode.SlugcatStats_SpearSpawnExplosiveRandomChance_Timeline;
@@ -235,14 +234,10 @@ namespace Stardust
                     new Hook(typeof(Player).GetProperty(nameof(Player.OutsideWatcherCampaign)).GetGetMethod(), typeof(KarmaCode).GetMethod(nameof(KarmaCode.Outside_Watcher)));
                     new Hook(typeof(Player).GetProperty(nameof(Player.rippleLevel)).GetGetMethod(), typeof(KarmaCode).GetMethod(nameof(KarmaCode.Ripple_Level)));
 
-                    
-
                     new Hook(typeof(RegionGate).GetProperty(nameof(RegionGate.MeetRequirement))!.GetGetMethod(), typeof(GateCode).GetMethod(nameof(GateCode.Meet_Requirement)));
 
                     new Hook(typeof(SaveState).GetProperty(nameof(SaveState.CanSeeVoidSpawn)).GetGetMethod(), typeof(SpawnCode).GetMethod(nameof(SpawnCode.CanSee_VoidSpawn)));
                     new Hook(typeof(VoidSpawnMigrationStream).GetProperty(nameof(VoidSpawnMigrationStream.MaxCapacity)).GetGetMethod(), typeof(SpawnCode).GetMethod(nameof(SpawnCode.Migration_MaxCapacity)));
-
-                    
 
                     new Hook(typeof(GateKarmaGlyph).GetProperty(nameof(GateKarmaGlyph.PlayNoEnergyAnimation)).GetGetMethod(), typeof(GateCode).GetMethod(nameof(GateCode.No_Energy)));
 
@@ -341,14 +336,6 @@ namespace Stardust
                 return;
             }
             initialized = true;
-            //Futile.atlasManager.LoadImage("atlases/StarNosedLizardHeadSprites/LizardHead0.2134689");
-            //Futile.atlasManager.LoadImage("atlases/StarNosedLizardHeadSprites/LizardHead1.2134689");
-            //Futile.atlasManager.LoadImage("atlases/StarNosedLizardHeadSprites/LizardHead2.2134689");
-            //Futile.atlasManager.LoadImage("atlases/StarNosedLizardHeadSprites/LizardHead3.2134689");
-            Futile.atlasManager.LoadImage("LizardHead0.2134689");
-            Futile.atlasManager.LoadImage("LizardHead1.2134689");
-            Futile.atlasManager.LoadImage("LizardHead2.2134689");
-            Futile.atlasManager.LoadImage("LizardHead3.2134689");
             Futile.atlasManager.LoadImage("atlases/sfkarma10");
             Futile.atlasManager.LoadImage("atlases/sfkarma11");
             Futile.atlasManager.LoadImage("atlases/sfsmallkarma10");
