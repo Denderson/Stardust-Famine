@@ -246,13 +246,12 @@ namespace lsfUtils
 
                     On.Water.ctor += EvilWater.InitialiseEvilWater;
                     On.Creature.Update += EvilWater.EvilWaterLogic;
-
-                    new Hook(typeof(Creature).GetProperty(nameof(Creature.injectedPoison)).GetGetMethod(), typeof(EvilWater).GetMethod(nameof(EvilWater.OverridePoison)));
                 }
 
 
                 if (isInit) return;
                 isInit = true;
+
 
                 // processing conditions
                 {
@@ -265,6 +264,7 @@ namespace lsfUtils
                 RegisterManagedObject<RoomConditionFilterUAD, RoomConditionFilterData, ManagedRepresentation>("RoomConditionalFilter", "lsfUtils");
                 RegisterManagedObject<LocalGravityUAD, LocalGravityData, ManagedRepresentation>("LocalGravity", "lsfUtils");
                 RegisterManagedObject<RippleZoneUAD, RippleZoneData, ManagedRepresentation>("RippleZone", "lsfUtils");
+                EvilWater.RegisterEvilWater();
 
                 Logger.LogMessage("LSF Utils success!");
             }

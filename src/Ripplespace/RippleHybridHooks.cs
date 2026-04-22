@@ -83,7 +83,6 @@ namespace lsfUtils.Ripplespace
             orig(self);
             if (self?.abstractPhysicalObject == null)
             {
-                Log.LogMessage("Couldnt get abstractPhysicalObject!");
                 return;
             }
             if (!CWTs.AbstractPhysicalObjectCWT.TryGetData(self.abstractPhysicalObject, out var data))
@@ -97,7 +96,6 @@ namespace lsfUtils.Ripplespace
                 Log.LogMessage("Is rippleHybrid!");
                 return;
             }
-            Log.LogMessage("Not rippleHybrid!");
         }
 
         public static void SpriteLeaser_ctor(On.RoomCamera.SpriteLeaser.orig_ctor orig, RoomCamera.SpriteLeaser self, IDrawable obj, RoomCamera rCam)

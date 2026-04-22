@@ -28,52 +28,52 @@
     
     <ItemGroup>
       <Reference Include="BepInEx">
-        <HintPath>..\..\Stardust-Famine\REFERENCES\BepInEx.dll</HintPath>
+        <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\BepInEx.dll</HintPath>
       </Reference>
       <Reference Include="Fisobs">
-        <HintPath>..\..\Stardust-Famine\REFERENCES\Fisobs.dll</HintPath>
+        <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\Fisobs.dll</HintPath>
       </Reference>
       <Reference Include="HOOKS-Assembly-CSharp">
-        <HintPath>..\..\Stardust-Famine\REFERENCES\HOOKS-Assembly-CSharp.dll</HintPath>
+        <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\HOOKS-Assembly-CSharp.dll</HintPath>
       </Reference>
       <Reference Include="Mono.Cecil">
-        <HintPath>..\..\Stardust-Famine\REFERENCES\Mono.Cecil.dll</HintPath>
+        <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\Mono.Cecil.dll</HintPath>
       </Reference>
       <Reference Include="MonoMod.Common">
-        <HintPath>..\..\Stardust-Famine\REFERENCES\MonoMod.Common.dll</HintPath>
+        <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\MonoMod.Common.dll</HintPath>
       </Reference>
       <Reference Include="MonoMod.RuntimeDetour">
-        <HintPath>..\..\Stardust-Famine\REFERENCES\MonoMod.RuntimeDetour.dll</HintPath>
+        <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\MonoMod.RuntimeDetour.dll</HintPath>
       </Reference>
       <Reference Include="MonoMod.Utils">
-        <HintPath>..\..\Stardust-Famine\REFERENCES\MonoMod.Utils.dll</HintPath>
+        <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\MonoMod.Utils.dll</HintPath>
       </Reference>
       <Reference Include="Newtonsoft.Json">
-        <HintPath>..\..\Stardust-Famine\REFERENCES\Newtonsoft.Json.dll</HintPath>
+        <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\Newtonsoft.Json.dll</HintPath>
       </Reference>
       <Reference Include="Pom">
-        <HintPath>..\..\Stardust-Famine\REFERENCES\Pom.dll</HintPath>
+        <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\Pom.dll</HintPath>
       </Reference>
       <Reference Include="Assembly-CSharp">
-        <HintPath>..\..\Stardust-Famine\REFERENCES\PUBLIC-Assembly-CSharp.dll</HintPath>
+        <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\PUBLIC-Assembly-CSharp.dll</HintPath>
       </Reference>
       <Reference Include="SlugBase">
-        <HintPath>..\..\Stardust-Famine\REFERENCES\SlugBase.dll</HintPath>
+        <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\SlugBase.dll</HintPath>
       </Reference>
       <Reference Include="Unity.Mathematics">
-        <HintPath>..\..\Stardust-Famine\REFERENCES\Unity.Mathematics.dll</HintPath>
+        <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\Unity.Mathematics.dll</HintPath>
       </Reference>
       <Reference Include="UnityEngine">
-        <HintPath>..\..\Stardust-Famine\REFERENCES\UnityEngine.dll</HintPath>
+        <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\UnityEngine.dll</HintPath>
       </Reference>
       <Reference Include="UnityEngine.CoreModule">
-        <HintPath>..\..\Stardust-Famine\REFERENCES\UnityEngine.CoreModule.dll</HintPath>
+        <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\UnityEngine.CoreModule.dll</HintPath>
       </Reference>
       <Reference Include="UnityEngine.InputLegacyModule">
-        <HintPath>..\..\Stardust-Famine\REFERENCES\UnityEngine.InputLegacyModule.dll</HintPath>
+        <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\UnityEngine.InputLegacyModule.dll</HintPath>
       </Reference>
       <Reference Include="UnityEngine.InputModule">
-        <HintPath>..\..\Stardust-Famine\REFERENCES\UnityEngine.InputModule.dll</HintPath>
+        <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\UnityEngine.InputModule.dll</HintPath>
       </Reference>
     </ItemGroup>
     

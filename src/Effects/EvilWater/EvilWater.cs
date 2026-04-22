@@ -9,7 +9,7 @@ namespace lsfUtils.Effects.EvilWater;
 
 public class EvilWater
 {
-    public static void __RegisterExamples()
+    public static void RegisterEvilWater()
     {
         try
         {
@@ -39,10 +39,29 @@ public class EvilWater
 
     public static void EvilWaterLogic(On.Creature.orig_Update orig, Creature self, bool eu)
     {
+        // checks to fail code and call vanilla
+        if (CreatureCWT.TryGetData(self, out var data))
+        {
+            orig(self, eu);
+            return;
+        }
+        if (!WaterCWT.TryGetData(self.room.waterObject, out var waterdata))
+        {
+            orig(self, eu);
+            return;
+        }
+        if (self?.room == null)
+        {
+            orig(self, eu);
+            return;
+        }
+
+        float oldPoison = self.injectedPoison;
+        self.injectedPoison = Mathf.Min(1f, self.injectedPoison + data.temporaryPoison);
         orig(self, eu);
-        if (self?.room == null) return;
-        if (!CWTs.CreatureCWT.TryGetData(self, out var data)) return;
-        if (self.Submersion > 0.5f && WaterCWT.TryGetData(self.room.waterObject, out var waterdata) && waterdata.isPoisonous)
+        self.injectedPoison = oldPoison;
+
+        if (self.Submersion > 0.5f && waterdata.isPoisonous)
         {
             if (data.timeInEvilWater < (int)(secondsUntilPoisonStartsFallingOffAfterExitingPoisonWater * 40)) data.timeInEvilWater++;
         }
@@ -65,11 +84,10 @@ public class EvilWater
         }
     }
 
-    public static float OverridePoison(Func<Creature, float> orig, Creature self)
+    public float OverridePoison(Func<Creature, float> orig, Creature self)
     {
-        Log.LogMessage("Overriding poison!");
         float result = orig(self);
-        if (CWTs.CreatureCWT.TryGetData(self, out var data))
+        if (self != null && CWTs.CreatureCWT.TryGetData(self, out var data))
         {
             return Mathf.Max(result, data.temporaryPoison);
         }
