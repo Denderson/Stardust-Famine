@@ -13,6 +13,7 @@ using RWCustom;
 using SlugBase;
 using SlugBase.Features;
 using SlugBase.SaveData;
+using Stardust.Anchors;
 using Stardust.Mechanics;
 using Stardust.Slugcats;
 using Stardust.Slugcats.Scholar;
@@ -249,7 +250,7 @@ namespace Stardust
                 {
                     isInit = true;
 
-                    Pom.Pom.RegisterManagedObject<AnchorUAD, AnchorData, ManagedRepresentation>("AnchorSpot", "Stardust Famine");
+                    Pom.Pom.RegisterManagedObject<Anchor, AnchorData, ManagedRepresentation>("AnchorSpot", "Stardust Famine");
                     Logger.LogMessage("Filter registered!!!!");
 
                     WorldLoader.Preprocessing.preprocessorConditions.Add(ConditionalsCode.StardustConditions);

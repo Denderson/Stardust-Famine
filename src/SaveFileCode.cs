@@ -13,6 +13,7 @@ using RWCustom;
 using SlugBase;
 using SlugBase.Features;
 using SlugBase.SaveData;
+using Stardust.Anchors;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
@@ -49,6 +50,7 @@ namespace Stardust
         public const string saveInit = prefix + "SaveInit";
         public const string gates = prefix + "Gates";
         public const string backupToUse = prefix + "BackupToUse";
+        public const string anchors = prefix + "Anchors";
 
         public static void CustomSavedataInit(On.SaveState.orig_LoadGame orig, SaveState self, string str, RainWorldGame game)
         {
@@ -62,6 +64,20 @@ namespace Stardust
             if (Plugin.SharedMechanics(self.saveStateNumber) && self.cycleNumber <= 1)
             {
                 SaveFileCode.InitialSaveSetup(self);
+            }
+        }
+
+        public static void InitialSaveSetup(this SaveState save)
+        {
+            if (!save.deathPersistentSaveData.GetSlugBaseData().TryGet(saveInit, out bool value) || !value)
+            {
+                Log.LogMessage("RESETTING SF SAVE DATA");
+                save.deathPersistentSaveData.GetSlugBaseData().Set(saveInit, true);
+                save.deathPersistentSaveData.SetBool(rippleDone, false);
+                save.SetString(gates, "");
+                save.ClearBackupSaves();
+                save.deathPersistentSaveData.SetBool(scholarPermadeath, false);
+                save.deathPersistentSaveData.SetString(anchors, "");
             }
         }
 
@@ -100,6 +116,13 @@ namespace Stardust
             Plugin.Log.LogMessage("Failed to get " + name);
             return false;
         }
+        public static string GetString(this DeathPersistentSaveData save, string name)
+        {
+            if (save.GetSlugBaseData().TryGet<string>(name, out string value)) return value;
+            Plugin.Log.LogMessage("Failed to get " + name);
+            return null;
+        }
+        public static void SetString(this DeathPersistentSaveData save, string name, string value) => save.GetSlugBaseData().Set<string>(name, value);
         public static string GetBackup(this DeathPersistentSaveData save, int backupNumber)
         {
             if (save.GetSlugBaseData().TryGet<string>(backup + backupNumber, out string saveString))
@@ -198,18 +221,6 @@ namespace Stardust
             backupSave.ClearBackupSaves();
             mainSave.deathPersistentSaveData.SetBackup(backup + backupNumber, ref backupSave);
         }
-        public static void InitialSaveSetup(this SaveState save)
-        {
-            if (!save.deathPersistentSaveData.GetSlugBaseData().TryGet(saveInit, out bool value) || !value)
-            {
-                Log.LogMessage("RESETTING SF SAVE DATA");
-                save.deathPersistentSaveData.GetSlugBaseData().Set(saveInit, true);
-                save.deathPersistentSaveData.SetBool(rippleDone, false);
-                save.SetString(gates, "");
-                save.ClearBackupSaves();
-                save.deathPersistentSaveData.SetBool(scholarPermadeath, false);
-            }
-        }
 
         public static void ClearBackupSaves(this SaveState save)
         {
@@ -233,6 +244,43 @@ namespace Stardust
                 }
             }
         }
-    }
 
+        public static void SetAnchorMeeting(this DeathPersistentSaveData data, AnchorEnums.AnchorID anchorType)
+        {
+            string anchorTypeString = anchorType.ToString()?.ToLowerInvariant();
+            string anchorData = data.GetString(anchors)?.ToLowerInvariant();
+
+            if (anchorData != null && anchorData.Length > 0)
+            {
+                Log.LogMessage("Adding anchor meeting!");
+                anchorData = anchorData + "+" + anchorTypeString;
+            }
+            else
+            {
+                Log.LogMessage("Adding first anchor meeting!");
+                anchorData = anchorTypeString;
+            }
+            data.SetString(anchors, anchorData);
+        }
+
+        public static bool GetAnchorMeeting(this DeathPersistentSaveData data, AnchorEnums.AnchorID anchorType)
+        {
+            string anchorTypeString = anchorType.ToString()?.ToLowerInvariant();
+            string anchorData = data.GetString(anchors)?.ToLowerInvariant();
+
+            if (anchorData == null || anchorData.Length <= 0)
+            {
+                Log.LogMessage("No anchor data!");
+                return false;
+            }
+
+            if (anchorData.Contains(anchorTypeString))
+            {
+                Log.LogMessage("Met this anchor before: " + anchorTypeString);
+                return true;
+            }
+            Log.LogMessage("Didnt meet this anchor before: " + anchorTypeString);
+            return false;
+        }
+    }
 }
