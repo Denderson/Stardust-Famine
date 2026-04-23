@@ -23,9 +23,9 @@ namespace Stardust.Anchors
 
         public string songName;
 
-        public List<Tuple<string, int>> presenceRooms;
+        public Dictionary<string, int> presenceRooms;
 
-        public AnchorWorldPresence(World world, AnchorID anchorID, string spotRoom, List<Tuple<string, int>> presenceRooms)
+        public AnchorWorldPresence(World world, AnchorID anchorID, string spotRoom, Dictionary<string, int> presenceRooms)
         {
             this.anchorID = anchorID;
             this.world = world;
@@ -101,26 +101,18 @@ namespace Stardust.Anchors
             {
                 return 1f;
             }
-            bool exists = false;
-            float intensity = 0f;
             string roomName = room.name;
 
             if (presenceRooms != null && presenceRooms.Count > 0)
             {
-                foreach (Tuple<string, int> presence in presenceRooms)
+                if (presenceRooms.TryGetValue(roomName, out int value))
                 {
-                    if (presence.Item1 == roomName)
-                    {
-                        exists = true;
-                        intensity = presence.Item2 * 0.01f;
-                        continue;
-                    }
-                }    
+                    return value * 0.01f;
+                }
+                Log.LogMessage("Couldnt find this room in presence rooms!");
+                return 0f;
             }
-            if (exists)
-            {
-                return intensity;
-            }
+            Log.LogMessage("Presence rooms is empty!");
             return 0f;
         }
 
@@ -185,7 +177,7 @@ namespace Stardust.Anchors
             }
 
             string anchorSpotRoom = "PLACEHOLDER";
-            List<Tuple<string, int>> anchorPresenceRooms = [];
+            Dictionary<string, int> anchorPresenceRooms = [];
 
             for (int i = 1; i < array.Length; i++)
             {
@@ -206,7 +198,7 @@ namespace Stardust.Anchors
                         }
                         else if (int.TryParse(splitLine[1], out int value))
                         {
-                            anchorPresenceRooms.Add(new Tuple<string, int>(splitLine[0], value));
+                            anchorPresenceRooms.Add(splitLine[0], value);
                         }
                     }
                 }

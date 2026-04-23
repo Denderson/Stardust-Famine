@@ -40,7 +40,7 @@
               "RelativeDocumentMoniker": "src\\Anchors\\AnchorWorldPresence.cs",
               "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Anchors\\AnchorWorldPresence.cs",
               "RelativeToolTip": "src\\Anchors\\AnchorWorldPresence.cs",
-              "ViewState": "AgIAACUAAAAAAAAAAAAAAHkAAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAACMAAAAAAAAAAAAAAHAAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-22T17:06:31.175Z",
               "EditorCaption": ""
@@ -55,8 +55,7 @@
               "RelativeToolTip": "src\\Anchors\\Anchor.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T17:02:35.527Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-22T17:02:35.527Z"
             },
             {
               "$type": "Document",
@@ -81,8 +80,7 @@
               "RelativeToolTip": "src\\Plugin.cs",
               "ViewState": "AgIAAAABAAAAAAAAAAAQwBMBAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-10T15:36:38.179Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-10T15:36:38.179Z"
             }
           ]
         }
