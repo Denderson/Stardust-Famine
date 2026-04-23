@@ -112,6 +112,7 @@ namespace Stardust.Anchors
                     if (presence.Item1 == roomName)
                     {
                         exists = true;
+                        intensity = presence.Item2 * 0.01f;
                         continue;
                     }
                 }    
