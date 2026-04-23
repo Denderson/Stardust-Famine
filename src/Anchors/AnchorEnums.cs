@@ -8,6 +8,6 @@ namespace Stardust.Anchors
 {
     public class AnchorEnums
     {
-        public enum AnchorID { Default, Deeperspace, Ripplespace, Carnalplane, Karmaspace, Mindspace, Weaverspace, Interstice }
+        public enum AnchorID { None, Deeperspace, Ripplespace, Carnalplane, Karmaspace, Mindspace, Weaverspace, Interstice }
     }
 }

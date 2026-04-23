@@ -228,6 +228,8 @@ namespace Stardust
 
                 On.Menu.MenuScene.BuildScene += MenuScene_BuildScene;
 
+                On.World.LoadWorldForFastTravel_Timeline_List1_Int32Array_Int32Array_Int32Array += World_LoadWorldForFastTravel_Timeline_List1_Int32Array_Int32Array_Int32Array;
+
 
                 // manual hooks
                 {
@@ -261,6 +263,15 @@ namespace Stardust
             {
                 Logger.LogMessage("Stardust Famine hooks failed!!!");
                 Logger.LogError(e);
+            }
+        }
+
+        private void World_LoadWorldForFastTravel_Timeline_List1_Int32Array_Int32Array_Int32Array(On.World.orig_LoadWorldForFastTravel_Timeline_List1_Int32Array_Int32Array_Int32Array orig, World self, SlugcatStats.Timeline timelinePosition, List<AbstractRoom> abstractRoomsList, int[] swarmRooms, int[] shelters, int[] gates)
+        {
+            orig(self, timelinePosition, abstractRoomsList, swarmRooms, shelters, gates);
+            if (self?.game != null && !self.singleRoomWorld && self.game.session is StoryGameSession && SharedMechanics(self.game.GetStorySession.saveStateNumber)) // you can switch to simply Bitter if we decide to exclude them from Scholar later on
+            {
+                self.SpawnAnchor();
             }
         }
 

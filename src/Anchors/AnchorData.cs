@@ -20,17 +20,19 @@ namespace Stardust.Anchors
         [StringField("Name", "Anchor Name", "Name: ")]
         public string name;
 
-        [EnumField<AnchorID>("Type", AnchorID.Default)]
+        [EnumField<AnchorID>("Type", AnchorID.None)]
         public AnchorID type;
 
-        public bool Active(ref RainWorldGame game)
+        public bool Active(RainWorldGame game)
         {
             // more convenient to access Active
-            return Active(ref game, type);
+            return Active(game, type);
         }
 
-        public static bool Active(ref RainWorldGame game, AnchorID type)
+        public static bool Active(RainWorldGame game, AnchorID type)
         {
+            // add custom conditions to spawn Anchors here (get which anchor this is for from the anchorID parameter)
+
             // here should be code for when to trigger it, aka checking for save data stuff
             if (game != null && game.IsStorySession && game.GetStorySession.saveState?.deathPersistentSaveData != null && game.GetStorySession.saveState.deathPersistentSaveData.GetAnchorMeeting(type))
             {
