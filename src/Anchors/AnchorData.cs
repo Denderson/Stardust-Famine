@@ -6,8 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static Pom.Pom;
-using static Stardust.Anchors.AnchorEnums;
 using static Stardust.Plugin;
+using static Stardust.Enums;
 
 namespace Stardust.Anchors
 {

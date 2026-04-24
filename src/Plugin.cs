@@ -14,9 +14,10 @@ using SlugBase;
 using SlugBase.Features;
 using SlugBase.SaveData;
 using Stardust.Anchors;
+using Stardust.Conditionals;
 using Stardust.Mechanics;
 using Stardust.Slugcats;
-using Stardust.Slugcats.Scholar;
+using Stardust.Slugcats.Scholar.Permadeath;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
@@ -55,11 +56,7 @@ namespace Stardust
 
     public class Plugin : BaseUnityPlugin
     {
-        public readonly Color exhaustedGateColor = new Color(1f, 0f, 0f);
         public static ManualLogSource Log { get; private set; }
-
-        public static int random;
-        public static bool checkFailed;
 
         public static OptionsMenu optionsMenuInstance;
         public bool initialized;
@@ -84,11 +81,6 @@ namespace Stardust
 
         }
 
-        public static void ResetValues()
-        {
-            random = RXRandom.Int(100);
-        }
-
         public void OnEnable()
         {
             UnityEngine.Debug.Log("Starting SF");
@@ -96,8 +88,6 @@ namespace Stardust
             {
                 Log = base.Logger;
                 Logger.LogInfo(Log);
-
-                ResetValues();
 
                 On.RainWorld.OnModsInit += RainWorld_OnModsInit;
 
@@ -118,7 +108,7 @@ namespace Stardust
 
                     On.Menu.SlugcatSelectMenu.SlugcatPageNewGame.ctor += SlugcatCode.SlugcatPageNewGame_ctor;
                     On.Menu.SlugcatSelectMenu.SlugcatPage.AddImage += SlugcatCode.SlugcatPage_AddImage;
-                    On.Menu.MenuScene.BuildScene += MenuScene_BuildScene;
+                    On.Menu.MenuScene.BuildScene += SlugcatCode.MenuScene_BuildScene;
 
                     On.SlugcatStats.SlugcatUnlocked += SlugcatCode.LockScholar;
                     On.SlugcatStats.SpearSpawnElectricRandomChance_Timeline += SlugcatCode.SlugcatStats_SpearSpawnElectricRandomChance_Timeline;
@@ -191,24 +181,23 @@ namespace Stardust
                     On.DeathPersistentSaveData.CanUseUnlockedGates += GateCode.DeathPersistentSaveData_CanUseUnlockedGates;
                     On.RegionGate.Unlock += GateCode.RegionGate_Unlock;
                     On.RainWorldGame.Win += GateCode.RainWorldGame_Win;
-                    On.RegionGate.KarmaBlinkRed += NoBlinkingKarmaOnExhaustedGates;
-                    On.RegionGate.ctor += ExhaustGates;
-                    On.GateKarmaGlyph.Update += GateKarmaGlyph_Update;
+                    On.RegionGate.KarmaBlinkRed += GateCode.NoBlinkingKarmaOnExhaustedGates;
+                    On.RegionGate.ctor += GateCode.ExhaustGates;
+                    On.GateKarmaGlyph.Update += GateCode.GateKarmaGlyph_Update;
                 }
 
                 // misc
                 {
-                    On.LocustSystem.SwarmScore_Creature += LocustSystem_SwarmScore_Creature;
+                    On.LocustSystem.SwarmScore_Creature += MiscCode.LocustSystem_SwarmScore_Creature;
                 }
 
                 // anchor
                 {
-                    On.World.LoadWorldForFastTravel_Timeline_List1_Int32Array_Int32Array_Int32Array += World_LoadWorldForFastTravel_Timeline_List1_Int32Array_Int32Array_Int32Array;
-                    On.Music.PlayerThreatTracker.Update += PlayerThreatTracker_Update;
-                    On.Music.MusicPlayer.GameRequestsSong += MusicPlayer_GameRequestsSong;
-                    On.Music.GhostSong.Update += GhostSong_Update;
+                    On.World.LoadWorldForFastTravel_Timeline_List1_Int32Array_Int32Array_Int32Array += AnchorHooks.World_LoadWorldForFastTravel_Timeline_List1_Int32Array_Int32Array_Int32Array;
+                    On.Music.PlayerThreatTracker.Update += AnchorHooks.PlayerThreatTracker_Update;
+                    On.Music.MusicPlayer.GameRequestsSong += AnchorHooks.MusicPlayer_GameRequestsSong;
+                    On.Music.GhostSong.Update += AnchorHooks.GhostSong_Update;
                 }
-
 
                 // il hooks
                 {
@@ -253,142 +242,6 @@ namespace Stardust
             }
         }
 
-        private void GhostSong_Update(On.Music.GhostSong.orig_Update orig, GhostSong self)
-        {
-            if (self?.musicPlayer?.threatTracker != null && CWTs.PlayerThreatTrackerCWT.TryGetData(self.musicPlayer.threatTracker, out var data) && data.anchorMode)
-            {
-                float oldGhostMode = self.musicPlayer.threatTracker.ghostMode;
-                self.musicPlayer.threatTracker.ghostMode = data.anchorIntensity;
-                orig(self);
-                self.musicPlayer.threatTracker.ghostMode = oldGhostMode;
-                return;
-            }
-            orig(self);
-        }
-
-        private void MusicPlayer_GameRequestsSong(On.Music.MusicPlayer.orig_GameRequestsSong orig, MusicPlayer self, MusicEvent musicEvent)
-        {
-            if (self?.threatTracker != null && CWTs.PlayerThreatTrackerCWT.TryGetData(self.threatTracker, out var data) && data.anchorMode)
-            {
-                Log.LogMessage("Not loading song due to Anchor presence!");
-                return;
-            }
-            orig(self, musicEvent);
-
-        }
-
-        private void PlayerThreatTracker_Update(On.Music.PlayerThreatTracker.orig_Update orig, PlayerThreatTracker self)
-        {
-            orig(self);
-            if (!CWTs.PlayerThreatTrackerCWT.TryGetData(self, out var data))
-            {
-                Log.LogMessage("Couldnt assign CWT!");
-                return;
-            }
-            if (self?.musicPlayer.manager.currentMainLoop == null || self.musicPlayer.manager.currentMainLoop.ID != ProcessManager.ProcessID.Game || !(self.musicPlayer.manager.currentMainLoop as RainWorldGame).IsStorySession)
-            {
-                return;
-            }
-            if (self.playerNumber >= (self.musicPlayer.manager.currentMainLoop as RainWorldGame).Players.Count || !((self.musicPlayer.manager.currentMainLoop as RainWorldGame).Players[self.playerNumber].realizedCreature is Player { room: not null } player))
-            {
-                return;
-            }
-            if (player.room.game.GameOverModeActive)
-            {
-                return;
-            }
-
-            string songName = null;
-            if (player?.room?.abstractRoom != null && player.room.abstractRoom.AnchorPresenceInRoom(out float intensity, out AnchorWorldPresence presence) && presence != null && presence.anchorID != AnchorEnums.AnchorID.None)
-            {
-                songName = presence.songName;
-                data.anchorMode = true;
-                data.anchorIntensity = intensity;
-            }
-            else
-            {
-                data.anchorMode = false;
-                data.anchorIntensity = 0f;
-            }
-            if (data.anchorMode)
-            {
-                self.recommendedDroneVolume = 0f;
-                self.musicPlayer.FadeOutAllNonGhostSongs(120f);
-                if (self.musicPlayer.song == null || !(self.musicPlayer.song is GhostSong) && songName != null)
-                {
-                    self.musicPlayer.RequestGhostSong(songName);
-                }
-            }
-        }
-
-        private void World_LoadWorldForFastTravel_Timeline_List1_Int32Array_Int32Array_Int32Array(On.World.orig_LoadWorldForFastTravel_Timeline_List1_Int32Array_Int32Array_Int32Array orig, World self, SlugcatStats.Timeline timelinePosition, List<AbstractRoom> abstractRoomsList, int[] swarmRooms, int[] shelters, int[] gates)
-        {
-            orig(self, timelinePosition, abstractRoomsList, swarmRooms, shelters, gates);
-            if (self?.game != null && !self.singleRoomWorld && self.game.session is StoryGameSession && SharedMechanics(self.game.GetStorySession.saveStateNumber)) // you can switch to simply Bitter if we decide to exclude them from Scholar later on
-            {
-                self.SpawnAnchor();
-            }
-        }
-
-        public static void MenuScene_BuildScene(On.Menu.MenuScene.orig_BuildScene orig, MenuScene self)
-        {
-            orig(self);
-            if (self.owner is SlugcatSelectMenu.SlugcatPageContinue page && SharedMechanics(page.slugcatNumber))
-            {
-                SaveState save = Custom.rainWorld.progression.GetOrInitiateSaveState(Enums.SlugcatStatsName.sfscholar, null, self.menu.manager.menuSetup, false);
-                if (page.slugcatNumber == Enums.SlugcatStatsName.bitter)
-                {
-                    if (save.Ripple()) self.sceneID = Enums.MenuSceneIDs.bitterRipple;
-                    if (save.HalfwayEchoes()) self.sceneID = Enums.MenuSceneIDs.bitterHalfway;
-                    if (save.EchoEncounters() > 0) self.sceneID = Enums.MenuSceneIDs.bitterEcho;
-                }
-                if (page.slugcatNumber == Enums.SlugcatStatsName.sfscholar)
-                {
-                    if (save.Ripple()) self.sceneID = Enums.MenuSceneIDs.scholarRipple;
-                }
-            }
-        }
-
-        private void GateKarmaGlyph_Update(On.GateKarmaGlyph.orig_Update orig, GateKarmaGlyph self, bool eu)
-        {
-            orig(self, eu);
-            if (self?.gate != null && CWTs.RegionGateCWT.TryGetData(self.gate, out var data) && data.exhausted)
-            {
-                self.flicker = Mathf.Max(self.flicker, 0.5f);
-                if (UnityEngine.Random.value < 0.02f)
-                {
-                    self.flicker = Mathf.Max(UnityEngine.Random.value, 0.5f);
-                }
-            }
-        }
-
-        private void ExhaustGates(On.RegionGate.orig_ctor orig, RegionGate self, Room room)
-        {
-            orig(self, room);
-            if (SharedMechanics(room?.game?.StoryCharacter) && room.IsGateLocked())
-            {
-                if (!CWTs.RegionGateCWT.TryGetData(self, out var data))
-                {
-                    Log.LogMessage("ERROR: Gate exhausted but cannot use CWT!");
-                    return;
-                }
-                data.exhausted = true;
-                foreach(GateKarmaGlyph gateKarmaGlyph in self.karmaGlyphs)
-                {
-                    gateKarmaGlyph.myDefaultColor = exhaustedGateColor;
-                }
-            }
-        }
-
-        private bool NoBlinkingKarmaOnExhaustedGates(On.RegionGate.orig_KarmaBlinkRed orig, RegionGate self)
-        {
-            if (CWTs.RegionGateCWT.TryGetData(self, out var data) && data.exhausted)
-            {
-                return false;
-            }
-            return orig(self);
-        }
-
         public void OnDisable()
         {
             if (!isInit)
@@ -418,87 +271,6 @@ namespace Stardust
                 Logger.LogError(ex);
             }
         }
-
-        public static float LocustSystem_SwarmScore_Creature(On.LocustSystem.orig_SwarmScore_Creature orig, LocustSystem self, Creature crit)
-        {
-            if (crit != null && crit.Submersion > 0.5)
-            {
-                return 0f;
-            }
-            return orig(self, crit);
-        }
-    }
-
-
-    
-    public class OptionsMenu : OptionInterface
-    {
-        public OpCheckBox opCheckBox (Configurable<bool> config, int x, int y, bool isUnfinished = false)
-        {
-            OpCheckBox checkBox = new OpCheckBox(config, x * 160, 503 - y * 80) { description = config.info.description };
-            if ( isUnfinished ) checkBox.colorEdge = new Color(0.85f, 0.35f, 0.4f);
-            return checkBox;
-        }
-
-        public OpLabel opLabel (string text, float x, float y, bool isUnfinished = false)
-        {
-            OpLabel label = new OpLabel(x * 160 + 30, 500 - y * 80, text);
-            if (isUnfinished) label.color = new Color(0.85f, 0.35f, 0.4f);
-            return label;
-        }
-
-        public OpLabel opBigLabel(string text, float y, bool isUnfinished = false)
-        {
-            OpLabel label = new OpLabel(410, 480 - y * 80, text, true);
-            if (isUnfinished) label.color = new Color(0.85f, 0.35f, 0.4f);
-            return label;
-        }
-
-        public OpLabel opSliderLabel (string text, int y, bool isUnfinished = false)
-        {
-            OpLabel label = new OpLabel(110, 460 - y * 80, text) { description = text };
-            if (isUnfinished) label.color = new Color(0.85f, 0.35f, 0.4f);
-            return label;
-        }
-        public OptionsMenu(Plugin plugin)
-        {
-            unlockScholar = config.Bind("stardustfamine_unlockScholar", false, new ConfigurableInfo("Unlocks Scholar"));
-            scholarSeenPermadeath = config.Bind("stardustfamine_scholarSeenPermadeath", false, new ConfigurableInfo("Scholar seen permadeath"));
-        }
-
-        public override void Initialize()
-        {
-
-            base.Initialize();
-
-            Color unfinishedColor = new Color(0.85f, 0.35f, 0.4f);
-
-
-            this.Tabs = new[] { new OpTab(this, "General options"), new OpTab(this, "Mechanics 1") };
-
-            // Tab 1
-            UIelement[] UIArrayElements = new UIelement[]
-            {
-                new OpLabel(0, 550, "General options", true), new OpLabel(160, 550, "(red means not implemeted yet)", true){color = unfinishedColor}
-            };
-            Tabs[0].AddItems(UIArrayElements);
-
-
-            // Tab 2
-            UIArrayElements = new UIelement[]
-            {
-                new OpLabel(0, 550, "Mechanics", true), new OpLabel(110, 550, "(red means not implemented yet)", true){color = unfinishedColor},
-
-                opLabel("Unlock Scholar", 0, 0),
-                opCheckBox(unlockScholar, 0, 0),
-
-                opLabel("Seen Scholar permadeath", 0, 1),
-                opCheckBox(scholarSeenPermadeath, 0, 1)
-            };
-            Tabs[1].AddItems(UIArrayElements);
-        }
-
-        public static Configurable<bool> unlockScholar, scholarSeenPermadeath;
     }
 }
 

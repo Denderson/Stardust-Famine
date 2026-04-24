@@ -35,6 +35,7 @@ using Watcher;
 using static SlugBase.Features.FeatureTypes;
 using static SlugBase.SaveData.SlugBaseSaveData;
 using static Stardust.Plugin;
+using static Stardust.Enums;
 
 namespace Stardust
 {
@@ -245,7 +246,7 @@ namespace Stardust
             }
         }
 
-        public static void SetAnchorMeeting(this DeathPersistentSaveData data, AnchorEnums.AnchorID anchorType)
+        public static void SetAnchorMeeting(this DeathPersistentSaveData data, AnchorID anchorType)
         {
             string anchorTypeString = anchorType.ToString()?.ToLowerInvariant();
             string anchorData = data.GetString(anchors)?.ToLowerInvariant();
@@ -263,7 +264,7 @@ namespace Stardust
             data.SetString(anchors, anchorData);
         }
 
-        public static bool GetAnchorMeeting(this DeathPersistentSaveData data, AnchorEnums.AnchorID anchorType)
+        public static bool GetAnchorMeeting(this DeathPersistentSaveData data, AnchorID anchorType)
         {
             string anchorTypeString = anchorType.ToString()?.ToLowerInvariant();
             string anchorData = data.GetString(anchors)?.ToLowerInvariant();

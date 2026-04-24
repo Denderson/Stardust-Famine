@@ -49,7 +49,7 @@ namespace Stardust.Anchors
 
         public float lastTalking;
 
-        //public Behavior behavior;
+        public AnchorBehavior behavior;
 
         public float[] freqSamples = new float[64];
 

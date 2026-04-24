@@ -12,8 +12,9 @@ using static Stardust.Plugin;
 using Menu;
 using Mono.Cecil.Cil;
 using UnityEngine.Rendering;
+using Stardust.Slugcats.Scholar.ThreadsSequence;
 
-namespace Stardust.Slugcats.Scholar
+namespace Stardust.Slugcats.Scholar.Permadeath
 {
     public static class Permadeath
     {
@@ -34,7 +35,7 @@ namespace Stardust.Slugcats.Scholar
             orig(self);
             if (self?.hud?.owner != null && self.hud.owner is Player && (self.hud.owner as Player).room?.game?.StoryCharacter == Enums.SlugcatStatsName.sfscholar && !self.gameOverMode && self.cycleTick > -1)
             {
-                self.label.text = self.hud.rainWorld.inGameTranslator.Translate("Cycle") + " " + Permadeath.CyclesRemaining((self.hud.owner as Player).room.game.GetStorySession.saveState.cycleNumber);
+                self.label.text = self.hud.rainWorld.inGameTranslator.Translate("Cycle") + " " + CyclesRemaining((self.hud.owner as Player).room.game.GetStorySession.saveState.cycleNumber);
             }
         }
 
@@ -82,7 +83,7 @@ namespace Stardust.Slugcats.Scholar
                     if (text.Length > 0)
                     {
                         text = menu.Translate(text);
-                        text = text + " - " + menu.Translate("Cycle") + " " + (self.saveGameData.cycle);
+                        text = text + " - " + menu.Translate("Cycle") + " " + self.saveGameData.cycle;
                         self.regionLabel.text = text;
                     }
                 }

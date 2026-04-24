@@ -35,6 +35,8 @@ namespace Stardust.Mechanics
 {
     public static class GateCode
     {
+        public static readonly Color exhaustedGateColor = new Color(1f, 0f, 0f);
+
         public static bool No_Energy(Func<GateKarmaGlyph, bool> orig, GateKarmaGlyph self)
         {
             return orig(self) || (self?.gate != null && CWTs.RegionGateCWT.TryGetData(self.gate, out var data) && data.exhausted);
@@ -113,6 +115,46 @@ namespace Stardust.Mechanics
                 {
                     return false;
                 }
+            }
+            return orig(self);
+        }
+
+        public static void GateKarmaGlyph_Update(On.GateKarmaGlyph.orig_Update orig, GateKarmaGlyph self, bool eu)
+        {
+            orig(self, eu);
+            if (self?.gate != null && CWTs.RegionGateCWT.TryGetData(self.gate, out var data) && data.exhausted)
+            {
+                self.flicker = Mathf.Max(self.flicker, 0.5f);
+                if (UnityEngine.Random.value < 0.02f)
+                {
+                    self.flicker = Mathf.Max(UnityEngine.Random.value, 0.5f);
+                }
+            }
+        }
+
+        public static void ExhaustGates(On.RegionGate.orig_ctor orig, RegionGate self, Room room)
+        {
+            orig(self, room);
+            if (SharedMechanics(room?.game?.StoryCharacter) && room.IsGateLocked())
+            {
+                if (!CWTs.RegionGateCWT.TryGetData(self, out var data))
+                {
+                    Log.LogMessage("ERROR: Gate exhausted but cannot use CWT!");
+                    return;
+                }
+                data.exhausted = true;
+                foreach (GateKarmaGlyph gateKarmaGlyph in self.karmaGlyphs)
+                {
+                    gateKarmaGlyph.myDefaultColor = exhaustedGateColor;
+                }
+            }
+        }
+
+        public static bool NoBlinkingKarmaOnExhaustedGates(On.RegionGate.orig_KarmaBlinkRed orig, RegionGate self)
+        {
+            if (CWTs.RegionGateCWT.TryGetData(self, out var data) && data.exhausted)
+            {
+                return false;
             }
             return orig(self);
         }

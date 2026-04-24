@@ -80,43 +80,29 @@ namespace Stardust
 
             public static MenuScene.SceneID threadsScene = new(nameof(threadsScene));
         }
-        
-        public class CreatureTemplateTypes
+
+        public class ConversationIDs
         {
-            
-
-            public static CreatureTemplate.Type PoisonSpider = new(nameof(PoisonSpider), true);
-            public static CreatureTemplate.Type MantisSpider = new(nameof(MantisSpider), true);
-
-            public static CreatureTemplate.Type MudJetfish = new(nameof(MudJetfish), true);
-
-            
-
-            public static CreatureTemplate.Type Porcupine = new(nameof(Porcupine), true);
-            public static CreatureTemplate.Type Ratel = new(nameof(Ratel), true);
-            public static CreatureTemplate.Type Muskfox = new(nameof(Muskfox), true);
-
+            public static Conversation.ID deeperspaceAnchor = new(nameof(deeperspaceAnchor));
+            public static Conversation.ID ripplespaceAnchor = new(nameof(ripplespaceAnchor));
+            public static Conversation.ID carnalplaneAnchor = new(nameof(carnalplaneAnchor));
+            public static Conversation.ID karmaspaceAnchor = new(nameof(karmaspaceAnchor));
+            public static Conversation.ID mindspaceAnchor = new(nameof(mindspaceAnchor));
+            public static Conversation.ID weaverspaceAnchor = new(nameof(weaverspaceAnchor));
+            public static Conversation.ID intersticeAnchor = new(nameof(intersticeAnchor));
         }
 
-        public class AbstractPhysicalObjects
+        public class SoundIDs
         {
-            public static AbstractPhysicalObject.AbstractObjectType PoisonDart = new(nameof(PoisonDart), true);
-
+            public static SoundID deeperspaceAnchor = new(nameof(deeperspaceAnchor));
+            public static SoundID ripplespaceAnchor = new(nameof(ripplespaceAnchor));
+            public static SoundID carnalplaneAnchor = new(nameof(carnalplaneAnchor));
+            public static SoundID karmaspaceAnchor = new(nameof(karmaspaceAnchor));
+            public static SoundID mindspaceAnchor = new(nameof(mindspaceAnchor));
+            public static SoundID weaverspaceAnchor = new(nameof(weaverspaceAnchor));
+            public static SoundID intersticeAnchor = new(nameof(intersticeAnchor));
         }
-        
-        public class SandboxUnlockIDs
-        {
 
-            public static MultiplayerUnlocks.SandboxUnlockID PoisonSpider = new(nameof(PoisonSpider), true);
-            public static MultiplayerUnlocks.SandboxUnlockID PoisonDart = new(nameof(PoisonDart), true);
-
-            public static MultiplayerUnlocks.SandboxUnlockID MantisSpider = new(nameof(MantisSpider), true);
-
-            public static MultiplayerUnlocks.SandboxUnlockID MudJetfish = new(nameof(MudJetfish), true);
-
-            public static MultiplayerUnlocks.SandboxUnlockID Porcupine = new(nameof(Porcupine), true);
-            public static MultiplayerUnlocks.SandboxUnlockID Ratel = new(nameof(Ratel), true);
-            public static MultiplayerUnlocks.SandboxUnlockID Muskfox = new(nameof(Muskfox), true);
-        }
+        public enum AnchorID { None, Deeperspace, Ripplespace, Carnalplane, Karmaspace, Mindspace, Weaverspace, Interstice }
     }
 }

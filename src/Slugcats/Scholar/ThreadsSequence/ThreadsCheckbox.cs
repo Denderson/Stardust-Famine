@@ -8,9 +8,9 @@ using RWCustom;
 using UnityEngine;
 using static Stardust.Plugin;
 
-namespace Stardust
+namespace Stardust.Slugcats.Scholar.ThreadsSequence
 {
-    public class ThreadsCheckbox : Menu.CheckBox
+    public class ThreadsCheckbox : CheckBox
     {
         private struct Simple : IOwnCheckBox
         {
@@ -37,7 +37,7 @@ namespace Stardust
         public override void Clicked()
         {
             base.Clicked();
-            if (base.Checked)
+            if (Checked)
             {
                 menu.startButton.fillTime = 40f;
                 menu.startButton.menuLabel.text = menu.Translate("CHOOSE THREAD");
@@ -52,13 +52,13 @@ namespace Stardust
         {
             SlugcatStats.Name name = menu.colorFromIndex(menu.slugcatPageIndex);
             bool hidden = name != Enums.SlugcatStatsName.sfscholar || !OptionsMenu.scholarSeenPermadeath.Value;
-            base.GetButtonBehavior.greyedOut = hidden || menu.restartChecked;
+            GetButtonBehavior.greyedOut = hidden || menu.restartChecked;
             selectable = !hidden && !menu.restartChecked;
-            pos.y = (hidden ? (-40) : 40);
+            pos.y = hidden ? -40 : 40;
             base.Update();
             if (menu.restartChecked)
             {
-                base.Checked = false;
+                Checked = false;
             }
         }
     }

@@ -36,7 +36,7 @@ using static SlugBase.Features.FeatureTypes;
 using static Stardust.Plugin;
 
 
-namespace Stardust
+namespace Stardust.Conditionals
 {
     public class ConditionalsCode
     {
@@ -80,11 +80,6 @@ namespace Stardust
 
             switch (array[0].ToLower())
             {
-                case "sfrandom":
-                    {
-                        value = Plugin.random;
-                        break;
-                    }
                 case "sfcycles":
                     {
                         value = game.GetStorySession.saveState.cycleNumber;
@@ -95,19 +90,12 @@ namespace Stardust
                         value = game.GetStorySession.saveState.EchoEncounters();
                         break;
                     }
-                case "sfelse":
-                    {
-                        Plugin.checkFailed = !Plugin.checkFailed;
-                        return !Plugin.checkFailed;
-                    }
                 default: return null;
             }
-            if ((sign == '=' && value == condition) || (sign == '>' && value > condition) || (sign == '<' && value < condition) || (sign == '-' && value >= condition))
+            if (sign == '=' && value == condition || sign == '>' && value > condition || sign == '<' && value < condition || sign == '-' && value >= condition)
             {
-                Plugin.checkFailed = false;
                 return true;
             }
-            Plugin.checkFailed = true;
             return false;
         }
 

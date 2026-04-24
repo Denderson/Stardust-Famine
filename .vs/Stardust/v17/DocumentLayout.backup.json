@@ -3,28 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\anchors\\anchor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\anchors\\anchor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\anchors\\anchorworldpresence.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\anchors\\anchorworldpresence.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\anchors\\anchorfade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\anchors\\anchorfade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\conditionals\\conditionalscode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\conditionals\\conditionalscode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\anchors\\anchordata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\anchors\\anchordata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\slugcats\\scholar\\teleportobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\slugcats\\scholar\\teleportobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\cwts\\worldcwt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\cwts\\worldcwt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\optionsmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\optionsmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\anchors\\anchorconversation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\anchors\\anchorconversation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -42,78 +38,65 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "WorldCWT.cs",
-              "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\CWTs\\WorldCWT.cs",
-              "RelativeDocumentMoniker": "src\\CWTs\\WorldCWT.cs",
-              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\CWTs\\WorldCWT.cs",
-              "RelativeToolTip": "src\\CWTs\\WorldCWT.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAuAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "ConditionalsCode.cs",
+              "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Conditionals\\ConditionalsCode.cs",
+              "RelativeDocumentMoniker": "src\\Conditionals\\ConditionalsCode.cs",
+              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Conditionals\\ConditionalsCode.cs",
+              "RelativeToolTip": "src\\Conditionals\\ConditionalsCode.cs",
+              "ViewState": "AgIAAEEAAAAAAAAAAAAgwFMAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-24T13:08:49.907Z",
+              "WhenOpened": "2026-04-24T18:34:15.762Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "AnchorFade.cs",
-              "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Anchors\\AnchorFade.cs",
-              "RelativeDocumentMoniker": "src\\Anchors\\AnchorFade.cs",
-              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Anchors\\AnchorFade.cs*",
-              "RelativeToolTip": "src\\Anchors\\AnchorFade.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAPAAAAAAAAAA==",
+              "Title": "TeleportObject.cs",
+              "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Slugcats\\Scholar\\TeleportObject.cs",
+              "RelativeDocumentMoniker": "src\\Slugcats\\Scholar\\TeleportObject.cs",
+              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Slugcats\\Scholar\\TeleportObject.cs",
+              "RelativeToolTip": "src\\Slugcats\\Scholar\\TeleportObject.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-24T12:28:47.403Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AnchorWorldPresence.cs",
-              "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Anchors\\AnchorWorldPresence.cs",
-              "RelativeDocumentMoniker": "src\\Anchors\\AnchorWorldPresence.cs",
-              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Anchors\\AnchorWorldPresence.cs",
-              "RelativeToolTip": "src\\Anchors\\AnchorWorldPresence.cs",
-              "ViewState": "AgIAAHQAAAAAAAAAAAAqwOgAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T17:06:31.175Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Anchor.cs",
-              "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Anchors\\Anchor.cs",
-              "RelativeDocumentMoniker": "src\\Anchors\\Anchor.cs",
-              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Anchors\\Anchor.cs",
-              "RelativeToolTip": "src\\Anchors\\Anchor.cs",
-              "ViewState": "AgIAAEMAAAAAAAAAAAAjwFgAAAAOAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T17:02:35.527Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "AnchorData.cs",
-              "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Anchors\\AnchorData.cs",
-              "RelativeDocumentMoniker": "src\\Anchors\\AnchorData.cs",
-              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Anchors\\AnchorData.cs",
-              "RelativeToolTip": "src\\Anchors\\AnchorData.cs",
-              "ViewState": "AgIAAAgAAAAAAAAAAAAAACgAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-22T16:14:25.83Z",
+              "WhenOpened": "2026-04-24T18:33:52.501Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "OptionsMenu.cs",
+              "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\OptionsMenu.cs",
+              "RelativeDocumentMoniker": "src\\OptionsMenu.cs",
+              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\OptionsMenu.cs",
+              "RelativeToolTip": "src\\OptionsMenu.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-24T18:30:57.294Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AnchorConversation.cs",
+              "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Anchors\\AnchorConversation.cs",
+              "RelativeDocumentMoniker": "src\\Anchors\\AnchorConversation.cs",
+              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Anchors\\AnchorConversation.cs",
+              "RelativeToolTip": "src\\Anchors\\AnchorConversation.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-24T15:11:45.428Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "Plugin.cs",
               "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Plugin.cs",
               "RelativeDocumentMoniker": "src\\Plugin.cs",
-              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Plugin.cs",
-              "RelativeToolTip": "src\\Plugin.cs",
-              "ViewState": "AgIAAOoAAAAAAAAAAAAAAPsAAAAjAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Plugin.cs*",
+              "RelativeToolTip": "src\\Plugin.cs*",
+              "ViewState": "AgIAAFMAAAAAAAAAAAA5wBUBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-10T15:36:38.179Z",
               "EditorCaption": ""
