@@ -27,6 +27,7 @@ namespace Stardust.CWTs
         public class DataClass
         {
             public AnchorWorldPresence anchorWorldPresence;
+            public bool hasAnchorWorldPresence;
         }
     }
 }

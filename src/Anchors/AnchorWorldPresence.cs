@@ -40,38 +40,38 @@ namespace Stardust.Anchors
             {
                 case AnchorID.Deeperspace:
                     {
-                        this.songName = "PLACEHOLDER";
+                        this.songName = null;
                         break;
                     }
                 case AnchorID.Ripplespace:
                     {
-                        this.songName = "PLACEHOLDER";
+                        this.songName = null;
                         break;
                     }
                 case AnchorID.Carnalplane:
                     {
-                        this.songName = "PLACEHOLDER";
+                        this.songName = null;
                         break;
                     }
                 case AnchorID.Karmaspace:
                     {
-                        this.songName = "PLACEHOLDER";
+                        this.songName = null;
                         break;
                     }
                 case AnchorID.Mindspace:
                     {
-                        this.songName = "PLACEHOLDER";
+                        this.songName = null;
                         break;
                     }
                 case AnchorID.Weaverspace:
                     {
-                        this.songName = "PLACEHOLDER";
+                        this.songName = null;
                         break;
                     }
                 default:
                     {
                         Log.LogMessage("No AnchorID!");
-                        this.songName = "PLACEHOLDER";
+                        this.songName = null;
                         break;
                     }
             }
@@ -176,7 +176,7 @@ namespace Stardust.Anchors
                 return;
             }
 
-            string anchorSpotRoom = "PLACEHOLDER";
+            string anchorSpotRoom = null;
             Dictionary<string, int> anchorPresenceRooms = [];
 
             for (int i = 1; i < array.Length; i++)
@@ -203,7 +203,37 @@ namespace Stardust.Anchors
                     }
                 }
             }
-            data.anchorWorldPresence = new AnchorWorldPresence(world, anchorID, anchorSpotRoom, anchorPresenceRooms);
+            if (anchorSpotRoom != null && anchorSpotRoom.Length > 0)
+            {
+                Log.LogMessage("Spawning Anchor!");
+                data.hasAnchorWorldPresence = true;
+                data.anchorWorldPresence = new AnchorWorldPresence(world, anchorID, anchorSpotRoom, anchorPresenceRooms);
+                return;
+            }
+            Log.LogMessage("No anchor to load!");
+            data.hasAnchorWorldPresence = false;
+        }
+
+        public static bool AnchorPresenceInRoom(this AbstractRoom abstractRoom, out float intensity, out AnchorWorldPresence presence)
+        {
+            intensity = 0f;
+            presence = null;
+            if (abstractRoom?.world == null)
+            {
+                return false;
+            }
+            if (!CWTs.WorldCWT.TryGetData(abstractRoom.world, out var data))
+            {
+                Log.LogMessage("Couldnt get WorldCWT!");
+                return false;
+            }
+            if (data?.anchorWorldPresence == null)
+            {
+                return false;
+            }
+            presence = data.anchorWorldPresence;
+            intensity = data.anchorWorldPresence.AnchorMode(abstractRoom);
+            return intensity > 0f;
         }
 
         public static AnchorID AnchorIDFromString(string id)

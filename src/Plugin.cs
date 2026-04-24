@@ -114,11 +114,18 @@ namespace Stardust
 
                 // slugcat code
                 {
+                    On.Player.Update += SlugcatCode.Player_Update;
+
                     On.Menu.SlugcatSelectMenu.SlugcatPageNewGame.ctor += SlugcatCode.SlugcatPageNewGame_ctor;
-                    On.Menu.SlugcatSelectMenu.ContinueStartedGame += Permadeath.GoToThreadsScreenFromMainMenu;
-                    On.Menu.SlugcatSelectMenu.StartGame += Permadeath.GoToThreadsScreenFromStartScreen;
-                    On.Menu.SlugcatSelectMenu.UpdateStartButtonText += Permadeath.PermadeathStartButton;
                     On.Menu.SlugcatSelectMenu.SlugcatPage.AddImage += SlugcatCode.SlugcatPage_AddImage;
+                    On.Menu.MenuScene.BuildScene += MenuScene_BuildScene;
+
+                    On.SlugcatStats.SlugcatUnlocked += SlugcatCode.LockScholar;
+                    On.SlugcatStats.SpearSpawnElectricRandomChance_Timeline += SlugcatCode.SlugcatStats_SpearSpawnElectricRandomChance_Timeline;
+                    On.SlugcatStats.SpearSpawnExplosiveRandomChance_Timeline += SlugcatCode.SlugcatStats_SpearSpawnExplosiveRandomChance_Timeline;
+                    On.SlugcatStats.SpearSpawnModifier_Timeline_float += SlugcatCode.SlugcatStats_SpearSpawnModifier_Timeline_float;
+                    On.SlugcatStats.PearlsGivePassageProgress += SlugcatCode.NoScholarPassage;
+                    On.Menu.SleepAndDeathScreen.AddPassageButton += SlugcatCode.NoPassageButton;
                 }
 
                 // bitter code
@@ -134,6 +141,20 @@ namespace Stardust
                 // scholar code
                 {
 
+                }
+
+                // permadeath code
+                {
+                    On.HUD.TextPrompt.Update += Permadeath.TextPromptCycleFix;
+                    On.HUD.Map.CycleLabel.UpdateCycleText += Permadeath.CycleLabelCycleFix;
+                    On.RainWorldGame.GoToRedsGameOver += Permadeath.ScholarPermadeathTrigger;
+                    On.RainWorldGame.GameOver += Permadeath.CheckForPermadeath;
+                    On.Menu.SlugcatSelectMenu.SlugcatPageContinue.ctor += Permadeath.PermadeathContinueScreen;
+                    On.Menu.SlugcatSelectMenu.ctor += Permadeath.AddThreadsCheckbox;
+                    On.ProcessManager.PostSwitchMainProcess += Permadeath.SwitchToThreadsScreen;
+                    On.Menu.SlugcatSelectMenu.ContinueStartedGame += Permadeath.GoToThreadsScreenFromMainMenu;
+                    On.Menu.SlugcatSelectMenu.StartGame += Permadeath.GoToThreadsScreenFromStartScreen;
+                    On.Menu.SlugcatSelectMenu.UpdateStartButtonText += Permadeath.PermadeathStartButton;
                 }
 
                 // karma code
@@ -157,11 +178,12 @@ namespace Stardust
                     On.Menu.GhostEncounterScreen.GetDataFromGame += GhostCode.MinKarmaOnEchoScreen;
                     On.GhostWorldPresence.SpawnGhost += GhostCode.NoEchoPriming;
                     On.Room.Loaded += GhostCode.RippleDepthsNearEchoes;
+                    On.Ghost.FadeOutFinished += GhostCode.CheckpointAfterEcho;
                 }
 
                 // save file code
                 {
-
+                    On.SaveState.LoadGame += SaveFileCode.CustomSavedataInit;
                 }
 
                 // gate code
@@ -169,67 +191,32 @@ namespace Stardust
                     On.DeathPersistentSaveData.CanUseUnlockedGates += GateCode.DeathPersistentSaveData_CanUseUnlockedGates;
                     On.RegionGate.Unlock += GateCode.RegionGate_Unlock;
                     On.RainWorldGame.Win += GateCode.RainWorldGame_Win;
-                }
-
-                On.Player.Update += SlugcatCode.Player_Update;
-                
-
-                // scav code
-                {
-                    
+                    On.RegionGate.KarmaBlinkRed += NoBlinkingKarmaOnExhaustedGates;
+                    On.RegionGate.ctor += ExhaustGates;
+                    On.GateKarmaGlyph.Update += GateKarmaGlyph_Update;
                 }
 
                 // misc
                 {
                     On.LocustSystem.SwarmScore_Creature += LocustSystem_SwarmScore_Creature;
                 }
-                
+
+                // anchor
+                {
+                    On.World.LoadWorldForFastTravel_Timeline_List1_Int32Array_Int32Array_Int32Array += World_LoadWorldForFastTravel_Timeline_List1_Int32Array_Int32Array_Int32Array;
+                    On.Music.PlayerThreatTracker.Update += PlayerThreatTracker_Update;
+                    On.Music.MusicPlayer.GameRequestsSong += MusicPlayer_GameRequestsSong;
+                    On.Music.GhostSong.Update += GhostSong_Update;
+                }
+
 
                 // il hooks
                 {
                     Log.LogMessage("IL hook hell starting");
                     IL.Menu.KarmaLadder.ctor_Menu_MenuObject_Vector2_HUD_IntVector2_bool += KarmaCode.KarmaLadder_ctor_Menu_MenuObject_Vector2_HUD_IntVector2_bool;
                     IL.DeathPersistentSaveData.SaveToString += KarmaCode.DeathPersistentSaveData_SaveToString;
+                    IL.Menu.SleepAndDeathScreen.GetDataFromGame += Permadeath.SleepAndDeathScreen_GetDataFromGame;
                 }
-
-                
-
-                On.Menu.SlugcatSelectMenu.SlugcatPageContinue.ctor += Permadeath.PermadeathContinueScreen;
-
-                On.Menu.SlugcatSelectMenu.ctor += Permadeath.AddThreadsCheckbox;
-                //On.Menu.MenuScene.BuildScene += MenuScene_BuildScene;
-
-                On.Ghost.FadeOutFinished += GhostCode.CheckpointAfterEcho;
-
-                On.SlugcatStats.SlugcatUnlocked += SlugcatCode.LockScholar;
-                On.SlugcatStats.SpearSpawnElectricRandomChance_Timeline += SlugcatCode.SlugcatStats_SpearSpawnElectricRandomChance_Timeline;
-                On.SlugcatStats.SpearSpawnExplosiveRandomChance_Timeline += SlugcatCode.SlugcatStats_SpearSpawnExplosiveRandomChance_Timeline;
-                On.SlugcatStats.SpearSpawnModifier_Timeline_float += SlugcatCode.SlugcatStats_SpearSpawnModifier_Timeline_float;
-                On.SlugcatStats.PearlsGivePassageProgress += SlugcatCode.NoScholarPassage;
-
-                On.ProcessManager.PostSwitchMainProcess += Permadeath.SwitchToThreadsScreen;
-
-                On.Menu.SleepAndDeathScreen.AddPassageButton += SlugcatCode.NoPassageButton;
-                IL.Menu.SleepAndDeathScreen.GetDataFromGame += Permadeath.SleepAndDeathScreen_GetDataFromGame;
-
-                On.RainWorldGame.GoToRedsGameOver += Permadeath.ScholarPermadeathTrigger;
-                On.RainWorldGame.GameOver += Permadeath.CheckForPermadeath;
-
-                On.SaveState.LoadGame += SaveFileCode.CustomSavedataInit;
-
-                On.RegionGate.KarmaBlinkRed += NoBlinkingKarmaOnExhaustedGates;
-                On.RegionGate.ctor += ExhaustGates;
-
-                On.GateKarmaGlyph.Update += GateKarmaGlyph_Update;
-
-                On.HUD.TextPrompt.Update += Permadeath.TextPromptCycleFix;
-
-                On.HUD.Map.CycleLabel.UpdateCycleText += Permadeath.CycleLabelCycleFix;
-
-                On.Menu.MenuScene.BuildScene += MenuScene_BuildScene;
-
-                On.World.LoadWorldForFastTravel_Timeline_List1_Int32Array_Int32Array_Int32Array += World_LoadWorldForFastTravel_Timeline_List1_Int32Array_Int32Array_Int32Array;
-
 
                 // manual hooks
                 {
@@ -263,6 +250,74 @@ namespace Stardust
             {
                 Logger.LogMessage("Stardust Famine hooks failed!!!");
                 Logger.LogError(e);
+            }
+        }
+
+        private void GhostSong_Update(On.Music.GhostSong.orig_Update orig, GhostSong self)
+        {
+            if (self?.musicPlayer?.threatTracker != null && CWTs.PlayerThreatTrackerCWT.TryGetData(self.musicPlayer.threatTracker, out var data) && data.anchorMode)
+            {
+                float oldGhostMode = self.musicPlayer.threatTracker.ghostMode;
+                self.musicPlayer.threatTracker.ghostMode = data.anchorIntensity;
+                orig(self);
+                self.musicPlayer.threatTracker.ghostMode = oldGhostMode;
+                return;
+            }
+            orig(self);
+        }
+
+        private void MusicPlayer_GameRequestsSong(On.Music.MusicPlayer.orig_GameRequestsSong orig, MusicPlayer self, MusicEvent musicEvent)
+        {
+            if (self?.threatTracker != null && CWTs.PlayerThreatTrackerCWT.TryGetData(self.threatTracker, out var data) && data.anchorMode)
+            {
+                Log.LogMessage("Not loading song due to Anchor presence!");
+                return;
+            }
+            orig(self, musicEvent);
+
+        }
+
+        private void PlayerThreatTracker_Update(On.Music.PlayerThreatTracker.orig_Update orig, PlayerThreatTracker self)
+        {
+            orig(self);
+            if (!CWTs.PlayerThreatTrackerCWT.TryGetData(self, out var data))
+            {
+                Log.LogMessage("Couldnt assign CWT!");
+                return;
+            }
+            if (self?.musicPlayer.manager.currentMainLoop == null || self.musicPlayer.manager.currentMainLoop.ID != ProcessManager.ProcessID.Game || !(self.musicPlayer.manager.currentMainLoop as RainWorldGame).IsStorySession)
+            {
+                return;
+            }
+            if (self.playerNumber >= (self.musicPlayer.manager.currentMainLoop as RainWorldGame).Players.Count || !((self.musicPlayer.manager.currentMainLoop as RainWorldGame).Players[self.playerNumber].realizedCreature is Player { room: not null } player))
+            {
+                return;
+            }
+            if (player.room.game.GameOverModeActive)
+            {
+                return;
+            }
+
+            string songName = null;
+            if (player?.room?.abstractRoom != null && player.room.abstractRoom.AnchorPresenceInRoom(out float intensity, out AnchorWorldPresence presence) && presence != null && presence.anchorID != AnchorEnums.AnchorID.None)
+            {
+                songName = presence.songName;
+                data.anchorMode = true;
+                data.anchorIntensity = intensity;
+            }
+            else
+            {
+                data.anchorMode = false;
+                data.anchorIntensity = 0f;
+            }
+            if (data.anchorMode)
+            {
+                self.recommendedDroneVolume = 0f;
+                self.musicPlayer.FadeOutAllNonGhostSongs(120f);
+                if (self.musicPlayer.song == null || !(self.musicPlayer.song is GhostSong) && songName != null)
+                {
+                    self.musicPlayer.RequestGhostSong(songName);
+                }
             }
         }
 
