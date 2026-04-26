@@ -11,6 +11,7 @@ using RWCustom;
 using SlugBase;
 using SlugBase.Features;
 using SlugBase.SaveData;
+using Stardust.SaveFile;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
@@ -44,7 +45,7 @@ namespace Stardust
         {
             if (SharedMechanics(self?.room?.game?.StoryCharacter))
             {
-                if (self.room.game.GetStorySession.saveState.deathPersistentSaveData.GetBool(SaveFileCode.rippleDone)) return 5f;
+                if (self.room.game.GetStorySession.saveState.deathPersistentSaveData.GetBool(SaveFileMain.rippleDone)) return 5f;
             }
             return orig(self);
         }
@@ -232,7 +233,7 @@ namespace Stardust
 
             c.Emit(OpCodes.Call,
                 il.Import(
-                    typeof(SaveFileCode).GetMethod(
+                    typeof(SaveFileMain).GetMethod(
                         "MinKarma",
                         new[] { typeof(Menu.Menu) }
                     )

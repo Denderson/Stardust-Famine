@@ -1,5 +1,6 @@
 ﻿using Menu;
 using RWCustom;
+using Stardust.SaveFile;
 using Stardust.Slugcats.Scholar;
 using System;
 using System.Collections.Generic;

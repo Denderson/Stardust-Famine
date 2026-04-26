@@ -13,6 +13,7 @@ using Menu;
 using Mono.Cecil.Cil;
 using UnityEngine.Rendering;
 using Stardust.Slugcats.Scholar.ThreadsSequence;
+using Stardust.SaveFile;
 
 namespace Stardust.Slugcats.Scholar.Permadeath
 {
@@ -194,7 +195,7 @@ namespace Stardust.Slugcats.Scholar.Permadeath
             {
                 self.manager.musicPlayer.FadeOutAllSongs(20f);
             }
-            self.GetStorySession.saveState.deathPersistentSaveData.SetBool(SaveFileCode.scholarPermadeath, true);
+            self.GetStorySession.saveState.deathPersistentSaveData.SetBool(SaveFileMain.scholarPermadeath, true);
             self.manager.RequestMainProcessSwitch(Enums.ProcessIDs.threadsProcess, 5f);
         }
 

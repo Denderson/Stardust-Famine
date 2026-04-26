@@ -15,8 +15,11 @@ using SlugBase.Features;
 using SlugBase.SaveData;
 using Stardust.Anchors;
 using Stardust.Conditionals;
+using Stardust.CWTs;
 using Stardust.Mechanics;
+using Stardust.SaveFile;
 using Stardust.Slugcats;
+using Stardust.Slugcats.Bitter;
 using Stardust.Slugcats.Scholar.Permadeath;
 using System;
 using System.Collections.Generic;
@@ -120,6 +123,12 @@ namespace Stardust
 
                 // bitter code
                 {
+
+                    // armor code
+                    {
+                        On.Player.ctor += Player_ctor;
+                    }
+
                     On.Creature.Grasp.ctor += BitterCode.BitterGraspImmunity;
                     On.LocustSystem.Swarm.TryAttach += BitterCode.BitterLocustImmunity;
                     On.SlugcatStats.ctor += BitterCode.OldFoodMeterCode; // NEED CHANGE
@@ -173,14 +182,15 @@ namespace Stardust
 
                 // save file code
                 {
-                    On.SaveState.LoadGame += SaveFileCode.CustomSavedataInit;
+                    On.SaveState.LoadGame += SaveFileMain.CustomSavedataInit;
+                    On.ShelterDoor.Close += SaveFileBitter.ShelterDoor_Close;
+                    On.RainWorldGame.Win += SaveFileMain.RainWorldGame_Win;
                 }
 
                 // gate code
                 {
                     On.DeathPersistentSaveData.CanUseUnlockedGates += GateCode.DeathPersistentSaveData_CanUseUnlockedGates;
                     On.RegionGate.Unlock += GateCode.RegionGate_Unlock;
-                    On.RainWorldGame.Win += GateCode.RainWorldGame_Win;
                     On.RegionGate.KarmaBlinkRed += GateCode.NoBlinkingKarmaOnExhaustedGates;
                     On.RegionGate.ctor += GateCode.ExhaustGates;
                     On.GateKarmaGlyph.Update += GateCode.GateKarmaGlyph_Update;
@@ -240,6 +250,22 @@ namespace Stardust
                 Logger.LogMessage("Stardust Famine hooks failed!!!");
                 Logger.LogError(e);
             }
+        }
+
+        
+
+        public static void Player_ctor(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
+        {
+            orig(self, abstractCreature, world);
+            if (self?.SlugCatClass != Enums.SlugcatStatsName.bitter)
+            {
+                return;
+            }
+            if (!PlayerCWT.TryGetData(self, out var data))
+            {
+                return;
+            }
+            
         }
 
         public void OnDisable()

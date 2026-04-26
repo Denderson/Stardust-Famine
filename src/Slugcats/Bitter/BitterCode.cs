@@ -1,9 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using Fisobs.Core;
-using IL;
-using IL.LizardCosmetics;
-using IL.Menu;
 using Menu.Remix.MixedUI;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -34,7 +31,7 @@ using Watcher;
 using static SlugBase.Features.FeatureTypes;
 using static Stardust.Plugin;
 
-namespace Stardust
+namespace Stardust.Slugcats.Bitter
 {
     public static class BitterCode
     {

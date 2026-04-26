@@ -4,6 +4,7 @@ using Menu;
 using RWCustom;
 using SlugBase.SaveData;
 using Stardust;
+using Stardust.SaveFile;
 using UnityEngine;
 using static Stardust.Plugin;
 
@@ -141,7 +142,7 @@ public class ThreadsScreen : global::Menu.Menu
                 if (save?.deathPersistentSaveData?.GetBackup(backupNumber) != null)
                 {
                     Log.LogMessage("Backup " + backupNumber + " exists");
-                    save.deathPersistentSaveData.SetInt(SaveFileCode.backupToUse, backupNumber);
+                    save.deathPersistentSaveData.SetInt(SaveFileMain.backupToUse, backupNumber);
                     saveToLoad = save.deathPersistentSaveData.GetBackup(backupNumber);
                     Log.LogMessage("Save to load: " + saveToLoad);
                     manager.rainWorld.progression.currentSaveState = save;

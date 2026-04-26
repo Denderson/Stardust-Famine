@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Stardust.SaveFile;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,8 @@ namespace Stardust.Anchors
                 return placedObject.data as AnchorData;
             }
         }
+
+        public int animationCounter;
 
         public readonly int firstBodySprite;
 
@@ -86,8 +89,8 @@ namespace Stardust.Anchors
                 targetPos = placedObject.pos;
                 //targetDir = -(placedObject.data as PlacedObject.ResizableObjectData).handlePos.normalized;
             }
-            /*behavior?.Update();
-            if (fadeOutCounter == 0 && behavior != null && behavior.Vanish)
+            behavior?.Update();
+            /*if (fadeOutCounter == 0 && behavior != null && behavior.Vanish)
             {
                 StartDeactivate();
             }*/

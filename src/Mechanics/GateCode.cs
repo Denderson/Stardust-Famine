@@ -11,6 +11,7 @@ using RWCustom;
 using SlugBase;
 using SlugBase.Features;
 using SlugBase.SaveData;
+using Stardust.SaveFile;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
@@ -41,47 +42,6 @@ namespace Stardust.Mechanics
         {
             return orig(self) || (self?.gate != null && CWTs.RegionGateCWT.TryGetData(self.gate, out var data) && data.exhausted);
         }
-        public static void RainWorldGame_Win(On.RainWorldGame.orig_Win orig, RainWorldGame self, bool malnourished, bool fromWarpPoint)
-        {
-            if (self.manager.upcomingProcess != null)
-            {
-                orig(self, malnourished, fromWarpPoint);
-                return;
-            }
-            if (!malnourished && self.IsStorySession)
-            {
-                string gates = self.GetStorySession.saveState.GetString(SaveFileCode.gates);
-                if (!string.IsNullOrEmpty(gates))
-                {
-                    Log.LogMessage("Before change: " + gates);
-                    string newGates = string.Empty;
-
-                    string[] arrayGates;
-                    if (gates != null && gates.Length > 2 && gates.Contains('+'))
-                    {
-                        arrayGates = gates.Split('+');
-                    }
-                    else arrayGates = [gates];
-                    for (int i = 0; i < arrayGates.Length; i++)
-                    {
-                        string newValue = arrayGates[i];
-                        if (newValue != null && newValue.Length > 1 && newValue.Contains('/') && newValue.Split('/').Length > 1 && Int32.TryParse(newValue.Split('/')[1], out int cyclesUntilOpen))
-                        {
-                            cyclesUntilOpen--;
-                            if (cyclesUntilOpen > 0)
-                            {
-                                if (newGates != string.Empty) newGates += "+";
-                                newGates += newValue.Split('/')[0] + "/" + cyclesUntilOpen;
-                            }
-                        }
-                    }
-                    Log.LogMessage("After change: " + newGates);
-                    self.GetStorySession.saveState.SetString(SaveFileCode.gates, newGates);
-                }
-            }
-            orig(self, malnourished, fromWarpPoint);
-
-        }
 
         public static void RegionGate_Unlock(On.RegionGate.orig_Unlock orig, RegionGate self)
         {
@@ -111,7 +71,7 @@ namespace Stardust.Mechanics
                 {
                     return false;
                 }
-                if (self.room.game.GetStorySession.saveState.deathPersistentSaveData.GetBool(SaveFileCode.rippleDone))
+                if (self.room.game.GetStorySession.saveState.deathPersistentSaveData.GetBool(SaveFileMain.rippleSequenceDone))
                 {
                     return false;
                 }

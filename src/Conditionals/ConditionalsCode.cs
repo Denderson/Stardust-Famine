@@ -15,6 +15,7 @@ using RWCustom;
 using SlugBase;
 using SlugBase.Features;
 using SlugBase.SaveData;
+using Stardust.SaveFile;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;

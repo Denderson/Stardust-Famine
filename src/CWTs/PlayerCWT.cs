@@ -35,6 +35,7 @@ namespace Stardust.CWTs
             public int teleportCooldown = 60;
 
             public int emergencyFood = 0;
+            public float armorHealth = 0f;
         }
     }
 }

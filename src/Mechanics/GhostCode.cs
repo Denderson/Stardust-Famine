@@ -7,6 +7,7 @@ using UnityEngine;
 using RWCustom;
 using Watcher;
 using static Stardust.Plugin;
+using Stardust.SaveFile;
 
 namespace Stardust
 {
