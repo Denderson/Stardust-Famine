@@ -222,9 +222,6 @@ namespace lsfUtils
 
                         new Hook(typeof(Player).GetProperty(nameof(Player.rippleLevel)).GetGetMethod(), typeof(RippleFlower).GetMethod(nameof(RippleFlower.PlayerRippleLevel)));
                         new Hook(typeof(Player).GetProperty(nameof(Player.maxRippleLevel)).GetGetMethod(), typeof(RippleFlower).GetMethod(nameof(RippleFlower.PlayerMaxRippleLevel)));
-
-                        new Hook(typeof(PhysicalObject).GetProperty(nameof(PhysicalObject.EffectiveRoomGravity)).GetGetMethod(), typeof(LocalGravityUAD).GetMethod(nameof(LocalGravityUAD.EffectiveRoomGravity)));
-                        new Hook(typeof(Player).GetProperty(nameof(Player.EffectiveRoomGravity)).GetGetMethod(), typeof(LocalGravityUAD).GetMethod(nameof(LocalGravityUAD.EffectiveRoomGravityForPlayer)));
                     }
                 }
 
@@ -238,6 +235,14 @@ namespace lsfUtils
                     On.BigSpiderAI.SpiderSpitModule.SpiderHasSpit += SpiderCode.SpiderSpitModule_SpiderHasSpit;
                 }
 
+                // gravity override
+                {
+                    On.PhysicalObject.Update += LocalGravity.PhysicalObject_Update;
+                    On.Player.Update += LocalGravity.Player_Update;
+                    new Hook(typeof(PhysicalObject).GetProperty(nameof(PhysicalObject.EffectiveRoomGravity)).GetGetMethod(), typeof(LocalGravity).GetMethod(nameof(LocalGravity.EffectiveRoomGravity)));
+                    new Hook(typeof(Player).GetProperty(nameof(Player.EffectiveRoomGravity)).GetGetMethod(), typeof(LocalGravity).GetMethod(nameof(LocalGravity.EffectiveRoomGravityForPlayer)));
+                }
+
                 // misc
                 {
                     On.PhysicalObject.InitiateGraphicsModule += PhysicalObject_InitiateGraphicsModule;
@@ -248,6 +253,8 @@ namespace lsfUtils
                     On.Creature.Update += EvilWater.EvilWaterLogic;
                 }
 
+                On.RoomSettings.LoadPlacedObjects_StringArray_Timeline += ConditionalLogic.RoomSettings_LoadPlacedObjects_StringArray_Timeline;
+
 
                 if (isInit) return;
                 isInit = true;
@@ -255,14 +262,14 @@ namespace lsfUtils
 
                 // processing conditions
                 {
-                    On.RoomSettings.LoadPlacedObjects_StringArray_Timeline += ConditionalLogic.RoomSettings_LoadPlacedObjects_StringArray_Timeline;
+                    
                     WorldLoader.Preprocessing.preprocessorConditions.Add(ConditionalLogic.LSFConditions);
                 }
 
                 RegisterManagedObject(new ManagedRippleFlower());
                 RegisterManagedObject<ConditionFilterUAD, ConditionFilterData, ManagedRepresentation>("ConditionalFilter", "lsfUtils");
                 RegisterManagedObject<RoomConditionFilterUAD, RoomConditionFilterData, ManagedRepresentation>("RoomConditionalFilter", "lsfUtils");
-                RegisterManagedObject<LocalGravityUAD, LocalGravityData, ManagedRepresentation>("LocalGravity", "lsfUtils");
+                RegisterManagedObject<LocalGravity, LocalGravityData, ManagedRepresentation>("LocalGravity", "lsfUtils");
                 RegisterManagedObject<RippleZoneUAD, RippleZoneData, ManagedRepresentation>("RippleZone", "lsfUtils");
                 EvilWater.RegisterEvilWater();
 
@@ -274,6 +281,8 @@ namespace lsfUtils
                 Logger.LogError(e);
             }
         }
+
+        
 
         private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
         {

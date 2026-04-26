@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using RWCustom;
 using static Pom.Pom;
 using lsfUtils.CWTs;
+using static lsfUtils.Plugin;
+using SlugBase.Features;
 
 namespace lsfUtils.Items
 {
@@ -24,56 +26,84 @@ namespace lsfUtils.Items
         public Vector2 radius;
     }
 
-    internal class LocalGravityUAD : UpdatableAndDeletable
+    public class LocalGravity : UpdatableAndDeletable
     {
-        private LocalGravityData data;
+        public LocalGravityData data;
+        Vector2 pos;
+        float range;
 
-        public LocalGravityUAD(PlacedObject placedObject, Room room)
+        public LocalGravity(PlacedObject placedObject, Room room)
         {
             LocalGravityData maybedata = placedObject.data as LocalGravityData;
             if (maybedata == null)
             {
                 throw new ArgumentException($"{nameof(PlacedObject)} was null or didn't contain a {nameof(LocalGravityData)} instance");
             }
-            data = maybedata;
+            this.data = maybedata;
+            this.pos = placedObject.pos;
+            this.range = maybedata.radius.magnitude;
             this.room = room;
+            if (RoomCWT.TryGetData(room, out var roomdata))
+            {
+                roomdata.localGravities.Add(this);
+            }
+            else
+            {
+                Log.LogMessage("Couldnt grab RoomCWT from orig!");
+            }
         }
 
-        public override void Update(bool eu)
+        public bool InRange(Vector2 pos)
         {
-            base.Update(eu);
-            if (data != null && room != null && room.physicalObjects != null && room.physicalObjects.Length > 0) 
+            return Custom.DistLess(pos, this.pos, this.range);
+        }
+
+        public static void PhysicalObject_Update(On.PhysicalObject.orig_Update orig, PhysicalObject self, bool eu)
+        {
+            orig(self, eu);
+            if (!PhysicalObjectCWT.TryGetData(self, out var physicalobjectdata))
             {
-                for (int i = 0; i < room.physicalObjects.Length; i++)
+                Log.LogMessage("Couldnt grab PhysicalObjectCWT from physicalobject update!");
+                return;
+            }
+            physicalobjectdata.shouldOverrideGravity = false;
+            physicalobjectdata.overrideGravity = -1f;
+            if (self?.room != null)
+            {
+                if (!RoomCWT.TryGetData(self.room, out var roomdata))
                 {
-                    for (int j = 0; j < room.physicalObjects[i].Count; j++)
+                    Log.LogMessage("Couldnt grab RoomCWT from physicalobject update!");
+                    return;
+                }
+                if (roomdata == null || roomdata.localGravities == null || roomdata.localGravities.Count < 1)
+                {
+                    return;
+                }
+                foreach (LocalGravity localGravity in roomdata.localGravities)
+                {
+                    if (localGravity.InRange(self.firstChunk.pos))
                     {
-                        if (PhysicalObjectCWT.TryGetData(room.physicalObjects[i][j], out var cwtdata))
-                        {
-                            float dist = Custom.Dist(room.physicalObjects[i][j].firstChunk.pos, data.owner.pos);
-                            if (dist < data.radius.magnitude)
-                            {
-                                cwtdata.shouldOverrideGravity = true;
-                                cwtdata.overrideGravity = data.gravity;
-                                room.physicalObjects[i][j].SetLocalGravity(data.gravity);
-                                if (room.physicalObjects[i][j] is Player)
-                                {
-                                    (room.physicalObjects[i][j] as Player).customPlayerGravity = data.gravity;
-                                    (room.physicalObjects[i][j] as Player).gravity = data.gravity;
-                                }
-                            }
-                            else if (dist < (data.radius.magnitude + 20))
-                            {
-                                cwtdata.shouldOverrideGravity = false;
-                                room.physicalObjects[i][j].SetLocalGravity(room.gravity);
-                                if (room.physicalObjects[i][j] is Player)
-                                {
-                                    (room.physicalObjects[i][j] as Player).customPlayerGravity = room.gravity;
-                                    (room.physicalObjects[i][j] as Player).gravity = room.gravity;
-                                }
-                            }
-                        }
+                        physicalobjectdata.shouldOverrideGravity = true;
+                        physicalobjectdata.overrideGravity = Mathf.Max(physicalobjectdata.overrideGravity, localGravity.data.gravity);
                     }
+                }
+            }
+        }
+
+        public static void Player_Update(On.Player.orig_Update orig, Player self, bool eu)
+        {
+            orig(self, eu);
+            if (self?.room != null)
+            {
+                if (!PhysicalObjectCWT.TryGetData(self, out var data))
+                {
+                    Log.LogMessage("Couldnt get PlayerCWT from player update!");
+                    return;
+                }
+                if (data.shouldOverrideGravity)
+                {
+                    self.customPlayerGravity = data.overrideGravity;
+                    self.gravity = data.overrideGravity;
                 }
             }
         }
