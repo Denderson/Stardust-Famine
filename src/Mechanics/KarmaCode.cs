@@ -45,7 +45,7 @@ namespace Stardust
         {
             if (SharedMechanics(self?.room?.game?.StoryCharacter))
             {
-                if (self.room.game.GetStorySession.saveState.deathPersistentSaveData.GetBool(SaveFileMain.rippleDone)) return 5f;
+                if (self.room.game.GetStorySession.saveState.deathPersistentSaveData.GetBool(SaveFileMain.rippleSequenceDone)) return 5f;
             }
             return orig(self);
         }

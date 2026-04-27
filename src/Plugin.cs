@@ -126,7 +126,10 @@ namespace Stardust
 
                     // armor code
                     {
-                        On.Player.ctor += Player_ctor;
+                        On.Player.ctor += ArmorCode.SetArmorOnPlayerCreation;
+                        On.ShelterDoor.Close += ArmorCode.SaveArmorOnHibernation;
+                        On.Creature.Violence += ArmorCode.Creature_Violence;
+                        On.Player.SpearStick += ArmorCode.Player_SpearStick;
                     }
 
                     On.Creature.Grasp.ctor += BitterCode.BitterGraspImmunity;
@@ -183,7 +186,6 @@ namespace Stardust
                 // save file code
                 {
                     On.SaveState.LoadGame += SaveFileMain.CustomSavedataInit;
-                    On.ShelterDoor.Close += SaveFileBitter.ShelterDoor_Close;
                     On.RainWorldGame.Win += SaveFileMain.RainWorldGame_Win;
                 }
 
@@ -253,20 +255,6 @@ namespace Stardust
         }
 
         
-
-        public static void Player_ctor(On.Player.orig_ctor orig, Player self, AbstractCreature abstractCreature, World world)
-        {
-            orig(self, abstractCreature, world);
-            if (self?.SlugCatClass != Enums.SlugcatStatsName.bitter)
-            {
-                return;
-            }
-            if (!PlayerCWT.TryGetData(self, out var data))
-            {
-                return;
-            }
-            
-        }
 
         public void OnDisable()
         {

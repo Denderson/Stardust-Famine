@@ -24,52 +24,30 @@ namespace Stardust.SaveFile
             if (!malnourished) armorRemaining += armorPerHibernation;
             else armorRemaining += armorPerStarve;
             if (armorRemaining > maxArmor) armorRemaining = maxArmor;
-            
-
             self.GetStorySession.saveState.SetInt(bitterArmorRemaining, armorRemaining);
         }
 
-        public static float ArmorFromSave(int armor)
+        public static int ArmorFromSave(SaveState save)
         {
-            return armor * 0.01f;
+            int armor = save.GetInt(bitterArmorRemaining);
+            if (armor > 0)
+            {
+                return armor;
+            }
+            Log.LogMessage("Armor not found, or broken!");
+            return 0;
         }
 
-        public static int ArmorToSave(float armor)
+        public static float ArmorIntToFloat(int armor)
         {
-            return (int)(armor * 150);
+            return (float)(armor * (1f / maxArmor));
         }
 
-        public static void ShelterDoor_Close(On.ShelterDoor.orig_Close orig, ShelterDoor self)
+        public static int ArmorFloatToInt(float armor)
         {
-            if (self?.room == null)
-            {
-                Log.LogMessage("Room is null in ShelterDoor_Close!");
-                return;
-            }
-            if (self.room.game?.StoryCharacter != Enums.SlugcatStatsName.bitter)
-            {
-                return;
-            }
-            if (self.room.PlayersInRoom == null || self.room.PlayersInRoom.Count <= 0)
-            {
-                Log.LogMessage("No players in ShelterDoor_Close!");
-                return;
-            }
-            float armor = 0f;
-            bool anyoneHasArmor = false;
-            foreach (Player player in self.room.PlayersInRoom)
-            {
-                if (player != null && player.SlugCatClass == Enums.SlugcatStatsName.bitter && PlayerCWT.TryGetData(player, out var data))
-                {
-                    anyoneHasArmor = true;
-                    armor = math.max(armor, data.armorHealth);
-                }
-            }
-            if (anyoneHasArmor)
-            {
-                self.room.game.GetStorySession.saveState.SetInt(bitterArmorRemaining, ArmorToSave(armor));
-            }
-            orig(self);
+            return (int)(armor * maxArmor);
         }
+
+
     }
 }

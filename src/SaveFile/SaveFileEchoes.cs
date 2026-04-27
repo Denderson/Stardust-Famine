@@ -39,7 +39,7 @@ namespace Stardust.SaveFile
         {
             if (data?.deathPersistentSaveData != null)
             {
-                return data.deathPersistentSaveData.GetBool(rippleDone);
+                return data.deathPersistentSaveData.GetBool(rippleSequenceDone);
             }
             return false;
         }

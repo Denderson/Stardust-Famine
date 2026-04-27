@@ -5,26 +5,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\savefile\\savefilebitter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\savefile\\savefilebitter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\slugcats\\bitter\\bittercode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\slugcats\\bitter\\bittercode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\slugcats\\bitter\\armorcode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\slugcats\\bitter\\armorcode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\anchors\\anchor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\anchors\\anchor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\anchors\\anchorconversation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\anchors\\anchorconversation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,76 +14,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "SaveFileBitter.cs",
-              "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\SaveFile\\SaveFileBitter.cs",
-              "RelativeDocumentMoniker": "src\\SaveFile\\SaveFileBitter.cs",
-              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\SaveFile\\SaveFileBitter.cs",
-              "RelativeToolTip": "src\\SaveFile\\SaveFileBitter.cs",
-              "ViewState": "AgIAACIAAAAAAAAAAAAAACIAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T14:22:01.275Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "ArmorCode.cs",
-              "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Slugcats\\Bitter\\ArmorCode.cs",
-              "RelativeDocumentMoniker": "src\\Slugcats\\Bitter\\ArmorCode.cs",
-              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Slugcats\\Bitter\\ArmorCode.cs",
-              "RelativeToolTip": "src\\Slugcats\\Bitter\\ArmorCode.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T13:48:57.737Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "BitterCode.cs",
-              "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Slugcats\\Bitter\\BitterCode.cs",
-              "RelativeDocumentMoniker": "src\\Slugcats\\Bitter\\BitterCode.cs",
-              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Slugcats\\Bitter\\BitterCode.cs",
-              "RelativeToolTip": "src\\Slugcats\\Bitter\\BitterCode.cs",
-              "ViewState": "AgIAACYAAAAAAAAAAAAQwE8AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T13:48:04.86Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Anchor.cs",
-              "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Anchors\\Anchor.cs",
-              "RelativeDocumentMoniker": "src\\Anchors\\Anchor.cs",
-              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Anchors\\Anchor.cs",
-              "RelativeToolTip": "src\\Anchors\\Anchor.cs",
-              "ViewState": "AgIAAFAAAAAAAAAAAAAkwHwAAAARAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T10:25:41.694Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "AnchorConversation.cs",
-              "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Anchors\\AnchorConversation.cs",
-              "RelativeDocumentMoniker": "src\\Anchors\\AnchorConversation.cs",
-              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Anchors\\AnchorConversation.cs",
-              "RelativeToolTip": "src\\Anchors\\AnchorConversation.cs",
-              "ViewState": "AgIAAAcAAAAAAAAAAAAAACkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-24T15:11:45.428Z",
-              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -113,7 +28,7 @@
               "RelativeDocumentMoniker": "src\\Plugin.cs",
               "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Plugin.cs",
               "RelativeToolTip": "src\\Plugin.cs",
-              "ViewState": "AgIAAKIAAAAAAAAAAAArwLwAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAGsAAAAAAAAAAAArwIIAAABMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-10T15:36:38.179Z",
               "EditorCaption": ""
