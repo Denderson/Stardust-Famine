@@ -69,10 +69,34 @@ namespace Stardust.Slugcats.Bitter
             }
         }
 
-        public static bool HitArmor(Player player, Vector2 direction)
+        public static bool HitArmor(Vector2 direction, BodyChunk hitChunk)
         {
-            // TODO, do NOT use velocity to avoid issues when standing still
-            return true;
+            if (direction == null || hitChunk?.owner == null || hitChunk.owner is not Player player)
+            {
+                return false;
+            }
+            if (!PlayerCWT.TryGetData(player, out var data))
+            {
+                Log.LogMessage("PlayerCWT is null!");
+                return false;
+            }
+            if (data.armorHealth <= 0)
+            {
+                Log.LogMessage("No armor remaining to block a hit!");
+                return false;
+            }
+            if (player.bodyMode == Player.BodyModeIndex.Crawl || player.animation == Player.AnimationIndex.BellySlide)
+            {
+                // if crouching, always block attacks from upwards
+                return direction.y < 0;
+            }
+            int horizontalDirectionOfChunk = (int)(player.flipDirection);
+            int horizontalDirectionOfAttack = (int)(Mathf.Sign(direction.x));
+            if (horizontalDirectionOfAttack == horizontalDirectionOfChunk)
+            {
+                return true;
+            }
+            return false;
         }
 
         public static bool Player_SpearStick(On.Player.orig_SpearStick orig, Player self, Weapon source, float dmg, BodyChunk chunk, PhysicalObject.Appendage.Pos appPos, Vector2 direction)
@@ -82,10 +106,11 @@ namespace Stardust.Slugcats.Bitter
             {
                 return false;
             }
-            if (self?.SlugCatClass == Enums.SlugcatStatsName.bitter && PlayerCWT.TryGetData(self, out var data) && data.armorHealth > 0f)
+            if (self?.SlugCatClass == Enums.SlugcatStatsName.bitter && PlayerCWT.TryGetData(self, out var data))
             {
-                if (HitArmor(self, direction))
+                if (HitArmor(direction, chunk))
                 {
+                    Log.LogMessage("Blocked by Bitter armor!");
                     return false;
                 }
             }
@@ -124,7 +149,7 @@ namespace Stardust.Slugcats.Bitter
             }
             if (directionAndMomentum.HasValue && hitChunk?.owner != null && hitChunk.owner is Player player && player.SlugCatClass == Enums.SlugcatStatsName.bitter && PlayerCWT.TryGetData(player, out var data))
             {
-                if (HitArmor(player, directionAndMomentum.Value))
+                if (HitArmor(directionAndMomentum.Value, hitChunk))
                 {
                     if (GetArmorValues(type, out float armorEfficency)) // only block if armor works against that damage type
                     {
