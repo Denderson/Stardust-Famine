@@ -1,0 +1,21 @@
+DangerType: Sandstorm
+CeilingDrips: 0
+RainIntensity: 1
+RumbleIntensity: 0.1029438
+WaveSpeed: 0.5342047
+WaveLength: 0.9828976
+WaveAmplitude: 5.875149E-06
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.409862
+Grime: 0.5
+BkgDroneVolume: 0.3
+BkgDroneNoThreatVolume: 1
+RandomItemDensity: 0.5
+RandomItemSpearChance: 0.2
+WaterReflectionAlpha: 0
+Palette: 1000
+EffectColorA: 21
+EffectColorB: 2
+Effects: ModifyEffectColorB-0,0.5,0.2087973-338.7333-150.9083, Fog-0.3015966-30-30, SurfaceSandstorm-0.203476-20-20, SandPuffs-1-30-30, WaterDepth-1-69.24896-84.90105, SilenceWater-1-301.0656-108.9719, WaterViscosity-0.2034758-137.4698-2.292709, 
+FadePalette: 35, 0.2

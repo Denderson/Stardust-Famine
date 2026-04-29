@@ -1,0 +1,10 @@
+RumbleIntensity: 0.1029438
+WaveSpeed: 0.5342047
+WaveLength: 0.9828976
+WaveAmplitude: 5.875149E-06
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.409862
+EffectColorB: 21
+PlacedObjects: LanternOnStick><762.2213><357.4774><-44.82196~-201.6583, LanternOnStick><877.4915><598.2734><35.57288~-107.0344, 
+FadePalette: 35, 0

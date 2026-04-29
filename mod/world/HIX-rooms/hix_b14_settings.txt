@@ -1,0 +1,22 @@
+DangerType: Sandstorm
+CeilingDrips: 0
+RumbleIntensity: 0.1029438
+WaveSpeed: 0.5
+WaveLength: 0.75
+WaveAmplitude: 0.04556853
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.4021291
+EffectColorA: 8
+EffectColorB: 21
+TerrainLight: 0
+TerrainWaves: 1
+TerrainEdgeRadius: 200
+TerrainGooHeight: 1
+TerrainGrain: 1
+TerrainDepth: 5
+TerrainSkyFade: 1
+TerrainPalette: outerrim
+Effects: ModifyEffectColorB-0,0.5,0.2216031-20-20, SurfaceSandstorm-0.4407952-249.8406-51.34375, Dustpuffs-1-40-40, Fog-0.3093298-30-30, 
+PlacedObjects: LanternOnStick><804.5718><525.8162><-10.67188~-129.8011, LanternOnStick><864.3076><503.6865><51.93646~-146.1646, LanternOnStick><573.6621><520.1705><4.980225~-163.951, LanternOnStick><117.2785><483.7694><25.61249~-155.4135, LanternOnStick><194.5404><493.655><-19.92081~-164.6625, LanternOnStick><276.732><1355.971><-20.63229~-154.7021, TerrainHandle><917.1745><441.5566><-44.26874~-19.20947~79.8418~70.43439~20, TerrainHandle><231.8147><367.9609><-102.6083~2.845825~0~-37.70734~20, TerrainHandle><575.7307><186.304><-255.572~15.6521~222.8448~28.45831~20, HarmfulSteam><159.5381><1359.087><5~8.660254~0.3314649~0.9666562~0.2344082~103.873~6.087585, CentipedeAttractor><501.8099><495.9043><0~100, TerrainHandle><804.2132><417.8226><0~-38.41876~40.71143~-6.403137~20, TerrainHandle><28.18427><445.7845><-40~0~39.28856~-27.74686~20, 
+AmbientSounds: OMNI><AM_WIN-HowlingWnd.ogg><438.0756><621.8395><0.2717391><1, SPOT><rwtw_duststorm_gusting.ogg><718.1053><398.0313><0.1674718><1><718.8199><1447.927><-79.46582><-63.10223><0><0.1, SPOT><RWTW_DustStorm_High.ogg><762.6358><504.4403><0.2138712><1><711.414><1513.783><-48.87311><-42.46997><0><0.1, OMNI><rwtw_duststorm_deep.ogg><467.4044><266.7898><0.1442699><1, 

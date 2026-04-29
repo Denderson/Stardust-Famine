@@ -126,12 +126,12 @@ namespace Stardust
                 {
                     // graphics
                     {
-                        On.PlayerGraphics.InitiateSprites += BitterGraphics.PlayerGraphics_InitiateSprites;
-                        On.PlayerGraphics.AddToContainer += BitterGraphics.PlayerGraphics_AddToContainer;
-                        On.PlayerGraphics.DrawSprites += BitterGraphics.PlayerGraphics_DrawSprites;
-                        On.PlayerGraphics.ApplyPalette += BitterGraphics.PlayerGraphics_ApplyPalette;
-                        On.PlayerGraphics.DefaultFaceSprite_float_int += BitterGraphics.PlayerGraphics_DefaultFaceSprite_float_int;
-                        On.PlayerGraphics.MuddableSprite += BitterGraphics.PlayerGraphics_MuddableSprite;
+                        //On.PlayerGraphics.InitiateSprites += BitterGraphics.PlayerGraphics_InitiateSprites;
+                        //On.PlayerGraphics.AddToContainer += BitterGraphics.PlayerGraphics_AddToContainer;
+                        //On.PlayerGraphics.DrawSprites += BitterGraphics.PlayerGraphics_DrawSprites;
+                        //On.PlayerGraphics.ApplyPalette += BitterGraphics.PlayerGraphics_ApplyPalette;
+                        //On.PlayerGraphics.DefaultFaceSprite_float_int += BitterGraphics.PlayerGraphics_DefaultFaceSprite_float_int;
+                        //On.PlayerGraphics.MuddableSprite += BitterGraphics.PlayerGraphics_MuddableSprite;
                     }
 
 

@@ -7,12 +7,12 @@
       "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\slugcats\\scholar\\teleportobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\slugcats\\scholar\\teleportobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\slugcats\\bitter\\bittergraphics\\bittergraphics.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\slugcats\\bitter\\bittergraphics\\bittergraphics.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\slugcats\\scholar\\teleportobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\slugcats\\scholar\\teleportobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\slugcats\\bitter\\bittergraphics\\bitterdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -46,7 +46,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "TeleportObject.cs",
               "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Slugcats\\Scholar\\TeleportObject.cs",
               "RelativeDocumentMoniker": "src\\Slugcats\\Scholar\\TeleportObject.cs",
@@ -54,8 +54,7 @@
               "RelativeToolTip": "src\\Slugcats\\Scholar\\TeleportObject.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-29T08:17:56.108Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-29T08:17:56.108Z"
             },
             {
               "$type": "Document",
@@ -67,8 +66,7 @@
               "RelativeToolTip": "src\\CWTs\\BitterGraphicsCWT.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-29T07:17:55.788Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-29T07:17:55.788Z"
             },
             {
               "$type": "Document",
@@ -80,8 +78,7 @@
               "RelativeToolTip": "src\\Slugcats\\Bitter\\BitterGraphics\\BitterData.cs",
               "ViewState": "AgIAAAwAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-29T07:17:00.755Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-29T07:17:00.755Z"
             },
             {
               "$type": "Document",
@@ -93,18 +90,17 @@
               "RelativeToolTip": "src\\Slugcats\\Bitter\\BitterGraphics\\BitterModule.cs",
               "ViewState": "AgIAAAQAAAAAAAAAAAAAACMAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-29T07:13:35.03Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-29T07:13:35.03Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "BitterGraphics.cs",
               "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Slugcats\\Bitter\\BitterGraphics\\BitterGraphics.cs",
               "RelativeDocumentMoniker": "src\\Slugcats\\Bitter\\BitterGraphics\\BitterGraphics.cs",
               "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Slugcats\\Bitter\\BitterGraphics\\BitterGraphics.cs",
               "RelativeToolTip": "src\\Slugcats\\Bitter\\BitterGraphics\\BitterGraphics.cs",
-              "ViewState": "AgIAABwBAAAAAAAAAAAUwCwBAAAZAAAAAAAAAA==",
+              "ViewState": "AgIAADUAAAAAAAAAAAAAAEYAAABNAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-29T07:11:30.845Z",
               "EditorCaption": ""
@@ -119,8 +115,7 @@
               "RelativeToolTip": "src\\Slugcats\\Bitter\\ArmorCode.cs",
               "ViewState": "AgIAADkAAAAAAAAAAAAAAF0AAABNAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-28T14:08:09.494Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-28T14:08:09.494Z"
             },
             {
               "$type": "Document",
@@ -130,7 +125,7 @@
               "RelativeDocumentMoniker": "src\\Plugin.cs",
               "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Plugin.cs",
               "RelativeToolTip": "src\\Plugin.cs",
-              "ViewState": "AgIAAHEAAAAAAAAAAAAAAIQAAACDAAAAAAAAAA==",
+              "ViewState": "AgIAAHEAAAAAAAAAAAAAAIgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-10T15:36:38.179Z",
               "EditorCaption": ""

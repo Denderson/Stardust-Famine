@@ -1,0 +1,14 @@
+Template: hix_settingstemplate_outside
+DangerType: Sandstorm
+CeilingDrips: 0
+RumbleIntensity: 0.1029441
+WaveSpeed: 0.5004731
+WaveLength: 0.9631801
+WaveAmplitude: 0.04837921
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.409862
+EffectColorA: 11
+EffectColorB: 21
+Effects: BrokenZeroG-0.01546661-20-20, SandPuffs-1-30-30, SurfaceSandstorm-1-40-40, Fog-0.3015966-50-50, 
+PlacedObjects: ZapCoil><567.1772><676.864><178.0229~36.44275, ZapCoil><571.6432><799.3387><178.0229~25.05939, ZapCoil><568.7656><547.0588><195.0979~36.44272, ZapCoil><777.5082><422.008><30.75104~111.1458, ZapCoil><889.8632><435.736><61.34363~101.8969, 

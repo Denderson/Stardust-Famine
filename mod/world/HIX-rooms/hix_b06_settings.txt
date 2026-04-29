@@ -1,0 +1,11 @@
+DangerType: Sandstorm
+CeilingDrips: 0
+RumbleIntensity: 0.1029438
+WaveSpeed: 0.4999886
+WaveLength: 0.9999943
+WaveAmplitude: 0.04832276
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.4098614
+Effects: SurfaceSandstorm-0.203476-20-20, 
+PlacedObjects: ScavengerOutpost><988.4436><319.3748><17.78638~172.5688~-85.375~12.09479~0.3282059~5~15, LanternOnStick><1012.008><314.3378><-15.65208~-168.9313, LanternOnStick><1272.264><436.5643><32.72711~-110.5918, LanternOnStick><1139.589><447.2554><-50.51358~-343.2385, LanternOnStick><710.8508><473.09><-34.14996~-188.8521, LanternOnStick><866.2764><371.8695><32.72705~-292.725, 

@@ -1,0 +1,13 @@
+Template: NONE
+DangerType: Sandstorm
+CeilingDrips: 0
+RumbleIntensity: 0.1029441
+WaveSpeed: 0.5
+WaveLength: 0.75
+WaveAmplitude: 0.04788044
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.409862
+Palette: 35
+EffectColorB: 21
+FadePalette: 10, 0.8042575

@@ -1,0 +1,25 @@
+DangerType: Sandstorm
+CeilingDrips: 0
+RumbleIntensity: 0.1029438
+WaveSpeed: 0.5
+WaveLength: 0.75
+WaveAmplitude: 0.04392117
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.4021285
+EffectColorA: 10
+EffectColorB: 21
+TerrainLight: 1
+TerrainStainAmount: 0.2319986
+TerrainStainBrightness: 0.2448027
+TerrainStainHeight: 0
+TerrainWaves: 1
+TerrainEdgeRadius: 0
+TerrainGooHeight: 0.08747797
+TerrainGrain: 1
+TerrainDepth: 3.724013
+TerrainSkyFade: 1
+TerrainPalette: outerrim
+Effects: SandPuffs-1-20-20, 
+PlacedObjects: TerrainHandle><435.9383><64.83575><-121.1062~-32.72711~186.6827~43.08199~20, TerrainHandle><943.2385><322.56><-61.64587~-56.31638~42.6554~17.07556~22.84583, TerrainHandle><749.7115><248.6071><-14.15578~-48.75879~80.54913~5.355042~20, TerrainHandle><1131.164><265.2163><-176.6~74.70313~129.1143~63.72025~20, TerrainHandle><1445.749><335.1412><-47.40088~-16.75616~71.61108~15.38153~20, TerrainHandle><1617.277><286.3227><-91.2~39.2~40~0~20, TerrainHandle><1311.085><328.1016><-51.07306~10.4621~29.41302~-10.23514~20, CentipedeAttractor><1351.039><371.8389><-381~151, BlackSpot><1056.733><397.0963><-22.05518~58.49789~73.4386~62.76666~76.99573~-3.557312, BlackSpot><1683.402><387.3278><-19.20941~82.6875~62.0553~62.05524~51.38342~-12.09482, BlackSpot><1309.429><43.8781><-2.134308~265.5323~150.2762~246.3229~139.6042~6.403107, 
+AmbientSounds: OMNI><AM_IND-Warehouse02.ogg><775.884><396.837><0.4347826><0.5891304, OMNI><RWTW_DustStorm_Deep.ogg><763.8065><529.8004><0.1086963><1, 

@@ -1,0 +1,22 @@
+Template: hix_settingstemplate_outside
+RumbleIntensity: 0.1029438
+WaveSpeed: 0.4540723
+WaveLength: 0.9770362
+WaveAmplitude: 1.269025E-05
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.4130435
+Grime: 0.3804348
+BkgDroneVolume: 0.2469565
+TerrainLight: 1
+TerrainStainAmount: 0.4949274
+TerrainStainHeight: 0.4871959
+TerrainWaves: 1
+TerrainEdgeRadius: 75.46652
+TerrainGooHeight: 0.2112082
+TerrainGrain: 1
+TerrainDepth: 1.959932
+TerrainSkyFade: 1
+TerrainPalette: outerrim
+PlacedObjects: SuperSlope><1690.201><553.3932><629.3251~-277.0729~103.2406, 
+TerrainFadePalette: torrid_desert, 0, 0, 0, 0, 0, 0
