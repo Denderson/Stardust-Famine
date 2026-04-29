@@ -1,0 +1,3 @@
+EffectColorA: 2
+PlacedObjects: LanternOnStick><887.5801><113.3134><20.03552~-142.1093, LanternOnStick><277.3462><102.3483><-13.5177~-131.2238, LanternOnStick><446.1677><434.7177><21.34375~-151.8562, 
+FadePalette: 35, 0.2010642

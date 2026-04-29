@@ -5,6 +5,6 @@ WaveAmplitude: 5.875149E-06
 SecondWaveLength: 0.1666667
 SecondWaveAmplitude: 0
 Clouds: 0.409862
-EffectColorB: 21
-PlacedObjects: LanternOnStick><762.2213><357.4774><-44.82196~-201.6583, LanternOnStick><877.4915><598.2734><35.57288~-107.0344, 
-FadePalette: 35, 0
+PlacedObjects: LanternOnStick><877.9063><599.2172><33.43854~-99.91974, LanternOnStick><762.987><357.1933><-41.26459~-173.2, 
+AmbientSounds: OMNI><AM_WIN-SubWnd.ogg><714.4378><492.6351><0.2525363><1, OMNI><RWTW_DustStorm_Deep.ogg><744.4814><535.9095><0.206137><1, 
+FadePalette: 35, 0.2010644

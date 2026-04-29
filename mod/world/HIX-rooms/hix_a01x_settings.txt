@@ -9,6 +9,6 @@ SecondWaveAmplitude: 0
 Clouds: 0.4098617
 EffectColorA: 2
 EffectColorB: 1
-Effects: SurfaceSandstorm-1-20-20, SandPuffs-1-30-30, 
-PlacedObjects: ColouredLightSource><624.7795><374.2552><100~50~FF0000~3.557251^73.56876~0.8221356~False~0.5154671~0.9202616~0.840263~Always~0.8583905~100, 
-AmbientSounds: DIR><rwtw_duststorm_deep.ogg><708.2592><418.6582><0.2061356><1><22.05244><0, SPOT><rwtw_duststorm_gusting.ogg><790.4321><545.6425><0.1056061><1><832.1738><605.4205><-40.33539><-54.5647><0><0.1, SPOT><rwtw_duststorm_high.ogg><790.7371><323.2847><0.1056041><1><838.8818><76.42433><-73.06268><-23.26054><0><0.1, OMNI><AM_WIN-SubWnd.ogg><463.7651><541.9241><0.1597363><1, 
+Effects: SurfaceSandstorm-0.3040077-312.4094-27.82604, SandPuffs-1-30-30, 
+PlacedObjects: ColouredLightSource><624.7795><374.2552><100~50~FF0000~3.557251^73.56876~0.8221356~False~0.5154671~0.9202616~0.840263~Always~0.8583905~100, ColouredLightSource><482.2145><387.1292><100~50~FF0000~3.557251^73.56876~0.8221356~False~0.5154671~0.9202616~0.840263~Always~0.8583905~100, 
+AmbientSounds: DIR><rwtw_duststorm_deep.ogg><708.2592><418.6582><0.2061356><1><22.05244><0, SPOT><rwtw_duststorm_gusting.ogg><790.4321><545.6425><0.2061383><1><832.1738><605.4205><-40.33539><-54.5647><0><0.1, SPOT><rwtw_duststorm_high.ogg><790.7371><323.2847><0.1520034><1><838.8818><76.42433><-73.06268><-23.26054><0><0.1, OMNI><AM_WIN-SubWnd.ogg><463.7651><541.9241><0.252535><1, 

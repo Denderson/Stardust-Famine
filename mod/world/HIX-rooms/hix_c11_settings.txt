@@ -16,6 +16,6 @@ TerrainGrain: 1
 TerrainDepth: 0.3359255
 TerrainSkyFade: 1
 TerrainPalette: outerrim
-Effects: SurfaceSandstorm-0.3015963-246.2833-22.88542, 
+Effects: SurfaceSandstorm-0.5050725-246.2833-22.88542, 
 PlacedObjects: NoDropwigPerchZone><1926.933><1806.806><0.7114258~165.4542, LanternOnStick><1531.528><567.6638><19.20923~-131.224, LanternOnStick><1629.859><618.8152><-17.07501~-181.0261, 
-FadePalette: 35, 0.4021285, 0.3093298, 0.2010639, 0.409862, 0.4098622, 0.4021286, 0.409862
+FadePalette: 35, 0.4021285, 0.3557293, 0.3093293, 0.409862, 0.4098622, 0.4021286, 0.409862
