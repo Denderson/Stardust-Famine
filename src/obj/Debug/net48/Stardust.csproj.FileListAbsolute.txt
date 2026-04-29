@@ -191,3 +191,4 @@ C:\Users\Ucenik\Downloads\Stardust-Famine\Stardust-Famine-main\src\bin\Debug\net
 C:\Users\Ucenik\Downloads\Stardust-Famine\Stardust-Famine-main\src\bin\Debug\net48\Pom.pdb
 C:\Users\Ucenik\Downloads\Stardust-Famine\Stardust-Famine-main\src\bin\Debug\net48\SlugBase.pdb
 C:\Users\Ucenik\Downloads\Stardust-Famine\Stardust-Famine-main\src\obj\Debug\net48\Stardust.csproj.Up2Date
+C:\Users\ivano\Documents\GitHub\Stardust-Famine\src\bin\Debug\net48\Assembly-CSharp-firstpass.dll

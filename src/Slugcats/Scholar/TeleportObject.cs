@@ -18,7 +18,7 @@ namespace Stardust.Slugcats.Scholar
 
         public bool fading;
 
-        private float shakeAmount;
+        private readonly float shakeAmount = 0;
 
         private Vector2 pos;
 

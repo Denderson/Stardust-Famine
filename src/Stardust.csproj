@@ -27,6 +27,9 @@
     </Target>
     
     <ItemGroup>
+      <Reference Include="Assembly-CSharp-firstpass">
+        <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\Assembly-CSharp-firstpass.dll</HintPath>
+      </Reference>
       <Reference Include="BepInEx">
         <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\BepInEx.dll</HintPath>
       </Reference>
@@ -75,6 +78,10 @@
       <Reference Include="UnityEngine.InputModule">
         <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\UnityEngine.InputModule.dll</HintPath>
       </Reference>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="Slugcats\Scholar\ScholarGraphics\" />
     </ItemGroup>
     
 </Project>
