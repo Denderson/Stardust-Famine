@@ -1,0 +1,10 @@
+﻿{
+	"id": "nightcar",
+	"name": "The Nightcat",
+	"version": "0.1.0",
+	"authors": "",
+	"description": "A reimagination of The Watcher. Keeps the essence of the campaign while reworking mechanics, creatures and connections.",
+	"requirements": [ "slime-cubed.slugbase" ],
+	"requirements_names": [ "SlugBase" ],
+	"tags": [ "Custom Slugcat" ]
+}
