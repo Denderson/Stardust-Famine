@@ -177,11 +177,18 @@ namespace Looker.Regions
         public static void RainCycle_Update(On.RainCycle.orig_Update orig, RainCycle self)
         {
             orig(self);
-            if (self?.world?.game?.StoryCharacter == LookerEnums.looker && self.timer < 200)
+            if (self?.world?.game?.StoryCharacter == LookerEnums.looker)
             {
                 if (self.world.region.name == "WRRA")
                 {
                     if (self.TimeUntilRain <= 200)
+                    {
+                        self.timer--;
+                    }
+                }
+                if (self.world.region.name == "WARA")
+                {
+                    if (self.TimeUntilRain <= 600)
                     {
                         self.timer--;
                     }

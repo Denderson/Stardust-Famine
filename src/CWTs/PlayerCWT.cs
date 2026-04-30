@@ -57,7 +57,8 @@ namespace Looker.CWTs
 
             public float overrideGravity = 0;
             public float overrideAirfriction = 0;
-            
+
+            public int timesUntilTargetedByLightning = 3;
         }
     }
 }

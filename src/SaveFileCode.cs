@@ -50,6 +50,7 @@ namespace Looker
         public const string maskEnding = prefix + "MaskEnding";
         public const string linkEnding = prefix + "LinkEnding";
         public const string puzzleEnding = prefix + "PuzzleEnding";
+        public const string daemonTutorialDone = prefix + "DaemonTutorial";
 
         public const string overrideShelter = prefix + "OverrideShelter";
         public const string regions = prefix + "Regions";
@@ -59,7 +60,7 @@ namespace Looker
         {
             Log.LogMessage("Loading savestate!");
             orig(self, str, game);
-            if (self.saveStateNumber == Plugin.LookerEnums.looker)
+            if (self?.saveStateNumber == Plugin.LookerEnums.looker)
             {
                 Log.LogMessage("Loading Looker savestate!");
                 SaveFileCode.InitialSaveSetup(self);
@@ -133,6 +134,7 @@ namespace Looker
             string linkedRegionsToGrab = GetString(save, linkedRegions);
             if (linkedRegionsToGrab != null && linkedRegionsToGrab.Length > 2 && !linkedRegionsToGrab.Contains(region))
             {
+                save.SetBool(daemonTutorialDone, false);
                 save.SetString(linkedRegions, linkedRegionsToGrab + "+" + region);
             }
         }
@@ -167,6 +169,8 @@ namespace Looker
                 save.SetString(overrideShelter, "SU_S04");
                 save.SetString(regions, "WORA");
                 save.SetString(linkedRegions, "WORA");
+
+                save.SetBool(daemonTutorialDone, false);
             }
             else Log.LogMessage("Looker initial save setup failed!");
         }

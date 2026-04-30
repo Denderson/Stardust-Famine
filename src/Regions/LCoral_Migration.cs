@@ -215,7 +215,6 @@ namespace Looker.Regions
                     self.abstractRoom.AddEntity(abstractCreature);
                     abstractCreature.RealizeInRoom();
                     self.AddObject(new ShockWave(new Vector2((float)abstractCreature.pos.x * 20f, (float)abstractCreature.pos.y * 20f), 200f, 0.1f, 15, false));
-                    Log.LogMessage("KnotSpawn spawned");
                 }
             }
             if (self.abstractRoom.name.ToLowerInvariant() == "wssr_ai" && OptionsMenu.metSliver.Value)

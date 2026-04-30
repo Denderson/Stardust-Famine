@@ -703,14 +703,15 @@ namespace Looker
             }
             if (self.currentState == WarpPoint.State.SpawnItems)
             {
+                if (Plugin.delayedTutorial != null && SaveFileCode.LinkCount(self.room.game.GetStorySession.saveState) % 5 == 0)
+                {
+                    self.room.game.GetStorySession.saveState.SetBool(SaveFileCode.daemonTutorialDone, true);
+                    Plugin.delayedTutorial = "LINK" + SaveFileCode.LinkCount(self.room.game.GetStorySession.saveState) / 5;
+                }
                 if (SaveFileCode.NewRegion(self.room.game.GetStorySession.saveState, self.room.world.region.name))
                 {
                     Plugin.Log.LogMessage("New region! " + self.room.world.region.name);
                     Plugin.delayedTutorial = self.room.world.region.name;
-                }
-                if (SaveFileCode.LinkCount(self.room.game.GetStorySession.saveState) % 5 == 0)
-                {
-                    Plugin.delayedTutorial = "LINK" + SaveFileCode.LinkCount(self.room.game.GetStorySession.saveState) / 5;
                 }
             }
         }

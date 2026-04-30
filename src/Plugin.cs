@@ -591,15 +591,24 @@ namespace Looker
         private Vector2 StaticBuildup_GetBestTarget(On.Watcher.LightningMaker.StaticBuildup.orig_GetBestTarget orig, LightningMaker.StaticBuildup self)
         {
             Vector2 value = orig(self);
-            if (self?.room == null || OptionsMenu.lessEvilLightnings.Value || CheckMechanics(self.room, "stormy", "WSKC"))
+            if (OptionsMenu.lessEvilLightnings.Value)
             {
                 return value;
             }
-
+            if (!CheckMechanics(self?.room, "stormy", "WSKC"))
+            {
+                return value;
+            }
             foreach (PhysicalObject physicalObject in self.targets)
             {
-                if (physicalObject != null && physicalObject is Player)
+                if (physicalObject != null && !self.IsTargetForbidden(physicalObject) && physicalObject is Player player && PlayerCWT.TryGetData(player, out var data))
                 {
+                    if (data.timesUntilTargetedByLightning > 0)
+                    {
+                        data.timesUntilTargetedByLightning--;
+                        return value;
+                    }
+                    data.timesUntilTargetedByLightning = 2;
                     return physicalObject.firstChunk.pos;
                 }
             }

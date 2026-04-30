@@ -37,11 +37,8 @@ namespace Looker.Regions
     {
         public static void SignalGameOver(VultureGrub self)
         {
-            if (self?.room?.game?.StoryCharacter != LookerEnums.looker) return;
-            if (OptionsMenu.noSkyWhales.Value || CheckMechanics(self.room, "signal", "WPTA"))
-            {
-                return;
-            }    
+            if (!CheckMechanics(self.room, "signal", "WPTA")) return;
+            if (OptionsMenu.noSkyWhales.Value) return;
             foreach (AbstractCreature player in self.room.game.AlivePlayers)
             {
                 if (player.realizedCreature != null && player.realizedCreature is Player)
@@ -86,7 +83,7 @@ namespace Looker.Regions
 
         public static void VultureGrub_AttemptCallVulture(On.VultureGrub.orig_AttemptCallVulture orig, VultureGrub self)
         {
-            if (self?.room?.game?.StoryCharacter == LookerEnums.looker && CheckMechanics(self.room, "signal", "WPTA"))
+            if (CheckMechanics(self.room, "signal", "WPTA"))
             {
                 SignalGameOver(self);
                 return;
