@@ -16,7 +16,7 @@ namespace lsfUtils.Items.PoisonDart
 
         public PoisonDartFisob() : base(Enums.AbstractPhysicalObjectType.PoisonDart)
         {
-            Icon = new SimpleIcon("Kill_Scavenger", RainWorld.RippleGold);
+            Icon = new SimpleIcon("atlases/Symbol_PoisonDart", Enums.Colors.PoisonColor);
             SandboxPerformanceCost = new SandboxPerformanceCost(0.35f, 0f);
             RegisterUnlock(Enums.SandboxUnlockID.PoisonDart, MultiplayerUnlocks.SandboxUnlockID.Slugcat, 15);
         }
