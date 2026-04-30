@@ -28,8 +28,6 @@ namespace Stardust.Slugcats.Bitter.BitterGraphics
         public int spikeSpritesEnd;
         public int spikeTipStart;
         public int spikeTipEnd;
-
-        public int tailSprite;
         //add tail
         public int endSprite;
 
@@ -192,8 +190,6 @@ namespace Stardust.Slugcats.Bitter.BitterGraphics
         public void OrderAllTailSpikes(int spriteInFront, bool side, RoomCamera.SpriteLeaser sLeaser, bool behind = false)
         {
             //move first ones in front of specified sprite
-
-            if (!behind && spriteInFront == 2) spriteInFront = tailSprite;
 
             if (!behind)
             {

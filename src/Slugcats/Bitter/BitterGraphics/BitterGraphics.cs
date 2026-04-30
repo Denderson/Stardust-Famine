@@ -62,7 +62,6 @@ namespace Stardust.Slugcats.Bitter.BitterGraphics
 
                 if (!self.RenderAsPup)
                 {
-                    sLeaser.sprites[data.tailSprite].color = data.ExtrasColour;
                     sLeaser.sprites[data.SpikeSprite(7, 0)].color = data.ExtrasColour;
                     sLeaser.sprites[data.SpikeSprite(7, 1)].color = data.ExtrasColour;
                     sLeaser.sprites[data.SpikeSprite(7, 2)].color = data.ExtrasColour;
@@ -166,8 +165,6 @@ namespace Stardust.Slugcats.Bitter.BitterGraphics
                     //UnityEngine.Debug.Log("SLEEP ALIGNMENT");
                 }
 
-                sLeaser.sprites[data.tailSprite].MoveInFrontOfOtherNode(sLeaser.sprites[2]);
-
                 data.OrderAllTailSpikes(2, sideTail, sLeaser, !backTail && !sideTail);
                 //UnityEngine.Debug.Log($"Behind: {!backTail && !sideTail}");
 
@@ -187,24 +184,12 @@ namespace Stardust.Slugcats.Bitter.BitterGraphics
 
                 if (sideTail) sLeaser.sprites[data.SpikeSprite(7, 1)].isVisible = false;
 
-                //tailtexture stuffs
-                if (sLeaser.sprites[2] is TriangleMesh baseMesh)
-                {
-                    if (sLeaser.sprites[data.tailSprite] is TriangleMesh tailMesh)
-                    {
-                        for (int k = 0; k < baseMesh.vertices.Length; k++)
-                        {
-                            tailMesh.MoveVertice(k, new Vector2(baseMesh.vertices[k].x, baseMesh.vertices[k].y));
-                        }
-                    }
-                }
-
 
                 for (int r = 0; r < data.Rows; r++)
                 {
                     bool flipped = false;
                     bool side = false;
-                    if (r < 4)//are we body spikes rn?
+                    if (r < 4) //are we body spikes rn?
                     {
                         var rot = sLeaser.sprites[0].rotation;
                         if (rot < 0) flipped = true;
@@ -220,7 +205,8 @@ namespace Stardust.Slugcats.Bitter.BitterGraphics
 
 
                         if (self.player.gravity == 0f || !self.player.Consious)
-                        {//mke rotTail relative to the player rotation
+                        {
+                            //mke rotTail relative to the player rotation
                             rot = Custom.VecToDeg(Custom.DegToVec(rot - sLeaser.sprites[0].rotation));
                         }
 
@@ -336,13 +322,9 @@ namespace Stardust.Slugcats.Bitter.BitterGraphics
                 Array.Resize(ref sLeaser.sprites, sLeaser.sprites.Length + data.Rows * data.Columns);//Bitter spike tips
                 data.spikeTipEnd = sLeaser.sprites.Length;
 
-                //data.tearSprite = sLeaser.sprites.Length;
-                data.tailSprite = sLeaser.sprites.Length + 1;
                 Array.Resize(ref sLeaser.sprites, sLeaser.sprites.Length + 2);
 
                 data.endSprite = sLeaser.sprites.Length;
-
-
 
                 for (int i = data.startSprite; i < data.spikeSpritesEnd; i++)
                 {
@@ -355,7 +337,7 @@ namespace Stardust.Slugcats.Bitter.BitterGraphics
                     sLeaser.sprites[i] = new FSprite("BitterSpikeB");
                 }
 
-                TriangleMesh.Triangle[] TailTris = new TriangleMesh.Triangle[]
+                /*TriangleMesh.Triangle[] TailTris = new TriangleMesh.Triangle[]
 {
                 new(0, 1, 2),
                 new(1, 2, 3),
@@ -392,9 +374,7 @@ namespace Stardust.Slugcats.Bitter.BitterGraphics
                     uv.y = Mathf.Lerp(tailMesh.element.uvBottomLeft.y, tailMesh.element.uvTopRight.y, uv.y);
 
                     tailMesh.UVvertices[i] = uv;
-                }
-
-                sLeaser.sprites[data.tailSprite] = tailMesh;
+                }*/
 
                 self.AddToContainer(sLeaser, rCam, null);
             }
