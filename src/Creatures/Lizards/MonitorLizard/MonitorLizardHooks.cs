@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,16 +14,24 @@ namespace lsfUtils.Creatures.Lizards.MonitorLizard
         {
             if (self?.lizard?.Template?.type != null && self.lizard.Template.type == Enums.CreatureTemplateType.MonitorLizard && (self.lizard as MonitorLizard).IsAlbino())
             {
-                col = Color.white;
+                col = Color.Lerp(Color.white, MudPit.defaultColor, 0.4f);
             }
-            orig(self, sLeaser, col);
+            else if (self?.lizard?.Template?.type != null && self.lizard.Template.type == Enums.CreatureTemplateType.MonitorLizard && !(self.lizard as MonitorLizard).IsAlbino())
+            {
+                col = Color.Lerp(self.palette.blackColor, MudPit.defaultColor, 0.2f);
+            }
+                orig(self, sLeaser, col);
         }
 
         public static Color LizardGraphics_BodyColor(On.LizardGraphics.orig_BodyColor orig, LizardGraphics self, float f)
         {
             if (self?.lizard?.Template?.type != null && self.lizard.Template.type == Enums.CreatureTemplateType.MonitorLizard && (self.lizard as MonitorLizard).IsAlbino())
             {
-                return Color.Lerp(Color.white, self.effectColor, Mathf.Clamp(Mathf.InverseLerp(self.lizard.lizardParams.tailColorationStart, 0.95f, Mathf.InverseLerp(self.bodyLength / self.BodyAndTailLength, 1f, f)), 0f, 1f));
+                return Color.Lerp(Color.Lerp(Color.white, MudPit.defaultColor, 0.4f), self.effectColor, Mathf.Clamp(Mathf.InverseLerp(self.lizard.lizardParams.tailColorationStart, 0.95f, Mathf.InverseLerp(self.bodyLength / self.BodyAndTailLength, 1f, f)), 0f, 1f));
+            }
+            else if (self?.lizard?.Template?.type != null && self.lizard.Template.type == Enums.CreatureTemplateType.MonitorLizard && !(self.lizard as MonitorLizard).IsAlbino())
+            {
+                return Color.Lerp(Color.Lerp(self.palette.blackColor, MudPit.defaultColor, 0.2f), self.effectColor, Mathf.Clamp(Mathf.InverseLerp(self.lizard.lizardParams.tailColorationStart, 0.95f, Mathf.InverseLerp(self.bodyLength / self.BodyAndTailLength, 1f, f)), 0f, 1f));
             }
             return orig(self, f);
         }
