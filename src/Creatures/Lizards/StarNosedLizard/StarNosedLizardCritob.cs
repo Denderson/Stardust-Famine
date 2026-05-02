@@ -12,7 +12,7 @@ public class StarNosedLizardCritob : Critob
     public StarNosedLizardCritob() : base(Enums.CreatureTemplateType.StarNosedLizard)
     {
         Debug.Log("Creating a StarNosed Lizard");
-        Icon = new SimpleIcon("Kill_Black_Lizard", new Color(0.16f, 0.16f, 0.19f));
+        Icon = new SimpleIcon("atlases/Kill_StarNosedLizard", new Color(0.16f, 0.16f, 0.19f));
         LoadedPerformanceCost = 50f;
         SandboxPerformanceCost = new(.25f, .25f);
         RegisterUnlock(KillScore.Configurable(1), Enums.SandboxUnlockID.StarNosedLizard, MultiplayerUnlocks.SandboxUnlockID.Slugcat);

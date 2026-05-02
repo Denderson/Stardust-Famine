@@ -19,7 +19,7 @@ namespace lsfUtils.Creatures.Lizards.StarNosedLizard
         {
             if (self.lizard.Template.type == Enums.CreatureTemplateType.StarNosedLizard)
             {
-                return self.palette.blackColor;
+                return Color.Lerp(self.palette.blackColor, Custom.HSL2RGB(Custom.WrappedRandomVariation(240 / 360f, 15 / 360f, .5f), 0.067f, Custom.ClampedRandomVariation(.3f, .1f, .5f)), 0.5f);
             }
             return orig(self);
         }
