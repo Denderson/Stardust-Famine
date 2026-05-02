@@ -1,0 +1,10 @@
+Template: NONE
+Clouds: 0.5326087
+Grime: 0.1521739
+Palette: 50
+EffectColorA: 13
+EffectColorB: 21
+Effects: LightBurn-0.2065217-20-20, Fog-1-30-30, Outer Rim View-0.1413043-40-40, 
+PlacedObjects: LightFixture><2983.427><653.9362><RedLight~17.32051~-10~79, BrainMold><2555.794><575.445><0~100, 
+FadePalette: 12, 0.1630435, 0.1630435, 0.1413043, 0.07608695, 0.01086957
+MorePalette0: 10, 0.06521739, 0.3369565, 0.7826087, 0.6195652, 0.5

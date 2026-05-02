@@ -15,5 +15,5 @@ TerrainGooHeight: 0
 TerrainDepth: 0.6839055
 TerrainPalette: outerrim
 Effects: Moth-0.2319973-30-30, SandPuffs-1-40-40, SurfaceSandstorm-0-341.5792-42.05521, 
-PlacedObjects: LocalTerrain><-206.424><715.3306><770.9052~930.2719^276.7572~140.8687^41.66037~906.0822^321.1832~, LanternOnStick><788.0515><294.9349><-12.09479~-208.0614, LanternOnStick><822.5007><419.6754><52.64789~-235.0968, 
+PlacedObjects: LanternOnStick><773.8223><247.2672><-17.78656~-123.3979, LanternOnStick><829.6154><334.3004><31.3042~-131.2239, 
 AmbientSounds: OMNI><RWTW_DustStorm_Deep.ogg><759.0977><532.7816><0.1442712><1, 

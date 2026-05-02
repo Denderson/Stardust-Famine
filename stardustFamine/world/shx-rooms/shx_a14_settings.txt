@@ -1,0 +1,16 @@
+Template: NONE
+DangerType: Sandstorm
+CeilingDrips: 0
+WaveSpeed: 0.5009093
+WaveLength: 0.9995453
+WaveAmplitude: 0.04828818
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.1847826
+Grime: 0.1521739
+Palette: 12
+Effects: LightBurn-0.1469315-20-20, SurfaceSandstorm-0.2938634-30-30, SandPuffs-1-40-40, 
+PlacedObjects: FloatingDebris><479.3864><448.6646><-151~46~739159901~0~30~0.25~0.5~61~321|706~345|226~0.41|0.25~0|0~-0.69|-0.88~Stardust~0.5~1.12v2.97v0v0|0v1.53v0v0~0, 
+AmbientSounds: SPOT><AM_WIN-StrongWnd2.ogg><769.009><502.0267><0.3117411><1><845.6121><656.96><-300.7293><-206.7331><0><0.2391988, OMNI><AM_ENV-CityTone.ogg><393.6014><169.1674><0.3608017><1, OMNI><AM_IND-Warehouse03.ogg><809.2455><384.5699><0.4381336><1, 
+FadePalette: 10, 0.06521739
+MorePalette0: 50, 0.2065217

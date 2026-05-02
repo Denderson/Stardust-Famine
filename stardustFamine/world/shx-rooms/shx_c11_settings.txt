@@ -1,0 +1,16 @@
+Template: NONE
+DangerType: Sandstorm
+CeilingDrips: 0
+WaveSpeed: 0.5
+WaveLength: 0.75
+WaveAmplitude: 0.04709252
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Grime: 0.173913
+RandomItemDensity: 0.2826087
+Palette: 12
+Effects: LightBurn-0.1413043-20-20, SandPuffs-1-30-30, 
+AmbientSounds: OMNI><RWTW_DustStorm_Deep.ogg><772.2747><539.8679><0.1442712><1, 
+FadePalette: 12, 0.1030681, 0.1572012, 0.203476
+MorePalette0: 50, 0, 0.1705614, 0.3022414
+MorePalette1: 1000, 0.6031925, 0.5026603, 0.409861

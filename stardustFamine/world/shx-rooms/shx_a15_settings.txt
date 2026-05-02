@@ -1,0 +1,14 @@
+Template: NONE
+DangerType: Sandstorm
+CeilingDrips: 0
+WaveSpeed: 0.5
+WaveLength: 0.75
+WaveAmplitude: 0.04788044
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.1304348
+Grime: 0.2608696
+Palette: 12
+Effects: SandPuffs-1-20-20, 
+AmbientSounds: OMNI><deep weird wind.wav><698.3661><298.9597><0.3685343><1, 
+FadePalette: 10, 0.2826087
