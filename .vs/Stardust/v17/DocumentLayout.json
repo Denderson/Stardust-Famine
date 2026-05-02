@@ -3,32 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\slugcats\\bitter\\bittergraphics\\bittergraphics.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\slugcats\\bitter\\bittergraphics\\bittergraphics.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\slugcats\\bitter\\bittergraphics\\bitterdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\slugcats\\bitter\\bittergraphics\\bitterdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\slugcats\\bitter\\bittergraphics\\bittermodule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\slugcats\\bitter\\bittergraphics\\bittermodule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\slugcats\\scholar\\teleportobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\slugcats\\scholar\\teleportobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\cwts\\bittergraphicscwt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\cwts\\bittergraphicscwt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|c:\\users\\ivano\\documents\\github\\stardust-famine\\src\\slugcats\\bitter\\armorcode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C8AF8B79-0A9F-435F-BC0C-FDA563ECCDB9}|src\\Stardust.csproj|solutionrelative:src\\slugcats\\bitter\\armorcode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,7 +14,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -46,88 +22,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "TeleportObject.cs",
-              "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Slugcats\\Scholar\\TeleportObject.cs",
-              "RelativeDocumentMoniker": "src\\Slugcats\\Scholar\\TeleportObject.cs",
-              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Slugcats\\Scholar\\TeleportObject.cs",
-              "RelativeToolTip": "src\\Slugcats\\Scholar\\TeleportObject.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-29T08:17:56.108Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "BitterGraphicsCWT.cs",
-              "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\CWTs\\BitterGraphicsCWT.cs",
-              "RelativeDocumentMoniker": "src\\CWTs\\BitterGraphicsCWT.cs",
-              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\CWTs\\BitterGraphicsCWT.cs",
-              "RelativeToolTip": "src\\CWTs\\BitterGraphicsCWT.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAgAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-29T07:17:55.788Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "BitterData.cs",
-              "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Slugcats\\Bitter\\BitterGraphics\\BitterData.cs",
-              "RelativeDocumentMoniker": "src\\Slugcats\\Bitter\\BitterGraphics\\BitterData.cs",
-              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Slugcats\\Bitter\\BitterGraphics\\BitterData.cs",
-              "RelativeToolTip": "src\\Slugcats\\Bitter\\BitterGraphics\\BitterData.cs",
-              "ViewState": "AgIAAKsAAAAAAAAAAAAnwL8AAAA6AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-29T07:17:00.755Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "BitterModule.cs",
-              "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Slugcats\\Bitter\\BitterGraphics\\BitterModule.cs",
-              "RelativeDocumentMoniker": "src\\Slugcats\\Bitter\\BitterGraphics\\BitterModule.cs",
-              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Slugcats\\Bitter\\BitterGraphics\\BitterModule.cs",
-              "RelativeToolTip": "src\\Slugcats\\Bitter\\BitterGraphics\\BitterModule.cs",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAAACMAAAAqAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-29T07:13:35.03Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "BitterGraphics.cs",
-              "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Slugcats\\Bitter\\BitterGraphics\\BitterGraphics.cs",
-              "RelativeDocumentMoniker": "src\\Slugcats\\Bitter\\BitterGraphics\\BitterGraphics.cs",
-              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Slugcats\\Bitter\\BitterGraphics\\BitterGraphics.cs",
-              "RelativeToolTip": "src\\Slugcats\\Bitter\\BitterGraphics\\BitterGraphics.cs",
-              "ViewState": "AgIAAEgAAAAAAAAAAAAgwHMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-29T07:11:30.845Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "ArmorCode.cs",
-              "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Slugcats\\Bitter\\ArmorCode.cs",
-              "RelativeDocumentMoniker": "src\\Slugcats\\Bitter\\ArmorCode.cs",
-              "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Slugcats\\Bitter\\ArmorCode.cs",
-              "RelativeToolTip": "src\\Slugcats\\Bitter\\ArmorCode.cs",
-              "ViewState": "AgIAADkAAAAAAAAAAAAAAF0AAABNAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-28T14:08:09.494Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
               "Title": "Plugin.cs",
               "DocumentMoniker": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Plugin.cs",
               "RelativeDocumentMoniker": "src\\Plugin.cs",
               "ToolTip": "C:\\Users\\ivano\\Documents\\GitHub\\Stardust-Famine\\src\\Plugin.cs",
               "RelativeToolTip": "src\\Plugin.cs",
-              "ViewState": "AgIAAHEAAAAAAAAAAAAAAI4AAABMAAAAAAAAAA==",
+              "ViewState": "AgIAAL4AAAAAAAAAAAAAANUAAABlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-10T15:36:38.179Z"
+              "WhenOpened": "2026-04-10T15:36:38.179Z",
+              "EditorCaption": ""
             }
           ]
         }

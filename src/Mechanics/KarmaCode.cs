@@ -233,7 +233,7 @@ namespace Stardust
 
             c.Emit(OpCodes.Call,
                 il.Import(
-                    typeof(SaveFileMain).GetMethod(
+                    typeof(SaveFileEchoes).GetMethod(
                         "MinKarma",
                         new[] { typeof(Menu.Menu) }
                     )
