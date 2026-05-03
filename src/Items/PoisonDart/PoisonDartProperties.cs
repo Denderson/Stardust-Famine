@@ -14,18 +14,18 @@ namespace lsfUtils.Items.PoisonDart
 
         public override void ScavCollectScore(Scavenger scavenger, ref int score)
         {
-            score = 1 + (int)Math.Round(PoisonDart.remainingPoison) * 2;
+            score = 1 + (int)Math.Round(PoisonDart.poison) * 2;
         }
         public override void ScavWeaponPickupScore(Scavenger scav, ref int score)
         {
-            score = 1 + (int)Math.Round(PoisonDart.remainingPoison) * 2;
+            score = 1 + (int)Math.Round(PoisonDart.poison) * 2;
         }
 
         public override void Grabability(Player player, ref Player.ObjectGrabability grabability)
         {
             if (PoisonDart.mode == Weapon.Mode.StuckInCreature)
             {
-                if (PoisonDart.pullOutCounter > 0)
+                if (PoisonDart.pullOutTimer > 0)
                 {
                     grabability = Player.ObjectGrabability.CantGrab;
                     return;

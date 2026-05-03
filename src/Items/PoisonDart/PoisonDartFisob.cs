@@ -18,7 +18,6 @@ namespace lsfUtils.Items.PoisonDart
             Icon = new SimpleIcon("atlases/Symbol_Dart", Enums.Colors.PoisonColor);
             SandboxPerformanceCost = new SandboxPerformanceCost(0.35f, 0f);
             RegisterUnlock(Enums.SandboxUnlockID.PoisonDart, MultiplayerUnlocks.SandboxUnlockID.Slugcat, 15);
-            Log.LogMessage("Made poison dart!");
         }
 
         public override AbstractPhysicalObject Parse(World world, EntitySaveData saveData, SandboxUnlock unlock)
@@ -29,7 +28,8 @@ namespace lsfUtils.Items.PoisonDart
             {
                 array = new string[1];
             }
-            PoisonDartAbstract PoisonDartAbstract = new PoisonDartAbstract(world, null, saveData.Pos, saveData.ID, (float.TryParse(array[0], out float result) ? result : 0f) * 0.1f);
+            float remainingPoison = float.TryParse(array[0], out float result) ? result : 1f;
+            PoisonDartAbstract PoisonDartAbstract = new(world, null, saveData.Pos, saveData.ID, remainingPoison);
             Plugin.Log.LogMessage("Exited parse");
             return PoisonDartAbstract;
         }

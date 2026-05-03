@@ -30,85 +30,100 @@ namespace lsfUtils.Items.Dart
 
         public bool hasPoisonGraphicsActive;
 
+        public float poison;
+
         public bool reinitiateSpritesOnDraw;
 
         public AbstractDart abstractDart => abstractPhysicalObject as AbstractDart;
 
         public BodyChunk stuckInChunk => stuckInObject.bodyChunks[stuckInChunkIndex];
 
+        public AbstractCreature shotFrom;
+
         public override bool HeavyWeapon => false;
 
-        public Dart(AbstractPhysicalObject abstractPhysicalObject) : base(abstractPhysicalObject, abstractPhysicalObject.world)
+        public int pullOutTimer;
+
+        public int pullOutAttempts;
+
+        public bool strongHit;
+
+        public Dart(AbstractDart abstractDart) : base(abstractDart, abstractDart.world)
         {
-            base.bodyChunks = new BodyChunk[1];
-            base.bodyChunks[0] = new BodyChunk(this, 0, new Vector2(0f, 0f), 5f, 0.07f);
-            bodyChunkConnections = new BodyChunkConnection[0];
-            base.airFriction = 0.995f;
-            base.gravity = 0.9f;
-            bounce = 0.4f;
+            Log.LogMessage("Making a dart!");
+            bodyChunks = new BodyChunk[1];
+            bodyChunks[0] = new BodyChunk(this, 0, new Vector2(0f, 0f), 5f, 0.07f);
+            bodyChunkConnections = [];
+            airFriction = 0.995f;
+            gravity = 0.9f;
+            bounce = 0.5f;
             surfaceFriction = 0.4f;
             collisionLayer = 2;
-            base.waterFriction = 0.98f;
-            base.buoyancy = 0.4f;
+            waterFriction = 0.98f;
+            buoyancy = 0.4f;
             pivotAtTip = false;
             lastPivotAtTip = false;
             stuckBodyPart = -1;
-            base.firstChunk.loudness = 7f;
-            tailPos = base.firstChunk.pos;
-            soundLoop = new ChunkDynamicSoundLoop(base.firstChunk);
+            firstChunk.loudness = 7f;
+            tailPos = firstChunk.pos;
+            soundLoop = new ChunkDynamicSoundLoop(firstChunk);
+            pullOutAttempts = 0;
+            pullOutTimer = 0;
+            strongHit = false;
+            poison = abstractDart.poison;
+            hasPoisonGraphicsActive = poison > 0f;
         }
 
         public override void PlaceInRoom(Room placeRoom)
         {
-            base.PlaceInRoom(placeRoom);
+            PlaceInRoom(placeRoom);
         }
 
         public override void ChangeMode(Mode newMode)
         {
-            if (base.mode == Mode.StuckInCreature)
+            if (mode == Mode.StuckInCreature)
             {
-                if (room != null)
-                {
-                    room.PlaySound(SoundID.Spear_Dislodged_From_Creature, base.firstChunk);
-                }
+                room?.PlaySound(SoundID.Spear_Dislodged_From_Creature, firstChunk);
                 PulledOutOfStuckObject();
                 ChangeOverlap(newOverlap: true);
             }
             else if (newMode == Mode.StuckInCreature)
             {
+                pullOutAttempts = 0;
+                pullOutTimer = 0;
                 ChangeOverlap(newOverlap: false);
             }
             if (newMode != Mode.Free)
             {
                 spinning = false;
             }
-            base.ChangeMode(newMode);
+            ChangeMode(newMode);
         }
 
         public override void Update(bool eu)
         {
-            base.Update(eu);
+            Update(eu);
             soundLoop.sound = SoundID.None;
-            if (base.firstChunk.vel.magnitude > 5f)
+            if (firstChunk.vel.magnitude > 5f)
             {
-                if (base.mode == Mode.Thrown)
+                if (mode == Mode.Thrown)
                 {
                     soundLoop.sound = SoundID.Spear_Thrown_Through_Air_LOOP;
                 }
-                else if (base.mode == Mode.Free)
+                else if (mode == Mode.Free)
                 {
                     soundLoop.sound = SoundID.Spear_Spinning_Through_Air_LOOP;
                 }
-                soundLoop.Volume = Mathf.InverseLerp(5f, 15f, base.firstChunk.vel.magnitude);
+                soundLoop.Volume = Mathf.InverseLerp(5f, 15f, firstChunk.vel.magnitude);
             }
             soundLoop.Update();
             lastPivotAtTip = pivotAtTip;
-            pivotAtTip = base.mode == Mode.Thrown || base.mode == Mode.StuckInCreature;
-            if (base.mode == Mode.Free)
+            pivotAtTip = mode == Mode.Thrown || mode == Mode.StuckInCreature;
+            if (mode == Mode.Free)
             {
                 if (spinning)
                 {
-                    if (Custom.DistLess(base.firstChunk.pos, base.firstChunk.lastPos, 4f * room.gravity))
+                    if (Custom.DistLess(firstChunk.pos, firstChunk.lastPos, 4f * room.gravity))
                     {
                         stillCounter++;
                     }
@@ -116,63 +131,60 @@ namespace lsfUtils.Items.Dart
                     {
                         stillCounter = 0;
                     }
-                    if (base.firstChunk.ContactPoint.y < 0 || stillCounter > 20)
+                    if (firstChunk.ContactPoint.y < 0 || stillCounter > 20)
                     {
                         spinning = false;
                         rotationSpeed = 0f;
                         rotation = Custom.DegToVec(Mathf.Lerp(-50f, 50f, UnityEngine.Random.value) + 180f);
-                        base.firstChunk.vel *= 0f;
-                        room.PlaySound(SoundID.Spear_Stick_In_Ground, base.firstChunk);
+                        firstChunk.vel *= 0f;
+                        room.PlaySound(SoundID.Spear_Stick_In_Ground, firstChunk);
                     }
                 }
-                else if (!Custom.DistLess(base.firstChunk.lastPos, base.firstChunk.pos, 6f))
+                else if (!Custom.DistLess(firstChunk.lastPos, firstChunk.pos, 6f))
                 {
                     SetRandomSpin();
                 }
             }
-            else if (base.mode == Mode.Thrown)
+            else if (mode == Mode.Thrown)
             {
-                base.firstChunk.vel.y += 0.45f;
-                if (Custom.DistLess(thrownPos, base.firstChunk.pos, 560f * Mathf.Max(1f, 1f)) && base.firstChunk.ContactPoint == throwDir && room.GetTile(base.firstChunk.pos).Terrain == Room.Tile.TerrainType.Air && room.GetTile(base.firstChunk.pos + throwDir.ToVector2() * 20f).Terrain == Room.Tile.TerrainType.Solid && (UnityEngine.Random.value < (0.33f) || Custom.DistLess(thrownPos, base.firstChunk.pos, 140f)))
+                firstChunk.vel.y += 0.45f;
+                if (Custom.DistLess(thrownPos, firstChunk.pos, 560f * Mathf.Max(1f, 1f)) && firstChunk.ContactPoint == throwDir && room.GetTile(firstChunk.pos).Terrain == Room.Tile.TerrainType.Air && room.GetTile(firstChunk.pos + throwDir.ToVector2() * 20f).Terrain == Room.Tile.TerrainType.Solid && (UnityEngine.Random.value < (0.33f) || Custom.DistLess(thrownPos, firstChunk.pos, 140f)))
                 {
                     vibrate = 10;
-                    room.PlaySound(SoundID.Spear_Bounce_Off_Creauture_Shell, base.firstChunk);
+                    room.PlaySound(SoundID.Spear_Bounce_Off_Creauture_Shell, firstChunk);
                     for (int num = 17; num > 0; num--)
                     {
-                        room.AddObject(new Spark(base.firstChunk.pos, Custom.RNV(), Color.white, null, 10, 20));
+                        room.AddObject(new Spark(firstChunk.pos, Custom.RNV(), Color.white, null, 10, 20));
                     }
                 }
             }
-            else if (base.mode == Mode.StuckInCreature)
+            else if (mode == Mode.StuckInCreature)
             {
-                if (stuckInAppendage != null)
+                if (stuckInChunk?.owner is Creature)
                 {
-                    setRotation = Custom.DegToVec(stuckRotation + Custom.VecToDeg(stuckInAppendage.appendage.OnAppendageDirection(stuckInAppendage)));
-                    base.firstChunk.pos = stuckInAppendage.appendage.OnAppendagePosition(stuckInAppendage);
-                }
-                else
-                {
-                    base.firstChunk.vel = stuckInChunk.vel;
-                    if (stuckBodyPart == -1 || !room.BeingViewed || (stuckInChunk.owner as Creature).BodyPartByIndex(stuckBodyPart) == null)
+                    if (stuckInAppendage != null)
                     {
-                        setRotation = Custom.DegToVec(stuckRotation + Custom.VecToDeg(stuckInChunk.Rotation));
-                        base.firstChunk.MoveWithOtherObject(eu, stuckInChunk, new Vector2(0f, 0f));
+                        setRotation = Custom.DegToVec(stuckRotation + Custom.VecToDeg(stuckInAppendage.appendage.OnAppendageDirection(stuckInAppendage)));
+                        firstChunk.pos = stuckInAppendage.appendage.OnAppendagePosition(stuckInAppendage);
                     }
                     else
                     {
-                        setRotation = Custom.DegToVec(stuckRotation + Custom.AimFromOneVectorToAnother(stuckInChunk.pos, (stuckInChunk.owner as Creature).BodyPartByIndex(stuckBodyPart).pos));
-                        base.firstChunk.MoveWithOtherObject(eu, stuckInChunk, Vector2.Lerp(stuckInChunk.pos, (stuckInChunk.owner as Creature).BodyPartByIndex(stuckBodyPart).pos, 0.5f) - stuckInChunk.pos);
+                        firstChunk.vel = stuckInChunk.vel;
+                        if (stuckBodyPart == -1 || !room.BeingViewed || (stuckInChunk.owner as Creature).BodyPartByIndex(stuckBodyPart) == null)
+                        {
+                            setRotation = Custom.DegToVec(stuckRotation + Custom.VecToDeg(stuckInChunk.Rotation));
+                            firstChunk.MoveWithOtherObject(eu, stuckInChunk, new Vector2(0f, 0f));
+                        }
+                        else
+                        {
+                            setRotation = Custom.DegToVec(stuckRotation + Custom.AimFromOneVectorToAnother(stuckInChunk.pos, (stuckInChunk.owner as Creature).BodyPartByIndex(stuckBodyPart).pos));
+                            firstChunk.MoveWithOtherObject(eu, stuckInChunk, Vector2.Lerp(stuckInChunk.pos, (stuckInChunk.owner as Creature).BodyPartByIndex(stuckBodyPart).pos, 0.5f) - stuckInChunk.pos);
+                        }
                     }
-                }
-                if (abstractDart.poison > 0f && stuckInChunk.owner is Creature creature && !(creature is Tardigrade))
-                {
-                    float num2 = 0.0035714286f;
-                    creature.InjectPoison(num2 * 3f, new HSLColor(abstractDart.poisonHue, 1f, 0.5f).rgb);
-                    abstractDart.poison = Mathf.Max(abstractDart.poison - num2, 0f);
-                }
-                if (stuckInChunk.owner.slatedForDeletetion)
-                {
-                    ChangeMode(Mode.Free);
+                    if (stuckInChunk.owner.slatedForDeletetion)
+                    {
+                        ChangeMode(Mode.Free);
+                    }
                 }
             }
             for (int num3 = abstractPhysicalObject.stuckObjects.Count - 1; num3 >= 0; num3--)
@@ -185,7 +197,7 @@ namespace lsfUtils.Items.Dart
                     }
                     else if (abstractPhysicalObject.stuckObjects[num3].B.realizedObject != null && abstractPhysicalObject.stuckObjects[num3].B.realizedObject.room == room)
                     {
-                        abstractPhysicalObject.stuckObjects[num3].B.realizedObject.firstChunk.MoveFromOutsideMyUpdate(eu, base.firstChunk.pos + rotation * Custom.LerpMap((abstractPhysicalObject.stuckObjects[num3] as AbstractPhysicalObject.ImpaledOnSpearStick).onSpearPosition, 0f, 4f, 15f, -15f));
+                        abstractPhysicalObject.stuckObjects[num3].B.realizedObject.firstChunk.MoveFromOutsideMyUpdate(eu, firstChunk.pos + rotation * Custom.LerpMap((abstractPhysicalObject.stuckObjects[num3] as AbstractPhysicalObject.ImpaledOnSpearStick).onSpearPosition, 0f, 4f, 15f, -15f));
                         abstractPhysicalObject.stuckObjects[num3].B.realizedObject.firstChunk.vel *= 0f;
                     }
                 }
@@ -194,14 +206,14 @@ namespace lsfUtils.Items.Dart
 
         public override void Thrown(Creature thrownBy, Vector2 thrownPos, Vector2? firstFrameTraceFromPos, IntVector2 throwDir, float frc, bool eu)
         {
-            base.Thrown(thrownBy, thrownPos, firstFrameTraceFromPos, throwDir, frc, eu);
-            room?.PlaySound(SoundID.Slugcat_Throw_Spear, base.firstChunk);
+            Thrown(thrownBy, thrownPos, firstFrameTraceFromPos, throwDir, frc, eu);
+            room?.PlaySound(SoundID.Slugcat_Throw_Spear, firstChunk);
         }
 
         public override void PickedUp(Creature upPicker)
         {
             ChangeMode(Mode.Carried);
-            room.PlaySound(SoundID.Slugcat_Pick_Up_Spear, base.firstChunk);
+            room.PlaySound(SoundID.Slugcat_Pick_Up_Spear, firstChunk);
         }
 
         public void LodgeInCreature(SharedPhysics.CollisionResult result, bool eu)
@@ -215,7 +227,7 @@ namespace lsfUtils.Items.Dart
                 {
                     stuckRotation = Custom.Angle(throwDir.ToVector2(), stuckInChunk.Rotation);
                 }
-                base.firstChunk.MoveWithOtherObject(eu, stuckInChunk, new Vector2(0f, 0f));
+                firstChunk.MoveWithOtherObject(eu, stuckInChunk, new Vector2(0f, 0f));
                 new AbstractPhysicalObject.AbstractSpearStick(abstractPhysicalObject, (result.obj as Creature).abstractCreature, stuckInChunkIndex, stuckBodyPart, stuckRotation);
             }
             else if (result.onAppendagePos != null)
@@ -229,7 +241,7 @@ namespace lsfUtils.Items.Dart
             {
                 for (int i = 0; i < 8; i++)
                 {
-                    room.AddObject(new WaterDrip(result.collisionPoint, -base.firstChunk.vel * (UnityEngine.Random.value * 0.5f) + Custom.DegToVec(360f * UnityEngine.Random.value) * (base.firstChunk.vel.magnitude * UnityEngine.Random.value * 0.5f), waterColor: false));
+                    room.AddObject(new WaterDrip(result.collisionPoint, -firstChunk.vel * (UnityEngine.Random.value * 0.5f) + Custom.DegToVec(360f * UnityEngine.Random.value) * (firstChunk.vel.magnitude * UnityEngine.Random.value * 0.5f), waterColor: false));
                 }
             }
         }
@@ -276,6 +288,9 @@ namespace lsfUtils.Items.Dart
             stuckInObject = null;
             stuckInAppendage = null;
             stuckInChunkIndex = 0;
+            pullOutAttempts = 0;
+            pullOutTimer = 0;
+            strongHit = false;
         }
 
         public override void HitSomethingWithoutStopping(PhysicalObject obj, BodyChunk chunk, Appendage appendage)
@@ -284,14 +299,14 @@ namespace lsfUtils.Items.Dart
             {
                 return;
             }
-            base.HitSomethingWithoutStopping(obj, chunk, appendage);
+            HitSomethingWithoutStopping(obj, chunk, appendage);
         }
 
         public void ProvideRotationBodyPart(BodyChunk chunk, BodyPart bodyPart)
         {
             stuckBodyPart = bodyPart.bodyPartArrayIndex;
-            stuckRotation = Custom.Angle(base.firstChunk.vel, (bodyPart.pos - chunk.pos).normalized);
-            bodyPart.vel += base.firstChunk.vel;
+            stuckRotation = Custom.Angle(firstChunk.vel, (bodyPart.pos - chunk.pos).normalized);
+            bodyPart.vel += firstChunk.vel;
         }
 
         public override bool HitSomething(SharedPhysics.CollisionResult result, bool eu)
@@ -319,23 +334,23 @@ namespace lsfUtils.Items.Dart
             }
             if (result.obj is Creature)
             {
-                if (!(result.obj is Player) || (result.obj as Creature).SpearStick(this, Mathf.Lerp(0.55f, 0.62f, UnityEngine.Random.value), result.chunk, result.onAppendagePos, base.firstChunk.vel))
+                if (!(result.obj is Player) || (result.obj as Creature).SpearStick(this, Mathf.Lerp(0.55f, 0.62f, UnityEngine.Random.value), result.chunk, result.onAppendagePos, firstChunk.vel))
                 {
-                    (result.obj as Creature).Violence(base.firstChunk, base.firstChunk.vel * (base.firstChunk.mass * 2f), result.chunk, result.onAppendagePos, Creature.DamageType.Stab, 0.1f, 20f);
+                    (result.obj as Creature).Violence(firstChunk, firstChunk.vel * (firstChunk.mass * 2f), result.chunk, result.onAppendagePos, Creature.DamageType.Stab, 0.1f, 20f);
                 }
             }
             else if (result.chunk != null)
             {
-                result.chunk.vel += base.firstChunk.vel * base.firstChunk.mass / result.chunk.mass;
+                result.chunk.vel += firstChunk.vel * firstChunk.mass / result.chunk.mass;
             }
             else if (result.onAppendagePos != null)
             {
-                (result.obj as IHaveAppendages).ApplyForceOnAppendage(result.onAppendagePos, base.firstChunk.vel * base.firstChunk.mass);
+                (result.obj as IHaveAppendages).ApplyForceOnAppendage(result.onAppendagePos, firstChunk.vel * firstChunk.mass);
             }
-            if (result.obj is Creature && (result.obj as Creature).SpearStick(this, Mathf.Lerp(0.55f, 0.62f, UnityEngine.Random.value), result.chunk, result.onAppendagePos, base.firstChunk.vel))
+            if (result.obj is Creature && (result.obj as Creature).SpearStick(this, Mathf.Lerp(0.55f, 0.62f, UnityEngine.Random.value), result.chunk, result.onAppendagePos, firstChunk.vel))
             {
                 Creature creature = result.obj as Creature;
-                room.PlaySound(SoundID.Spear_Stick_In_Creature, base.firstChunk);
+                room.PlaySound(SoundID.Spear_Stick_In_Creature, firstChunk);
                 LodgeInCreature(result, eu);
                 if (flag2)
                 {
@@ -343,10 +358,10 @@ namespace lsfUtils.Items.Dart
                 }
                 return true;
             }
-            room.PlaySound(SoundID.Spear_Bounce_Off_Creauture_Shell, base.firstChunk);
+            room.PlaySound(SoundID.Spear_Bounce_Off_Creauture_Shell, firstChunk);
             vibrate = 20;
             ChangeMode(Mode.Free);
-            base.firstChunk.vel = base.firstChunk.vel * -0.5f + Custom.DegToVec(UnityEngine.Random.value * 360f) * (Mathf.Lerp(0.1f, 0.4f, UnityEngine.Random.value) * base.firstChunk.vel.magnitude);
+            firstChunk.vel = firstChunk.vel * -0.5f + Custom.DegToVec(UnityEngine.Random.value * 360f) * (Mathf.Lerp(0.1f, 0.4f, UnityEngine.Random.value) * firstChunk.vel.magnitude);
             SetRandomSpin();
             return false;
         }
@@ -391,13 +406,13 @@ namespace lsfUtils.Items.Dart
                 sLeaser.RemoveAllSpritesFromContainer();
                 InitiateSprites(sLeaser, rCam);
                 ApplyPalette(sLeaser, rCam, rCam.currentPalette);
-                if (base.mode == Mode.StuckInCreature)
+                if (mode == Mode.StuckInCreature)
                 {
                     ChangeOverlap(newOverlap: true);
                     ChangeOverlap(newOverlap: false);
                 }
             }
-            Vector2 vector = Vector2.Lerp(base.firstChunk.lastPos, base.firstChunk.pos, timeStacker);
+            Vector2 vector = Vector2.Lerp(firstChunk.lastPos, firstChunk.pos, timeStacker);
             if (vibrate > 0)
             {
                 vector += Custom.DegToVec(UnityEngine.Random.value * 360f) * (2f * UnityEngine.Random.value);
@@ -419,7 +434,8 @@ namespace lsfUtils.Items.Dart
                 sLeaser.sprites[0].y = vector4.y - camPos.y;
                 sLeaser.sprites[0].anchorY = 0f;
                 sLeaser.sprites[0].rotation = Custom.VecToDeg(vector3);
-                Color rgb = new HSLColor(abstractDart.poisonHue, 1f, 0.5f).rgb;
+                //Color rgb = new HSLColor(Enums.Colors.PoisonColor, 1f, 0.5f).rgb;
+                Color rgb = Enums.Colors.PoisonColor;
                 rgb = new Color(rgb.r, rgb.g, rgb.b, abstractDart.poison);
                 Color b = new Color(color.r, color.g, color.b, abstractDart.poison);
                 for (int i = 0; i < 2; i++)
@@ -430,7 +446,7 @@ namespace lsfUtils.Items.Dart
                 }
                 if (blink > 0 && UnityEngine.Random.value < 0.5f)
                 {
-                    sLeaser.sprites[1].color = base.blinkColor;
+                    sLeaser.sprites[1].color = blinkColor;
                 }
                 else
                 {
@@ -444,13 +460,13 @@ namespace lsfUtils.Items.Dart
             }
             else if (blink > 0 && UnityEngine.Random.value < 0.5f)
             {
-                sLeaser.sprites[0].color = base.blinkColor;
+                sLeaser.sprites[0].color = blinkColor;
             }
             else
             {
                 sLeaser.sprites[0].color = color;
             }
-            if (base.slatedForDeletetion || room != rCam.room)
+            if (slatedForDeletetion || room != rCam.room)
             {
                 sLeaser.CleanSpritesAndRemove();
             }
