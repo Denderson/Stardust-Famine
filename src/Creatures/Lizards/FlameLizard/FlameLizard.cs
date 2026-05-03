@@ -50,9 +50,9 @@ public class FlameLizard : Lizard
         {
             JawOpen = 0f;
         }
-        if (Consious && jawOpen > 0.3)
+        if (Consious && jawOpen > 0.25)
         {
-            flameTimer = math.min(flameTimer + 1, 20);
+            flameTimer = math.min(flameTimer + 1, 40);
         }
         else flameTimer = math.max(flameTimer - 1, 0);
 
@@ -62,7 +62,7 @@ public class FlameLizard : Lizard
             flameTimer = 40;
         }
 
-        if (flameTimer == 40 && flameJet == null)
+        if (flameTimer > 20 && flameJet == null)
         {
             FlameJet.FlameJetData flameJetData = new FlameJet.FlameJetData(null);
             flameJetData.temperature = 1f;
@@ -78,7 +78,7 @@ public class FlameLizard : Lizard
         {
             flameJet.pos = bodyChunks[0].pos + Custom.DirVec(bodyChunks[1].pos, bodyChunks[0].pos) * 25;
             flameJet.target = Custom.DirVec(bodyChunks[1].pos, bodyChunks[0].pos) * 170;
-            if (flameTimer == 40)
+            if (flameTimer > 20)
             {
                 flameJet.intensity = Mathf.Min(flameJet.intensity + 0.04f, jawOpen);
             }
