@@ -297,7 +297,6 @@ namespace lsfUtils
             Futile.atlasManager.LoadImage("atlases/Kill_StarNosedLizard");
 
             Futile.atlasManager.LoadImage("atlases/Symbol_Dart");
-            Futile.atlasManager.LoadImage("atlases/Symbol_PoisonDart");
 
             Futile.atlasManager.LoadImage("atlases/Dart");
             Futile.atlasManager.LoadImage("atlases/PoisonDart");

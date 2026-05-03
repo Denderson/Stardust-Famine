@@ -365,7 +365,7 @@ namespace lsfUtils.Items.Dart
             {
                 hasPoisonGraphicsActive = true;
                 sLeaser.sprites = new FSprite[2];
-                sLeaser.sprites[1] = new FSprite("SmallSpear");
+                sLeaser.sprites[1] = new FSprite("atlases/PoisonDart");
                 sLeaser.sprites[0] = TriangleMesh.MakeLongMesh(1, pointyTip: false, customColor: true);
                 for (int i = 0; i < 2; i++)
                 {
@@ -378,7 +378,7 @@ namespace lsfUtils.Items.Dart
             else
             {
                 sLeaser.sprites = new FSprite[1];
-                sLeaser.sprites[0] = new FSprite("SmallSpear");
+                sLeaser.sprites[0] = new FSprite("atlases/Dart");
             }
             AddToContainer(sLeaser, rCam, null);
         }

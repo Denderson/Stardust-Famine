@@ -15,7 +15,7 @@ namespace lsfUtils.Items.PoisonDart
     {
         public PoisonDartFisob() : base(Enums.AbstractPhysicalObjectType.PoisonDart)
         {
-            Icon = new SimpleIcon("Symbol_PoisonDart", Enums.Colors.PoisonColor);
+            Icon = new SimpleIcon("atlases/Symbol_Dart", Enums.Colors.PoisonColor);
             SandboxPerformanceCost = new SandboxPerformanceCost(0.35f, 0f);
             RegisterUnlock(Enums.SandboxUnlockID.PoisonDart, MultiplayerUnlocks.SandboxUnlockID.Slugcat, 15);
             Log.LogMessage("Made poison dart!");
