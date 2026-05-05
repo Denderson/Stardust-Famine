@@ -34,3 +34,4 @@
 !*.csproj
 !*.png
 !*.txt
+!*.json
