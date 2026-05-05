@@ -13,19 +13,20 @@
 !src/Scholar/
 
 !stardustFamine/
-!atlases/
-!modify/
-!modify/world/
-!music/
-!music/procedural/
-!palettes/
-!plugins/
-!scenes/
-!scenes/*/
-!slugbase/
-!slugbase/scenes/
-!world/
-!world/*/
+!stardustFamine/atlases/
+!stardustFamine/modify/
+!stardustFamine/modify/world/
+!stardustFamine/music/
+!stardustFamine/music/procedural/
+!stardustFamine/palettes/
+!stardustFamine/plugins/
+!stardustFamine/scenes/
+!stardustFamine/scenes/*/
+!stardustFamine/slugbase/
+!stardustFamine/slugbase/scenes/
+!stardustFamine/world/
+!stardustFamine/world/*/
+!stardustFamine/world/*/*/
 
 !*.sln
 !*.cs
