@@ -1,0 +1,22 @@
+DangerType: Sandstorm
+CeilingDrips: 0
+RainIntensity: 1
+RumbleIntensity: 0.1029441
+WaveSpeed: 0.5
+WaveLength: 0.75
+WaveAmplitude: 0.04601168
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.409862
+Grime: 0.3804348
+BkgDroneVolume: 0.2469565
+BkgDroneNoThreatVolume: 1
+RandomItemDensity: 0.5
+RandomItemSpearChance: 0.2
+WaterReflectionAlpha: 0
+Palette: 1000
+EffectColorA: 11
+EffectColorB: 21
+Effects: SurfaceSandstorm-1-235.5719-30.67188, SandPuffs-1-30-30, Fog-0.3015963-40-40, ModifyEffectColorA-0,0.5,0.206137-338.8124-153.8333, WaterViscosity-0.2087975-30.79065-129.6833, WaterDepth-1-15.13855-86.28442, SilenceWater-1-301.0656-108.9719, 
+AmbientSounds: OMNI><AM_WIN-SubWnd.ogg><96.04535><501.6693><0.2525363><1, OMNI><rwtw_duststorm_deep.ogg><153.3079><400.0605><0.2061366><1, OMNI><rwtw_duststorm_gusting.ogg><765.016><357.0899><0.206137><1, OMNI><rwtw_duststorm_high.ogg><780.9903><292.5801><0.1597376><1, 
+FadePalette: 35, 0.4

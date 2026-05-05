@@ -1,3 +1,0 @@
-[ADD]HIX
-[ADD]SLX
-[ADD]SHX

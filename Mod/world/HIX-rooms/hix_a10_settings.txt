@@ -1,0 +1,19 @@
+DangerType: Sandstorm
+CeilingDrips: 0
+RumbleIntensity: 0.1029441
+WaveSpeed: 0.4967887
+WaveLength: 0.9983944
+WaveAmplitude: 2.137032E-05
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.4045407
+EffectColorA: 21
+EffectColorB: 21
+TerrainWaves: 1
+TerrainEdgeRadius: 16.69391
+TerrainGooHeight: 0
+TerrainDepth: 0.6839055
+TerrainPalette: outerrim
+Effects: Moth-0.2319973-30-30, SandPuffs-1-40-40, SurfaceSandstorm-0-341.5792-42.05521, 
+PlacedObjects: LanternOnStick><773.8223><247.2672><-17.78656~-123.3979, LanternOnStick><829.6154><334.3004><31.3042~-131.2239, 
+AmbientSounds: OMNI><RWTW_DustStorm_Deep.ogg><759.0977><532.7816><0.1442712><1, 

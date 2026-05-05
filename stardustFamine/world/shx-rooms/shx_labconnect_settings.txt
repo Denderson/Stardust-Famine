@@ -1,9 +1,0 @@
-Template: NONE
-Clouds: 0.1630435
-Grime: 0.173913
-Palette: 50
-EffectColorA: 14
-EffectColorB: 21
-Effects: LightBurn-0.1304348-20-20, BrokenZeroG-0.7717391-40-40, 
-PlacedObjects: CustomDecal><-199.0103><31.77584><-14~2303~1367~2299~1361~0~0~0~0.06521755~1~0~rustymetal~0.4440405~1~0.4440405~1~0.4440405~1~0.4440405~1, CustomDecal><-201.3585><57.21853><-14~2303~1367~2299~1361~0~0~0~0.06521755~1~0~rustymetal(var)~0.313563~1~0.313563~1~0.313563~1~0.313563~1, LightFixture><892.6797><1448.074><RedLight~17.32051~-10~97, LightFixture><856.7383><842.1108><RedLight~17.32051~-10~68, LightFixture><70.99994><2016><RedLight~17.32051~-10~68, CustomDecal><-197><1536><-14~2303~1367~2299~1361~0~0~0~0.06521755~1~0~rustymetal(var)~1~1~1~1~0~1~0~1, WallMycelia><168.0326><1888.447><12~54, WallMycelia><838.8342><1833.493><19~20, CoralNeuron><632.4984><1850.751><-45~84, LightSource><86.15851><1708.137><1~Environment~3~190~50~86.60254~1~0~None~0~0, 
-FadePalette: 22, 0.423913, 0.423913, 0.423913

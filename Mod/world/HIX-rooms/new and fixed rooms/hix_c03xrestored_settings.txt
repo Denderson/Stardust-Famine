@@ -1,0 +1,6 @@
+Palette: 5
+EffectColorA: 10
+EffectColorB: 2
+Effects: WaterDepth-0-0-0, WaterViscosity-0-20-20, SandPuffs-0-30-30, SurfaceSandstorm-0-40-40, Fog-0-50-50, ModifyEffectColorA-0,0.5,0.5-60-60, 
+PlacedObjects: WaterCutoff><1834.266><10.32977><1389.874~0~30~30~Y, WaterCutoff><-193.3421><10.11199><1418.332~0~30~30~Y, 
+FadePalette: 15, 0, 0, 0

@@ -1,2 +1,0 @@
-Room_Attr: SLX_H03: Deer-Stay,
-//FloodForge|SubregionColorOverride|-1|#ffffff

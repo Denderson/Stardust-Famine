@@ -1,0 +1,14 @@
+Template: NONE
+DangerType: Sandstorm
+CeilingDrips: 0
+WaveSpeed: 0.460815
+WaveLength: 0.9804075
+WaveAmplitude: 0.001563747
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Palette: 73
+EffectColorA: 18
+Effects: SSSwarmers-0.02173913-20-20, BrokenZeroG-0.1086956-30-30, LightBurn-0.2826087-150-104, SandPuffs-1-40-40, 
+PlacedObjects: LightSource><595.9642><517.9468><0.6847826~EffectColor1~102~209~50~86.60254~0~0~Fade~0.9565217~0, LightSource><193><84.00001><0.4891304~EffectColor1~108~152~50~86.60254~0~0~Fade~0.9891304~0, WallMycelia><197.1747><88.43531><0~108, CoralNeuron><300.2999><132.7502><-57~62, 
+FadePalette: 12, 0.1521739
+MorePalette0: 50, 0.1521739

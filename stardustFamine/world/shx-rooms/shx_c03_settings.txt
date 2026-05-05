@@ -1,8 +1,0 @@
-Template: NONE
-CeilingDrips: 0
-Clouds: 0.08695652
-Grime: 0.2608696
-Palette: 12
-Effects: LightBurn-0.1630435-20-20, 
-PlacedObjects: LightSource><546.5626><189.68><1~Environment~-19~218~50~86.60254~0~0~Fade~0.8152174~0, LightFixture><2657.412><314.1321><RedLight~17.32051~-10~15, LightFixture><159.6675><543.8907><RedLight~17.32051~-10~1, 
-FadePalette: 10, 0.4130435, 0.5, 0.6521739

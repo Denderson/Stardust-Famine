@@ -1,7 +1,0 @@
-Template: NONE
-CeilingDrips: 0
-Grime: 0.1956522
-Palette: 73
-Effects: LightBurn-0.2826087-20-20, SandPuffs-1-30-30, 
-FadePalette: 12, 0.1630435, 0.1630435, 0.1630435
-MorePalette0: 50, 0.1413043, 0.08695652, 0.04347826

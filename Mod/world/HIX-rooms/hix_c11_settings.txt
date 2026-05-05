@@ -1,0 +1,21 @@
+Template: hix_settingstemplate_outside
+RumbleIntensity: 0.1029438
+WaveSpeed: 0.5055178
+WaveLength: 0.9972411
+WaveAmplitude: 0.04450144
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Clouds: 0.4021288
+EffectColorA: 10
+EffectColorB: 21
+TerrainLight: 1
+TerrainWaves: 1
+TerrainEdgeRadius: 117.226
+TerrainGooHeight: 0.1648095
+TerrainGrain: 1
+TerrainDepth: 0.3359255
+TerrainSkyFade: 1
+TerrainPalette: outerrim
+Effects: SurfaceSandstorm-0.5050725-246.2833-22.88542, 
+PlacedObjects: NoDropwigPerchZone><1926.933><1806.806><0.7114258~165.4542, LanternOnStick><1531.528><567.6638><19.20923~-131.224, LanternOnStick><1629.859><618.8152><-17.07501~-181.0261, 
+FadePalette: 35, 0.4021285, 0.3557293, 0.3093293, 0.409862, 0.4098622, 0.4021286, 0.409862

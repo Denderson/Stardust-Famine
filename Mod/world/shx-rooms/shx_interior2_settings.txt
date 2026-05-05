@@ -1,0 +1,24 @@
+Template: NONE
+DangerType: Sandstorm
+CeilingDrips: 0
+WaveSpeed: 0.5
+WaveLength: 0.75
+WaveAmplitude: 0.04946124
+SecondWaveLength: 0.1666667
+SecondWaveAmplitude: 0
+Grime: 0.173913
+Palette: 73
+TerrainLight: 0
+TerrainStainAmount: 0
+TerrainStainBrightness: 0
+TerrainWaves: 0.5824054
+TerrainEdgeRadius: 56.90653
+TerrainGooHeight: 0.2266753
+TerrainGrain: 0.5746725
+TerrainDepth: 0.4519185
+TerrainSkyFade: 1
+TerrainPalette: outerrim
+Effects: LightBurn-0.2934783-20-20, SandPuffs-1-30-30, 
+PlacedObjects: TerrainHandle><733.4922><427.1816><-126.0865~-49.06668~39.28857~-4.266663~91.82224, TerrainHandle><1053.9><411.722><-185.1376~57.60001~109.723~-31.28891~109.6, TerrainHandle><1418.946><415.131><-49.2489~-29.15555~122.5292~71.8222~126.6667, TerrainHandle><1695.204><609.1593><-96.91669~34.1333~62.05524~26.3111~140.8889, BlackSpot><369.1094><217.6068><-32.01563~164.4444~165.9281~138.8444~191.5406~25.59998, 
+FadePalette: 12, 0.1623981, 0.1623981, 0.1623981, 0.1623981
+MorePalette0: 50, 0.1469315, 0.1469322, 0.1469315, 0.1469315

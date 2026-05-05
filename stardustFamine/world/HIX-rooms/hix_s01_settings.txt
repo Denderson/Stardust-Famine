@@ -1,2 +1,0 @@
-RumbleIntensity: 0
-Effects: SurfaceSandstorm-0-40-40, 

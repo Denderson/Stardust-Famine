@@ -1,2 +1,0 @@
-GATE_HIX_SHX : 5 : 1
-
