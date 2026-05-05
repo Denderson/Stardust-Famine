@@ -13,39 +13,36 @@ namespace Stardust.SaveFile
     {
         public static void SetAnchorMeeting(this DeathPersistentSaveData data, AnchorID anchorType)
         {
-            string anchorTypeString = anchorType.ToString()?.ToLowerInvariant();
-            string anchorData = data.GetString(anchors)?.ToLowerInvariant();
-
+            var anchorTypeString = anchorType.ToString()?.ToLowerInvariant();
+            var anchorData = data.GetString(anchors)?.ToLowerInvariant();
             if (anchorData != null && anchorData.Length > 0)
             {
                 Log.LogMessage("Adding anchor meeting!");
-                anchorData = anchorData + "+" + anchorTypeString;
+                anchorData = $"{anchorData}+{anchorTypeString}";
             }
             else
             {
                 Log.LogMessage("Adding first anchor meeting!");
                 anchorData = anchorTypeString;
             }
-            data.SetString(anchors, anchorData);
+            data.Set<string>(anchors, anchorData);
         }
 
         public static bool GetAnchorMeeting(this DeathPersistentSaveData data, AnchorID anchorType)
         {
-            string anchorTypeString = anchorType.ToString()?.ToLowerInvariant();
-            string anchorData = data.GetString(anchors)?.ToLowerInvariant();
-
+            var anchorTypeString = anchorType.ToString()?.ToLowerInvariant();
+            var anchorData = data.GetString(anchors)?.ToLowerInvariant();
             if (anchorData == null || anchorData.Length <= 0)
             {
                 Log.LogMessage("No anchor data!");
                 return false;
             }
-
             if (anchorData.Contains(anchorTypeString))
             {
-                Log.LogMessage("Met this anchor before: " + anchorTypeString);
+                Log.LogMessage($"Met this anchor before: {anchorTypeString}");
                 return true;
             }
-            Log.LogMessage("Didnt meet this anchor before: " + anchorTypeString);
+            Log.LogMessage($"Didnt meet this anchor before: {anchorTypeString}");
             return false;
         }
     }

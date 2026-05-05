@@ -9,8 +9,11 @@
 !src/Mechanics/
 !src/SaveFile/
 !src/Slugcats/
-!src/Bitter/
-!src/Scholar/
+!src/Slugcats/Bitter/
+!src/Slugcats/Bitter/BitterGraphics/
+!src/Slugcats/Scholar/
+!src/Slugcats/Scholar/Permadeath/
+!src/Slugcats/Scholar/ThreadsSequence/
 
 !stardustFamine/
 !stardustFamine/atlases/

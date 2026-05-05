@@ -20,11 +20,11 @@ namespace Stardust.SaveFile
         public static void TickArmor(RainWorldGame self, bool malnourished)
         {
             int armorRemaining = self.GetStorySession.saveState.GetInt(bitterArmorRemaining);
-            Log.LogMessage("Before change: " + armorRemaining);
+            Log.LogMessage($"Before change: {armorRemaining}");
             if (!malnourished) armorRemaining += armorPerHibernation;
             else armorRemaining += armorPerStarve;
             if (armorRemaining > maxArmor) armorRemaining = maxArmor;
-            self.GetStorySession.saveState.SetInt(bitterArmorRemaining, armorRemaining);
+            self.GetStorySession.saveState.Set<int>(bitterArmorRemaining, armorRemaining);
         }
 
         public static int ArmorFromSave(SaveState save)

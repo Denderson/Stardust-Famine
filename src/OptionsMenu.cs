@@ -12,29 +12,29 @@ namespace Stardust
     {
         public OpCheckBox opCheckBox(Configurable<bool> config, int x, int y, bool isUnfinished = false)
         {
-            OpCheckBox checkBox = new OpCheckBox(config, x * 160, 503 - y * 80) { description = config.info.description };
-            if (isUnfinished) checkBox.colorEdge = new Color(0.85f, 0.35f, 0.4f);
+            OpCheckBox checkBox = new(config, x * 160, 503 - y * 80) { description = config.info.description };
+            if (isUnfinished) checkBox.colorEdge = new(0.85f, 0.35f, 0.4f);
             return checkBox;
         }
 
         public OpLabel opLabel(string text, float x, float y, bool isUnfinished = false)
         {
-            OpLabel label = new OpLabel(x * 160 + 30, 500 - y * 80, text);
-            if (isUnfinished) label.color = new Color(0.85f, 0.35f, 0.4f);
+            OpLabel label = new(x * 160 + 30, 500 - y * 80, text);
+            if (isUnfinished) label.color = new(0.85f, 0.35f, 0.4f);
             return label;
         }
 
         public OpLabel opBigLabel(string text, float y, bool isUnfinished = false)
         {
-            OpLabel label = new OpLabel(410, 480 - y * 80, text, true);
-            if (isUnfinished) label.color = new Color(0.85f, 0.35f, 0.4f);
+            OpLabel label = new(410, 480 - y * 80, text, true);
+            if (isUnfinished) label.color = new(0.85f, 0.35f, 0.4f);
             return label;
         }
 
         public OpLabel opSliderLabel(string text, int y, bool isUnfinished = false)
         {
-            OpLabel label = new OpLabel(110, 460 - y * 80, text) { description = text };
-            if (isUnfinished) label.color = new Color(0.85f, 0.35f, 0.4f);
+            OpLabel label = new(110, 460 - y * 80, text) { description = text };
+            if (isUnfinished) label.color = new(0.85f, 0.35f, 0.4f);
             return label;
         }
         public OptionsMenu(Plugin plugin)
@@ -45,25 +45,19 @@ namespace Stardust
 
         public override void Initialize()
         {
-
             base.Initialize();
 
-            Color unfinishedColor = new Color(0.85f, 0.35f, 0.4f);
-
-
-            this.Tabs = new[] { new OpTab(this, "General options"), new OpTab(this, "Mechanics 1") };
-
-            // Tab 1
-            UIelement[] UIArrayElements = new UIelement[]
-            {
-                new OpLabel(0, 550, "General options", true), new OpLabel(160, 550, "(red means not implemeted yet)", true){color = unfinishedColor}
+            Color unfinishedColor = new(0.85f, 0.35f, 0.4f);
+            this.Tabs = new[] {
+                new OpTab(this, "General options"),
+                new OpTab(this, "Mechanics 1")
             };
-            Tabs[0].AddItems(UIArrayElements);
-
-
+            // Tab 1
+            Tabs[0].AddItems(new[] {
+                new OpLabel(0, 550, "General options", true), new OpLabel(160, 550, "(red means not implemeted yet)", true){color = unfinishedColor}
+            });
             // Tab 2
-            UIArrayElements = new UIelement[]
-            {
+            Tabs[1].AddItems(new UIelement[] {
                 new OpLabel(0, 550, "Mechanics", true), new OpLabel(110, 550, "(red means not implemented yet)", true){color = unfinishedColor},
 
                 opLabel("Unlock Scholar", 0, 0),
@@ -71,8 +65,7 @@ namespace Stardust
 
                 opLabel("Seen Scholar permadeath", 0, 1),
                 opCheckBox(scholarSeenPermadeath, 0, 1)
-            };
-            Tabs[1].AddItems(UIArrayElements);
+            });
         }
 
         public static Configurable<bool> unlockScholar, scholarSeenPermadeath;

@@ -59,7 +59,7 @@ namespace Stardust
                 {
                     if (karma > 9)
                     {
-                        self.karmaSprite.element = Futile.atlasManager.GetElementWithName("atlases/sfsmallkarma" + karma);
+                        self.karmaSprite.element = Futile.atlasManager.GetElementWithName($"atlases/sfsmallkarma{karma}");
                     }
                     self.baseColor = Color.Lerp(Color.white, RainWorld.SaturatedGold, player.room.game.GetStorySession.saveState.EchoEncounters() * 0.07f);
                 }
@@ -78,7 +78,7 @@ namespace Stardust
                 {
                     if (self.displayKarma.x > 9)
                     {
-                        self.karmaSprite.element = Futile.atlasManager.GetElementWithName("atlases/sfsmallkarma" + self.displayKarma.x);
+                        self.karmaSprite.element = Futile.atlasManager.GetElementWithName($"atlases/sfsmallkarma{self.displayKarma.x}");
                     }
                     self.baseColor = Color.Lerp(Color.white, RainWorld.SaturatedGold, player.room.game.GetStorySession.saveState.EchoEncounters() * 0.07f);
                 }
@@ -97,7 +97,7 @@ namespace Stardust
                 {
                     if (self.displayKarma.x > 9)
                     {
-                        self.karmaSprite.element = Futile.atlasManager.GetElementWithName("atlases/sfsmallkarma" + self.displayKarma.x);
+                        self.karmaSprite.element = Futile.atlasManager.GetElementWithName($"atlases/sfsmallkarma{self.displayKarma.x}");
                     }
                     self.baseColor = Color.Lerp(Color.white, RainWorld.SaturatedGold, player.room.game.GetStorySession.saveState.EchoEncounters() * 0.07f);
                 }
@@ -110,13 +110,13 @@ namespace Stardust
         public static void KarmaSymbol_GrafUpdate(On.Menu.KarmaLadder.KarmaSymbol.orig_GrafUpdate orig, Menu.KarmaLadder.KarmaSymbol self, float timeStacker)
         {
             orig(self, timeStacker);
-            if (self?.parent is not null && self.parent is Menu.KarmaLadder && (self.parent as Menu.KarmaLadder).menu is Menu.KarmaLadderScreen karmaLadderScreen && SharedMechanics((karmaLadderScreen.saveState?.saveStateNumber)))
+            if ((self?.parent as Menu.KarmaLadder)?.menu is Menu.KarmaLadderScreen screen && SharedMechanics((screen.saveState?.saveStateNumber)))
             {
                 if (!self.rippleMode)
                 {
                     float num6 = Mathf.Clamp(Mathf.Abs((float)self.displayKarma.x - Mathf.Lerp(self.ladder.lastScroll, self.ladder.scroll, timeStacker)) / 0.75f, 0f, 1f);
                     float num12 = Mathf.Lerp(self.lastEnergy, self.energy, timeStacker);
-                    Color color2 = Color.Lerp(Color.black, Color.Lerp(Color.Lerp(Color.white, RainWorld.SaturatedGold, karmaLadderScreen.saveState.EchoEncounters() * 0.07f), Menu.Menu.MenuColor(Menu.Menu.MenuColors.DarkGrey).rgb, num6), num12);
+                    Color color2 = Color.Lerp(Color.black, Color.Lerp(Color.Lerp(Color.white, RainWorld.SaturatedGold, screen.saveState.EchoEncounters() * 0.07f), Menu.Menu.MenuColor(Menu.Menu.MenuColors.DarkGrey).rgb, num6), num12);
                     self.sprites[self.KarmaSprite].color = color2;
                     self.sprites[self.RingSprite].color = color2;
                 }
@@ -126,24 +126,20 @@ namespace Stardust
         public static void KarmaSymbol_UpdateDisplayKarma(On.Menu.KarmaLadder.KarmaSymbol.orig_UpdateDisplayKarma orig, Menu.KarmaLadder.KarmaSymbol self, IntVector2 dpKarma)
         {
             orig(self, dpKarma);
-            if (self?.parent is not null && self.parent is Menu.KarmaLadder && (self.parent as Menu.KarmaLadder).menu is Menu.KarmaLadderScreen karmaLadderScreen && SharedMechanics((karmaLadderScreen.saveState?.saveStateNumber)))
+            if ((self?.parent as Menu.KarmaLadder)?.menu is Menu.KarmaLadderScreen screen && SharedMechanics((screen.saveState?.saveStateNumber)))
             {
                 if (!self.rippleMode && self.displayKarma.x > 9)
-                {
-                    self.sprites[self.KarmaSprite].element = Futile.atlasManager.GetElementWithName("atlases/sfkarma" + self.displayKarma.x);
-                }
+                    self.sprites[self.KarmaSprite].element = Futile.atlasManager.GetElementWithName($"atlases/sfkarma{self.displayKarma.x}");
             }
         }
 
         public static void KarmaSymbol_ctor(On.Menu.KarmaLadder.KarmaSymbol.orig_ctor orig, Menu.KarmaLadder.KarmaSymbol self, Menu.Menu menu, Menu.MenuObject owner, Vector2 pos, FContainer container, FContainer foregroundContainer, IntVector2 displayKarma, bool rippleMode)
         {
             orig(self, menu, owner, pos, container, foregroundContainer, displayKarma, rippleMode);
-            if (self?.parent is not null && self.parent is Menu.KarmaLadder && (self.parent as Menu.KarmaLadder).menu is Menu.KarmaLadderScreen karmaLadderScreen && SharedMechanics((karmaLadderScreen.saveState?.saveStateNumber)))
+            if ((self?.parent as Menu.KarmaLadder)?.menu is Menu.KarmaLadderScreen screen && SharedMechanics((screen.saveState?.saveStateNumber)))
             {
                 if (!self.rippleMode && self.displayKarma.x > 9)
-                {
-                    self.sprites[self.KarmaSprite].element = Futile.atlasManager.GetElementWithName("atlases/sfkarma" + self.displayKarma.x);
-                }
+                    self.sprites[self.KarmaSprite].element = Futile.atlasManager.GetElementWithName($"atlases/sfkarma{self.displayKarma.x}");
             }
         }
 
@@ -153,23 +149,14 @@ namespace Stardust
             Log.LogMessage("Ghost encounter reached");
             if (SharedMechanics(self.saveStateNumber))
             {
-                int i = 0;
-                foreach (KeyValuePair<GhostWorldPresence.GhostID, int> item in self.deathPersistentSaveData.ghostsTalkedTo)
-                {
-                    if (item.Value > 1)
-                    {
-                        i++;
-                    }
-                }
-                Log.LogMessage("no of Echo: " + i);
+                int i = self.deathPersistentSaveData.ghostsTalkedTo.Count(e => e.Value > 1);
+                Log.LogMessage($"number of Echo: {i}");
                 if (i == 0)
-                {
                     return;
-                }
                 Log.LogMessage("Echo met");
                 self.deathPersistentSaveData.karmaCap = i + 5;
                 self.theGlow = true;
-                Debug.Log("Current karma: " + self.deathPersistentSaveData.karmaCap);
+                Debug.Log($"Current karma: {self.deathPersistentSaveData.karmaCap}");
                 if (self.saveStateNumber == Enums.SlugcatStatsName.sfscholar)
                 {
                     SaveState saveCopy = self;

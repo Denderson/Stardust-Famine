@@ -64,7 +64,7 @@ namespace Stardust.SaveFile
             orig(self, str, game);
             if (self.saveStateNumber == SlugcatStatsName.sfscholar && self.deathPersistentSaveData.GetSlugBaseData().TryGet(backupToUse, out int backup) && backup > -1)
             {
-                Log.LogMessage("Loading backup in loadgame: " + backup);
+                Log.LogMessage($"Loading backup in loadgame: {backup}");
                 string saveToLoad = self.deathPersistentSaveData.GetBackup(backup);
                 orig(self, saveToLoad, game);
             }
@@ -87,9 +87,9 @@ namespace Stardust.SaveFile
             Log.LogMessage("RESETTING SF SAVE DATA");
             save.deathPersistentSaveData.GetSlugBaseData().Set(saveInit, true);
 
-            save.deathPersistentSaveData.SetBool(rippleSequenceDone, false);
-            save.SetString(gates, "");
-            save.deathPersistentSaveData.SetString(anchors, "");
+            save.deathPersistentSaveData.Set<bool>(rippleSequenceDone, false);
+            save.Set<string>(gates, "");
+            save.deathPersistentSaveData.Set<string>(anchors, "");
         }
 
         public static void InitialSaveSetupBitter(this SaveState save)
@@ -98,9 +98,9 @@ namespace Stardust.SaveFile
             {
                 save.InitialSaveSetup();
 
-                save.SetBool(bitterTutorialDone, false);
-                save.deathPersistentSaveData.SetBool(bitterSeenSlugtreeSequence, false);
-                save.SetInt(bitterArmorRemaining, 150);
+                save.Set<bool>(bitterTutorialDone, false);
+                save.deathPersistentSaveData.Set<bool>(bitterSeenSlugtreeSequence, false);
+                save.Set<int>(bitterArmorRemaining, 150);
             }
         }
 
@@ -111,7 +111,7 @@ namespace Stardust.SaveFile
                 save.InitialSaveSetup();
 
                 save.ClearBackupSaves();
-                save.deathPersistentSaveData.SetBool(scholarPermadeath, false);
+                save.deathPersistentSaveData.Set<bool>(scholarPermadeath, false);
             }
         }
 
@@ -130,61 +130,63 @@ namespace Stardust.SaveFile
 
         public static bool GetBool(this SaveState save, string name)
         {
-            if (save.miscWorldSaveData.GetSlugBaseData().TryGet(name, out bool b)) return b;
-            Log.LogMessage("Failed to get " + name);
-            return false;
+            if (save.miscWorldSaveData.GetSlugBaseData().TryGet(name, out bool b))
+                return b;
+            Log.LogMessage($"Failed to get {name}");
+            return new bool();
         }
-        public static void SetBool(this SaveState save, string name, bool value) => save.miscWorldSaveData.GetSlugBaseData().Set(name, value);
+
+        public static void Set<T>(this SaveState save, string name, T value) => save.miscWorldSaveData.GetSlugBaseData().Set(name, value);
+        public static void Set<T>(this DeathPersistentSaveData data, string name, T value) => data.GetSlugBaseData().Set(name, value);
+
         public static string GetString(this SaveState save, string name)
         {
             if (save.miscWorldSaveData.GetSlugBaseData().TryGet(name, out string value)) return value;
-            Log.LogMessage("Failed to get " + name);
+            Log.LogMessage($"Failed to get {name}");
             return null;
         }
-        public static void SetString(this SaveState save, string name, string value) => save.miscWorldSaveData.GetSlugBaseData().Set(name, value);
         public static int GetInt(this SaveState save, string name)
         {
             if (save.miscWorldSaveData.GetSlugBaseData().TryGet(name, out int value)) return value;
-            Log.LogMessage("Failed to get " + name);
+            Log.LogMessage($"Failed to get {name}");
             return -1;
         }
-        public static void SetInt(this SaveState save, string name, int value) => save.miscWorldSaveData.GetSlugBaseData().Set(name, value);
         public static int GetInt(this DeathPersistentSaveData data, string name)
         {
             if (data.GetSlugBaseData().TryGet(name, out int value)) return value;
-            Log.LogMessage("Failed to get " + name);
+            Log.LogMessage($"Failed to get {name}");
             return -1;
         }
-        public static void SetInt(this DeathPersistentSaveData data, string name, int value) => data.GetSlugBaseData().Set(name, value);
-        public static void SetBool(this DeathPersistentSaveData save, string name, bool value) => save.GetSlugBaseData().Set(name, value);
+
         public static bool GetBool(this DeathPersistentSaveData save, string name)
         {
             if (save.GetSlugBaseData().TryGet(name, out bool b)) return b;
-            Log.LogMessage("Failed to get " + name);
+            Log.LogMessage($"Failed to get {name}");
             return false;
         }
+        
         public static string GetString(this DeathPersistentSaveData save, string name)
         {
             if (save.GetSlugBaseData().TryGet(name, out string value)) return value;
-            Log.LogMessage("Failed to get " + name);
+            Log.LogMessage($"Failed to get {name}");
             return null;
         }
-        public static void SetString(this DeathPersistentSaveData save, string name, string value) => save.GetSlugBaseData().Set(name, value);
+
         public static string GetBackup(this DeathPersistentSaveData save, int backupNumber)
         {
             if (save.GetSlugBaseData().TryGet(backup + backupNumber, out string saveString))
             {
                 string result = saveString;
-                Log.LogMessage("Getting backup: " + result);
+                Log.LogMessage($"Getting backup: {result}");
                 return result;
             }
-            Log.LogMessage("Failed to get " + backup + backupNumber);
+            Log.LogMessage($"Failed to get {backup}{backupNumber}");
             return null;
         }
         public static void SetBackup(this DeathPersistentSaveData save, string name, ref SaveState value)
         {
             string result = value.SaveToString();
-            Log.LogMessage("Setting backup: " + result);
+            Log.LogMessage($"Setting backup: {result}");
             save.GetSlugBaseData().Set(name, result);
         }
 

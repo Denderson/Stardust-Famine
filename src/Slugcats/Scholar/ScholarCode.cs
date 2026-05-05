@@ -36,8 +36,6 @@ namespace Stardust.Slugcats.Scholar
 {
     public static class ScholarCode
     {
-
-
         public static void Teleport(Player player)
         {
             for (int i = 0; i < player.room.physicalObjects.Length; i++)

@@ -20,9 +20,8 @@ namespace Stardust.SaveFile
             string gates = self.GetStorySession.saveState.GetString(SaveFileMain.gates);
             if (!string.IsNullOrEmpty(gates))
             {
-                Log.LogMessage("Before change: " + gates);
+                Log.LogMessage($"Before change: {gates}");
                 string newGates = string.Empty;
-
                 string[] arrayGates;
                 if (gates != null && gates.Length > 2 && gates.Contains('+'))
                 {
@@ -38,12 +37,12 @@ namespace Stardust.SaveFile
                         if (cyclesUntilOpen > 0)
                         {
                             if (newGates != string.Empty) newGates += "+";
-                            newGates += newValue.Split('/')[0] + "/" + cyclesUntilOpen;
+                            newGates += newValue.Split('/')[0] + $"/{cyclesUntilOpen}";
                         }
                     }
                 }
-                Log.LogMessage("After change: " + newGates);
-                self.GetStorySession.saveState.SetString(SaveFileMain.gates, newGates);
+                Log.LogMessage($"After change: {newGates}");
+                self.GetStorySession.saveState.Set<string>(SaveFileMain.gates, newGates);
             }
         }
 
@@ -55,11 +54,11 @@ namespace Stardust.SaveFile
         }
         public static void LockGate(this Room room)
         {
-            Log.LogMessage("Locking gate: " + room.abstractRoom.name);
+            Log.LogMessage($"Locking gate: {room.abstractRoom.name}");
             string regions = room.game.GetStorySession.saveState.GetString(gates);
-            if (regions != null) room.game.GetStorySession.saveState.SetString(gates, regions + "+" + room.abstractRoom.name + "/3");
-            else room.game.GetStorySession.saveState.SetString(gates, room.abstractRoom.name + "/3");
-            Log.LogMessage("Gates locked: " + room.game.GetStorySession.saveState.GetString(gates));
+            if (regions != null) room.game.GetStorySession.saveState.Set<string>(gates, $"{regions}+{room.abstractRoom.name}/3");
+            else room.game.GetStorySession.saveState.Set<string>(gates, $"{room.abstractRoom.name}/3");
+            Log.LogMessage($"Gates locked: {room.game.GetStorySession.saveState.GetString(gates)}");
         }
     }
 }

@@ -91,9 +91,9 @@ public class ThreadsScreen : global::Menu.Menu
                 {
                     if (currentSaveState?.deathPersistentSaveData?.GetBackup(i) != null)
                     {
-                        Log.LogMessage("Backup " + i);
+                        Log.LogMessage($"Backup {i}");
                         Log.LogMessage(currentSaveState?.deathPersistentSaveData?.GetBackup(i) != null);
-                        SimpleButton newButton = new(this, pages[0], "BACKUP-" + i, "BACKUP-" + i, new Vector2(manager.rainWorld.options.ScreenSize.x * 0.5f + 120f * (i - 3), manager.rainWorld.options.ScreenSize.y * 0.5f), new Vector2(110f, 30f))
+                        SimpleButton newButton = new(this, pages[0], $"BACKUP-{i}", $"BACKUP-{i}", new Vector2(manager.rainWorld.options.ScreenSize.x * 0.5f + 120f * (i - 3), manager.rainWorld.options.ScreenSize.y * 0.5f), new Vector2(110f, 30f))
                         {
                             black = 1f
                         };
@@ -141,10 +141,10 @@ public class ThreadsScreen : global::Menu.Menu
                 string saveToLoad = " ";
                 if (save?.deathPersistentSaveData?.GetBackup(backupNumber) != null)
                 {
-                    Log.LogMessage("Backup " + backupNumber + " exists");
-                    save.deathPersistentSaveData.SetInt(SaveFileMain.backupToUse, backupNumber);
+                    Log.LogMessage($"Backup {backupNumber} exists");
+                    save.deathPersistentSaveData.Set<int>(SaveFileMain.backupToUse, backupNumber);
                     saveToLoad = save.deathPersistentSaveData.GetBackup(backupNumber);
-                    Log.LogMessage("Save to load: " + saveToLoad);
+                    Log.LogMessage($"Save to load: {saveToLoad}");
                     manager.rainWorld.progression.currentSaveState = save;
                     Log.LogMessage("Loading backup");
                     manager.rainWorld.progression.currentSaveState.LoadGame(saveToLoad, null);
@@ -154,7 +154,7 @@ public class ThreadsScreen : global::Menu.Menu
                         //manager.rainWorld.progression.currentSaveState.deathPersistentSaveData.GetSlugBaseData().Set<string>(SaveFileCode.backup + i, saveToLoad);
                     }
                 }
-                else Log.LogMessage("Backup " + backupNumber + " does not exist");
+                else Log.LogMessage($"Backup {backupNumber} does not exist");
             }
             else manager.rainWorld.progression.currentSaveState = manager.rainWorld.progression.GetOrInitiateSaveState(Enums.SlugcatStatsName.sfscholar, null, manager.menuSetup, saveAsDeathOrQuit: false);
             if (manager.musicPlayer?.song != null) manager.musicPlayer.song.FadeOut(20f);

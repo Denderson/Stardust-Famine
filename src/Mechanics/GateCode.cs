@@ -47,7 +47,7 @@ namespace Stardust.Mechanics
         {
             if (SharedMechanics(self.room?.game?.StoryCharacter))
             {
-                Log.LogMessage("Unlocking region gate + " + self.room.abstractRoom.name);
+                Log.LogMessage($"Unlocking region gate {self.room.abstractRoom.name}");
                 if (self.unlocked)
                 {
                     return;

@@ -28,7 +28,7 @@ public static class AnchorHooks
             return;
         }
 
-        string filePath = "world/" + world.region.name + "/anchor.txt";
+        string filePath = $"world/{world.region.name}/anchor.txt";
         if (!File.Exists(AssetManager.ResolveFilePath(filePath)))
         {
             Log.LogMessage("Anchor file doesnt exist!");
@@ -56,13 +56,13 @@ public static class AnchorHooks
         {
             if (!array[i].StartsWith("//") && array[i].Length > 0)
             {
-                Log.LogMessage("Reading line: " + i);
+                Log.LogMessage($"Reading line: {i}");
                 if (array[i].Contains(':'))
                 {
                     string[] splitLine = array[i].Split(':');
                     if (splitLine.Length != 2)
                     {
-                        Log.LogMessage("Incorrect formatting in Anchor file, line " + i);
+                        Log.LogMessage($"Incorrect formatting in Anchor file, line {i}");
                         continue;
                     }
                     if (splitLine[1].ToLowerInvariant().StartsWith("spot"))

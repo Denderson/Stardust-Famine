@@ -49,9 +49,7 @@ namespace Stardust.Slugcats.Bitter
         {
             bool success = orig(self);
             if (success && self.target is Player && (self.target as Player).SlugCatClass == Enums.SlugcatStatsName.bitter)
-            {
                 self.attachCooldown += 40;
-            }
             return success;
 
         }
@@ -68,12 +66,8 @@ namespace Stardust.Slugcats.Bitter
 
         public static float BitterBiteResistance(On.Player.orig_DeathByBiteMultiplier orig, Player self)
         {
-            if (self?.SlugCatClass != null && self.SlugCatClass == Enums.SlugcatStatsName.bitter)
-            {
-                return orig(self) * 0.50f;
-            }
-            return orig(self);
-
+            float resistance = (self?.SlugCatClass == Enums.SlugcatStatsName.bitter) ? 0.50f : 1.0f;
+            return orig(self) * resistance;
         }
     }
 }

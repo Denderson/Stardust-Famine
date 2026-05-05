@@ -18,13 +18,9 @@ namespace Stardust.Slugcats.Bitter.BitterGraphics
         public static bool PlayerGraphics_MuddableSprite(On.PlayerGraphics.orig_MuddableSprite orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, int sprite)
         {
             if (BitterGraphicsCWT.TryGetData(self, out var data))
-            {
                 return orig(self, sLeaser, sprite) || sprite >= data.startSprite && sprite < data.endSprite;
-            }
             else
-            {
                 return orig(self, sLeaser, sprite);
-            }
         }
 
         public static string PlayerGraphics_DefaultFaceSprite_float_int(On.PlayerGraphics.orig_DefaultFaceSprite_float_int orig, PlayerGraphics self, float eyeScale, int imgIndex)
@@ -82,7 +78,7 @@ namespace Stardust.Slugcats.Bitter.BitterGraphics
             {
                 //head
                 if (sLeaser.sprites[3].element.name.StartsWith("HeadC")) sLeaser.sprites[3].SetElementByName(sLeaser.sprites[3].element.name.Replace("HeadC", "HeadA"));
-                if (!sLeaser.sprites[3].element.name.Contains("Bitter") && sLeaser.sprites[3].element.name.StartsWith("HeadA")) sLeaser.sprites[3].SetElementByName("Bitter" + sLeaser.sprites[3].element.name);
+                if (!sLeaser.sprites[3].element.name.Contains("Bitter") && sLeaser.sprites[3].element.name.StartsWith("HeadA")) sLeaser.sprites[3].SetElementByName($"Bitter{sLeaser.sprites[3].element.name}");
 
                 for (int i = data.startSprite; i < data.spikeSpritesEnd; i++)
                 {

@@ -12,23 +12,10 @@ namespace Stardust.Slugcats.Bitter.BitterGraphics
 {
     public static class BitterModule
     {
-        private static readonly ConditionalWeakTable<Player, BitterData> BitterCWT = new ConditionalWeakTable<Player, BitterData>();
-
-        public static bool IsBitter(this Player player)
-        {
-            return player.SlugCatClass == Enums.SlugcatStatsName.bitter;
-        }
-
-        public static bool IsBitter(this PlayerGraphics player)
-        {
-            return player.player.IsBitter();
-        }
-            
-        public static BitterData GetBitterData(this Player player)
-        {
-            return BitterCWT.GetValue(player, (_) => new BitterData(player));
-        }
-
+        private static readonly ConditionalWeakTable<Player, BitterData> BitterCWT = new();
+        public static bool IsBitter(this Player player) => player.SlugCatClass == Enums.SlugcatStatsName.bitter;
+        public static bool IsBitter(this PlayerGraphics player) => player.player.IsBitter();
+        public static BitterData GetBitterData(this Player player) => BitterCWT.GetValue(player, (_) => new BitterData(player));
         public static void Follow(this FSprite sprite, FSprite follow)
         {
             sprite.SetPosition(follow.GetPosition());

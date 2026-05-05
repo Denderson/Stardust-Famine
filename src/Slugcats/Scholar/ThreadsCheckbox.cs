@@ -15,12 +15,7 @@ namespace Stardust.Slugcats.Scholar.ThreadsSequence
         private struct Simple : IOwnCheckBox
         {
             private bool on;
-
-            bool IOwnCheckBox.GetChecked(CheckBox box)
-            {
-                return on;
-            }
-
+            bool IOwnCheckBox.GetChecked(CheckBox box) => on;
             void IOwnCheckBox.SetChecked(CheckBox box, bool c)
             {
                 on = c;
@@ -57,9 +52,7 @@ namespace Stardust.Slugcats.Scholar.ThreadsSequence
             pos.y = hidden ? -40 : 40;
             base.Update();
             if (menu.restartChecked)
-            {
                 Checked = false;
-            }
         }
     }
 

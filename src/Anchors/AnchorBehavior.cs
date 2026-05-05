@@ -1,4 +1,5 @@
-﻿using HUD;
+﻿using System.Linq;
+using HUD;
 using Stardust.Anchors;
 using UnityEngine;
 using static Stardust.Anchors.Anchor;
@@ -49,33 +50,14 @@ public class AnchorBehavior : Conversation.IOwnAConversation
         get
         {
             int num = owner.room.CameraViewingPoint(owner.targetPos);
-            RoomCamera[] cameras = owner.room.game.cameras;
-            foreach (RoomCamera roomCamera in cameras)
-            {
-                if (roomCamera.room == owner.room && roomCamera.currentCameraPosition == num)
-                {
+            foreach (var camera in owner.room.game.cameras)
+                if (camera.room == owner.room && camera.currentCameraPosition == num)
                     return true;
-                }
-            }
             return false;
         }
     }
 
-    public bool AnyCameraInRoom
-    {
-        get
-        {
-            RoomCamera[] cameras = owner.room.game.cameras;
-            for (int i = 0; i < cameras.Length; i++)
-            {
-                if (cameras[i].room == owner.room)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
+    public bool AnyCameraInRoom => owner.room.game.cameras.Any(e => e.room == owner.room);
 
     public DialogBox DialogBox
     {

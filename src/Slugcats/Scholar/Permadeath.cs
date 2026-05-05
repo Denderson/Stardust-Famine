@@ -21,41 +21,25 @@ namespace Stardust.Slugcats.Scholar.Permadeath
     {
         public const int maxCycles = 20;
 
-        public static int CyclesRemaining(int currentCycle)
-        {
-            return maxCycles - currentCycle;
-        }
-
-        public static bool ShouldPermadie(int currentCycle)
-        {
-            return CyclesRemaining(currentCycle) <= 0;
-        }
+        public static int CyclesRemaining(int currentCycle) => maxCycles - currentCycle;
+        public static bool ShouldPermadie(int currentCycle) => CyclesRemaining(currentCycle) <= 0;
 
         public static void TextPromptCycleFix(On.HUD.TextPrompt.orig_Update orig, HUD.TextPrompt self)
         {
             orig(self);
             if (self?.hud?.owner != null && self.hud.owner is Player && (self.hud.owner as Player).room?.game?.StoryCharacter == Enums.SlugcatStatsName.sfscholar && !self.gameOverMode && self.cycleTick > -1)
-            {
                 self.label.text = self.hud.rainWorld.inGameTranslator.Translate("Cycle") + " " + CyclesRemaining((self.hud.owner as Player).room.game.GetStorySession.saveState.cycleNumber);
-            }
         }
 
         public static void CycleLabelCycleFix(On.HUD.Map.CycleLabel.orig_UpdateCycleText orig, HUD.Map.CycleLabel self)
         {
             orig(self);
-            Player player = self.owner.hud.owner as Player;
+            var player = self.owner.hud.owner as Player;
             if (player.abstractCreature.world.game.StoryCharacter == Enums.SlugcatStatsName.sfscholar)
             {
                 int cyclesRemaining = CyclesRemaining(player.abstractCreature.world.game.GetStorySession.saveState.cycleNumber);
-                if (cyclesRemaining <= 0)
-                {
-                    self.red = 1;
-                }
-                else
-                {
-                    self.red = -1;
-                }
-                self.label.text = self.owner.hud.rainWorld.inGameTranslator.Translate("Cycle") + " " + cyclesRemaining;
+                self.red = (cyclesRemaining <= 0) ? 1 : -1;
+                self.label.text = self.owner.hud.rainWorld.inGameTranslator.Translate("Cycle") + $" {cyclesRemaining}";
             }
         }
 
@@ -84,7 +68,7 @@ namespace Stardust.Slugcats.Scholar.Permadeath
                     if (text.Length > 0)
                     {
                         text = menu.Translate(text);
-                        text = text + " - " + menu.Translate("Cycle") + " " + self.saveGameData.cycle;
+                        text = text + " - " + menu.Translate("Cycle") + $" {self.saveGameData.cycle}";
                         self.regionLabel.text = text;
                     }
                 }
@@ -96,7 +80,7 @@ namespace Stardust.Slugcats.Scholar.Permadeath
             orig(self);
             if (self.sceneID == Enums.MenuSceneIDs.threadsScene)
             {
-                self.sceneFolder = "Scenes" + Path.DirectorySeparatorChar + "ScholarSupernova";
+                self.sceneFolder = $"Scenes{Path.DirectorySeparatorChar}ScholarSupernova";
                 if (true) //self.flatMode)
                 {
                     self.AddIllustration(new MenuIllustration(self.menu, self, self.sceneFolder, "ScholarSupernova - Flat", new Vector2(683f, 384f), crispPixels: false, anchorCenter: true));
@@ -159,9 +143,7 @@ namespace Stardust.Slugcats.Scholar.Permadeath
         public static void SwitchToThreadsScreen(On.ProcessManager.orig_PostSwitchMainProcess orig, ProcessManager self, ProcessManager.ProcessID ID)
         {
             if (ID == Enums.ProcessIDs.threadsProcess)
-            {
                 self.currentMainLoop = new ThreadsScreen(self);
-            }
             orig(self, ID);
         }
 
@@ -187,16 +169,13 @@ namespace Stardust.Slugcats.Scholar.Permadeath
                 orig(self);
                 return;
             }
-            if (self.manager.upcomingProcess != null)
+            if (self.manager.upcomingProcess == null)
             {
-                return;
+                if (self.manager.musicPlayer != null)
+                    self.manager.musicPlayer.FadeOutAllSongs(20f);
+                self.GetStorySession.saveState.deathPersistentSaveData.Set<bool>(SaveFileMain.scholarPermadeath, true);
+                self.manager.RequestMainProcessSwitch(Enums.ProcessIDs.threadsProcess, 5f);
             }
-            if (self.manager.musicPlayer != null)
-            {
-                self.manager.musicPlayer.FadeOutAllSongs(20f);
-            }
-            self.GetStorySession.saveState.deathPersistentSaveData.SetBool(SaveFileMain.scholarPermadeath, true);
-            self.manager.RequestMainProcessSwitch(Enums.ProcessIDs.threadsProcess, 5f);
         }
 
 

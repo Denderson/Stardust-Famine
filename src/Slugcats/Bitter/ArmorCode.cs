@@ -43,7 +43,7 @@ namespace Stardust.Slugcats.Bitter
             }
             if (anyoneHasArmor)
             {
-                self.room.game.GetStorySession.saveState.SetInt(bitterArmorRemaining, ArmorFloatToInt(armor));
+                self.room.game.GetStorySession.saveState.Set<int>(bitterArmorRemaining, ArmorFloatToInt(armor));
             }
             orig(self);
         }

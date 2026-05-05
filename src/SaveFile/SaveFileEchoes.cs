@@ -12,61 +12,35 @@ namespace Stardust.SaveFile
 {
     public static class SaveFileEchoes
     {
-        public static bool HalfwayEchoes(this SaveState data)
-        {
-            return data.EchoEncounters() > maxEchoes / 2;
-        }
-
+        public static bool HalfwayEchoes(this SaveState data) => data.EchoEncounters() > maxEchoes / 2;
         public static int EchoEncounters(this DeathPersistentSaveData data)
         {
-            if (data.maximumRippleLevel >= 1f)
-            {
-                return maxEchoes;
-            }
-            return math.clamp(data.karmaCap - 5, 0, maxEchoes);
+            return (data.maximumRippleLevel >= 1f) ? maxEchoes : math.clamp(data.karmaCap - 5, 0, maxEchoes);
         }
 
         public static int EchoEncounters(this SaveState save)
         {
             if (save?.deathPersistentSaveData != null && SharedMechanics(save.saveStateNumber))
-            {
                 return save.deathPersistentSaveData.EchoEncounters();
-            }
             return 0;
         }
 
         public static bool Ripple(this SaveState data)
         {
             if (data?.deathPersistentSaveData != null)
-            {
                 return data.deathPersistentSaveData.GetBool(rippleSequenceDone);
-            }
             return false;
         }
 
-        public static int MinKarma(this DeathPersistentSaveData data)
-        {
-            int echo = data.EchoEncounters();
-            return (1 + echo) / 2;
-        }
-        public static int MinKarma(this SaveState data)
-        {
-            int echo = data.EchoEncounters();
-            return (1 + echo) / 2;
-        }
-
-
+        public static int MinKarma(this DeathPersistentSaveData data) => (1 + data.EchoEncounters()) / 2;
+        public static int MinKarma(this SaveState data) => (1 + data.EchoEncounters()) / 2;
         public static int MinKarma(this Menu.Menu menu)
         {
-            if (menu is KarmaLadderScreen)
-            {
-                return (menu as KarmaLadderScreen).saveState.MinKarma();
-            }
-            if (menu is SleepAndDeathScreen)
-            {
-                return (menu as SleepAndDeathScreen).saveState.deathPersistentSaveData.MinKarma();
-            }
-            return 0;
+            return menu switch {
+                SleepAndDeathScreen sads => sads.saveState.MinKarma(),
+                KarmaLadderScreen kls => kls.saveState.MinKarma(),
+                _ => 0
+            };
         }
     }
 }

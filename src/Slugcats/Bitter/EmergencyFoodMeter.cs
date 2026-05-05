@@ -56,17 +56,10 @@ namespace Stardust.Slugcats.Bitter
             orig(self, hud, maxFood, survivalLimit, associatedPup, pupNumber);
             bool shouldHaveEmergencyFoodMeter = false;
             if (CWTs.FoodMeterCWT.TryGetData(self, out var data))
-            {
-                if (!data.isEFM && !data.hasEFM)
-                {
-                    shouldHaveEmergencyFoodMeter = true;
-                }
-            }
+                shouldHaveEmergencyFoodMeter |= (!data.isEFM && !data.hasEFM);
 
             if (shouldHaveEmergencyFoodMeter)
-            {
                 self.TrySpawnEmergencyBar();
-            }
             recursionPrevention = false;
         }
     }

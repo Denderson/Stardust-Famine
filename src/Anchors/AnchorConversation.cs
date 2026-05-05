@@ -23,14 +23,13 @@ public class AnchorConversation : Conversation
 
     private static SoundID GetVoiceline(ID id)
     {
-        if (id == null) return null;
         if (id == deeperspaceAnchor) return SoundIDs.deeperspaceAnchor;
-        if (id == ripplespaceAnchor) return SoundIDs.ripplespaceAnchor;
-        if (id == carnalplaneAnchor) return SoundIDs.carnalplaneAnchor;
-        if (id == karmaspaceAnchor) return SoundIDs.karmaspaceAnchor;
-        if (id == mindspaceAnchor) return SoundIDs.mindspaceAnchor;
-        if (id == weaverspaceAnchor) return SoundIDs.weaverspaceAnchor;
-        if (id == intersticeAnchor) return SoundIDs.intersticeAnchor;
+        else if (id == ripplespaceAnchor) return SoundIDs.ripplespaceAnchor;
+        else if (id == carnalplaneAnchor) return SoundIDs.carnalplaneAnchor;
+        else if (id == karmaspaceAnchor) return SoundIDs.karmaspaceAnchor;
+        else if (id == mindspaceAnchor) return SoundIDs.mindspaceAnchor;
+        else if (id == weaverspaceAnchor) return SoundIDs.weaverspaceAnchor;
+        else if (id == intersticeAnchor) return SoundIDs.intersticeAnchor;
         return null;
     }
 
