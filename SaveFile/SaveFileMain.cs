@@ -68,17 +68,16 @@ namespace Stardust.SaveFile
                 string saveToLoad = self.deathPersistentSaveData.GetBackup(backup);
                 orig(self, saveToLoad, game);
             }
-            if (self.cycleNumber > 1)
+            if (self.cycleNumber <= 1)
             {
-                return;
-            }
-            if (self.saveStateNumber == Enums.SlugcatStatsName.bitter)
-            {
-                self.InitialSaveSetupBitter();
-            }    
-            else if (self.saveStateNumber == Enums.SlugcatStatsName.sfscholar)
-            {
-                self.InitialSaveSetupScholar();
+                if (self.saveStateNumber == Enums.SlugcatStatsName.bitter)
+                {
+                    self.InitialSaveSetupBitter();
+                }    
+                else if (self.saveStateNumber == Enums.SlugcatStatsName.sfscholar)
+                {
+                    self.InitialSaveSetupScholar();
+                }
             }
         }
 
@@ -97,7 +96,6 @@ namespace Stardust.SaveFile
             if (!save.deathPersistentSaveData.GetSlugBaseData().TryGet(saveInit, out bool value) || !value)
             {
                 save.InitialSaveSetup();
-
                 save.Set<bool>(bitterTutorialDone, false);
                 save.deathPersistentSaveData.Set<bool>(bitterSeenSlugtreeSequence, false);
                 save.Set<int>(bitterArmorRemaining, 150);
@@ -109,7 +107,6 @@ namespace Stardust.SaveFile
             if (!save.deathPersistentSaveData.GetSlugBaseData().TryGet(saveInit, out bool value) || !value)
             {
                 save.InitialSaveSetup();
-
                 save.ClearBackupSaves();
                 save.deathPersistentSaveData.Set<bool>(scholarPermadeath, false);
             }

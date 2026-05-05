@@ -11,9 +11,7 @@ namespace Stardust.Mechanics
         public static float LocustSystem_SwarmScore_Creature(On.LocustSystem.orig_SwarmScore_Creature orig, LocustSystem self, Creature crit)
         {
             if (crit != null && crit.Submersion > 0.5)
-            {
                 return 0f;
-            }
             return orig(self, crit);
         }
     }

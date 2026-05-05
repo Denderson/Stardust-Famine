@@ -96,9 +96,7 @@ namespace Stardust
                 if (player.maxRippleLevel < 1f)
                 {
                     if (self.displayKarma.x > 9)
-                    {
                         self.karmaSprite.element = Futile.atlasManager.GetElementWithName($"atlases/sfsmallkarma{self.displayKarma.x}");
-                    }
                     self.baseColor = Color.Lerp(Color.white, RainWorld.SaturatedGold, player.room.game.GetStorySession.saveState.EchoEncounters() * 0.07f);
                 }
                 self.karmaSprite.color = self.baseColor;
@@ -151,18 +149,18 @@ namespace Stardust
             {
                 int i = self.deathPersistentSaveData.ghostsTalkedTo.Count(e => e.Value > 1);
                 Log.LogMessage($"number of Echo: {i}");
-                if (i == 0)
-                    return;
-                Log.LogMessage("Echo met");
-                self.deathPersistentSaveData.karmaCap = i + 5;
-                self.theGlow = true;
-                Debug.Log($"Current karma: {self.deathPersistentSaveData.karmaCap}");
-                if (self.saveStateNumber == Enums.SlugcatStatsName.sfscholar)
-                {
-                    SaveState saveCopy = self;
-                    self.SetBackupSave(ref saveCopy, Math.Max(i - 1, 0));
+                if (i > 0) {
+                    Log.LogMessage("Echo met");
+                    self.deathPersistentSaveData.karmaCap = i + 5;
+                    self.theGlow = true;
+                    Debug.Log($"Current karma: {self.deathPersistentSaveData.karmaCap}");
+                    if (self.saveStateNumber == Enums.SlugcatStatsName.sfscholar)
+                    {
+                        SaveState saveCopy = self;
+                        self.SetBackupSave(ref saveCopy, Math.Max(i - 1, 0));
+                    }
+                    rainWorld.progression.SaveProgressionAndDeathPersistentDataOfCurrentState(saveAsDeath: false, saveAsQuit: false);
                 }
-                rainWorld.progression.SaveProgressionAndDeathPersistentDataOfCurrentState(saveAsDeath: false, saveAsQuit: false);
             }
         }
 

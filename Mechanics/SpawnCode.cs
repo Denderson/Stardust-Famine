@@ -15,9 +15,7 @@ namespace Stardust.Mechanics
         {
             int value = orig(self);
             if (SharedMechanics(self?.room?.game?.StoryCharacter) && self.room.game.GetStorySession.saveState.EchoEncounters() < 2)
-            {
                 return 5;
-            }
             return value;
         }
 

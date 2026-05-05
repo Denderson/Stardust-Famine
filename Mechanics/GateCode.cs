@@ -49,9 +49,7 @@ namespace Stardust.Mechanics
             {
                 Log.LogMessage($"Unlocking region gate {self.room.abstractRoom.name}");
                 if (self.unlocked)
-                {
                     return;
-                }
                 self.unlocked = true;
                 self.room.LockGate();
             }
@@ -68,13 +66,9 @@ namespace Stardust.Mechanics
             if (SharedMechanics(self?.room?.game?.StoryCharacter))
             {
                 if (CWTs.RegionGateCWT.TryGetData(self, out var data) && data.exhausted)
-                {
                     return false;
-                }
                 if (self.room.game.GetStorySession.saveState.deathPersistentSaveData.GetBool(SaveFileMain.rippleSequenceDone))
-                {
                     return false;
-                }
             }
             return orig(self);
         }
@@ -86,9 +80,7 @@ namespace Stardust.Mechanics
             {
                 self.flicker = Mathf.Max(self.flicker, 0.5f);
                 if (UnityEngine.Random.value < 0.02f)
-                {
                     self.flicker = Mathf.Max(UnityEngine.Random.value, 0.5f);
-                }
             }
         }
 
@@ -103,19 +95,15 @@ namespace Stardust.Mechanics
                     return;
                 }
                 data.exhausted = true;
-                foreach (GateKarmaGlyph gateKarmaGlyph in self.karmaGlyphs)
-                {
-                    gateKarmaGlyph.myDefaultColor = exhaustedGateColor;
-                }
+                foreach (var glyph in self.karmaGlyphs)
+                    glyph.myDefaultColor = exhaustedGateColor;
             }
         }
 
         public static bool NoBlinkingKarmaOnExhaustedGates(On.RegionGate.orig_KarmaBlinkRed orig, RegionGate self)
         {
             if (CWTs.RegionGateCWT.TryGetData(self, out var data) && data.exhausted)
-            {
                 return false;
-            }
             return orig(self);
         }
     }
