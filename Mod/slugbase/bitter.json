@@ -19,6 +19,9 @@
 		"world_state": [ "bitter", "Watcher" ],
 		"the_mark": false,
 		"select_menu_scene": "Slugcat_bitter",
+		"sleep_scene": "Sleep_bitter",
+		"starve_scene": "Sleep_bitter",
+		"death_scene": "Sleep_bitter",
 		"expedition_enabled": false
 	}
 }
