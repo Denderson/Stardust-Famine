@@ -6,14 +6,27 @@
 
 !src/
 !src/Creatures/
+!src/Creatures/*/
+!src/Creatures/*/*/
 !src/CWTs/
 !src/Effects/
+!src/Effects/EvilWater/
 !src/Items/
-!src/Items/Dart/
-!src/Items/PoisonDart/
-!src/Items/RippleFlower/
+!src/Items/*/
 !src/ProcessingConditions/
 !src/Ripplespace/
+
+!Mod/
+!Mod/atlases
+!Creatures/
+!Creatures/*/
+!Creatures/*/*/
+!CWTs/
+!Effects/
+!Items/
+!Items/*/
+!ProcessingConditions/
+!Ripplespace/
 
 !*.png
 !*.txt

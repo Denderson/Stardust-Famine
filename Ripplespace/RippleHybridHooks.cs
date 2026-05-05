@@ -40,7 +40,7 @@ namespace lsfUtils.Ripplespace
             Log.LogMessage("Ripplifying abstract!");
             abstractPhysicalObject.rippleLayer = rippleLayer;
             abstractPhysicalObject.rippleBothSides = rippleBoth;
-            if (abstractPhysicalObject as AbstractCreature apo)
+            if (abstractPhysicalObject is AbstractCreature apo)
             {
                 apo.rippleLayer = 1;
                 apo.rippleBothSides = true;
