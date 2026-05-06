@@ -1,4 +1,5 @@
-﻿using System;
+﻿using lsfUtils.Items.Dart;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -27,7 +28,8 @@ namespace lsfUtils.CWTs
             public bool rippleMode = false;
             public bool startingRipple = false;
             public int rippleTimer = -1;
-            public int activationTimer;
+            public int activationTimer = 0;
+            public AbstractDart pullingOutThisDart = null;
         }
     }
 }

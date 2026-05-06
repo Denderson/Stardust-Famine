@@ -41,6 +41,7 @@ using static SlugBase.Features.FeatureTypes;
 using static lsfUtils.Ripplespace.RippleHybridHooks;
 using lsfUtils.Ripplespace;
 using lsfUtils.Effects.EvilWater;
+using lsfUtils.Items.Dart;
 
 #pragma warning disable CS0618
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -255,6 +256,7 @@ namespace lsfUtils
                 }
 
                 On.RoomSettings.LoadPlacedObjects_StringArray_Timeline += ConditionalLogic.RoomSettings_LoadPlacedObjects_StringArray_Timeline;
+                On.Player.GrabUpdate += Player_GrabUpdate;
 
 
                 if (isInit) return;
@@ -284,6 +286,8 @@ namespace lsfUtils
         }
 
         
+
+
 
         private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
         {

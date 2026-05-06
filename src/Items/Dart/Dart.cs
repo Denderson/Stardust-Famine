@@ -95,6 +95,8 @@ namespace lsfUtils.Items.Dart
             base.ChangeMode(newMode);
         }
 
+        public bool ShouldStickInCreature(Creature creature, )
+
         public override void Update(bool eu)
         {
             base.Update(eu);
