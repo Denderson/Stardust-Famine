@@ -1,6 +1,7 @@
 *
 !.gitignore
 
+!stardust/
 !stardust/mod/
 !stardust/Anchors/
 !stardust/Conditionals/
