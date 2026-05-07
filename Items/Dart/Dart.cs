@@ -48,6 +48,8 @@ namespace lsfUtils.Items.Dart
 
         public bool strongHit;
 
+        public float pullOutChance;
+
         public Dart(AbstractDart abstractDart) : base(abstractDart, abstractDart.world)
         {
             Log.LogMessage("Making a dart!");
@@ -72,6 +74,8 @@ namespace lsfUtils.Items.Dart
             strongHit = false;
             poison = abstractDart.poison;
             hasPoisonGraphicsActive = poison > 0f;
+            this.abstractDart.realisedDart = this;
+            pullOutChance = 0.5f;
         }
 
         public override void ChangeMode(Mode newMode)
@@ -95,7 +99,10 @@ namespace lsfUtils.Items.Dart
             base.ChangeMode(newMode);
         }
 
-        public bool ShouldStickInCreature(Creature creature, )
+        public bool ShouldStickInCreature(Creature creature)
+        {
+            return true;
+        }
 
         public override void Update(bool eu)
         {

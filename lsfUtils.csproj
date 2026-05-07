@@ -11,6 +11,9 @@
   <ItemGroup>
     <Reference Include="lib\*.dll" Private="False" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="lib\" />
+  </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn />
   </PropertyGroup>

@@ -1,7 +1,10 @@
-﻿using RWCustom;
+﻿using JetBrains.Annotations;
+using lsfUtils.CWTs;
+using RWCustom;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Unity.Mathematics;
@@ -14,8 +17,13 @@ namespace lsfUtils.Items.Dart
         public static void Player_GrabUpdate(On.Player.orig_GrabUpdate orig, Player self, bool eu)
         {
             orig(self, eu);
-            if (self != null && self.Consious && !self.input[0].pckp && self.FreeHand() > -1 && self.input[0].y == 0)
+            if (self == null || !self.Consious || self.FreeHand() < 0)
             {
+                return;
+            }
+            if (self.input[0].y != 0 || self.input[0].pckp)
+            {
+                ResetPull(self);
                 return;
             }
             HandleSelfDartPull(self);
@@ -23,17 +31,23 @@ namespace lsfUtils.Items.Dart
 
         public static void HandleSelfDartPull(Player player)
         {
-            if (!HasEmbeddedDart(player)) return;
-
-
-            int required = 40;
+            if (!HasEmbeddedDart(player, out Dart dart)) return;
 
             player.slowMovementStun = math.max(player.slowMovementStun, 40);
+            player.eyesClosedTime = math.max(player.eyesClosedTime, 40);
 
-            if (selfPullTimers[player] >= required)
+            dart.pullOutTimer++;
+            // do animation part here
+
+            if (dart.PullOutLuckCheck())
             {
-                PullOutDartFromSelf(player);
-                selfPullTimers[player] = 0;
+                PullOutDartFromSelf(player, dart);
+            }
+            else
+            {
+                ResetPull(player);
+                player.Stun(40);
+                player.lungsExhausted = true;
             }
         }
 
@@ -41,68 +55,61 @@ namespace lsfUtils.Items.Dart
         {
             dart = null;
             if (player?.abstractPhysicalObject?.stuckObjects == null || player.abstractPhysicalObject.stuckObjects.Count < 1) return false;
-
-            foreach (AbstractPhysicalObject.AbstractSpearStick stick in player.abstractCreature.stuckObjects)
+            if (!PlayerCWT.TryGetData(player, out var data)) return false;
+            if (data.pullingOutThisDart != null)
             {
-                if (stick?.Spear is AbstractDart)
-                {
-                    dart = ((stick.Spear as AbstractDart).realizedObject as ;
-                }
+                dart = data.pullingOutThisDart;
+                return true;
             }
 
-            bool result = player.abstractCreature.stuckObjects.Exists(obj => obj is AbstractPhysicalObject.AbstractSpearStick stick && stick.Spear is AbstractDart abstractDart);
-            Log.LogMessage("Result: " +  result);
-            return result;
+            foreach (AbstractPhysicalObject.AbstractObjectStick stick in player.abstractCreature.stuckObjects)
+            {
+                if (stick is AbstractPhysicalObject.AbstractSpearStick && (stick as AbstractPhysicalObject.AbstractSpearStick).Spear is AbstractDart abstractDart)
+                {
+                    data.pullingOutThisDart = abstractDart.realisedDart;
+                    dart = data.pullingOutThisDart;
+                    Log.LogMessage("Found a dart in self!");
+                    return true;
+                }
+            }
+            return false;
         }
 
-        public static void PullOutDartFromSelf(Player player)
+        public static void PullOutDartFromSelf(Player player, Dart dart)
         {
-            var stuckList = player.abstractCreature.stuckObjects;
+            if (player == null || dart == null) return;
 
-            for (int i = 0; i < stuckList.Count; i++)
+            dart.ChangeMode(Weapon.Mode.Free);
+
+            int hand = player.FreeHand();
+
+            if (hand > -1)
             {
-                var stick = stuckList[i] as AbstractPhysicalObject.AbstractObjectStick;
-                if (stick == null) continue;
-
-                if (stick.A.type == AbstractPhysicalObject.AbstractObjectType.Dart)
-                {
-                    AbstractPhysicalObject dartAbstract = stick.A;
-
-                    // remove from body
-                    stuckList.RemoveAt(i);
-
-                    // realize it
-                    dartAbstract.RealizeInRoom();
-                    PhysicalObject dart = dartAbstract.realizedObject;
-
-                    // spawn at player
-                    dart.firstChunk.pos = player.mainBodyChunk.pos;
-
-                    // try to put in hand
-                    if (player.grasps[0] == null)
-                        player.SlugcatGrab(dart, 0);
-                    else if (player.grasps[1] == null)
-                        player.SlugcatGrab(dart, 1);
-                    else
-                        dart.firstChunk.vel = Custom.RNV() * 5f; // drop if hands full
-
-                    // feedback
-                    player.room.PlaySound(SoundID.Spear_Pull_Out_Of_Creature, player.mainBodyChunk);
-
-                    // small stun (feels more real)
-                    player.Stun(10);
-
-                    break;
-                }
+                player.SlugcatGrab(dart, hand);
             }
+
+            player.room.PlaySound(SoundID.Spear_Dislodged_From_Creature, player.mainBodyChunk);
+            player.Stun(10);
         }
 
         public static void ResetPull(Player player)
         {
-            if (selfPullTimers.ContainsKey(player))
-            {
-                selfPullTimers[player] = 0;
-            }
+            if (player == null) return;
+            if (!PlayerCWT.TryGetData(player, out var data)) return;
+            data.pullingOutThisDart.pullOutTimer = 0;
+            data.pullingOutThisDart.pullOutAttempts = 0;
+            data.pullingOutThisDart.pullOutChance = 1;
+            data.pullingOutThisDart = null;
+        }
+
+        public static bool PullOutLuckCheck(this Dart dart)
+        {
+            if (dart == null) return false;
+
+            dart.pullOutAttempts++;
+            float randomValue = UnityEngine.Random.value;
+            float numberToBeat = math.pow(dart.pullOutChance, dart.pullOutAttempts);
+            return (randomValue > numberToBeat);
         }
     }
 }
