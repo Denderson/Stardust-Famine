@@ -1,0 +1,11 @@
+{
+	"id": "lsfUtils",
+	"name": "lsfUtils",
+	"version": "0.1",
+	"hide_version": false,
+	"authors": "",
+	"description": "Dependency mod that adds a few mechanics and creatures for modders to use",
+	"requirements": [ "watcher", "fisobs" ],
+	"requirements_names": [ "The Watcher", "Fisobs" ],
+	"checksum_override_version": false
+}
