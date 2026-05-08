@@ -30,14 +30,6 @@
 !stardust/Mod/world/*/
 !stardust/Mod/world/*/*/
 
-!*.sln
-!*.cs
-!*.csproj
-!*.png
-!*.txt
-!*.json
-!*.ogg
-
 !lsfutils/
 !lsfutils/src/
 !lsfutils/src/Creatures/
@@ -67,3 +59,10 @@
 !*.json
 !*.cs
 !*.csproj
+!*.sln
+!*.cs
+!*.csproj
+!*.png
+!*.txt
+!*.json
+!*.ogg
