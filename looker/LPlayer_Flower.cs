@@ -85,21 +85,15 @@ namespace Looker
                     {
                         data.currentlyFloating = false;
                         if (self.canJump > 0)
-                        {
                             data.floatRemaining = Math.Min(data.floatRemaining + 2, 60);
-                        }
                     }
                     if (data.currentlyFloating)
                     {
                         data.timeInFloat++;
                         self.gravity = 0.3f;
-                        for (int i = 0; i < self.bodyChunks.Length; i++)
-                        {
-                            if (self.bodyChunks[i].vel.y < 8)
-                            {
-                                self.bodyChunks[i].vel.y += Mathf.Min(0.25f * Mathf.Pow(data.timeInFloat, 0.7f), 1.1f);
-                            }
-                        }
+                        foreach (var chunk in self.bodyChunks)
+                            if (chunk.vel.y < 8)
+                                chunk.vel.y += Mathf.Min(0.25f * Mathf.Pow(data.timeInFloat, 0.7f), 1.1f);
                     }
                     else
                     {
@@ -141,13 +135,9 @@ namespace Looker
                     }
                 }
                 if (data.darknessImmunity > 0)
-                {
                     data.darknessImmunity--;
-                }
                 if (data.darknessImmunity > 0)
-                {
                     darknessProgress = 0;
-                }
                 if (darknessProgress > 0.8)
                 {
                     self.eyesClosedTime = 10;
@@ -155,9 +145,7 @@ namespace Looker
                     if (darknessProgress >= 1 && data.darknessImmunity <= 0)
                     {
                         if (!OptionsMenu.weakerDarkness.Value && !self.dead)
-                        {
                             self.Die();
-                        }
                     }
                 }
 
@@ -167,16 +155,12 @@ namespace Looker
                     self.watcherInstability = (float)(data.rippleTimer) / (float)MaxRippleDuration();
                     data.rippleTimer--;
                     if (data.rippleTimer == 1)
-                    {
                         self.Stun(12);
-                    }
                 }
                 self.watcherInstability /= 2;
                 self.WatcherInstabilityUpdate();
                 if (self.standingInWarpPointProtectionTime > 0)
-                {
                     self.standingInWarpPointProtectionTime--;
-                }
                 if (data.startingRipple)
                 {
                     if (self.startingCamoStateOnActivate == -1)
@@ -194,9 +178,7 @@ namespace Looker
                     self.activateCamoTimer++;
                     
                     if (!self.CanLevitate)
-                    {
                         self.rippleActivating = true;
-                    }
                     if (self.activateCamoTimer == 80 && self.performingActivationTimer == 0)
                     {
                         self.ChangeRippleLayer(1);
@@ -293,21 +275,12 @@ namespace Looker
 
             if (CheckMechanics(newRoom, "migration", "WMPA"))
             {
-                if (newRoom.abstractRoom.name == data.oldChaserRoom)
-                {
-                    data.timeUntilChaser = 40;
-                }
-                else
-                {
-                    data.timeUntilChaser = 80;
-                }
+                data.timeUntilChaser = (newRoom.abstractRoom.name == data.oldChaserRoom) ? 40 : 80;
                 data.chaserpos = pos;
                 data.oldChaserRoom = newRoom.abstractRoom.name;
                 Vector2 vector = Custom.IntVector2ToVector2(newRoom.ShorcutEntranceHoleDirection(pos));
                 for (int i = 0; i < self.bodyChunks.Length; i++)
-                {
                     self.bodyChunks[i].vel = vector * 35f;
-                }
             }
 
             if (roomName.StartsWith("WARA") && CheckMechanics(self.room, "signal", "WPTA"))
@@ -324,15 +297,9 @@ namespace Looker
             {
                 bool flag = true;
                 for (int i = 0; i < newRoom.physicalObjects.Length; i++)
-                {
                     for (int j = 0; j < newRoom.physicalObjects[i].Count; j++)
-                    {
                         if (newRoom.physicalObjects[i][j] is VultureMask)
-                        {
                             flag = false;
-                        }
-                    }
-                }
                 if (flag)
                 {
                     VultureMask.AbstractVultureMask abstractVultureMask = new(newRoom.world, null, self.room.GetWorldCoordinate(self.mainBodyChunk.pos), SpecialId, self.abstractCreature.ID.RandomSeed, false);
