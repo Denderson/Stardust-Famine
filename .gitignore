@@ -2,15 +2,14 @@
 !.gitignore
 
 !looker/
+!looker/CWTs/
+!looker/Regions/
 !looker/Mod/
 !looker/Mod/illustrations/
 !looker/Mod/scenes/
 !looker/Mod/scenes/*/
 !looker/Mod/slugbase/
 !looker/Mod/slugbase/scenes/
-!looker/src/
-!looker/src/CWTs/
-!looker/src/Regions/
 
 !stardust/
 !stardust/mod/
