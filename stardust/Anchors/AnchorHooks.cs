@@ -5,13 +5,23 @@ using Stardust.CWTs;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEngine;
 using static Stardust.Enums;
 using static Stardust.Plugin;
-
 
 namespace Stardust.Anchors;
 public static class AnchorHooks
 {
+    public static Vector2 DialogBox_DrawPos(On.HUD.DialogBox.orig_DrawPos orig, HUD.DialogBox self, float timeStacker)
+    {
+        Vector2 value = orig(self, timeStacker);
+
+        if (DialogBoxCWT.TryGetData(self, out var data) && data.isAnchorBox)
+        {
+            value += data.positionOffset;
+        }
+        return value;
+    }
     public static void SpawnAnchor(this World world)
     {
         if (ModManager.Expedition && Custom.rainWorld.ExpeditionMode)

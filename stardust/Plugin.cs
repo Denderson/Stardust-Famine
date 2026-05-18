@@ -220,6 +220,7 @@ namespace Stardust
                     On.Music.PlayerThreatTracker.Update += AnchorHooks.PlayerThreatTracker_Update;
                     On.Music.MusicPlayer.GameRequestsSong += AnchorHooks.MusicPlayer_GameRequestsSong;
                     On.Music.GhostSong.Update += AnchorHooks.GhostSong_Update;
+                    On.HUD.DialogBox.DrawPos += AnchorHooks.DialogBox_DrawPos;
                 }
 
                 // il hooks

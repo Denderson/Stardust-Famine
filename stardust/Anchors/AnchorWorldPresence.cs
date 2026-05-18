@@ -91,7 +91,11 @@ namespace Stardust.Anchors
 
         public float AnchorMode(AbstractRoom room)
         {
-            if (anchorRoom == room)
+            if (room == null)
+            {
+                return 0.0f;
+            }
+            if (anchorRoom != null && anchorRoom == room)
                 return 1f;
             if (presenceRooms != null && presenceRooms.Count > 0)
             {
@@ -106,8 +110,10 @@ namespace Stardust.Anchors
 
         public float AttractionValueForCreature(AbstractRoom room, CreatureTemplate.Type tp, float defValue)
         {
-            if (room.index == anchorRoom.index)
+            if (AnchorMode(room) > 0f)
+            {
                 return 0f;
+            }
             float num = CreaturesAllowedInThisRoom(room);
             return Mathf.Lerp(Mathf.Min(defValue, num), defValue * num, 0.5f);
         }
