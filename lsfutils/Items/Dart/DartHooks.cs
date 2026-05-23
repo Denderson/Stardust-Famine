@@ -96,6 +96,7 @@ namespace lsfUtils.Items.Dart
         {
             if (player == null) return;
             if (!PlayerCWT.TryGetData(player, out var data)) return;
+            if (data?.pullingOutThisDart == null) return;
             data.pullingOutThisDart.pullOutTimer = 0;
             data.pullingOutThisDart.pullOutAttempts = 0;
             data.pullingOutThisDart.pullOutChance = 1;

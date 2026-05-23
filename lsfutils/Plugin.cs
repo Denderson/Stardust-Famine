@@ -256,7 +256,7 @@ namespace lsfUtils
                 }
 
                 On.RoomSettings.LoadPlacedObjects_StringArray_Timeline += ConditionalLogic.RoomSettings_LoadPlacedObjects_StringArray_Timeline;
-                On.Player.GrabUpdate += Player_GrabUpdate;
+                On.Player.GrabUpdate += DartHooks.Player_GrabUpdate;
 
 
                 if (isInit) return;

@@ -14,9 +14,9 @@ public class EvilWater
         try
         {
             new EffectDefinitionBuilder("EvilWater")
-                .AddFloatField("placeholder", 0f, 1f, 0.1f, 1f, "placeholder")
-                //.AddIntField("delay", 0, 80, 40, "Delay until poison")
-                //.AddFloatField("speed", 0f, 1f, 0.1f, 1f, "Poison speed")
+                .AddFloatField("delay", 0, 2f, 0.1f, 1f, "Delay")
+                .AddFloatField("speed", 0f, 1f, 0.1f, 1f, "Speed")
+                .AddBoolField("temporary", true, "Temporary")
                 .SetUADFactory((room, data, firstTimeRealized) => new EvilWaterEffectUAD(data))
                 .SetCategory("lsfUtils")
                 .Register();
@@ -40,7 +40,7 @@ public class EvilWater
     public static void EvilWaterLogic(On.Creature.orig_Update orig, Creature self, bool eu)
     {
         // checks to fail code and call vanilla
-        if (CreatureCWT.TryGetData(self, out var data))
+        if (!CreatureCWT.TryGetData(self, out var data))
         {
             orig(self, eu);
             return;
