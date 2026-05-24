@@ -29,7 +29,9 @@ namespace lsfUtils.CWTs
             public bool startingRipple = false;
             public int rippleTimer = -1;
             public int activationTimer = 0;
+            public bool pendingRippleExit;
             public Dart pullingOutThisDart = null;
+            public int rippleExitTimeout;
         }
     }
 }

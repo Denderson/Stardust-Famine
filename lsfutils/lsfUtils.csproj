@@ -9,7 +9,57 @@
     <PathMap>$(MSBuildThisFileDirectory.Replace(',', ',,').Replace('=', '=='))=/</PathMap>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="lib\*.dll" Private="False" />
+    <Reference Include="lib\Assembly-CSharp-firstpass.dll">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="lib\BepInEx.dll">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="lib\Fisobs.dll">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="lib\HOOKS-Assembly-CSharp.dll">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="lib\Mono.Cecil.dll">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="lib\MonoMod.Common.dll">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="lib\MonoMod.RuntimeDetour.dll">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="lib\MonoMod.Utils.dll">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="lib\Newtonsoft.Json.dll">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="lib\Pom.dll">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="lib\PUBLIC-Assembly-CSharp.dll">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="lib\SlugBase.dll">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="lib\Unity.Mathematics.dll">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="lib\UnityEngine.CoreModule.dll">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="lib\UnityEngine.dll">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="lib\UnityEngine.InputLegacyModule.dll">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="lib\UnityEngine.InputModule.dll">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="lib\" />

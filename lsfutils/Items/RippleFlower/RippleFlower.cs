@@ -145,12 +145,12 @@ namespace lsfUtils.Items.RippleFlower
                 {
                     self.Stun(12);
                     data.rippleMode = false;
-                    self.abstractCreature.rippleLayer = 0;
+                    self.ToggleCamo();
+                    self.room.game.cameras[0].lastRippleState = false;
                 }
             }
             if (data.startingRipple)
             {
-                Log.LogMessage("Timer: " + data.activationTimer);
                 if (self.startingCamoStateOnActivate == -1)
                 {
                     self.startingCamoStateOnActivate = (self.isCamo ? 1 : 0);

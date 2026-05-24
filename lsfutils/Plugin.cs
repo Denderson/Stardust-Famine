@@ -214,6 +214,7 @@ namespace lsfUtils
                 {
                     // ripple flower
                     {
+                        Log.LogMessage("Loading ripple flower code!");
                         On.Player.Update += RippleFlower.Player_Update;
                         On.KarmaFlower.BitByPlayer += RippleFlower.KarmaFlower_BitByPlayer;
                         On.KarmaFlower.DrawSprites += RippleFlower.KarmaFlower_DrawSprites;
@@ -221,10 +222,12 @@ namespace lsfUtils
                         On.KarmaFlower.InitiateSprites += RippleFlower.KarmaFlower_InitiateSprites;
                         On.PlayerGraphics.InitiateSprites += RippleFlower.PlayerGraphics_InitiateSprites;
 
+
                         On.PhysicalObject.GetLocalGravity += PhysicalObject_GetLocalGravity;
 
                         new Hook(typeof(Player).GetProperty(nameof(Player.rippleLevel)).GetGetMethod(), typeof(RippleFlower).GetMethod(nameof(RippleFlower.PlayerRippleLevel)));
                         new Hook(typeof(Player).GetProperty(nameof(Player.maxRippleLevel)).GetGetMethod(), typeof(RippleFlower).GetMethod(nameof(RippleFlower.PlayerMaxRippleLevel)));
+                        Log.LogMessage("Exiting ripple flower code!");
                     }
                 }
 
