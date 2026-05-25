@@ -1,11 +1,6 @@
 ﻿using lsfUtils.Items;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace lsfUtils.CWTs
 {
@@ -25,7 +20,7 @@ namespace lsfUtils.CWTs
         }
         public class DataClass
         {
-            public List<LocalGravity> localGravities = new List<LocalGravity>();
+            public List<LocalGravity> localGravities = [];
         }
     }
 }

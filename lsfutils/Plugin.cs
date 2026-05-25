@@ -242,7 +242,11 @@ namespace lsfUtils
 
                 // gravity override
                 {
+                    Log.LogMessage("Gravity override rework!");
                     On.PhysicalObject.Update += LocalGravity.PhysicalObject_Update;
+                    On.Player.Update += LocalGravity.Player_Update_CorrectGravityField;
+                    On.Player.UpdateBodyMode += LocalGravity.Player_UpdateBodyMode;
+                    On.Player.UpdateAnimation += LocalGravity.Player_UpdateAnimation;
                     On.Player.Update += LocalGravity.Player_Update;
                     new Hook(typeof(PhysicalObject).GetProperty(nameof(PhysicalObject.EffectiveRoomGravity)).GetGetMethod(), typeof(LocalGravity).GetMethod(nameof(LocalGravity.EffectiveRoomGravity)));
                     new Hook(typeof(Player).GetProperty(nameof(Player.EffectiveRoomGravity)).GetGetMethod(), typeof(LocalGravity).GetMethod(nameof(LocalGravity.EffectiveRoomGravityForPlayer)));
@@ -287,10 +291,6 @@ namespace lsfUtils
                 Logger.LogError(e);
             }
         }
-
-        
-
-
 
         private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
         {
