@@ -21,7 +21,6 @@ using Stardust.SaveFile;
 using Stardust.Slugcats;
 using Stardust.Slugcats.Bitter;
 using Stardust.Slugcats.Scholar.Permadeath;
-using Stardust.Slugcats.Bitter.BitterGraphics;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
@@ -126,12 +125,11 @@ namespace Stardust
                 {
                     // graphics
                     {
-                        //On.PlayerGraphics.InitiateSprites += BitterGraphics.PlayerGraphics_InitiateSprites;
-                        //On.PlayerGraphics.AddToContainer += BitterGraphics.PlayerGraphics_AddToContainer;
-                        //On.PlayerGraphics.DrawSprites += BitterGraphics.PlayerGraphics_DrawSprites;
-                        //On.PlayerGraphics.ApplyPalette += BitterGraphics.PlayerGraphics_ApplyPalette;
-                        //On.PlayerGraphics.DefaultFaceSprite_float_int += BitterGraphics.PlayerGraphics_DefaultFaceSprite_float_int;
-                        //On.PlayerGraphics.MuddableSprite += BitterGraphics.PlayerGraphics_MuddableSprite;
+                        On.PlayerGraphics.InitiateSprites += BitterGraphics.PlayerGraphics_InitiateSprites;
+                        On.PlayerGraphics.AddToContainer += BitterGraphics.PlayerGraphics_AddToContainer;
+                        On.PlayerGraphics.DrawSprites += BitterGraphics.PlayerGraphics_DrawSprites;
+                        On.PlayerGraphics.ApplyPalette += BitterGraphics.PlayerGraphics_ApplyPalette;
+                        On.PlayerGraphics.MuddableSprite += BitterGraphics.PlayerGraphics_MuddableSprite;
                     }
 
 
@@ -286,6 +284,8 @@ namespace Stardust
             Futile.atlasManager.LoadImage("atlases/sfkarma11");
             Futile.atlasManager.LoadImage("atlases/sfsmallkarma10");
             Futile.atlasManager.LoadImage("atlases/sfsmallkarma11");
+            Futile.atlasManager.LoadImage("atlases/BitterSpike");
+            Futile.atlasManager.LoadImage("atlases/BitterSpikeEnd");
             optionsMenuInstance = new OptionsMenu(this);
             try
             {

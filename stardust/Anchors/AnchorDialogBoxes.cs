@@ -29,7 +29,7 @@ namespace Stardust.Anchors
         }
     }
 
-    public class AnchorDialogueBoxes
+    public class AnchorDialogueBoxContainer
     {
         public List<AnchorDialogueBox> Dialogs = [];
         public AnchorDialogueBox CreateDialog(HUD.HUD hud, string text, Vector2 posOffset, int extraLinger = 0)
