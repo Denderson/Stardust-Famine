@@ -286,6 +286,8 @@ namespace lsfUtils
                 RegisterManagedObject<EventRect, EventRectData, ManagedRepresentation>("EventRect", "lsfUtils");
                 EvilWater.RegisterEvilWater();
 
+                EventLogic.RegisterBuiltInEvents();
+
                 Logger.LogMessage("LSF Utils success!");
             }
             catch (Exception e)
