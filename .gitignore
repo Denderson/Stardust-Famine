@@ -41,23 +41,15 @@
 !stardust/Mod/world/*/*/
 
 !lsfutils/
-!lsfutils/src/
-!lsfutils/src/Creatures/
-!lsfutils/src/Creatures/*/
-!lsfutils/src/Creatures/*/*/
-!lsfutils/src/CWTs/
-!lsfutils/src/Effects/
-!lsfutils/src/Effects/EvilWater/
-!lsfutils/src/Items/
-!lsfutils/src/Items/*/
-!lsfutils/src/ProcessingConditions/
-!lsfutils/src/Ripplespace/
 !lsfutils/Mod/
 !lsfutils/Mod/atlases
 !lsfutils/Creatures/
 !lsfutils/Creatures/*/
 !lsfutils/Creatures/*/*/
 !lsfutils/CWTs/
+!lsfutils/DevtoolsObjects/
+!lsfutils/DevtoolsObjects/*/
+!lsfutils/DevtoolsObjects/*/*/
 !lsfutils/Effects/
 !lsfutils/Items/
 !lsfutils/Items/*/
