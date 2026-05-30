@@ -1,4 +1,4 @@
-﻿using lsfUtils.Items.Dart;
+﻿using lsfUtils.Items.Darts.Dart;
 using System.Runtime.CompilerServices;
 
 namespace lsfUtils.CWTs

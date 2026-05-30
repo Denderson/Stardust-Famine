@@ -18,10 +18,7 @@ using lsfUtils.Creatures.Spawn;
 using lsfUtils.Creatures.Spiders;
 using lsfUtils.Creatures.Spiders.PoisonSpider;
 using lsfUtils.CWTs;
-using lsfUtils.Items;
-using lsfUtils.Items.PoisonDart;
 using lsfUtils.Items.RippleFlower;
-using lsfUtils.ProcessingConditions;
 using Menu.Remix.MixedUI;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -41,7 +38,12 @@ using static SlugBase.Features.FeatureTypes;
 using static lsfUtils.Ripplespace.RippleHybridHooks;
 using lsfUtils.Ripplespace;
 using lsfUtils.Effects.EvilWater;
-using lsfUtils.Items.Dart;
+using lsfUtils.DevtoolsObjects.LocalGravity;
+using lsfUtils.DevtoolsObjects.ConditionalFilter;
+using lsfUtils.DevtoolsObjects.RippleZone;
+using lsfUtils.Items.Darts.Dart;
+using lsfUtils.Items.Darts.PoisonDart;
+using lsfUtils.DevtoolsObjects.EventRectangle;
 
 #pragma warning disable CS0618
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -277,10 +279,11 @@ namespace lsfUtils
                 }
 
                 RegisterManagedObject(new ManagedRippleFlower());
-                RegisterManagedObject<ConditionFilterUAD, ConditionFilterData, ManagedRepresentation>("ConditionalFilter", "lsfUtils");
+                RegisterManagedObject<ConditionFilter, ConditionFilterData, ManagedRepresentation>("ConditionalFilter", "lsfUtils");
                 RegisterManagedObject<RoomConditionFilterUAD, RoomConditionFilterData, ManagedRepresentation>("RoomConditionalFilter", "lsfUtils");
                 RegisterManagedObject<LocalGravity, LocalGravityData, ManagedRepresentation>("LocalGravity", "lsfUtils");
-                RegisterManagedObject<RippleZoneUAD, RippleZoneData, ManagedRepresentation>("RippleZone", "lsfUtils");
+                RegisterManagedObject<RippleZone, RippleZoneData, ManagedRepresentation>("RippleZone", "lsfUtils");
+                RegisterManagedObject<EventRect, EventRectData, ManagedRepresentation>("EventRect", "lsfUtils");
                 EvilWater.RegisterEvilWater();
 
                 Logger.LogMessage("LSF Utils success!");

@@ -1,4 +1,4 @@
-﻿using lsfUtils.Items;
+﻿using lsfUtils.DevtoolsObjects.LocalGravity;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
