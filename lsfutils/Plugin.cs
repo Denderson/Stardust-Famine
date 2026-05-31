@@ -274,7 +274,6 @@ namespace lsfUtils
 
                 // processing conditions
                 {
-                    
                     WorldLoader.Preprocessing.preprocessorConditions.Add(ConditionalLogic.LSFConditions);
                 }
 

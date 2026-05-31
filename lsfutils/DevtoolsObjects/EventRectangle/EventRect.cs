@@ -9,6 +9,7 @@ using UnityEngine;
 using static Pom.Pom;
 using static lsfUtils.Plugin;
 using BepInEx;
+using static lsfUtils.DevtoolsObjects.EventRectangle.EventLogic;
 
 namespace lsfUtils.DevtoolsObjects.EventRectangle
 {
@@ -16,7 +17,18 @@ namespace lsfUtils.DevtoolsObjects.EventRectangle
     {
         private EventRectData data;
         private PlacedObject placedObject;
-        public FloatRect rect;
+
+        public FloatRect rect; // the range of the event rectangle
+
+        public int timer; // for events that are not instant, tell it how many frames the event lasts, counts to zero
+
+        public bool triggered; // prevents an event rectangle from activating multiple times per cycle
+
+        public string eventType; // represents what event should trigger. may change to an enum later on for convenience
+
+        public string eventValue; // represents the custom info about that event, can be null and still work if the event allows it
+
+        public Player triggerer;
         public EventRect(PlacedObject placedObject, Room room)
         {
             EventRectData maybedata = placedObject.data as EventRectData;
@@ -35,34 +47,62 @@ namespace lsfUtils.DevtoolsObjects.EventRectangle
                 Mathf.Max(corner1.x, corner2.x),
                 Mathf.Max(corner1.y, corner2.y)
             );
+            timer = -1;
+            triggered = false;
+            if (data != null)
+            {
+                if (data.eventType != null && !data.eventType.IsNullOrWhiteSpace())
+                {
+                    eventType = data.eventType.Trim().ToLowerInvariant();
+                    if (eventType.Contains("event: ")) eventType = eventType.Replace("event: ", "").Trim();
+                }
+                else
+                {
+                    Log.LogMessage("eventValue doesnt exist!");
+                    eventType = null;
+                }
+
+                if (data.eventValue != null && !data.eventValue.IsNullOrWhiteSpace())
+                {
+                    eventValue = data.eventValue.Trim().ToLowerInvariant();
+                    if (eventValue.Contains("event: ")) eventValue = eventValue.Replace("event: ", "").Trim();
+                }
+                else
+                {
+                    eventValue = null;
+                }
+            }
+            
         }
         public override void Update(bool eu)
         {
+            
             base.Update(eu);
-            for (int i = 0; i < room.physicalObjects.Length; i++)
+            if (!triggered && room != null && room.PlayersInRoom != null && room.PlayersInRoom.Count > 0)
             {
-                for (int j = 0; j < room.physicalObjects[i].Count; j++)
+                foreach (Player player in room.PlayersInRoom)
                 {
-                    for (int k = 0; k < room.physicalObjects[i][j].bodyChunks.Length; k++)
+                    if (player == null || player.bodyChunks == null || player.bodyChunks.Length < 1)
                     {
-                        Vector2 vector = room.physicalObjects[i][j].bodyChunks[k].ContactPoint.ToVector2();
-                        Vector2 pos = room.physicalObjects[i][j].bodyChunks[k].pos + vector * (room.physicalObjects[i][j].bodyChunks[k].rad + 30f);
-                        if (rect.Vector2Inside(pos) && room.physicalObjects[i][j] is Player player)
-                        {
-                            if (data?.condition != null && !data.condition.IsNullOrWhiteSpace())
-                            {
-                                string eventText = data.condition.Trim().ToLowerInvariant();
-                                if (eventText.Contains("event: ")) eventText = eventText.Replace("event: ", "").Trim();
-
-                                EventLogic.TriggerEvent(eventText, room, player);
-                            }
-                            else
-                            {
-                                Log.LogMessage("No eventText!");
-                            }
-                            this.Destroy();
-                        }
+                        continue;
                     }
+                    Vector2 vector = player.mainBodyChunk.ContactPoint.ToVector2();
+                    Vector2 pos = player.mainBodyChunk.pos + vector * (player.mainBodyChunk.rad + 30f);
+                    if (rect.Vector2Inside(pos))
+                    {
+                        triggered = true;
+                        triggerer = player;
+                    }
+                }
+            }
+
+            if (triggered && timer > 0)
+            {
+                timer--;
+                if (timer == 0)
+                {
+                    EventLogic.TriggerEvent(this, eventType, room, triggerer, eventValue);
+                    Destroy();
                 }
             }
         }

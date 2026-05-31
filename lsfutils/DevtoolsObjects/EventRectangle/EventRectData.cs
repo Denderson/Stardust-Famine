@@ -19,24 +19,13 @@ namespace lsfUtils.DevtoolsObjects.EventRectangle
         {
         }
 
-        [StringField("EventRect", "Event-Value", "Event: ")]
-        public string condition;
+        [StringField("EventType", "Event-Type", "Type: ")]
+        public string eventType;
 
-        [BooleanField("SingleUse", false, ManagedFieldWithPanel.ControlType.button, "Single-Use: ")]
+        [StringField("EventValue", "Event-Value", "Value: ")]
+        public string eventValue;
+
+        [BooleanField("OncePerSavefile", false, ManagedFieldWithPanel.ControlType.button, "Once per savefile: ")]
         public bool singleUse;
-
-        public bool Active(ref RainWorldGame game)
-        {
-            bool? value = WorldLoader.Preprocessing.PreprocessCustomConditions(condition, game);
-            if (value != null && value == true)
-            {
-                return true;
-            }
-            return false;
-        }
-        public virtual void DeactivatePlacedObject(PlacedObject pObj)
-        {
-            pObj.active = false;
-        }
     }
 }
