@@ -41,6 +41,15 @@ namespace lsfUtils.DevtoolsObjects.LocalGravity
             }
         }
 
+        public override void Destroy()
+        {
+            base.Destroy();
+            if (RoomCWT.TryGetData(room, out var roomdata) && roomdata.localGravities != null && roomdata.localGravities.Count > 0 && roomdata.localGravities.Contains(this))
+            {
+                roomdata.localGravities.Remove(this);
+            }
+        }
+
         public bool InRange(Vector2 pos)
         {
             return Custom.DistLess(pos, this.pos, data.radius.magnitude);

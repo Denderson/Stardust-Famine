@@ -5,10 +5,14 @@ using System.Linq;
 using UnityEngine;
 using static lsfUtils.Plugin;
 
-namespace lsfUtils.Effects.EvilWater;
+namespace lsfUtils.Effects;
 
 public class EvilWater
 {
+    public static readonly float secondsUntilFullPoisonFromEvilWater = 5;
+    public static readonly float secondsUntilPoisonStartsFallingOffAfterExitingPoisonWater = 3;
+    public static readonly float secondsUntilPoisonBuildupAfterEnteringPoisonWater = 1.5f;
+
     public static void RegisterEvilWater()
     {
         try
@@ -30,7 +34,7 @@ public class EvilWater
     public static void InitialiseEvilWater(On.Water.orig_ctor orig, Water self, Room room, int waterLevel)
     {
         orig(self, room, waterLevel);
-        if (room.roomSettings.GetEffectAmount(Enums.EffectTypes.EvilWater) > 0f && CWTs.WaterCWT.TryGetData(self, out var data))
+        if (room.roomSettings.GetEffectAmount(Enums.EffectTypes.EvilWater) > 0f && WaterCWT.TryGetData(self, out var data))
         {
             data.isPoisonous = true;
             // setting to a CWT so I dont need to grab room effects every tick
@@ -45,12 +49,7 @@ public class EvilWater
             orig(self, eu);
             return;
         }
-        if (!WaterCWT.TryGetData(self.room.waterObject, out var waterdata))
-        {
-            orig(self, eu);
-            return;
-        }
-        if (self?.room == null)
+        if (!WaterCWT.TryGetData(self.room?.waterObject, out var waterdata))
         {
             orig(self, eu);
             return;
@@ -87,7 +86,7 @@ public class EvilWater
     public float OverridePoison(Func<Creature, float> orig, Creature self)
     {
         float result = orig(self);
-        if (self != null && CWTs.CreatureCWT.TryGetData(self, out var data))
+        if (self != null && CreatureCWT.TryGetData(self, out var data))
         {
             return Mathf.Max(result, data.temporaryPoison);
         }

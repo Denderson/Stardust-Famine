@@ -96,7 +96,7 @@ namespace lsfUtils.DevtoolsObjects.EventRectangle
                 }
             }
 
-            if (triggered && timer > 0)
+            if (triggered)
             {
                 timer--;
                 if (timer == 0)

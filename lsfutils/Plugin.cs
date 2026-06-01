@@ -37,13 +37,13 @@ using static Pom.Pom;
 using static SlugBase.Features.FeatureTypes;
 using static lsfUtils.Ripplespace.RippleHybridHooks;
 using lsfUtils.Ripplespace;
-using lsfUtils.Effects.EvilWater;
 using lsfUtils.DevtoolsObjects.LocalGravity;
 using lsfUtils.DevtoolsObjects.ConditionalFilter;
 using lsfUtils.DevtoolsObjects.RippleZone;
 using lsfUtils.Items.Darts.Dart;
 using lsfUtils.Items.Darts.PoisonDart;
 using lsfUtils.DevtoolsObjects.EventRectangle;
+using lsfUtils.Effects;
 
 #pragma warning disable CS0618
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -65,10 +65,6 @@ namespace lsfUtils
         public bool isInit;
 
         public static readonly EntityID SpecialId = new(1, -20);
-        public static readonly float secondsUntilFullPoisonFromEvilWater = 5;
-
-        public static readonly float secondsUntilPoisonStartsFallingOffAfterExitingPoisonWater = 3;
-        public static readonly float secondsUntilPoisonBuildupAfterEnteringPoisonWater = 1.5f;
 
         private void LoadResources(RainWorld rainWorld)
         {
