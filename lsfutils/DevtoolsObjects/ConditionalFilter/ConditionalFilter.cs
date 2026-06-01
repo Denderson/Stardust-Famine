@@ -10,7 +10,7 @@ using static Pom.Pom;
 
 namespace lsfUtils.DevtoolsObjects.ConditionalFilter
 {
-    internal class ConditionFilter : UpdatableAndDeletable
+    public class ConditionFilter : UpdatableAndDeletable
     {
         private ConditionFilterData data;
 

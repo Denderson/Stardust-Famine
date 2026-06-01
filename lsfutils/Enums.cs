@@ -16,6 +16,8 @@ namespace lsfUtils
 
         public enum DartType {Default, Poison, Quill, Sharpnel}
 
+        public enum DarknessPhase { None, Increasing, Decreasing }
+
         public class Colors
         {
             public static Color PoisonColor = new(0.31f, 0.46f, 0.10f);
