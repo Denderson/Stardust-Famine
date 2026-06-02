@@ -2,6 +2,7 @@
 using lsfUtils.CWTs;
 using System;
 using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 using static lsfUtils.Plugin;
 
@@ -9,47 +10,43 @@ namespace lsfUtils.Effects;
 
 public class EvilWater
 {
-    public static readonly float secondsUntilFullPoisonFromEvilWater = 5;
-    public static readonly float secondsUntilPoisonStartsFallingOffAfterExitingPoisonWater = 3;
-    public static readonly float secondsUntilPoisonBuildupAfterEnteringPoisonWater = 1.5f;
+    public const string delayKey = "delay";
+    public const string speedKey = "speed";
+    public const string temporaryKey = "temporary";
 
     public static void RegisterEvilWater()
     {
-        try
-        {
-            new EffectDefinitionBuilder("EvilWater")
-                .AddFloatField("delay", 0, 2f, 0.1f, 1f, "Delay")
-                .AddFloatField("speed", 0f, 1f, 0.1f, 1f, "Speed")
-                .AddBoolField("temporary", true, "Temporary")
-                .SetUADFactory((room, data, firstTimeRealized) => new EvilWaterEffectUAD(data))
-                .SetCategory("lsfUtils")
-                .Register();
-        }
-        catch (Exception ex)
-        {
-            Log.LogWarning($"Error on eff examples init {ex}");
-        }
+        new EffectDefinitionBuilder("EvilWater")
+            .AddFloatField(delayKey, 0, 2f, 0.1f, 1f, "Delay")
+            .AddFloatField(speedKey, 0f, 1f, 0.1f, 1f, "Speed")
+            .AddBoolField(temporaryKey, true, "Temporary")
+            .SetCategory("lsfUtils")
+            .Register();
     }
 
     public static void InitialiseEvilWater(On.Water.orig_ctor orig, Water self, Room room, int waterLevel)
     {
         orig(self, room, waterLevel);
-        if (room.roomSettings.GetEffectAmount(Enums.EffectTypes.EvilWater) > 0f && WaterCWT.TryGetData(self, out var data))
+        if (room?.roomSettings != null && room.roomSettings.GetEffectAmount(Enums.EffectTypes.EvilWater) > 0f && WaterCWT.TryGetData(self, out var waterdata))
         {
-            data.isPoisonous = true;
-            // setting to a CWT so I dont need to grab room effects every tick
+            waterdata.isPoisonous = true;
+            if (RegionCWT.TryGetCustomRegionParams(self.room.world.region, out var paramsdata))
+            {
+                waterdata.evilWaterTimer = paramsdata.EvilWaterTimer;
+                waterdata.evilWaterPoisonDelayTimer = paramsdata.EvilWaterPoisonDelayTimer;
+                waterdata.evilWaterHealDelayTimer = paramsdata.EvilWaterHealDelayTimer;
+            }
         }
     }
 
     public static void EvilWaterLogic(On.Creature.orig_Update orig, Creature self, bool eu)
     {
-        // checks to fail code and call vanilla
         if (!CreatureCWT.TryGetData(self, out var data))
         {
             orig(self, eu);
             return;
         }
-        if (!WaterCWT.TryGetData(self.room?.waterObject, out var waterdata))
+        if (!WaterCWT.TryGetData(self.room?.waterObject, out var waterdata) || !waterdata.isPoisonous)
         {
             orig(self, eu);
             return;
@@ -60,27 +57,19 @@ public class EvilWater
         orig(self, eu);
         self.injectedPoison = oldPoison;
 
-        if (self.Submersion > 0.5f && waterdata.isPoisonous)
+        if (self.Submersion > 0.5f)
         {
-            if (data.timeInEvilWater < (int)(secondsUntilPoisonStartsFallingOffAfterExitingPoisonWater * 40)) data.timeInEvilWater++;
+            if (data.timeInEvilWater >= waterdata.evilWaterPoisonDelayTimer) data.isInEvilWater = true;
+            else data.timeInEvilWater++;
         }
         else
         {
-            if (data.timeInEvilWater > 0)
-            {
-                data.timeInEvilWater--;
-            }
+            if (data.timeInEvilWater <= 0) data.isInEvilWater = false;
+            else data.timeInEvilWater--;
         }
-        if (data.timeInEvilWater > (int)(secondsUntilPoisonBuildupAfterEnteringPoisonWater * 40))
-        {
-            // buildup poison while submerged
-            data.temporaryPoison = Mathf.Min(1f, data.temporaryPoison + (float)(1 / (40 * secondsUntilFullPoisonFromEvilWater)));
-        }
-        else
-        {
-            // poison decrease while not submerged
-            data.temporaryPoison = Mathf.Max(0f, data.temporaryPoison - (float)(1 / (40 * secondsUntilFullPoisonFromEvilWater)));
-        }
+
+        if (data.isInEvilWater) data.temporaryPoison = Mathf.Min(1f, data.temporaryPoison + 1f / waterdata.evilWaterTimer);
+        else data.temporaryPoison = Mathf.Max(0f, data.temporaryPoison - 1f / waterdata.evilWaterTimer);
     }
 
     public float OverridePoison(Func<Creature, float> orig, Creature self)
@@ -93,21 +82,3 @@ public class EvilWater
         return result;
     }
 }
-
-public class EvilWaterEffectUAD : UpdatableAndDeletable
-{
-    public EffectExtraData EffectData { get; }
-
-    public EvilWaterEffectUAD(EffectExtraData effectData)
-    {
-        EffectData = effectData;
-    }
-
-    public override void Update(bool eu)
-    {
-        // add update here? idk
-        // not really needed since hooking Water.ctor is possible and how its done in vanilla
-        // but oh well
-    }
-}
-

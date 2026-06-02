@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using lsfUtils.Effects;
+using System.Runtime.CompilerServices;
 using static lsfUtils.Enums;
 
 namespace lsfUtils.CWTs
@@ -19,10 +20,8 @@ namespace lsfUtils.CWTs
         }
         public class DataClass
         {
-            public int regionState = 0;
-            public float darknessProgress = 0f;
-            public int darknessTimer = 0;
-            public DarknessPhase darknessPhase = DarknessPhase.None;
+            public CreepingDarknessUAD creepingDarkness;
+            public int regionState;
         }
     }
 }

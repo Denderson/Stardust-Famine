@@ -35,7 +35,7 @@ using UnityEngine;
 using Watcher;
 using static Pom.Pom;
 using static SlugBase.Features.FeatureTypes;
-using static lsfUtils.Ripplespace.RippleHybridHooks;
+using static lsfUtils.Ripplespace.RippleHybrid;
 using lsfUtils.Ripplespace;
 using lsfUtils.DevtoolsObjects.LocalGravity;
 using lsfUtils.DevtoolsObjects.ConditionalFilter;
@@ -44,6 +44,7 @@ using lsfUtils.Items.Darts.Dart;
 using lsfUtils.Items.Darts.PoisonDart;
 using lsfUtils.DevtoolsObjects.EventRectangle;
 using lsfUtils.Effects;
+using lsfUtils.CreatureTags;
 
 #pragma warning disable CS0618
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -250,18 +251,36 @@ namespace lsfUtils
                     new Hook(typeof(Player).GetProperty(nameof(Player.EffectiveRoomGravity)).GetGetMethod(), typeof(LocalGravity).GetMethod(nameof(LocalGravity.EffectiveRoomGravityForPlayer)));
                 }
 
+                // creeping darkness
+                {
+                    On.RoomCamera.Update += CreepingDarkness.RoomCamera_Update;
+                    On.LightSource.Update += CreepingDarkness.LightSource_Update;
+                    On.Lantern.Update += CreepingDarkness.Lantern_Update;
+                    On.LanternStick.Update += CreepingDarkness.LanternStick_Update;
+                }
+
                 // misc
                 {
                     On.PhysicalObject.InitiateGraphicsModule += PhysicalObject_InitiateGraphicsModule;
                     On.RoomCamera.SpriteLeaser.ctor += SpriteLeaser_ctor;
-                    On.AbstractCreature.setCustomFlags += AbstractCreature_setCustomFlags;
+                    On.AbstractCreature.setCustomFlags += CreatureFlagSetup.AbstractCreature_setCustomFlags;
 
                     On.Water.ctor += EvilWater.InitialiseEvilWater;
                     On.Creature.Update += EvilWater.EvilWaterLogic;
+
+                    On.Region.ctor_string_int_int_RainWorldGame_Timeline += Region_ctor_string_int_int_RainWorldGame_Timeline;
+                }
+
+                // poison immune
+                {
+                    On.Creature.InjectPoison += PoisonImmune.Creature_InjectPoison;
+                    On.Creature.Update += PoisonImmune.Creature_Update;
                 }
 
                 On.RoomSettings.LoadPlacedObjects_StringArray_Timeline += ConditionalLogic.RoomSettings_LoadPlacedObjects_StringArray_Timeline;
                 On.Player.GrabUpdate += DartHooks.Player_GrabUpdate;
+
+
 
 
                 if (isInit) return;
@@ -289,6 +308,20 @@ namespace lsfUtils
             {
                 Logger.LogMessage("LSF Utils failure!!!");
                 Logger.LogError(e);
+            }
+        }
+
+        public static void Region_ctor_string_int_int_RainWorldGame_Timeline(On.Region.orig_ctor_string_int_int_RainWorldGame_Timeline orig, Region self, string name, int firstRoomIndex, int regionNumber, RainWorldGame game, SlugcatStats.Timeline timelineIndex)
+        {
+            orig(self, name, firstRoomIndex, regionNumber, game, timelineIndex);
+            if (self?.regionParams == null)
+            {
+                return;
+            }
+            CustomRegionParams customParams = CustomRegionParams.ParseFromUnrecognized(self.regionParams.unrecognizedParams, name);
+            if (RegionCWT.TryGetData(self, out var data))
+            {
+                data.customRegionParams = customParams;
             }
         }
 

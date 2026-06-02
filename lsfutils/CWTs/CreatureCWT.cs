@@ -18,8 +18,9 @@ namespace lsfUtils.CWTs
         }
         public class DataClass
         {
-            public int timeInEvilWater;
-            public float temporaryPoison;
+            public int timeInEvilWater = 0;
+            public float temporaryPoison = 0f;
+            public bool isInEvilWater = false;
         }
     }
 }

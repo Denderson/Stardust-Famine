@@ -19,6 +19,9 @@ namespace lsfUtils.CWTs
         public class DataClass
         {
             public bool isPoisonous;
+            public int evilWaterTimer;
+            public int evilWaterPoisonDelayTimer;
+            public int evilWaterHealDelayTimer;
         }
     }
 }

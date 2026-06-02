@@ -26,6 +26,7 @@ namespace lsfUtils.CWTs
             public bool pendingRippleExit;
             public Dart pullingOutThisDart = null;
             public int rippleExitTimeout;
+            public int darknessImmunity = 0;
         }
     }
 }
