@@ -495,7 +495,7 @@ namespace lsfUtils.Creatures.Lizards
                 breedParams.danger = 0.5f;
                 breedParams.headSize = 1.2f;
                 breedParams.tamingDifficulty = 3f;
-                breedParams.headGraphics = new int[5] { 2134688, 2134688, 2134689, 2, 3 };
+                breedParams.headGraphics = [2134688, 2134688, 2134689, 2, 3];
                 breedParams.headShieldAngle = 100f;
                 breedParams.neckStiffness = 0.2f;
                 breedParams.jawOpenAngle = 150f; //
@@ -557,7 +557,7 @@ namespace lsfUtils.Creatures.Lizards
                 breedParams.idleCounterSubtractWhenCloseToIdlePos = 100;
                 breedParams.danger = 0.3f;
                 breedParams.tamingDifficulty = 3f;
-                breedParams.headGraphics = new int[5] { 2134689, 2134689, 0, 0, 0 };
+                breedParams.headGraphics = [2134689, 2134689, 0, 0, 0];
                 breedParams.headSize = 1.3f;
                 breedParams.headShieldAngle = 100f;
                 breedParams.neckStiffness = 0.2f;
@@ -581,7 +581,7 @@ namespace lsfUtils.Creatures.Lizards
                 temp = orig(CreatureTemplate.Type.PinkLizard, lizardAncestor, pinkTemplate, blueTemplate, greenTemplate);
                 breedParams = (temp.breedParameters as LizardBreedParams)!;
                 temp.type = type;
-                temp.name = "MonitorLizard";
+                temp.name = "PoisonLizard";
                 breedParams.template = type;
 
                 breedParams.tongue = true;
@@ -613,9 +613,9 @@ namespace lsfUtils.Creatures.Lizards
                 breedParams.tailColorationStart = 0.3f;
                 breedParams.tailColorationExponent = 2f;
                 breedParams.standardColor = Enums.Colors.PoisonColor;
-                breedParams.toughness = 3f; //
-                breedParams.swimSpeed = 1f; //
-                breedParams.idleCounterSubtractWhenCloseToIdlePos = 100; //
+                breedParams.toughness = 3f;
+                breedParams.swimSpeed = 1f; 
+                breedParams.idleCounterSubtractWhenCloseToIdlePos = 100;
                 breedParams.danger = 0.5f;
                 breedParams.headSize = 1f;
                 breedParams.tamingDifficulty = 3f;
@@ -797,6 +797,18 @@ namespace lsfUtils.Creatures.Lizards
                     self.AddModule(self.lurkTracker);
                     self.utilityComparer.AddComparedModule(self.lurkTracker, null, Mathf.Lerp(0.4f, 0.3f, creature.personality.energy), 1f);
                 }
+            }
+        }
+
+        public static void LizardGraphics_InitiateSprites(On.LizardGraphics.orig_InitiateSprites orig, LizardGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
+        {
+            orig(self, sLeaser, rCam);
+
+            if (self.lizard.Template.type == Enums.CreatureTemplateType.StarNosedLizard)
+            {
+                sLeaser.sprites[self.SpriteHeadStart].anchorY = 0.6f;
+                sLeaser.sprites[self.SpriteHeadStart + 1].anchorY = 0.6f;
+                sLeaser.sprites[self.SpriteHeadStart + 2].anchorY = 0.6f;
             }
         }
     }

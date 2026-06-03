@@ -118,6 +118,7 @@ namespace lsfUtils
                         On.LizardVoice.GetMyVoiceTrigger += LizardCode.On_LizardVoice_GetMyVoiceTrigger;
                         On.LizardAI.ctor += LizardCode.LizardAI_ctor;
                         On.LizardTongue.ctor += LizardCode.LizardTongue_ctor;
+                        On.LizardGraphics.InitiateSprites += LizardCode.LizardGraphics_InitiateSprites;
                         new Hook(typeof(Lizard).GetProperty(nameof(Lizard.Swimmer)).GetGetMethod(), typeof(LizardCode).GetMethod(nameof(LizardCode.Lizard_Swimmer)));
 
                         // airplane lizard
@@ -379,6 +380,7 @@ namespace lsfUtils
                 Logger.LogError(e);
             }
         }
+
         public static bool GetNameFromAnywhere(out SlugcatStats.Name name)
         {
             name = null;
