@@ -26,6 +26,8 @@ namespace lsfUtils
         public class EffectTypes
         {
             public static RoomSettings.RoomEffect.Type EvilWater = new(nameof(EvilWater), true);
+            public static RoomSettings.RoomEffect.Type CreepingDarkness = new(nameof(CreepingDarkness), true);
+            public static RoomSettings.RoomEffect.Type LookerMechanicOverride = new(nameof(LookerMechanicOverride), true);
         }
 
         public class CreatureTemplateType
@@ -92,6 +94,7 @@ namespace lsfUtils
         {
             public static MultiplayerUnlocks.SandboxUnlockID RippleFlower = new(nameof(RippleFlower), true);
             public static MultiplayerUnlocks.SandboxUnlockID PoisonDart = new(nameof(PoisonDart), true);
+            public static MultiplayerUnlocks.SandboxUnlockID KarmaMask = new(nameof(KarmaMask), true);
 
             public static MultiplayerUnlocks.SandboxUnlockID WeaverLizard = new(nameof(WeaverLizard), true);
             public static MultiplayerUnlocks.SandboxUnlockID FlameLizard = new(nameof(FlameLizard), true);
@@ -114,6 +117,10 @@ namespace lsfUtils
 
             public void UnregisterValues()
             {
+                KarmaMask?.Unregister();
+                KarmaMask = null;
+                PoisonDart?.Unregister();
+                PoisonDart = null;
                 RippleFlower?.Unregister();
                 RippleFlower = null;
 
@@ -157,6 +164,7 @@ namespace lsfUtils
             public static AbstractPhysicalObject.AbstractObjectType RippleFlower = new(nameof(RippleFlower), true);
             public static AbstractPhysicalObject.AbstractObjectType Dart = new(nameof(Dart), true);
             public static AbstractPhysicalObject.AbstractObjectType PoisonDart = new(nameof(PoisonDart), true);
+            public static AbstractPhysicalObject.AbstractObjectType KarmaMask = new(nameof(KarmaMask), true);
 
             public void UnregisterValues()
             {
@@ -164,6 +172,8 @@ namespace lsfUtils
                 RippleFlower = null;
                 PoisonDart?.Unregister();
                 PoisonDart = null;
+                KarmaMask?.Unregister();
+                KarmaMask = null;
             }
         }
 

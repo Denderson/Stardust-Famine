@@ -17,8 +17,19 @@ using lsfUtils.Creatures.Scavs.ScavSeer;
 using lsfUtils.Creatures.Spawn;
 using lsfUtils.Creatures.Spiders;
 using lsfUtils.Creatures.Spiders.PoisonSpider;
+using lsfUtils.CreatureTags;
 using lsfUtils.CWTs;
+using lsfUtils.DevtoolsObjects.ConditionalFilter;
+using lsfUtils.DevtoolsObjects.EventRectangle;
+using lsfUtils.DevtoolsObjects.LocalGravity;
+using lsfUtils.DevtoolsObjects.RippleZone;
+using lsfUtils.Effects;
+using lsfUtils.Items.Darts.Dart;
+using lsfUtils.Items.Darts.PoisonDart;
 using lsfUtils.Items.RippleFlower;
+using lsfUtils.Items.KarmaMask;
+using lsfUtils.RegionParams;
+using lsfUtils.Ripplespace;
 using Menu.Remix.MixedUI;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -33,18 +44,9 @@ using System.Runtime.Remoting.Contexts;
 using System.Security.Permissions;
 using UnityEngine;
 using Watcher;
+using static lsfUtils.RegionParams.RegionTypeParams;
 using static Pom.Pom;
 using static SlugBase.Features.FeatureTypes;
-using lsfUtils.Ripplespace;
-using lsfUtils.DevtoolsObjects.LocalGravity;
-using lsfUtils.DevtoolsObjects.ConditionalFilter;
-using lsfUtils.DevtoolsObjects.RippleZone;
-using lsfUtils.Items.Darts.Dart;
-using lsfUtils.Items.Darts.PoisonDart;
-using lsfUtils.DevtoolsObjects.EventRectangle;
-using lsfUtils.Effects;
-using lsfUtils.CreatureTags;
-using lsfUtils.RegionParams;
 
 #pragma warning disable CS0618
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -64,6 +66,8 @@ namespace lsfUtils
 
         public bool initialized;
         public bool isInit;
+
+        public const string templarMaskIcon = "atlases/templarMaskIcon";
 
         public static readonly EntityID SpecialId = new(1, -20);
 
@@ -101,6 +105,7 @@ namespace lsfUtils
 
                     Content.Register(new RippleFlowerFisob());
                     Content.Register(new PoisonDartFisob());
+                    Content.Register(new KarmaMaskFisob());
 
                     Log.LogMessage("Done with Fisobs!");
                 }
@@ -315,7 +320,7 @@ namespace lsfUtils
 
                 // region parameters
                 {
-                    On.Region.ctor_string_int_int_RainWorldGame_Timeline += Region_ctor_string_int_int_RainWorldGame_Timeline;
+                    On.Region.ctor_string_int_int_RainWorldGame_Timeline += CustomRegionParams.Region_ctor_string_int_int_RainWorldGame_Timeline;
 
                     // scavenger params
                     {
@@ -325,6 +330,13 @@ namespace lsfUtils
                     // sentient rot params
                     {
                         On.Region.IsSentientRotRegion += Region_IsSentientRotRegion;
+                        On.Region.IsVanillaSentientRotRegion += Region_IsVanillaSentientRotRegion;
+                        On.Region.HasSentientRotResistance += Region_HasSentientRotResistance;
+                        On.Region.IsDaemonRegion += Region_IsDaemonRegion;
+                        On.Region.IsAncientUrbanRegion += Region_IsAncientUrbanRegion;
+                        On.Region.IsRubiconRegion += Region_IsRubiconRegion;
+                        On.Region.IsShatteredTerraceRegion += Region_IsShatteredTerraceRegion;
+                        On.Region.HasWarpFatigueResistance += Region_HasWarpFatigueResistance;
                     }
                 }
 
@@ -343,7 +355,9 @@ namespace lsfUtils
                 RegisterManagedObject<LocalGravity, LocalGravityData, ManagedRepresentation>("LocalGravity", "lsfUtils");
                 RegisterManagedObject<RippleZone, RippleZoneData, ManagedRepresentation>("RippleZone", "lsfUtils");
                 RegisterManagedObject<EventRect, EventRectData, ManagedRepresentation>("EventRect", "lsfUtils");
+
                 EvilWater.RegisterEvilWater();
+                CreepingDarkness.RegisterCreepingDarkness();
 
                 EventLogic.RegisterBuiltInEvents();
 
@@ -358,26 +372,31 @@ namespace lsfUtils
             }
         }
 
-        public static bool Region_IsSentientRotRegion(On.Region.orig_IsSentientRotRegion orig, string name)
+        public static bool GetNameFromAnywhere(out SlugcatStats.Name name)
         {
-            bool value = orig(name);
-            return value;
+            name = null;
+            if (RWCustom.Custom.rainWorld.processManager?.currentMainLoop is RainWorldGame game && game.IsStorySession)
+            {
+                name = game.StoryCharacter;
+                return true;
+            }
+            Log.LogMessage("Error in GetNameFromAnywhere!");
+            return false;
         }
 
-        public static void Region_ctor_string_int_int_RainWorldGame_Timeline(On.Region.orig_ctor_string_int_int_RainWorldGame_Timeline orig, Region self, string name, int firstRoomIndex, int regionNumber, RainWorldGame game, SlugcatStats.Timeline timelineIndex)
+        public static bool GetTimelineFromAnywhere(out SlugcatStats.Timeline timeline)
         {
-            orig(self, name, firstRoomIndex, regionNumber, game, timelineIndex);
-            if (self?.regionParams == null)
+            timeline = null;
+            if (RWCustom.Custom.rainWorld.processManager?.currentMainLoop is RainWorldGame game && game.IsStorySession)
             {
-                return;
+                timeline = game.TimelinePoint;
+                return true;
             }
-            CustomRegionParams customParams = CustomRegionParams.ParseFromUnrecognized(self.regionParams.unrecognizedParams, name);
-            if (RegionCWT.TryGetData(self, out var data))
-            {
-                data.customRegionParams = customParams;
-            }
+            Log.LogMessage("Error in GetTimelineFromAnywhere!");
+            return false;
         }
 
+        
         private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
         {
             orig(self);
@@ -395,6 +414,8 @@ namespace lsfUtils
             Futile.atlasManager.LoadImage("atlases/PoisonDart");
 
             Futile.atlasManager.LoadAtlas("atlases/lsfLizardStuff");
+
+            Futile.atlasManager.LoadImage(templarMaskIcon);
         }
 
         private float PhysicalObject_GetLocalGravity(On.PhysicalObject.orig_GetLocalGravity orig, PhysicalObject self)

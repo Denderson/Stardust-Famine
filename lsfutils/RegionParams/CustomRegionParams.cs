@@ -1,4 +1,5 @@
-﻿using System;
+﻿using lsfUtils.CWTs;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.CompilerServices;
@@ -109,5 +110,20 @@ namespace lsfUtils.RegionParams
         private static int ParseInt(string s) => int.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture);
 
         private static bool ParseBool(string s) => s.Trim().ToLowerInvariant() == "true";
+
+        public static void Region_ctor_string_int_int_RainWorldGame_Timeline(On.Region.orig_ctor_string_int_int_RainWorldGame_Timeline orig, Region self, string name, int firstRoomIndex, int regionNumber, RainWorldGame game, SlugcatStats.Timeline timelineIndex)
+        {
+            orig(self, name, firstRoomIndex, regionNumber, game, timelineIndex);
+            if (self?.regionParams == null)
+            {
+                return;
+            }
+            CustomRegionParams customParams = CustomRegionParams.ParseFromUnrecognized(self.regionParams.unrecognizedParams, name);
+            if (RegionCWT.TryGetData(self, out var data))
+            {
+                data.customRegionParams = customParams;
+            }
+        }
+
     }
 }

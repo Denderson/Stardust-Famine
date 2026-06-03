@@ -24,10 +24,16 @@ public class EvilWater
             .Register();
     }
 
+    public static bool HasEffect(Room room)
+    {
+        if (room?.roomSettings?.effects == null) return false;
+        return room.roomSettings.GetEffect(Enums.EffectTypes.CreepingDarkness) != null;
+    }
+
     public static void InitialiseEvilWater(On.Water.orig_ctor orig, Water self, Room room, int waterLevel)
     {
         orig(self, room, waterLevel);
-        if (room?.roomSettings != null && room.roomSettings.GetEffectAmount(Enums.EffectTypes.EvilWater) > 0f && WaterCWT.TryGetData(self, out var waterdata))
+        if (room?.roomSettings != null && HasEffect(room) && WaterCWT.TryGetData(self, out var waterdata))
         {
             waterdata.isPoisonous = true;
             if (RegionCWT.TryGetCustomRegionParams(self.room.world.region, out var paramsdata))
