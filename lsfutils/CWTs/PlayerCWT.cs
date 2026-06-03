@@ -27,6 +27,9 @@ namespace lsfUtils.CWTs
             public Dart pullingOutThisDart = null;
             public int rippleExitTimeout;
             public int darknessImmunity = 0;
+
+            public bool karmaMode = false;
+            public bool previousKarmaMode = false;
         }
     }
 }

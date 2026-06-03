@@ -252,6 +252,13 @@ namespace lsfUtils
                     {
                         On.Player.GrabUpdate += DartHooks.Player_GrabUpdate;
                     }
+
+                    // karma mask
+                    {
+                        new Hook(typeof(RegionGate).GetProperty(nameof(RegionGate.MeetRequirement))!.GetGetMethod(), typeof(KarmaMaskHooks).GetMethod(nameof(KarmaMaskHooks.Meet_Requirement)));
+                        On.HUD.KarmaMeter.Update += KarmaMaskHooks.KarmaMeter_Update;
+                        On.Player.Update += KarmaMaskHooks.Player_Update;
+                    }
                 }
 
                 // devtools objects
@@ -286,7 +293,8 @@ namespace lsfUtils
                         On.RoomCamera.Update += CreepingDarkness.RoomCamera_Update;
                         On.LightSource.Update += CreepingDarkness.LightSource_Update;
                         On.Lantern.Update += CreepingDarkness.Lantern_Update;
-                        On.LanternStick.Update += CreepingDarkness.LanternStick_Update;
+                        On.Player.Update += CreepingDarkness.Player_Update;
+                        On.RainWorldGame.Update += CreepingDarkness.RainWorldGame_Update;
                     }
 
                     // evilwater
@@ -371,7 +379,6 @@ namespace lsfUtils
                 Logger.LogError(e);
             }
         }
-
         public static bool GetNameFromAnywhere(out SlugcatStats.Name name)
         {
             name = null;

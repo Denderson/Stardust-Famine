@@ -19,6 +19,10 @@ public class CreepingDarknessUAD
     public bool simpleVersion;
     public bool scavLantern;
 
+    public enum DarknessState { Expanding, FullIdle, Retracting, EmptyIdle }
+    public DarknessState state = DarknessState.Expanding;
+    public int idleCounter = 0;
+
     public float ExpandSpeed => expandTimer > 0 ? 1f / expandTimer : 1f / 600f;
     public float RetractSpeed => retractTimer > 0 ? 1f / retractTimer : 1f / 200f;
 
@@ -40,6 +44,58 @@ public class CreepingDarknessUAD
             simpleVersion = p.CreepingDarknessSimpleVersion;
             scavLantern = p.CreepingDarknessScavLantern;
         }
+    }
+
+    public void Tick()
+    {
+        switch (state)
+        {
+            case DarknessState.Expanding:
+                {
+                    darknessProgress = Mathf.Min(1f, darknessProgress + ExpandSpeed);
+                    if (darknessProgress >= 1f)
+                    {
+                        state = DarknessState.FullIdle;
+                        idleCounter = expandIdleTimer;
+                    }
+                    break;
+                }
+
+            case DarknessState.FullIdle:
+                {
+                    idleCounter--;
+                    if (idleCounter <= 0)
+                    {
+                        state = DarknessState.Retracting;
+                    }
+                    break;
+                }
+                
+
+            case DarknessState.Retracting:
+                {
+                    darknessProgress = Mathf.Max(0f, darknessProgress - RetractSpeed);
+                    if (darknessProgress <= 0f)
+                    {
+                        state = DarknessState.EmptyIdle;
+                        idleCounter = retractIdleTimer;
+                    }
+                    break;
+                }
+
+            case DarknessState.EmptyIdle:
+                {
+                    idleCounter--;
+                    if (idleCounter <= 0)
+                    {
+                        state = DarknessState.Expanding;
+                    }
+                    break;
+                }
+                
+        }
+
+        retractDarkness = state == DarknessState.Retracting;
     }
 }
 
@@ -65,6 +121,7 @@ public class CreepingDarkness
         uad = worldData.creepingDarkness;
         return uad != null;
     }
+
     public static void Room_Loaded(On.Room.orig_Loaded orig, Room self)
     {
         orig(self);
@@ -77,6 +134,7 @@ public class CreepingDarkness
         worldData.creepingDarkness = new CreepingDarknessUAD(self.world);
         Log.LogMessage($"CreepingDarkness: UAD initialised for world '{self.world.region?.name}'.");
     }
+
     public static void RoomCamera_Update(On.RoomCamera.orig_Update orig, RoomCamera self)
     {
         orig(self);
@@ -84,13 +142,13 @@ public class CreepingDarkness
         if (self.room == null || !HasEffect(self.room)) return;
         if (!TryGetUAD(self.room.world, out var uad)) return;
 
-        if (uad.retractDarkness) uad.darknessProgress = Mathf.Max(0f, uad.darknessProgress - uad.RetractSpeed);
-        else uad.darknessProgress = Mathf.Min(1f, uad.darknessProgress + uad.ExpandSpeed);
+        uad.Tick();
 
         self.sofBlackFade = uad.darknessProgress;
         self.effect_darkness = uad.darknessProgress;
         self.lightBloomAlpha = 1f - uad.darknessProgress;
     }
+
     public static void LightSource_Update(On.LightSource.orig_Update orig, LightSource self, bool eu)
     {
         orig(self, eu);
@@ -109,21 +167,14 @@ public class CreepingDarkness
             else Log.LogMessage("CreepingDarkness: Couldn't find PlayerCWT!");
         }
     }
+
     public static void Lantern_Update(On.Lantern.orig_Update orig, Lantern self, bool eu)
     {
         orig(self, eu);
 
         if (self?.room == null || !HasEffect(self.room)) return;
         if (!TryGetUAD(self.room.world, out var uad)) return;
-        if (self.stick != null) return; // LanternStick handles this case
-
-        foreach (Player player in self.room.PlayersInRoom)
-        {
-            if (player?.abstractCreature?.realizedCreature == null) continue;
-            if (!Custom.DistLess(self.firstChunk.pos, player.firstChunk.pos, 100f)) continue;
-
-            if (PlayerCWT.TryGetData(player, out var data)) data.darknessImmunity = 120;
-        }
+        if (self.stick != null) return;
 
         if (uad.darknessProgress > 0.8f && LanternCWT.TryGetData(self, out var lanternData))
         {
@@ -166,19 +217,44 @@ public class CreepingDarkness
             }
         }
     }
-    public static void LanternStick_Update(On.LanternStick.orig_Update orig, LanternStick self, bool eu)
+
+    public static void Player_Update(On.Player.orig_Update orig, Player self, bool eu)
     {
         orig(self, eu);
 
-        if (self?.room == null || !HasEffect(self.room)) return;
-        if (self.lantern == null) return;
+        if (self?.room == null) return;
+        if (!PlayerCWT.TryGetData(self, out var data)) return;
+        if (!TryGetUAD(self.room.world, out var uad)) return;
 
-        foreach (Player player in self.room.PlayersInRoom)
+        if (data.darknessImmunity > 0)
         {
-            if (player?.abstractCreature?.realizedCreature == null) continue;
-            if (!Custom.DistLess(self.lantern.firstChunk.pos, player.firstChunk.pos, 100f)) continue;
+            data.darknessImmunity--;
+            if (uad.simpleVersion)
+            {
+                uad.state = CreepingDarknessUAD.DarknessState.Retracting;
+            }
+        }
 
-            if (PlayerCWT.TryGetData(player, out var data)) data.darknessImmunity = 120;
+        if (uad.darknessProgress > 0.8)
+        {
+            self.eyesClosedTime = 10;
+            self.slowMovementStun = 40;
+            if (uad.darknessProgress >= 1 && data.darknessImmunity <= 0)
+            {
+                if (!self.dead)
+                {
+                    self.Die();
+                }
+            }
+        }
+    }
+
+    public static void RainWorldGame_Update(On.RainWorldGame.orig_Update orig, RainWorldGame self)
+    {
+        orig(self);
+        if (self?.world != null && !self.GamePaused && self.processActive && WorldCWT.TryGetData(self.world, out var data) && data.creepingDarkness != null)
+        {
+            data.creepingDarkness.Tick();
         }
     }
 }

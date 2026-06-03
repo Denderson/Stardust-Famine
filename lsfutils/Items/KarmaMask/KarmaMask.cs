@@ -7,27 +7,37 @@ namespace lsfUtils.Items.KarmaMask
 {
     public class KarmaMask : VultureMask
     {
+        LightSource lightSource;
         public KarmaMaskAbstract KarmaMaskAbstract => abstractPhysicalObject as KarmaMaskAbstract;
 
         public KarmaMask(KarmaMaskAbstract abstr) : base(abstr, null)
         {
             Log.LogMessage("Spawning karma mask!");
             abstractPhysicalObject.rippleBothSides = true;
-            if (CWTs.VultureMaskCWT.TryGetData(this, out var data))
+            lightSource = null;
+        }
+
+        public override void Update(bool eu)
+        {
+            base.Update(eu);
+            if (lightSource == null)
             {
-                data.isKarmaMask = true;
+                lightSource = new LightSource(firstChunk.pos, environmentalLight: false, RainWorld.GoldRGB, this)
+                {
+                    affectedByPaletteDarkness = 0.5f
+                };
+                room.AddObject(lightSource);
             }
             else
             {
-                Log.LogMessage("Couldn't get VultureMask CWT from KarmaMaskObject ctor!");
+                lightSource.setPos = firstChunk.pos;
+                lightSource.setRad = 100f;
+                lightSource.setAlpha = 1f;
+                if (lightSource.slatedForDeletetion || lightSource.room != this.room)
+                {
+                    lightSource = null;
+                }
             }
-        }
-
-        public static bool IsKarmaMask(VultureMask mask)
-        {
-            if (mask == null) return false;
-            if (!CWTs.VultureMaskCWT.TryGetData(mask, out var data)) return false;
-            return data.isKarmaMask;
         }
     }
 }
