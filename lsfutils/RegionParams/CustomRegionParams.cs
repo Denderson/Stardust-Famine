@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using static lsfUtils.Plugin;
 
-namespace lsfUtils
+namespace lsfUtils.RegionParams
 {
     public class CustomRegionParams
     {

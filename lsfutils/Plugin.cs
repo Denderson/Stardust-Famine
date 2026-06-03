@@ -35,7 +35,6 @@ using UnityEngine;
 using Watcher;
 using static Pom.Pom;
 using static SlugBase.Features.FeatureTypes;
-using static lsfUtils.Ripplespace.RippleHybrid;
 using lsfUtils.Ripplespace;
 using lsfUtils.DevtoolsObjects.LocalGravity;
 using lsfUtils.DevtoolsObjects.ConditionalFilter;
@@ -45,6 +44,7 @@ using lsfUtils.Items.Darts.PoisonDart;
 using lsfUtils.DevtoolsObjects.EventRectangle;
 using lsfUtils.Effects;
 using lsfUtils.CreatureTags;
+using lsfUtils.RegionParams;
 
 #pragma warning disable CS0618
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -105,107 +105,121 @@ namespace lsfUtils
                     Log.LogMessage("Done with Fisobs!");
                 }
 
-                // lizards
+                // creatures
                 {
-                    On.LizardBreeds.BreedTemplate_Type_CreatureTemplate_CreatureTemplate_CreatureTemplate_CreatureTemplate += LizardCode.On_LizardBreeds_BreedTemplate_Type_CreatureTemplate_CreatureTemplate_CreatureTemplate_CreatureTemplate;
-                    On.LizardVoice.GetMyVoiceTrigger += LizardCode.On_LizardVoice_GetMyVoiceTrigger;
-                    On.LizardAI.ctor += LizardCode.LizardAI_ctor;
-                    On.LizardTongue.ctor += LizardCode.LizardTongue_ctor;
-                    new Hook(typeof(Lizard).GetProperty(nameof(Lizard.Swimmer)).GetGetMethod(), typeof(LizardCode).GetMethod(nameof(LizardCode.Lizard_Swimmer)));
-
-                    // airplane lizard
+                    // lizards
                     {
-                        On.Lizard.EnterAnimation += AirplaneLizardHooks.Lizard_EnterAnimation;
-                        On.LizardGraphics.BodyColor += AirplaneLizardHooks.LizardGraphics_BodyColor;
-                        On.LizardGraphics.ColorBody += AirplaneLizardHooks.LizardGraphics_ColorBody;
-                        On.LizardCosmetics.SpineSpikes.ctor += AirplaneLizardHooks.SpineSpikes_ctor;
-                        On.LizardAI.AggressiveBehavior += AirplaneLizardHooks.LizardAI_AggressiveBehavior;
+                        On.LizardBreeds.BreedTemplate_Type_CreatureTemplate_CreatureTemplate_CreatureTemplate_CreatureTemplate += LizardCode.On_LizardBreeds_BreedTemplate_Type_CreatureTemplate_CreatureTemplate_CreatureTemplate_CreatureTemplate;
+                        On.LizardVoice.GetMyVoiceTrigger += LizardCode.On_LizardVoice_GetMyVoiceTrigger;
+                        On.LizardAI.ctor += LizardCode.LizardAI_ctor;
+                        On.LizardTongue.ctor += LizardCode.LizardTongue_ctor;
+                        new Hook(typeof(Lizard).GetProperty(nameof(Lizard.Swimmer)).GetGetMethod(), typeof(LizardCode).GetMethod(nameof(LizardCode.Lizard_Swimmer)));
+
+                        // airplane lizard
+                        {
+                            On.Lizard.EnterAnimation += AirplaneLizardHooks.Lizard_EnterAnimation;
+                            On.LizardGraphics.BodyColor += AirplaneLizardHooks.LizardGraphics_BodyColor;
+                            On.LizardGraphics.ColorBody += AirplaneLizardHooks.LizardGraphics_ColorBody;
+                            On.LizardCosmetics.SpineSpikes.ctor += AirplaneLizardHooks.SpineSpikes_ctor;
+                            On.LizardAI.AggressiveBehavior += AirplaneLizardHooks.LizardAI_AggressiveBehavior;
+                        }
+
+                        // flame lizard
+                        {
+
+                        }
+
+                        // raspberry lizard
+                        {
+                            //IL.LizardCosmetics.Antennae.ctor += Creatures.RaspberryLizard.RaspberryLizardHooks.Antennae_ctor;
+                            On.LizardAI.ctor += RaspberryLizardHooks.LizardAI_ctor;
+                            On.LizardAI.TravelPreference += RaspberryLizardHooks.LizardAI_TravelPreference;
+                            On.LizardPather.HeuristicForCell += RaspberryLizardHooks.LizardPather_HeuristicForCell;
+                        }
+
+                        // weaver lizard
+                        {
+                            On.LizardGraphics.InitiateSprites += WeaverLizardHooks.LizardGraphics_InitiateSprites;
+                            On.LizardCosmetics.LongShoulderScales.ctor += WeaverLizardHooks.LongShoulderScales_ctor;
+                            On.LizardCosmetics.TailTuft.ctor += WeaverLizardHooks.TailTuft_ctor;
+
+                        }
+
+                        // poison lizard
+                        {
+                            On.LizardAI.Update += PoisonLizardHooks.LizardAI_Update;
+                            On.Lizard.Bite += PoisonLizardHooks.Lizard_Bite;
+                            On.LizardTongue.Impact += PoisonLizardHooks.LizardTongue_Impact;
+                            On.LizardAI.IUseARelationshipTracker_UpdateDynamicRelationship += PoisonLizardHooks.LizardAI_IUseARelationshipTracker_UpdateDynamicRelationship;
+                        }
+
+                        // monitor lizard
+                        {
+                            On.LizardGraphics.ColorBody += MonitorLizardHooks.LizardGraphics_ColorBody;
+                            On.LizardGraphics.BodyColor += MonitorLizardHooks.LizardGraphics_BodyColor;
+                            On.Water.Update += MonitorLizardHooks.Water_Update;
+                            On.MudPit.ChunkSlowdown += MonitorLizardHooks.MudPit_ChunkSlowdown;
+                        }
+
+                        // starnosed lizard
+                        {
+                            On.SuperHearing.Update += StarNosedLizardHooks.SuperHearing_Update;
+                            IL.LizardCosmetics.Whiskers.ctor += NoseTendrils.Whiskers_ctor;
+                            new Hook(typeof(LizardGraphics).GetProperty(nameof(LizardGraphics.effectColor)).GetGetMethod(), typeof(StarNosedLizardHooks).GetMethod(nameof(StarNosedLizardHooks.Lizard_effectColor)));
+                            new Hook(typeof(LizardGraphics).GetProperty(nameof(LizardGraphics.HeadLightsUpFromNoise)).GetGetMethod(), typeof(StarNosedLizardHooks).GetMethod(nameof(StarNosedLizardHooks.Lizard_HeadLight)));
+                            On.LizardAI.Update += StarNosedLizardHooks.LizardAI_Update;
+                        }
                     }
 
-                    // flame lizard
+                    // scavs
                     {
+                        On.Scavenger.SetUpCombatSkills += ScavCode.Scavenger_SetUpCombatSkills;
+                        On.Scavenger.Throw += ScavCode.Scavenger_Throw;
+                        On.ScavengerAI.WantToThrowSpearAtCreature += ScavCode.ScavengerAI_WantToThrowSpearAtCreature;
+                        On.ScavengerAI.DecideBehavior += ScavCode.ScavengerAI_DecideBehavior;
+                        On.ScavengersWorldAI.Trader.ScavScore += ScavCode.Trader_ScavScore;
+
+                        // scav flank
+                        {
+                            On.Scavenger.ctor += ScavFlankHooks.Scavenger_ctor;
+                            On.Scavenger.Update += ScavFlankHooks.Scavenger_Update;
+                            On.Scavenger.PlaceInRoom += ScavFlankHooks.Scavenger_PlaceInRoom;
+                            On.Scavenger.Violence += ScavFlankHooks.Scavenger_Violence;
+
+                            new Hook(typeof(Scavenger).GetProperty(nameof(Scavenger.KarmicArmorProtected)).GetGetMethod(), typeof(ScavFlankHooks).GetMethod(nameof(ScavFlankHooks.KarmicArmor_Protected)));
+                        }
+
+                        // scav seer
+                        {
+                            On.ScavengerGraphics.ShockReaction += ScavSeerHooks.ScavengerGraphics_ShockReaction;
+                            On.ScavengerAbstractAI.InOffscreenDen += ScavFlankHooks.ScavengerAbstractAI_InOffscreenDen;
+                            On.ScavengerAI.ScavPlayerRelationChange += ScavMessengerHooks.ScavengerAI_ScavPlayerRelationChange;
+                            On.ScavengerAI.WantToStayInDenUntilEndOfCycle += ScavMessengerHooks.ScavengerAI_WantToStayInDenUntilEndOfCycle;
+                            On.ScavengerGraphics.ctor += ScavSeerHooks.ScavengerGraphics_ctor;
+                            On.ScavengerAbstractAI.ScavengerSquad.UpdateLeader += ScavSeerHooks.ScavengerSquad_UpdateLeader;
+                            On.ScavengerAI.ReactToNoise += ScavSeerHooks.ScavengerAI_ReactToNoise;
+                            On.ScavengerAI.Update += ScavSeerHooks.ScavengerAI_Update;
+                        }
+
+                        // scav messenger
+                        {
+                            On.ScavengerAI.SocialEvent += ScavMessengerHooks.ScavengerAI_SocialEvent;
+                            On.ScavengerAbstractAI.GoHome += ScavMessengerHooks.ScavengerAbstractAI_GoHome;
+                            On.ScavengerAbstractAI.ReGearInDen += ScavMessengerHooks.ScavengerAbstractAI_ReGearInDen;
+                            On.ScavengerAI.WeaponScore += ScavMessengerHooks.ScavengerAI_WeaponScore;
+                            On.ScavengerAI.CollectScore_PhysicalObject_bool += ScavMessengerHooks.ScavengerAI_CollectScore_PhysicalObject_bool;
+                        }
+
 
                     }
 
-                    // raspberry lizard
+                    // spiders
                     {
-                        //IL.LizardCosmetics.Antennae.ctor += Creatures.RaspberryLizard.RaspberryLizardHooks.Antennae_ctor;
-                        On.LizardAI.ctor += RaspberryLizardHooks.LizardAI_ctor;
-                        On.LizardAI.TravelPreference += RaspberryLizardHooks.LizardAI_TravelPreference;
-                        On.LizardPather.HeuristicForCell += RaspberryLizardHooks.LizardPather_HeuristicForCell;
-                    }
-
-                    // weaver lizard
-                    {
-                        On.LizardGraphics.InitiateSprites += WeaverLizardHooks.LizardGraphics_InitiateSprites;
-                        On.LizardCosmetics.LongShoulderScales.ctor += WeaverLizardHooks.LongShoulderScales_ctor;
-                        On.LizardCosmetics.TailTuft.ctor += WeaverLizardHooks.TailTuft_ctor;
-
-                    }
-
-                    // poison lizard
-                    {
-                        On.LizardAI.Update += PoisonLizardHooks.LizardAI_Update;
-                        On.Lizard.Bite += PoisonLizardHooks.Lizard_Bite;
-                        On.LizardTongue.Impact += PoisonLizardHooks.LizardTongue_Impact;
-                        On.LizardAI.IUseARelationshipTracker_UpdateDynamicRelationship += PoisonLizardHooks.LizardAI_IUseARelationshipTracker_UpdateDynamicRelationship;
-                    }
-
-                    // monitor lizard
-                    {
-                        On.LizardGraphics.ColorBody += MonitorLizardHooks.LizardGraphics_ColorBody;
-                        On.LizardGraphics.BodyColor += MonitorLizardHooks.LizardGraphics_BodyColor;
-                        On.Water.Update += MonitorLizardHooks.Water_Update;
-                        On.MudPit.ChunkSlowdown += MonitorLizardHooks.MudPit_ChunkSlowdown;
-                    }
-
-                    // starnosed lizard
-                    {
-                        On.SuperHearing.Update += StarNosedLizardHooks.SuperHearing_Update;
-                        IL.LizardCosmetics.Whiskers.ctor += NoseTendrils.Whiskers_ctor;
-                        new Hook(typeof(LizardGraphics).GetProperty(nameof(LizardGraphics.effectColor)).GetGetMethod(), typeof(StarNosedLizardHooks).GetMethod(nameof(StarNosedLizardHooks.Lizard_effectColor)));
-                        new Hook(typeof(LizardGraphics).GetProperty(nameof(LizardGraphics.HeadLightsUpFromNoise)).GetGetMethod(), typeof(StarNosedLizardHooks).GetMethod(nameof(StarNosedLizardHooks.Lizard_HeadLight)));
-                        On.LizardAI.Update += StarNosedLizardHooks.LizardAI_Update;
-                    }
-                }
-
-                // scavs
-                {
-                    On.Scavenger.SetUpCombatSkills += ScavCode.Scavenger_SetUpCombatSkills;
-                    On.Scavenger.Throw += ScavCode.Scavenger_Throw;
-                    On.ScavengerAI.WantToThrowSpearAtCreature += ScavCode.ScavengerAI_WantToThrowSpearAtCreature;
-                    On.ScavengerAI.DecideBehavior += ScavCode.ScavengerAI_DecideBehavior;
-                    On.ScavengersWorldAI.Trader.ScavScore += ScavCode.Trader_ScavScore;
-
-                    // scav flank
-                    {
-                        On.Scavenger.ctor += ScavFlankHooks.Scavenger_ctor;
-                        On.Scavenger.Update += ScavFlankHooks.Scavenger_Update;
-                        On.Scavenger.PlaceInRoom += ScavFlankHooks.Scavenger_PlaceInRoom;
-                        On.Scavenger.Violence += ScavFlankHooks.Scavenger_Violence;
-
-                        new Hook(typeof(Scavenger).GetProperty(nameof(Scavenger.KarmicArmorProtected)).GetGetMethod(), typeof(ScavFlankHooks).GetMethod(nameof(ScavFlankHooks.KarmicArmor_Protected)));
-                    }
-
-                    // scav seer
-                    {
-                        On.ScavengerGraphics.ShockReaction += ScavSeerHooks.ScavengerGraphics_ShockReaction;
-                        On.ScavengerAbstractAI.InOffscreenDen += ScavFlankHooks.ScavengerAbstractAI_InOffscreenDen;
-                        On.ScavengerAI.ScavPlayerRelationChange += ScavMessengerHooks.ScavengerAI_ScavPlayerRelationChange;
-                        On.ScavengerAI.WantToStayInDenUntilEndOfCycle += ScavMessengerHooks.ScavengerAI_WantToStayInDenUntilEndOfCycle;
-                        On.ScavengerGraphics.ctor += ScavSeerHooks.ScavengerGraphics_ctor;
-                        On.ScavengerAbstractAI.ScavengerSquad.UpdateLeader += ScavSeerHooks.ScavengerSquad_UpdateLeader;
-                        On.ScavengerAI.ReactToNoise += ScavSeerHooks.ScavengerAI_ReactToNoise;
-                        On.ScavengerAI.Update += ScavSeerHooks.ScavengerAI_Update;
-                    }
-
-                    // scav messenger
-                    {
-                        On.ScavengerAI.SocialEvent += ScavMessengerHooks.ScavengerAI_SocialEvent;
-                        On.ScavengerAbstractAI.GoHome += ScavMessengerHooks.ScavengerAbstractAI_GoHome;
-                        On.ScavengerAbstractAI.ReGearInDen += ScavMessengerHooks.ScavengerAbstractAI_ReGearInDen;
-                        On.ScavengerAI.WeaponScore += ScavMessengerHooks.ScavengerAI_WeaponScore;
-                        On.ScavengerAI.CollectScore_PhysicalObject_bool += ScavMessengerHooks.ScavengerAI_CollectScore_PhysicalObject_bool;
+                        On.DartMaggot.ChangeMode += SpiderCode.DartMaggot_ChangeMode;
+                        On.BigSpiderAI.SpiderSpitModule.CanSpit += SpiderCode.SpiderSpitModule_CanSpit;
+                        On.DartMaggot.Shoot += SpiderCode.DartMaggot_Shoot;
+                        On.DartMaggot.Update += SpiderCode.DartMaggot_Update;
+                        On.BigSpiderAI.SpiderSpitModule.SpiderHasSpit += SpiderCode.SpiderSpitModule_SpiderHasSpit;
                     }
                 }
 
@@ -228,60 +242,91 @@ namespace lsfUtils
                         new Hook(typeof(Player).GetProperty(nameof(Player.maxRippleLevel)).GetGetMethod(), typeof(RippleFlower).GetMethod(nameof(RippleFlower.PlayerMaxRippleLevel)));
                         Log.LogMessage("Exiting ripple flower code!");
                     }
+
+                    // darts
+                    {
+                        On.Player.GrabUpdate += DartHooks.Player_GrabUpdate;
+                    }
                 }
 
-                // spiders
+                // devtools objects
                 {
-                    On.DartMaggot.ChangeMode += SpiderCode.DartMaggot_ChangeMode;
-                    On.BigSpiderAI.SpiderSpitModule.CanSpit += SpiderCode.SpiderSpitModule_CanSpit;
-                    On.DartMaggot.Shoot += SpiderCode.DartMaggot_Shoot;
-                    On.DartMaggot.Update += SpiderCode.DartMaggot_Update;
-                    On.BigSpiderAI.SpiderSpitModule.SpiderHasSpit += SpiderCode.SpiderSpitModule_SpiderHasSpit;
+                    // local gravity
+                    {
+                        Log.LogMessage("Gravity override rework!");
+                        On.PhysicalObject.Update += LocalGravity.PhysicalObject_Update;
+                        On.Player.Update += LocalGravity.Player_Update_CorrectGravityField;
+                        On.Player.UpdateBodyMode += LocalGravity.Player_UpdateBodyMode;
+                        On.Player.UpdateAnimation += LocalGravity.Player_UpdateAnimation;
+                        On.Player.Update += LocalGravity.Player_Update;
+                        new Hook(typeof(PhysicalObject).GetProperty(nameof(PhysicalObject.EffectiveRoomGravity)).GetGetMethod(), typeof(LocalGravity).GetMethod(nameof(LocalGravity.EffectiveRoomGravity)));
+                        new Hook(typeof(Player).GetProperty(nameof(Player.EffectiveRoomGravity)).GetGetMethod(), typeof(LocalGravity).GetMethod(nameof(LocalGravity.EffectiveRoomGravityForPlayer)));
+                    }
+
+                    // conditional filter
+                    {
+                        On.RoomSettings.LoadPlacedObjects_StringArray_Timeline += ConditionalLogic.RoomSettings_LoadPlacedObjects_StringArray_Timeline;
+                    }
+
+                    // event zone
+                    {
+
+                    }
                 }
 
-                // gravity override
+                // devtools effects
                 {
-                    Log.LogMessage("Gravity override rework!");
-                    On.PhysicalObject.Update += LocalGravity.PhysicalObject_Update;
-                    On.Player.Update += LocalGravity.Player_Update_CorrectGravityField;
-                    On.Player.UpdateBodyMode += LocalGravity.Player_UpdateBodyMode;
-                    On.Player.UpdateAnimation += LocalGravity.Player_UpdateAnimation;
-                    On.Player.Update += LocalGravity.Player_Update;
-                    new Hook(typeof(PhysicalObject).GetProperty(nameof(PhysicalObject.EffectiveRoomGravity)).GetGetMethod(), typeof(LocalGravity).GetMethod(nameof(LocalGravity.EffectiveRoomGravity)));
-                    new Hook(typeof(Player).GetProperty(nameof(Player.EffectiveRoomGravity)).GetGetMethod(), typeof(LocalGravity).GetMethod(nameof(LocalGravity.EffectiveRoomGravityForPlayer)));
+                    // creeping darkness
+                    {
+                        On.RoomCamera.Update += CreepingDarkness.RoomCamera_Update;
+                        On.LightSource.Update += CreepingDarkness.LightSource_Update;
+                        On.Lantern.Update += CreepingDarkness.Lantern_Update;
+                        On.LanternStick.Update += CreepingDarkness.LanternStick_Update;
+                    }
+
+                    // evilwater
+                    {
+                        On.Water.ctor += EvilWater.InitialiseEvilWater;
+                        On.Creature.Update += EvilWater.EvilWaterLogic;
+                    }
                 }
 
-                // creeping darkness
+                // creature flags
                 {
-                    On.RoomCamera.Update += CreepingDarkness.RoomCamera_Update;
-                    On.LightSource.Update += CreepingDarkness.LightSource_Update;
-                    On.Lantern.Update += CreepingDarkness.Lantern_Update;
-                    On.LanternStick.Update += CreepingDarkness.LanternStick_Update;
-                }
-
-                // misc
-                {
-                    On.PhysicalObject.InitiateGraphicsModule += PhysicalObject_InitiateGraphicsModule;
-                    On.RoomCamera.SpriteLeaser.ctor += SpriteLeaser_ctor;
                     On.AbstractCreature.setCustomFlags += CreatureFlagSetup.AbstractCreature_setCustomFlags;
 
-                    On.Water.ctor += EvilWater.InitialiseEvilWater;
-                    On.Creature.Update += EvilWater.EvilWaterLogic;
+                    // ripple hybrid
+                    {
+                        On.PhysicalObject.InitiateGraphicsModule += RippleHybrid.PhysicalObject_InitiateGraphicsModule;
+                        On.RoomCamera.SpriteLeaser.ctor += RippleHybrid.SpriteLeaser_ctor;
+                    }
 
-                    On.Region.ctor_string_int_int_RainWorldGame_Timeline += Region_ctor_string_int_int_RainWorldGame_Timeline;
+                    // poison immune
+                    {
+                        On.Creature.InjectPoison += PoisonImmune.Creature_InjectPoison;
+                        On.Creature.Update += PoisonImmune.Creature_Update;
+                    }
+
+                    // ghost immune
+                    {
+                        IL.GhostCreatureSedater.Update += EchoImmune.GhostCreatureSedater_Update;
+                    }
                 }
 
-                // poison immune
+                // region parameters
                 {
-                    On.Creature.InjectPoison += PoisonImmune.Creature_InjectPoison;
-                    On.Creature.Update += PoisonImmune.Creature_Update;
+                    On.Region.ctor_string_int_int_RainWorldGame_Timeline += Region_ctor_string_int_int_RainWorldGame_Timeline;
+
+                    // scavenger params
+                    {
+                        On.ScavengerAbstractAI.InitGearUp += ScavengerParams.ScavengerAbstractAI_InitGearUp;
+                    }
+
+                    // sentient rot params
+                    {
+                        On.Region.IsSentientRotRegion += Region_IsSentientRotRegion;
+                    }
                 }
-
-                On.RoomSettings.LoadPlacedObjects_StringArray_Timeline += ConditionalLogic.RoomSettings_LoadPlacedObjects_StringArray_Timeline;
-                On.Player.GrabUpdate += DartHooks.Player_GrabUpdate;
-
-
-
 
                 if (isInit) return;
                 isInit = true;
@@ -302,6 +347,8 @@ namespace lsfUtils
 
                 EventLogic.RegisterBuiltInEvents();
 
+                RegionTypeParams.Load();
+
                 Logger.LogMessage("LSF Utils success!");
             }
             catch (Exception e)
@@ -309,6 +356,12 @@ namespace lsfUtils
                 Logger.LogMessage("LSF Utils failure!!!");
                 Logger.LogError(e);
             }
+        }
+
+        public static bool Region_IsSentientRotRegion(On.Region.orig_IsSentientRotRegion orig, string name)
+        {
+            bool value = orig(name);
+            return value;
         }
 
         public static void Region_ctor_string_int_int_RainWorldGame_Timeline(On.Region.orig_ctor_string_int_int_RainWorldGame_Timeline orig, Region self, string name, int firstRoomIndex, int regionNumber, RainWorldGame game, SlugcatStats.Timeline timelineIndex)

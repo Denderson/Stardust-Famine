@@ -55,6 +55,9 @@
 !lsfutils/Items/*/
 !lsfutils/ProcessingConditions/
 !lsfutils/Ripplespace/
+!lsfutils/CreatureTags/
+!lsfutils/CreatureTags/*/
+!lsfutils/RegionParams/
 
 !*.png
 !*.txt
