@@ -58,6 +58,8 @@
 !lsfutils/CreatureTags/
 !lsfutils/CreatureTags/*/
 !lsfutils/RegionParams/
+!lsfutils//Items/Dart/
+!lsfutils/Items/Darts/*/
 
 !*.png
 !*.txt

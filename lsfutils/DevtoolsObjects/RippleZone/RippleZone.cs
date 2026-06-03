@@ -33,13 +33,13 @@ namespace lsfUtils.DevtoolsObjects.RippleZone
             if (room != null && Input.GetKey(KeyCode.W))
             {
                 AbstractCreature abstractCreature = new(room.world, StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.Centipede), null, room.GetWorldCoordinate(data.owner.pos), room.world.game.GetNewID());
-                if (CWTs.AbstractPhysicalObjectCWT.TryGetData(abstractCreature, out var abstractobjectdata))
+                if (CWTs.AbstractCreatureCWT.TryGetData(abstractCreature, out var abstractobjectdata))
                 {
                     Log.LogMessage("Ripplifying!!!");
                     activated = true;
                     abstractCreature.rippleBothSides = data.overrideRippleBoth;
                     abstractCreature.rippleLayer = data.overrideRippleLayer;
-                    abstractobjectdata.isripplehybrid = true;
+                    abstractobjectdata.isRippleHybrid = true;
                 }
                 room.abstractRoom.AddEntity(abstractCreature);
                 abstractCreature.RealizeInRoom();

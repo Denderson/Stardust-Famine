@@ -40,15 +40,15 @@ namespace lsfUtils.Ripplespace
             Log.LogMessage("Ripplifying abstract!");
             abstractPhysicalObject.rippleLayer = rippleLayer;
             abstractPhysicalObject.rippleBothSides = rippleBoth;
-            if (abstractPhysicalObject is AbstractCreature apo)
+            if (abstractPhysicalObject is AbstractCreature absractCreature)
             {
-                apo.rippleLayer = 1;
-                apo.rippleBothSides = true;
-                apo.rippleCreature = true;
-            }
-            if (CWTs.AbstractPhysicalObjectCWT.TryGetData(abstractPhysicalObject, out var data))
-            {
-                data.isripplehybrid = true;
+                absractCreature.rippleLayer = 1;
+                absractCreature.rippleBothSides = true;
+                absractCreature.rippleCreature = true;
+                if (CWTs.AbstractCreatureCWT.TryGetData(absractCreature, out var data))
+                {
+                    data.isRippleHybrid = true;
+                }
             }
         }
 
@@ -59,12 +59,16 @@ namespace lsfUtils.Ripplespace
             {
                 return;
             }
-            if (!CWTs.AbstractPhysicalObjectCWT.TryGetData(self.abstractPhysicalObject, out var data))
+            if (self.abstractPhysicalObject is not AbstractCreature abstractCreature)
+            {
+                return;
+            }
+            if (!CWTs.AbstractCreatureCWT.TryGetData(abstractCreature, out var data))
             {
                 Log.LogMessage("No CWT!");
                 return;
             }
-            if (data.isripplehybrid)
+            if (data.isRippleHybrid)
             {
                 self.RipplifyRealisedObject(self.abstractPhysicalObject.rippleLayer, self.abstractPhysicalObject.rippleBothSides);
                 Log.LogMessage("Is rippleHybrid!");
@@ -75,7 +79,7 @@ namespace lsfUtils.Ripplespace
         public static void SpriteLeaser_ctor(On.RoomCamera.SpriteLeaser.orig_ctor orig, RoomCamera.SpriteLeaser self, IDrawable obj, RoomCamera rCam)
         {
             orig(self, obj, rCam);
-            if (obj is PhysicalObject physicalObject && physicalObject?.abstractPhysicalObject != null && CWTs.AbstractPhysicalObjectCWT.TryGetData(physicalObject.abstractPhysicalObject, out var data) && data.isripplehybrid)
+            if (obj is Creature creature && creature?.abstractCreature != null && CWTs.AbstractCreatureCWT.TryGetData(creature.abstractCreature, out var data) && data.isRippleHybrid)
             {
                 Log.LogMessage("Ripple shader starting!");
                 if (self.sprites == null || self.sprites.Length == 0)
@@ -86,7 +90,7 @@ namespace lsfUtils.Ripplespace
                 {
                     if (fSprite != null)
                     {
-                        int rippleLayer = (physicalObject.abstractPhysicalObject.rippleBothSides) ? -1 : physicalObject.abstractPhysicalObject.rippleLayer;
+                        int rippleLayer = (creature.abstractCreature.rippleBothSides) ? -1 : creature.abstractCreature.rippleLayer;
                         fSprite.shader = RainWorld.TryGetRippleMaskedShaderVariant(rippleLayer, fSprite.shader.name);
                     }
                 }
