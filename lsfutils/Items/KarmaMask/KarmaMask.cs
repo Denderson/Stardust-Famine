@@ -10,10 +10,21 @@ namespace lsfUtils.Items.KarmaMask
         LightSource lightSource;
         public KarmaMaskAbstract KarmaMaskAbstract => abstractPhysicalObject as KarmaMaskAbstract;
 
-        public KarmaMask(KarmaMaskAbstract abstr, World world) : base(abstr, world)
+        static AbstractVultureMask MakeDummy(KarmaMaskAbstract abstr)
         {
+            return new AbstractVultureMask(abstr.world, null, abstr.pos, abstr.ID, 0, false);
+        }
+
+        public KarmaMask(KarmaMaskAbstract abstr, World world) : base(MakeDummy(abstr), world)
+        {
+            abstractPhysicalObject = abstr;
+            abstr.realizedObject = this;
+            maskGfx = new VultureMaskGraphics(this, VultureMask.MaskType.SCAVTEMPLAR, 0, "");
+            maskGfx.glimmer = true;
+            maskGfx.ignoreDarkness = true;
+            maskGfx.GenerateColor(0);
+
             Log.LogMessage("Spawning karma mask!");
-            abstractPhysicalObject.rippleBothSides = true;
             lightSource = null;
         }
 

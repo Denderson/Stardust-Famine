@@ -260,6 +260,9 @@ namespace lsfUtils
                         new Hook(typeof(RegionGate).GetProperty(nameof(RegionGate.MeetRequirement))!.GetGetMethod(), typeof(KarmaMaskHooks).GetMethod(nameof(KarmaMaskHooks.Meet_Requirement)));
                         On.HUD.KarmaMeter.Update += KarmaMaskHooks.KarmaMeter_Update;
                         On.Player.Update += KarmaMaskHooks.Player_Update;
+                        On.MoreSlugcats.VultureMaskGraphics.ctor_PhysicalObject_MaskType_int_string += KarmaMaskHooks.VultureMaskGraphics_ctor_PhysicalObject_MaskType_int_string;
+                        On.MoreSlugcats.VultureMaskGraphics.DrawSprites += KarmaMaskHooks.VultureMaskGraphics_DrawSprites;
+
                     }
                 }
 
