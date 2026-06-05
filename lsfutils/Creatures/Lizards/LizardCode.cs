@@ -21,6 +21,14 @@ namespace lsfUtils.Creatures.Lizards
                    self.creature.creatureTemplate.type != Enums.CreatureTemplateType.WeaverLizard;
         }
 
+        public static bool IsImmuneToVultureMask(CreatureTemplate.Type type)
+        {
+            return type != Enums.CreatureTemplateType.AirplaneLizard &&
+                   type != Enums.CreatureTemplateType.FlameLizard &&
+                   type != Enums.CreatureTemplateType.RaspberryLizard &&
+                   type != Enums.CreatureTemplateType.WeaverLizard;
+        }
+
         public static void LizardAI_UpdateDynamicRelationship(ILContext il)
         {
             var c = new ILCursor(il);
@@ -785,17 +793,23 @@ namespace lsfUtils.Creatures.Lizards
         {
             orig(self, creature, world);
 
-            if (self?.lizard?.Template?.type != null)
+            if (creature?.realizedCreature != null && creature.creatureTemplate?.type != null)
             {
-                if (self.lizard.Template.type == Enums.CreatureTemplateType.StarNosedLizard)
+                CreatureTemplate.Type type = creature.creatureTemplate.type;
+                if (type== Enums.CreatureTemplateType.StarNosedLizard)
                 {
                     self.AddModule(new SuperHearing(self, self.tracker, 500f));
                 }
-                if (self.lizard.Template.type == Enums.CreatureTemplateType.MonitorLizard || self.lizard.Template.type == Enums.CreatureTemplateType.PoisonLizard)
+                if (type == Enums.CreatureTemplateType.MonitorLizard || type == Enums.CreatureTemplateType.PoisonLizard)
                 {
                     self.lurkTracker = new LizardAI.LurkTracker(self, self.lizard);
                     self.AddModule(self.lurkTracker);
                     self.utilityComparer.AddComparedModule(self.lurkTracker, null, Mathf.Lerp(0.4f, 0.3f, creature.personality.energy), 1f);
+                }
+                orig(self, creature, world);
+                if (IsImmuneToVultureMask(type))
+                {
+                    self.usedToVultureMask = 9999;
                 }
             }
         }

@@ -46,10 +46,7 @@ namespace lsfUtils.RegionParams
         public static CustomRegionParams ParseFromUnrecognized(Dictionary<string, string> unrecognized, string regionName)
         {
             CustomRegionParams customRegionParams = new();
-            if (unrecognized == null || unrecognized.Count == 0)
-                return customRegionParams;
-
-            Log.LogMessage($"Reading custom parameters for region '{regionName}'...");
+            if (unrecognized == null || unrecognized.Count == 0) return customRegionParams;
 
             foreach (var keyvalue in unrecognized)
             {

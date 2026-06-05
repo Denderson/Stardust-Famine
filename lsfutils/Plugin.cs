@@ -47,6 +47,7 @@ using Watcher;
 using static lsfUtils.RegionParams.RegionTypeParams;
 using static Pom.Pom;
 using static SlugBase.Features.FeatureTypes;
+using System.IO;
 
 #pragma warning disable CS0618
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -352,6 +353,10 @@ namespace lsfUtils
                 EvilWater.RegisterEvilWater();
                 CreepingDarkness.RegisterCreepingDarkness();
 
+                On.RainWorld.Start += RainWorld_Start;
+
+                Log.LogMessage("Checking isInit!");
+
                 if (isInit) return;
                 isInit = true;
 
@@ -360,17 +365,18 @@ namespace lsfUtils
                     WorldLoader.Preprocessing.preprocessorConditions.Add(ConditionalLogic.LSFConditions);
                 }
 
-                RegisterManagedObject(new ManagedRippleFlower());
-                RegisterManagedObject(new ManagedKarmaMask());
+                Log.LogMessage("Registering lsfUtils stuff...");
+
                 RegisterManagedObject<ConditionFilter, ConditionFilterData, ManagedRepresentation>("ConditionalFilter", "lsfUtils");
                 RegisterManagedObject<RoomConditionFilterUAD, RoomConditionFilterData, ManagedRepresentation>("RoomConditionalFilter", "lsfUtils");
                 RegisterManagedObject<LocalGravity, LocalGravityData, ManagedRepresentation>("LocalGravity", "lsfUtils");
                 RegisterManagedObject<RippleZone, RippleZoneData, ManagedRepresentation>("RippleZone", "lsfUtils");
                 RegisterManagedObject<EventRect, EventRectData, ManagedRepresentation>("EventRect", "lsfUtils");
 
-                EventLogic.RegisterBuiltInEvents();
+                RegisterManagedObject(new ManagedRippleFlower());
+                RegisterManagedObject(new ManagedKarmaMask());
 
-                RegionTypeParams.Load();
+                EventLogic.RegisterBuiltInEvents();
 
                 Logger.LogMessage("LSF Utils success!");
             }
@@ -381,15 +387,46 @@ namespace lsfUtils
             }
         }
 
+        public static void RainWorld_Start(On.RainWorld.orig_Start orig, RainWorld self)
+        {
+            orig(self);
+            // load here stuff that requires AssetManager here (like ResolveFilePath)
+
+            string path;
+            try
+            {
+                path = AssetManager.ResolveFilePath("lsfUtils/regionMetaParameters.txt");
+            }
+            catch (Exception ex)
+            {
+                Log.LogWarning($"RegionTypeParams.Load: AssetManager not ready or path resolution failed: {ex.Message}");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(path) || !File.Exists(path))
+            {
+                Log.LogWarning("regionMetaParameters.txt not found.");
+                return;
+            }
+
+            RegionTypeParams.Load();
+        }
+
         public static bool GetNameFromAnywhere(out SlugcatStats.Name name)
         {
             name = null;
-            if (RWCustom.Custom.rainWorld.processManager?.currentMainLoop is RainWorldGame game && game.IsStorySession)
+            if (RWCustom.Custom.rainWorld.processManager?.currentMainLoop is RainWorldGame game)
             {
-                name = game.StoryCharacter;
-                return true;
+                if (game.IsStorySession)
+                {
+                    name = game.StoryCharacter;
+                    return true;
+                }
             }
-            Log.LogMessage("Error in GetNameFromAnywhere!");
+            else
+            {
+                Log.LogMessage("Error in GetNameFromAnywhere!");
+            }
             return false;
         }
 
@@ -398,10 +435,16 @@ namespace lsfUtils
             timeline = null;
             if (RWCustom.Custom.rainWorld.processManager?.currentMainLoop is RainWorldGame game && game.IsStorySession)
             {
-                timeline = game.TimelinePoint;
-                return true;
+                if (game.IsStorySession)
+                {
+                    timeline = game.TimelinePoint;
+                    return true;
+                }
             }
-            Log.LogMessage("Error in GetTimelineFromAnywhere!");
+            else
+            {
+                Log.LogMessage("Error in GetTimelineFromAnywhere!");
+            }
             return false;
         }
 
@@ -434,16 +477,6 @@ namespace lsfUtils
                 return data.overrideGravity;
             }
             return orig(self);
-        }
-
-        private void LizardAI_ctor(On.LizardAI.orig_ctor orig, LizardAI self, AbstractCreature creature, World world)
-        {
-            orig(self, creature, world);
-            CreatureTemplate.Type type = creature?.creatureTemplate?.type;
-            if (type == Enums.CreatureTemplateType.AirplaneLizard  || type == Enums.CreatureTemplateType.WeaverLizard || type == Enums.CreatureTemplateType.FlameLizard || type == Enums.CreatureTemplateType.RaspberryLizard)
-            {
-                self.usedToVultureMask = 9999;
-            }
         }
 
         public void OnDisable()

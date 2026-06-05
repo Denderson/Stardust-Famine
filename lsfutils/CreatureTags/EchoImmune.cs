@@ -40,38 +40,30 @@ namespace lsfUtils.CreatureTags
 
         public static void GhostCreatureSedater_Update(ILContext il)
         {
-            var cursor = new ILCursor(il);
-            int patchCount = 0;
-
-            while (cursor.TryGotoNext(MoveType.After, x => x.MatchLdfld<CreatureTemplate>(nameof(CreatureTemplate.ghostSedationImmune))))
+            try
             {
-                VariableDefinition creatureLocal = null;
-                var search = cursor.Clone();
-                while (search.TryGotoPrev(x => x.MatchStloc(out _)))
+                var cursor = new ILCursor(il);
+
+                int patchCount = 0;
+
+                while (cursor.TryGotoNext(MoveType.After, x => x.MatchLdfld<CreatureTemplate>(nameof(CreatureTemplate.ghostSedationImmune))))
                 {
-                    var local = il.Body.Variables[((VariableReference)search.Next.Operand).Index];
-                    if (local.VariableType.FullName == typeof(AbstractCreature).FullName)
-                    {
-                        creatureLocal = local;
-                        break;
-                    }
+                    cursor.Emit(OpCodes.Ldloc_3);
+
+                    cursor.EmitDelegate<Func<bool, AbstractCreature, bool>>(
+                        (vanillaImmune, abstractCreature) =>
+                            vanillaImmune ||
+                            (abstractCreature?.realizedCreature?.IsEchoImmune() ?? false));
+
+                    patchCount++;
                 }
 
-                if (creatureLocal == null)
-                {
-                    Log.LogWarning("EchoImmuneHooks: Could not find AbstractCreature local, skipping patch.");
-                    continue;
-                }
-
-                cursor.Emit(OpCodes.Ldloc, creatureLocal);
-                cursor.EmitDelegate<System.Func<bool, AbstractCreature, bool>>((vanillaImmune, ac) =>
-                    vanillaImmune || (ac?.realizedCreature?.IsEchoImmune() ?? false));
-
-                patchCount++;
+                Log.LogMessage("ghostSedationImmune check failure!");
             }
-
-            if (patchCount == 0) Log.LogWarning("EchoImmuneHooks: No ghostSedationImmune fields were patched — the hook has no effect.");
-            else if (patchCount != 2) Log.LogWarning($"EchoImmuneHooks: Expected 2 patches, got {patchCount}. Some immunity checks may be missing.");
+            catch (Exception ex)
+            {
+                Log.LogMessage($"ghostSedationImmune error! {ex}");
+            }
         }
     }
 }
