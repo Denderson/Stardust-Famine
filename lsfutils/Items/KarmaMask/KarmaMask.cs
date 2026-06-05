@@ -10,7 +10,7 @@ namespace lsfUtils.Items.KarmaMask
         LightSource lightSource;
         public KarmaMaskAbstract KarmaMaskAbstract => abstractPhysicalObject as KarmaMaskAbstract;
 
-        public KarmaMask(KarmaMaskAbstract abstr) : base(abstr, null)
+        public KarmaMask(KarmaMaskAbstract abstr, World world) : base(abstr, world)
         {
             Log.LogMessage("Spawning karma mask!");
             abstractPhysicalObject.rippleBothSides = true;

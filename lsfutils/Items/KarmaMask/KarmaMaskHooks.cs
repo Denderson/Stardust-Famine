@@ -96,28 +96,21 @@ namespace lsfUtils.Items.KarmaMask
         public static void Player_Update(On.Player.orig_Update orig, Player self, bool eu)
         {
             orig(self, eu);
-            if (self?.grasps == null)
-            {
-                return;
-            }
-            if (!PlayerCWT.TryGetData(self, out var data))
-            {
-                return;
-            }
+            if (self?.grasps == null) return;
+            if (!PlayerCWT.TryGetData(self, out var data)) return;
+
             data.previousKarmaMode = data.karmaMode;
-            if (self.grasps.Length != 0)
+
+            bool flag = false;
+            for (int i = 0; i < self.grasps.Length; i++)
             {
-                bool flag = false;
-                for (int i = 0; i < self.grasps.Length; i++)
+                if (self.grasps[i]?.grabbed is KarmaMask)
                 {
-                    if (self.grasps[i]?.grabbed is KarmaMask)
-                    {
-                        data.karmaMode = true;
-                        flag = true;
-                    }
-                    if (!flag) data.karmaMode = false;
+                    flag = true;
+                    break;
                 }
             }
+            data.karmaMode = flag;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace lsfUtils.Items.KarmaMask
         public override void Realize()
         {
             base.Realize();
-            realizedObject ??= new KarmaMask(this);
+            realizedObject ??= new KarmaMask(this, world);
         }
 
         public override string ToString()

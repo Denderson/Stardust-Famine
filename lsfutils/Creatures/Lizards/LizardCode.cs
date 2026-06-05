@@ -806,9 +806,9 @@ namespace lsfUtils.Creatures.Lizards
 
             if (self.lizard.Template.type == Enums.CreatureTemplateType.StarNosedLizard)
             {
-                sLeaser.sprites[self.SpriteHeadStart].anchorY = 0.6f;
-                sLeaser.sprites[self.SpriteHeadStart + 1].anchorY = 0.6f;
-                sLeaser.sprites[self.SpriteHeadStart + 2].anchorY = 0.6f;
+                //sLeaser.sprites[self.SpriteHeadStart].anchorY = 0.7f;
+                //sLeaser.sprites[self.SpriteHeadStart + 1].anchorY = 0.7f;
+                //sLeaser.sprites[self.SpriteHeadStart + 2].anchorY = 0.7f;
             }
         }
     }

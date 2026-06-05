@@ -142,8 +142,6 @@ public class CreepingDarkness
         if (self.room == null || !HasEffect(self.room)) return;
         if (!TryGetUAD(self.room.world, out var uad)) return;
 
-        uad.Tick();
-
         self.sofBlackFade = uad.darknessProgress;
         self.effect_darkness = uad.darknessProgress;
         self.lightBloomAlpha = 1f - uad.darknessProgress;

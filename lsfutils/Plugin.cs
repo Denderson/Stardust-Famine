@@ -349,9 +349,11 @@ namespace lsfUtils
                     }
                 }
 
+                EvilWater.RegisterEvilWater();
+                CreepingDarkness.RegisterCreepingDarkness();
+
                 if (isInit) return;
                 isInit = true;
-
 
                 // processing conditions
                 {
@@ -359,14 +361,12 @@ namespace lsfUtils
                 }
 
                 RegisterManagedObject(new ManagedRippleFlower());
+                RegisterManagedObject(new ManagedKarmaMask());
                 RegisterManagedObject<ConditionFilter, ConditionFilterData, ManagedRepresentation>("ConditionalFilter", "lsfUtils");
                 RegisterManagedObject<RoomConditionFilterUAD, RoomConditionFilterData, ManagedRepresentation>("RoomConditionalFilter", "lsfUtils");
                 RegisterManagedObject<LocalGravity, LocalGravityData, ManagedRepresentation>("LocalGravity", "lsfUtils");
                 RegisterManagedObject<RippleZone, RippleZoneData, ManagedRepresentation>("RippleZone", "lsfUtils");
                 RegisterManagedObject<EventRect, EventRectData, ManagedRepresentation>("EventRect", "lsfUtils");
-
-                EvilWater.RegisterEvilWater();
-                CreepingDarkness.RegisterCreepingDarkness();
 
                 EventLogic.RegisterBuiltInEvents();
 
