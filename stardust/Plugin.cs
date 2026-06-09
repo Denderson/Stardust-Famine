@@ -17,6 +17,7 @@ using Stardust.Anchors;
 using Stardust.Conditionals;
 using Stardust.CWTs;
 using Stardust.Mechanics;
+using Stardust.RippleLayers;
 using Stardust.SaveFile;
 using Stardust.Slugcats;
 using Stardust.Slugcats.Bitter;
@@ -221,6 +222,13 @@ namespace Stardust
                     On.HUD.DialogBox.DrawPos += AnchorHooks.DialogBox_DrawPos;
                 }
 
+                // ripple layers
+                {
+                    On.RoomCamera.ctor += DeeperspaceHooks.RoomCamera_ctor;
+                    On.RoomCamera.DrawUpdate += DeeperspaceHooks.RoomCamera_DrawUpdate;
+                    On.RoomCamera.ClearAllSprites += DeeperspaceHooks.RoomCamera_ClearAllSprites;
+                }
+
                 // il hooks
                 {
                     Log.LogMessage("IL hook hell starting");
@@ -254,6 +262,7 @@ namespace Stardust
                     Logger.LogMessage("Filter registered!!!!");
 
                     WorldLoader.Preprocessing.preprocessorConditions.Add(ConditionalsCode.StardustConditions);
+                    
                     Logger.LogMessage("Hooking success!!!");
                 }
             }
@@ -263,8 +272,6 @@ namespace Stardust
                 Logger.LogError(e);
             }
         }
-
-        
 
         public void OnDisable()
         {
@@ -295,6 +302,16 @@ namespace Stardust
             {
                 UnityEngine.Debug.Log($"Stardust Famine: Hook_OnModsInit options failed init error {optionsMenuInstance}{ex}");
                 Logger.LogError(ex);
+            }
+
+            try
+            {
+                AssetBundle assetBundle = AssetBundle.LoadFromFile(AssetManager.ResolveFilePath("assets/deeperspaceBackground"));
+                self.Shaders.Add("deeperspaceBackground", FShader.CreateShader("deeperspaceBackground", assetBundle.LoadAsset<Shader>("Assets/Shaders/deeperspaceBackground.shader")));
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
             }
         }
     }

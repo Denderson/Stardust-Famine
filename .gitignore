@@ -39,6 +39,8 @@
 !stardust/Mod/world/
 !stardust/Mod/world/*/
 !stardust/Mod/world/*/*/
+!stardust/RippleLayers/
+!stardust/RippleLayers/*/
 
 !lsfutils/
 !lsfutils/Mod/
