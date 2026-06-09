@@ -27,7 +27,7 @@ public class EvilWater
     public static bool HasEffect(Room room)
     {
         if (room?.roomSettings?.effects == null) return false;
-        return room.roomSettings.GetEffect(Enums.EffectTypes.CreepingDarkness) != null;
+        return room.roomSettings.GetEffect(Enums.EffectTypes.EvilWater) != null;
     }
 
     public static void InitialiseEvilWater(On.Water.orig_ctor orig, Water self, Room room, int waterLevel)
