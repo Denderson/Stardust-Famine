@@ -7,18 +7,10 @@ using UnityEngine;
 using static Pom.Pom;
 namespace lsfUtils.DevtoolsObjects.EventRectangle
 {
-    public class EventRectData : ManagedData
+    public class EventRectData(PlacedObject po) : ManagedData(po, [ new Vector2Field("01p2", new Vector2(160f, 80f), Vector2Field.VectorReprType.rect) ])
     {
         [BackedByField("01p2")]
         public Vector2 p2;
-
-        public EventRectData(PlacedObject po) : base(po, new ManagedField[]
-        {
-            new Vector2Field("01p2", new Vector2(160f, 80f), Vector2Field.VectorReprType.rect)
-        })
-        {
-        }
-
         [StringField("EventType", "Event-Type", "Type: ")]
         public string eventType;
 

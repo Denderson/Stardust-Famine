@@ -8,12 +8,8 @@ using static Pom.Pom;
 
 namespace lsfUtils.DevtoolsObjects.LocalGravity
 {
-    public class LocalGravityData : ManagedData
+    public class LocalGravityData(PlacedObject po) : ManagedData(po, [])
     {
-        public LocalGravityData(PlacedObject po) : base(po, new ManagedField[] { })
-        {
-
-        }
         [FloatField("Gravity%", 0, 1, 1, 0.01f, ManagedFieldWithPanel.ControlType.slider, "Gravity%: ")]
         public float gravity;
 
