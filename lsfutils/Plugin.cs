@@ -333,9 +333,10 @@ namespace lsfUtils
                     // scav factions
                     {
                         IL.ScavengerAI.IUseARelationshipTracker_UpdateDynamicRelationship += ScavFactionHooks.IL_UpdateDynamicRelationship;
-
                         On.ScavengerAbstractAI.ScavengerSquad.DoesScavengerWantToBeInSquad += ScavFactionHooks.Squad_DoesScavengerWantToBeInSquad;
                         On.ScavengerAbstractAI.ScavengerSquad.AddMember += ScavFactionHooks.Squad_AddMember;
+                        On.CreatureCommunities.LoadDefaultCommunityAlignments += ScavFactionHooks.LoadDefaultCommunityAlignments_Post;
+                        On.CreatureCommunities.CycleTick += ScavFactionHooks.CycleTick_Post;
                     }
                 }
 
@@ -388,7 +389,7 @@ namespace lsfUtils
                 RegisterManagedObject(new ManagedKarmaMask());
 
                 EventLogic.RegisterBuiltInEvents();
-                ScavFactions.LoadAllFactionsFromAllMods();
+                ScavFactions.LoadAndRegisterAllFactions();
 
                 Logger.LogMessage("LSF Utils success!");
             }
