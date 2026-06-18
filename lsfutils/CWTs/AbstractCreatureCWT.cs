@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using lsfUtils.CreatureTags;
 
 namespace lsfUtils.CWTs
 {
@@ -22,6 +23,7 @@ namespace lsfUtils.CWTs
             public bool isRippleHybrid;
             public bool isEchoImmune;
             public bool isPoisonImmune;
+            public string faction = "default";
         }
     }
 }

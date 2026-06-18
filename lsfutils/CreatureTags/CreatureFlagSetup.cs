@@ -51,6 +51,19 @@ namespace lsfUtils.CreatureTags
                     Log.LogMessage("EchoImmune check!");
                     EchoImmune.SetupEchoImmune(self);
                 }
+
+                if (value.Contains("faction"))
+                {
+                    if (value.Contains(':') && value.Split(':').Length > 1)
+                    {
+                        string faction = value.Split(':')[1];
+                        if (!string.IsNullOrEmpty(faction))
+                        {
+                            ScavFactions.SetupFaction(self, value.Split(':')[1]);
+                        }
+                        else Log.LogMessage("Invalid faction!");
+                    }
+                }
             }
         }
     }

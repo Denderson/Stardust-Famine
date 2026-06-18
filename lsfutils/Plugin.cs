@@ -329,6 +329,14 @@ namespace lsfUtils
                     {
                         IL.GhostCreatureSedater.Update += EchoImmune.GhostCreatureSedater_Update;
                     }
+
+                    // scav factions
+                    {
+                        IL.ScavengerAI.IUseARelationshipTracker_UpdateDynamicRelationship += ScavFactionHooks.IL_UpdateDynamicRelationship;
+
+                        On.ScavengerAbstractAI.ScavengerSquad.DoesScavengerWantToBeInSquad += ScavFactionHooks.Squad_DoesScavengerWantToBeInSquad;
+                        On.ScavengerAbstractAI.ScavengerSquad.AddMember += ScavFactionHooks.Squad_AddMember;
+                    }
                 }
 
                 // region parameters
@@ -380,6 +388,7 @@ namespace lsfUtils
                 RegisterManagedObject(new ManagedKarmaMask());
 
                 EventLogic.RegisterBuiltInEvents();
+                ScavFactions.LoadAllFactionsFromAllMods();
 
                 Logger.LogMessage("LSF Utils success!");
             }
