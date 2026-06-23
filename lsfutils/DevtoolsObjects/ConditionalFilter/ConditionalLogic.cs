@@ -16,42 +16,47 @@ namespace lsfUtils.DevtoolsObjects.ConditionalFilter
     {
         public static bool? LSFConditions(string text, RainWorldGame game)
         {
-            text = text.ToLowerInvariant();
+            Log.LogMessage("original text: " + text);
+            string modifiedText = text;
+            
+            modifiedText = modifiedText.ToLowerInvariant();
             if (game == null || !game.IsStorySession)
             {
                 return null;
             }
-            if (text.Contains("lsf")) text.Replace("lsf", "");
+            if (modifiedText.Contains("lsf")) modifiedText.Replace("lsf", "");
 
             string[] array;
             char? sign = null;
 
-            if (text.Contains("="))
+            if (modifiedText.Contains("="))
             {
                 sign = '=';
-                array = text.Split('=');
+                array = modifiedText.Split('=');
             }
-            else if (text.Contains(">"))
+            else if (modifiedText.Contains(">"))
             {
                 sign = '>';
-                array = text.Split('>');
+                array = modifiedText.Split('>');
             }
-            else if (text.Contains('<'))
+            else if (modifiedText.Contains('<'))
             {
                 sign = '<';
-                array = text.Split('<');
+                array = modifiedText.Split('<');
             }
-            else if (text.Contains('-'))
+            else if (modifiedText.Contains('-'))
             {
                 sign = '-';
-                array = text.Split('-');
+                array = modifiedText.Split('-');
             }
             else
             {
-                array = [text];
+                array = [modifiedText];
             }
 
             bool? result = null;
+            Log.LogMessage("modified text: " + text);
+            Log.LogMessage("sign: " + sign);
             if (sign == null)
             {
                 switch (array[0])
@@ -297,6 +302,8 @@ namespace lsfUtils.DevtoolsObjects.ConditionalFilter
                 result = sign == '=' && value == condition || sign == '>' && value > condition || sign == '<' && value < condition || sign == '-' && value >= condition;
             }
             else return null;
+
+            Log.LogMessage("result: " + result);
 
             return result;
         }

@@ -22,12 +22,13 @@ using lsfUtils.CWTs;
 using lsfUtils.DevtoolsObjects.ConditionalFilter;
 using lsfUtils.DevtoolsObjects.EventRectangle;
 using lsfUtils.DevtoolsObjects.LocalGravity;
+using lsfUtils.DevtoolsObjects.RippleTunnel;
 using lsfUtils.DevtoolsObjects.RippleZone;
 using lsfUtils.Effects;
 using lsfUtils.Items.Darts.Dart;
 using lsfUtils.Items.Darts.PoisonDart;
-using lsfUtils.Items.RippleFlower;
 using lsfUtils.Items.KarmaMask;
+using lsfUtils.Items.RippleFlower;
 using lsfUtils.RegionParams;
 using lsfUtils.Ripplespace;
 using Menu.Remix.MixedUI;
@@ -37,8 +38,10 @@ using MonoMod.RuntimeDetour;
 using Newtonsoft.Json.Linq;
 using RWCustom;
 using SlugBase.Features;
+using Stardust.PlacedObjects;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Contexts;
 using System.Security.Permissions;
@@ -47,7 +50,6 @@ using Watcher;
 using static lsfUtils.RegionParams.RegionTypeParams;
 using static Pom.Pom;
 using static SlugBase.Features.FeatureTypes;
-using System.IO;
 
 #pragma warning disable CS0618
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -384,12 +386,13 @@ namespace lsfUtils
                 RegisterManagedObject<LocalGravity, LocalGravityData, ManagedRepresentation>("LocalGravity", "lsfUtils");
                 RegisterManagedObject<RippleZone, RippleZoneData, ManagedRepresentation>("RippleZone", "lsfUtils");
                 RegisterManagedObject<EventRect, EventRectData, ManagedRepresentation>("EventRect", "lsfUtils");
+                Log.LogMessage("Registering ripple tunnel!");
+                RegisterManagedObject<RippleTunnel, RippleTunnelData, RippleTunnelRepresentation>("RippleTunnel", "lsfUtils");
 
                 RegisterManagedObject(new ManagedRippleFlower());
                 RegisterManagedObject(new ManagedKarmaMask());
 
                 EventLogic.RegisterBuiltInEvents();
-                ScavFactions.LoadAndRegisterAllFactions();
 
                 Logger.LogMessage("LSF Utils success!");
             }
@@ -461,7 +464,7 @@ namespace lsfUtils
             return false;
         }
 
-        
+
         private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
         {
             orig(self);
@@ -481,6 +484,8 @@ namespace lsfUtils
             Futile.atlasManager.LoadAtlas("atlases/lsfLizardStuff");
 
             Futile.atlasManager.LoadImage(templarMaskIcon);
+
+            ScavFactions.LoadAndRegisterAllFactions();
         }
 
         private float PhysicalObject_GetLocalGravity(On.PhysicalObject.orig_GetLocalGravity orig, PhysicalObject self)
@@ -501,5 +506,3 @@ namespace lsfUtils
         }
     }
 }
-
-

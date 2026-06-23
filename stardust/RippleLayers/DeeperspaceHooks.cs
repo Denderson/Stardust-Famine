@@ -22,7 +22,9 @@ namespace Stardust.RippleLayers
             if (!RoomCameraCWT.TryGetData(self, out var cwt)) return;
             if (cwt.deeperspaceData == null) return;
 
-            bool inDeeperspace = self.room != null && self.room.game.ActiveRippleLayer == 2;
+            bool inDeeperspace = self.room != null
+                && self.followAbstractCreature != null
+                && self.followAbstractCreature.rippleLayer == 2;
 
             if (inDeeperspace) cwt.deeperspaceData.Activate();
             else cwt.deeperspaceData.Deactivate();

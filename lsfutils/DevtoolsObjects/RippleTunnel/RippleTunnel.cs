@@ -53,7 +53,7 @@ namespace lsfUtils.DevtoolsObjects.RippleTunnel
             }
 
             warpTear.FadeIn(120f);
-            warpTear.openAnimation = Mathf.MoveTowards(warpTear.openAnimation, 1f, 1f / 60f);
+            warpTear.openAnimation = 1f;
         }
 
         private void UpdateTransport()
