@@ -24,7 +24,11 @@ namespace lsfUtils.DevtoolsObjects.ConditionalFilter
             {
                 return null;
             }
-            if (modifiedText.Contains("lsf")) modifiedText.Replace("lsf", "");
+            if (modifiedText.Contains("lsf"))
+            {
+                modifiedText.Replace("lsf", "");
+            }
+            else return null;
 
             string[] array;
             char? sign = null;
