@@ -142,21 +142,21 @@ namespace Stardust.Slugcats
 
         public static void MenuScene_BuildScene(On.Menu.MenuScene.orig_BuildScene orig, MenuScene self)
         {
-            orig(self);
             if (self.owner is SlugcatSelectMenu.SlugcatPageContinue page && SharedMechanics(page.slugcatNumber))
             {
-                SaveState save = Custom.rainWorld.progression.GetOrInitiateSaveState(Enums.SlugcatStatsName.sfscholar, null, self.menu.manager.menuSetup, false);
+                SaveState save = Custom.rainWorld.progression.GetOrInitiateSaveState(page.slugcatNumber, null, self.menu.manager.menuSetup, false);
                 if (page.slugcatNumber == Enums.SlugcatStatsName.bitter)
                 {
                     if (save.Ripple()) self.sceneID = Enums.MenuSceneIDs.bitterRipple;
-                    if (save.HalfwayEchoes()) self.sceneID = Enums.MenuSceneIDs.bitterHalfway;
-                    if (save.EchoEncounters() > 0) self.sceneID = Enums.MenuSceneIDs.bitterEcho;
+                    else if (save.HalfwayEchoes()) self.sceneID = Enums.MenuSceneIDs.bitterHalfway;
+                    else if (save.EchoEncounters() > 0) self.sceneID = Enums.MenuSceneIDs.bitterEcho;
                 }
                 if (page.slugcatNumber == Enums.SlugcatStatsName.sfscholar)
                 {
                     if (save.Ripple()) self.sceneID = Enums.MenuSceneIDs.scholarRipple;
                 }
             }
+            orig(self);
         }
     }
 }

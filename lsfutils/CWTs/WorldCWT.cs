@@ -22,6 +22,7 @@ namespace lsfUtils.CWTs
         {
             public CreepingDarknessUAD creepingDarkness;
             public int regionState;
+            public int regionStateSwitchTimer;
         }
     }
 }

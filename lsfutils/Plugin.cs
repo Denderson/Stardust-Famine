@@ -297,6 +297,7 @@ namespace lsfUtils
                 {
                     // creeping darkness
                     {
+                        On.Room.Loaded += CreepingDarkness.Room_Loaded;
                         On.RoomCamera.Update += CreepingDarkness.RoomCamera_Update;
                         On.LightSource.Update += CreepingDarkness.LightSource_Update;
                         On.Lantern.Update += CreepingDarkness.Lantern_Update;
