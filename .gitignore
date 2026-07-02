@@ -34,6 +34,8 @@
 !stardust/Mod/plugins/
 !stardust/Mod/scenes/
 !stardust/Mod/scenes/*/
+!stardust/Mod/shaders/
+!stardust/Mod/shaders/*/
 !stardust/Mod/slugbase/
 !stardust/Mod/slugbase/scenes/
 !stardust/Mod/world/
@@ -62,6 +64,9 @@
 !lsfutils/RegionParams/
 !lsfutils//Items/Dart/
 !lsfutils/Items/Darts/*/
+!lsfutils/Mod/shaders/
+!lsfutils/Mod/shaders/*/
+!lsfutils/Mod/shaders/lsfutils
 
 !*.png
 !*.txt
