@@ -37,7 +37,6 @@ using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using Newtonsoft.Json.Linq;
 using RWCustom;
-using SlugBase.Features;
 using Stardust.PlacedObjects;
 using System;
 using System.Collections.Generic;
@@ -49,7 +48,6 @@ using UnityEngine;
 using Watcher;
 using static lsfUtils.RegionParams.RegionTypeParams;
 using static Pom.Pom;
-using static SlugBase.Features.FeatureTypes;
 
 #pragma warning disable CS0618
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -57,7 +55,6 @@ using static SlugBase.Features.FeatureTypes;
 
 namespace lsfUtils
 {
-    [BepInDependency("slime-cubed.slugbase")]
     [BepInDependency("io.github.dual.fisobs")]
     [BepInPlugin("lsfUtils", "LSF Utils", "0.1")]
 
@@ -469,6 +466,7 @@ namespace lsfUtils
         private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
         {
             orig(self);
+
             if (initialized)
             {
                 return;
@@ -486,7 +484,33 @@ namespace lsfUtils
 
             Futile.atlasManager.LoadImage(templarMaskIcon);
 
+            string bundlePath = AssetManager.ResolveFilePath("shaders/lsfutils");
+            AssetBundle bundle = AssetBundle.LoadFromFile(bundlePath);
+            if (bundle != null)
+            {
+                RegisterShader(self, bundle, "Assets/Shaders/RippleSpawnBodyGreen.shader", "RippleSpawnBodyGreen");
+                RegisterShader(self, bundle, "Assets/Shaders/RippleGlowGreen.shader", "RippleGlowGreen");
+                bundle.Unload(false);
+            }
+            else
+            {
+                Log.LogMessage("Failed to load starspawngreen shader bundle!");
+            }
+
             ScavFactions.LoadAndRegisterAllFactions();
+
+            Log.LogMessage("Sprites and shaders loaded!");
+        }
+
+        private static void RegisterShader(RainWorld rainWorld, AssetBundle bundle, string assetPath, string shaderKey)
+        {
+            Shader unityShader = bundle.LoadAsset<Shader>(assetPath);
+            if (unityShader == null)
+            {
+                Log.LogMessage($"Shader at {assetPath} not found in bundle!");
+                return;
+            }
+            rainWorld.Shaders[shaderKey] = FShader.CreateShader(shaderKey, unityShader);
         }
 
         private float PhysicalObject_GetLocalGravity(On.PhysicalObject.orig_GetLocalGravity orig, PhysicalObject self)

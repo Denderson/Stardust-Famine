@@ -190,9 +190,8 @@ public class StarSpawnGraphics : ComplexGraphicsModule
 
     public int EffectSprite => 2;
 
-    private FShader BodyShader => Custom.rainWorld.Shaders["RippleSpawnBody"];
-
-    private FShader EffectShader => Custom.rainWorld.Shaders["RippleGlow"];
+    private FShader BodyShader => Custom.rainWorld.Shaders["RippleSpawnBodyGreen"];
+    private FShader EffectShader => Custom.rainWorld.Shaders["RippleGlowGreen"];
 
     private FShader GlowShader => Custom.rainWorld.Shaders["FlatWaterLightRippleSpawn"];
 
@@ -324,11 +323,11 @@ public class StarSpawnGraphics : ComplexGraphicsModule
             Vector2 a = vector;
             if (dayLightMode)
             {
-                meshColor = new Color(0.5f, 0.5f, 0f);
+                meshColor = new Color(0.2f, 0.5f, 0.1f);
             }
             else
             {
-                meshColor = new Color(0.7f + 0.3f * Mathf.InverseLerp(0.1f, 0.9f, darkness), Mathf.Lerp(Mathf.Lerp(Custom.LerpMap(darkness, 0.1f, 0.9f, 0.1f, 0.075f, 0.5f), 0.24f, 0f), 0.8f, 0f), 0f);
+                meshColor = new Color(Mathf.Lerp(Mathf.Lerp(Custom.LerpMap(darkness, 0.1f, 0.9f, 0.1f, 0.075f, 0.5f), 0.24f, 0f), 0.8f, 0f), 0.7f + 0.3f * Mathf.InverseLerp(0.1f, 0.9f, darkness), 0f);
             }
             UpdateGlowSpriteColor(sLeaser);
             sLeaser.sprites[GlowSprite].x = a.x - camPos.x;

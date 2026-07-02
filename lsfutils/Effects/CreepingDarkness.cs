@@ -111,7 +111,7 @@ public class CreepingDarkness
     public static bool HasEffect(Room room)
     {
         if (room?.roomSettings?.effects == null) return false;
-        return room.roomSettings.GetEffect(Enums.EffectTypes.CreepingDarkness) != null;
+        return TryGetUAD(room.world, out var _);
     }
 
     public static bool TryGetUAD(World world, out CreepingDarknessUAD uad)

@@ -11,9 +11,6 @@ using MonoMod.RuntimeDetour;
 using MoreSlugcats;
 using Music;
 using RWCustom;
-using SlugBase;
-using SlugBase.Features;
-using SlugBase.SaveData;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
@@ -31,7 +28,6 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.Playables;
 using Watcher;
-using static SlugBase.Features.FeatureTypes;
 
 
 namespace lsfUtils.Creatures.Spawn

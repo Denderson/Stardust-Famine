@@ -122,7 +122,7 @@ public class StarSpawn : Creature, IPlayerEdible
         bodyChunks[0].collideWithObjects = false;
         canBeHitByWeapons = true;
 
-        effectColor = Custom.HSL2RGB(Custom.WrappedRandomVariation(244f / 360f, 15 / 360f, .5f), 0.66f, Custom.ClampedRandomVariation(60f / 360f, 15f / 360f, .5f));
+        effectColor = Custom.HSL2RGB(Custom.WrappedRandomVariation(120f / 360f, 15 / 360f, .5f), 0.66f, Custom.ClampedRandomVariation(60f / 360f, 15f / 360f, .5f));
 
         List<BodyChunk> list = new();
         List<BodyChunkConnection> list2 = new();

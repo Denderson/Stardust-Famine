@@ -2,7 +2,6 @@
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using RWCustom;
-using SlugBase.Features;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Text;
