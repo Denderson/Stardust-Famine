@@ -485,9 +485,20 @@ namespace lsfUtils
             Futile.atlasManager.LoadImage(templarMaskIcon);
 
             string bundlePath = AssetManager.ResolveFilePath("shaders/lsfutils");
+            Log.LogMessage($"Resolved bundle path: {bundlePath}");
+            if (System.IO.File.Exists(bundlePath))
+            {
+                Log.LogMessage($"Bundle last write: {System.IO.File.GetLastWriteTime(bundlePath)}");
+            }
+            else
+            {
+                Log.LogMessage("File does not exist at resolved path!");
+            }
+
             AssetBundle bundle = AssetBundle.LoadFromFile(bundlePath);
             if (bundle != null)
             {
+                Log.LogMessage("Bundle loaded. Assets inside: " + string.Join(", ", bundle.GetAllAssetNames()));
                 RegisterShader(self, bundle, "Assets/Shaders/RippleSpawnBodyGreen.shader", "RippleSpawnBodyGreen");
                 RegisterShader(self, bundle, "Assets/Shaders/RippleGlowGreen.shader", "RippleGlowGreen");
                 RegisterShader(self, bundle, "Assets/Shaders/SeerHalo.shader", "SeerHalo");

@@ -45,7 +45,7 @@ namespace lsfUtils.Creatures.Scavs.ScavSeer
             sLeaser.sprites[firstSprite] = new FSprite("Futile_White", true)
             {
                 shader = rCam.game.rainWorld.Shaders["SeerHalo"],
-                scale = 40f
+                scale = 35f
             };
         }
 

@@ -83,8 +83,7 @@ namespace lsfUtils.Creatures.Scavs.ScavSeer
                     source.AI.PingCD = 160;
                     source.room.AddObject(new Scavs.ScavSeer.SeerPing(source, source.mainBodyChunk.pos, source.karmicArmor?.rad ?? 0f, 0.3f, 0.3f, 100));
                 }
-
-
+                (source as ScavSeer).haloActivationTime = 40;
             }
         }
         public static void ScavengerGraphics_ShockReaction(On.ScavengerGraphics.orig_ShockReaction orig, ScavengerGraphics self, float intensity)

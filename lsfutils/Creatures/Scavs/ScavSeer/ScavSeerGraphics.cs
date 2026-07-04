@@ -8,7 +8,6 @@ namespace lsfUtils.Creatures.Scavs.ScavSeer
         public SeerHalo halo;
 
         private readonly int haloFirstSprite;
-        private bool haloSpritesReady;
 
         public ScavSeerGraphics(ScavSeer Seer) : base(Seer)
         {
@@ -18,11 +17,10 @@ namespace lsfUtils.Creatures.Scavs.ScavSeer
 
         public override void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
         {
-            if (!haloSpritesReady)
+            if (sLeaser.sprites.Length <= haloFirstSprite)
             {
                 Array.Resize(ref sLeaser.sprites, haloFirstSprite + halo.totalSprites);
                 halo.InitiateSprites(sLeaser, rCam);
-                haloSpritesReady = true;
             }
             base.AddToContainer(sLeaser, rCam, newContatiner);
             halo.AddToContainer(sLeaser, rCam, newContatiner);
