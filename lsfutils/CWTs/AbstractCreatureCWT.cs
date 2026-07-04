@@ -24,6 +24,7 @@ namespace lsfUtils.CWTs
             public bool isEchoImmune;
             public bool isPoisonImmune;
             public string faction = "default";
+            public bool starveTag = false;
         }
     }
 }

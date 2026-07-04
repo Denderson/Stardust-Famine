@@ -24,6 +24,9 @@ namespace lsfUtils.CWTs
 
             public int rippleTunnelTimer = 0;
             public int rippleTunnelCooldown = 0;
+
+            public int starveStunTimer = 0;
+            public bool starveInit = false;
         }
     }
 }

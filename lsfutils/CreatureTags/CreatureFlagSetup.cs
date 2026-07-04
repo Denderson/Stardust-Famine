@@ -52,6 +52,12 @@ namespace lsfUtils.CreatureTags
                     EchoImmune.SetupEchoImmune(self);
                 }
 
+                if (value.Contains("starving"))
+                {
+                    Log.LogMessage("StarveTag check!");
+                    EchoImmune.SetupEchoImmune(self);
+                }
+
                 if (value.Contains("faction"))
                 {
                     if (value.Contains(':') && value.Split(':').Length > 1)

@@ -338,6 +338,14 @@ namespace lsfUtils
                         On.CreatureCommunities.LoadDefaultCommunityAlignments += ScavFactionHooks.LoadDefaultCommunityAlignments_Post;
                         On.CreatureCommunities.CycleTick += ScavFactionHooks.CycleTick_Post;
                     }
+
+                    // starve tag
+                    {
+                        On.RelationshipTracker.DynamicRelationship.Update += StarveTag.DynamicRelationship_Update;
+                        On.Creature.Update += StarveTag.Creature_Update;
+                        On.SlugcatStats.NourishmentOfObjectEaten += StarveTag.SlugcatStats_NourishmentOfObjectEaten;
+                        On.LizardAI.ctor += StarveTag.LizardAI_ctor;
+                    }
                 }
 
                 // region parameters
