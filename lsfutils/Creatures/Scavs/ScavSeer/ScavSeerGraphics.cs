@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace lsfUtils.Creatures.Scavs.ScavSeer
@@ -10,13 +6,24 @@ namespace lsfUtils.Creatures.Scavs.ScavSeer
     public class ScavSeerGraphics : ScavengerGraphics
     {
         public SeerHalo halo;
-        public ScavSeerGraphics(ScavSeer Seer) : base(Seer) 
+
+        private readonly int haloFirstSprite;
+        private bool haloSpritesReady;
+
+        public ScavSeerGraphics(ScavSeer Seer) : base(Seer)
         {
-            halo = new SeerHalo(this, this.TotalSprites);
+            haloFirstSprite = TotalSprites;
+            halo = new SeerHalo(this, haloFirstSprite);
         }
 
         public override void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
         {
+            if (!haloSpritesReady)
+            {
+                Array.Resize(ref sLeaser.sprites, haloFirstSprite + halo.totalSprites);
+                halo.InitiateSprites(sLeaser, rCam);
+                haloSpritesReady = true;
+            }
             base.AddToContainer(sLeaser, rCam, newContatiner);
             halo.AddToContainer(sLeaser, rCam, newContatiner);
         }
@@ -31,12 +38,6 @@ namespace lsfUtils.Creatures.Scavs.ScavSeer
         {
             base.DrawSprites(sLeaser, rCam, timeStacker, camPosV2);
             halo.DrawSprites(sLeaser, rCam, timeStacker, camPosV2);
-        }
-
-        public override void InitiateSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
-        {
-            base.InitiateSprites(sLeaser, rCam);
-            halo.InitiateSprites(sLeaser, rCam);
         }
 
         public override void Update()
