@@ -304,15 +304,30 @@ namespace Stardust
                 Logger.LogError(ex);
             }
 
-            try
+            string bundlePath = AssetManager.ResolveFilePath("shaders/stardust");
+            AssetBundle bundle = AssetBundle.LoadFromFile(bundlePath);
+            if (bundle != null)
             {
-                AssetBundle assetBundle = AssetBundle.LoadFromFile(AssetManager.ResolveFilePath("assets/deeperspaceBackground"));
-                self.Shaders.Add("deeperspaceBackground", FShader.CreateShader("deeperspaceBackground", assetBundle.LoadAsset<Shader>("Assets/Shaders/deeperspaceBackground.shader")));
+                RegisterShader(self, bundle, "Assets/Shaders/deeperspaceBackground.shader", "deeperspaceBackground");
+                bundle.Unload(false);
             }
-            catch (Exception ex)
+            else
             {
-                Debug.LogException(ex);
+                Log.LogMessage("Failed to load stardust shader bundle!");
             }
+
+            Log.LogMessage("Sprites and shaders loaded!");
+        }
+
+        private static void RegisterShader(RainWorld rainWorld, AssetBundle bundle, string assetPath, string shaderKey)
+        {
+            Shader unityShader = bundle.LoadAsset<Shader>(assetPath);
+            if (unityShader == null)
+            {
+                Log.LogMessage($"Shader at {assetPath} not found in bundle!");
+                return;
+            }
+            rainWorld.Shaders[shaderKey] = FShader.CreateShader(shaderKey, unityShader);
         }
     }
 }

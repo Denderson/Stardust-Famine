@@ -490,11 +490,12 @@ namespace lsfUtils
             {
                 RegisterShader(self, bundle, "Assets/Shaders/RippleSpawnBodyGreen.shader", "RippleSpawnBodyGreen");
                 RegisterShader(self, bundle, "Assets/Shaders/RippleGlowGreen.shader", "RippleGlowGreen");
+                RegisterShader(self, bundle, "Assets/Shaders/SeerHalo.shader", "SeerHalo");
                 bundle.Unload(false);
             }
             else
             {
-                Log.LogMessage("Failed to load starspawngreen shader bundle!");
+                Log.LogMessage("Failed to load lsfUtils shader bundle!");
             }
 
             ScavFactions.LoadAndRegisterAllFactions();
