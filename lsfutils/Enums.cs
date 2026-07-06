@@ -95,6 +95,7 @@ namespace lsfUtils
             public static MultiplayerUnlocks.SandboxUnlockID RippleFlower = new(nameof(RippleFlower), true);
             public static MultiplayerUnlocks.SandboxUnlockID PoisonDart = new(nameof(PoisonDart), true);
             public static MultiplayerUnlocks.SandboxUnlockID KarmaMask = new(nameof(KarmaMask), true);
+            public static MultiplayerUnlocks.SandboxUnlockID ExplosiveBoomerang = new(nameof(ExplosiveBoomerang), true);
 
             public static MultiplayerUnlocks.SandboxUnlockID WeaverLizard = new(nameof(WeaverLizard), true);
             public static MultiplayerUnlocks.SandboxUnlockID FlameLizard = new(nameof(FlameLizard), true);
@@ -165,6 +166,7 @@ namespace lsfUtils
             public static AbstractPhysicalObject.AbstractObjectType Dart = new(nameof(Dart), true);
             public static AbstractPhysicalObject.AbstractObjectType PoisonDart = new(nameof(PoisonDart), true);
             public static AbstractPhysicalObject.AbstractObjectType KarmaMask = new(nameof(KarmaMask), true);
+            public static AbstractPhysicalObject.AbstractObjectType ExplosiveBoomerang = new(nameof(ExplosiveBoomerang), true);
 
             public void UnregisterValues()
             {
