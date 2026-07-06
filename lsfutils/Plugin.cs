@@ -261,7 +261,7 @@ namespace lsfUtils
                         On.Player.Update += KarmaMaskHooks.Player_Update;
                         On.MoreSlugcats.VultureMaskGraphics.ctor_PhysicalObject_MaskType_int_string += KarmaMaskHooks.VultureMaskGraphics_ctor_PhysicalObject_MaskType_int_string;
                         On.MoreSlugcats.VultureMaskGraphics.DrawSprites += KarmaMaskHooks.VultureMaskGraphics_DrawSprites;
-
+                        On.Player.Grabability += Player_Grabability;
                     }
                 }
 
@@ -407,6 +407,22 @@ namespace lsfUtils
                 Logger.LogMessage("LSF Utils failure!!!");
                 Logger.LogError(e);
             }
+        }
+
+        public static Player.ObjectGrabability Player_Grabability(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
+        {
+            Player.ObjectGrabability value = orig(self, obj);
+            if (self?.grasps != null && self.grasps.Length > 0 && value == Player.ObjectGrabability.TwoHands && obj is JetFish)
+            {
+                foreach (Creature.Grasp grasp in self.grasps)
+                {
+                    if (grasp?.grabbed != null && grasp.grabbed is KarmaMask)
+                    {
+                        value = Player.ObjectGrabability.OneHand;
+                    }
+                }
+            }
+            return value;
         }
 
         public static void RainWorld_Start(On.RainWorld.orig_Start orig, RainWorld self)

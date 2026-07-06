@@ -96,5 +96,7 @@ namespace lsfUtils.Items.KarmaMask
             }
             data.karmaMode = flag;
         }
+
+
     }
 }

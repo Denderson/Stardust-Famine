@@ -441,6 +441,8 @@ namespace lsfUtils.DevtoolsObjects.ConditionalFilter
             List<RoomConditionFilterData> list2 = [];
             foreach (PlacedObject placedObject in self.placedObjects)
             {
+                if (self.room == null) break;
+
                 if (placedObject.data is ConditionFilterData filter && !filter.Active(ref self.room.game))
                 {
                     list.Add(filter);
