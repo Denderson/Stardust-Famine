@@ -9,38 +9,55 @@ namespace lsfUtils.Items.ExplosiveBoomerang
 {
     public class ExplosiveBoomerang : Boomerang
     {
-        public Color explodeColor = new(1f, 0.55f, 0.1f);
+        public Color explodeColor = new(1f, 0.4f, 0.3f);
+        public Color singularityColor = new(0.2f, 0.2f, 1f);
 
         public bool ignited;
         public BombSmoke smoke;
         public float burn;
 
-        public int explodeCooldown;
+        public bool isSingularity;
+        public bool returning;
 
-        private const int ExplodeCooldownDuration = 20;
         private const int SpriteGlow = 3;
         private const int TotalSprites = 4;
 
-        public ExplosiveBoomerang(AbstractPhysicalObject abstractPhysicalObject, World world) : base(abstractPhysicalObject, world)
+        public Color ExplosionColor
         {
+            get
+            {
+                if (isSingularity) return singularityColor;
+                else return explodeColor;
+            }
+        }
+
+        public ExplosiveBoomerang(AbstractPhysicalObject abstractPhysicalObject, World world, bool isSingularity) : base(abstractPhysicalObject, world)
+        {
+            this.isSingularity = isSingularity;
             firstChunk.mass = 0.15f;
             ignited = false;
             smoke = null;
-            explodeCooldown = ExplodeCooldownDuration;
+            returning = false;
         }
 
         public override void Update(bool eu)
         {
             base.Update(eu);
 
-            if (explodeCooldown > 0) explodeCooldown--;
-
             if (ignited || burn > 0f)
             {
-                if (Submersion == 1f && room.waterObject != null && !room.waterObject.WaterIsLethal)
+                if (!isSingularity && Submersion == 1f && room.waterObject != null)
                 {
-                    ignited = false;
-                    burn = 0f;
+                    if (!room.waterObject.WaterIsLethal)
+                    {
+                        ignited = false;
+                        burn = 0f;
+                    }
+                    else
+                    {
+                        ignited = true;
+                    }
+                        
                 }
 
                 if (ignited && burn == 0f && mode != Mode.Thrown) burn = 0.5f + Random.value * 0.5f;
@@ -50,7 +67,7 @@ namespace lsfUtils.Items.ExplosiveBoomerang
                     room.AddObject(new Spark(Vector2.Lerp(firstChunk.lastPos, firstChunk.pos, Random.value), firstChunk.vel * 0.1f + Custom.RNV() * 3f * Random.value, explodeColor, null, 7, 25));
                 }
 
-                if (smoke == null)
+                if (smoke == null )
                 {
                     smoke = new BombSmoke(room, firstChunk.pos, firstChunk, explodeColor);
                     room.AddObject(smoke);
@@ -67,8 +84,21 @@ namespace lsfUtils.Items.ExplosiveBoomerang
                 burn -= 1f / 30f;
                 if (burn <= 0f)
                 {
-                    ignited = false;
                     Explode(null);
+                    ignited = false;
+                    burn = 0f;
+                }
+            }
+
+            if (isSingularity && mode == Mode.Thrown && thrownBy != null && returning)
+            {
+                Vector2 toThrower = thrownBy.mainBodyChunk.pos - firstChunk.pos;
+                float dist = toThrower.magnitude;
+                if (dist > 0.01f)
+                {
+                    Vector2 dir = toThrower / dist;
+                    float homingStrength = Custom.LerpMap(dist, 0f, 200f, 0.05f, 0.25f);
+                    firstChunk.vel = Vector2.Lerp(firstChunk.vel, dir * firstChunk.vel.magnitude, homingStrength);
                 }
             }
         }
@@ -101,33 +131,33 @@ namespace lsfUtils.Items.ExplosiveBoomerang
             if (result.obj is Creature creature)
             {
                 creature.Violence(firstChunk, firstChunk.vel * firstChunk.mass, result.chunk, result.onAppendagePos, Creature.DamageType.Explosion, 0.6f, 60f);
-
-                if (explodeCooldown == 0) Explode(result.chunk);
+                Explode(result.chunk);
             }
             else if (result.chunk != null)
             {
                 result.chunk.vel += firstChunk.vel * firstChunk.mass / result.chunk.mass;
+                Explode(result.chunk);
             }
             else if (result.onAppendagePos != null)
             {
                 (result.obj as IHaveAppendages).ApplyForceOnAppendage(result.onAppendagePos, firstChunk.vel * firstChunk.mass);
+                Explode(null);
             }
+
+            returning = !returning;
 
             return true;
         }
 
         public override void HitWall()
         {
-            bool wasThrown = mode == Mode.Thrown;
             base.HitWall();
-
-            if (wasThrown && mode == Mode.Free && explodeCooldown == 0) Explode(null);
+            Explode(null);
         }
 
         public void Explode(BodyChunk hitChunk)
         {
             if (slatedForDeletetion) return;
-            if (explodeCooldown > 0) return;
 
             Vector2 pos = Vector2.Lerp(firstChunk.pos, firstChunk.lastPos, 0.35f);
 
@@ -190,29 +220,17 @@ namespace lsfUtils.Items.ExplosiveBoomerang
             room.InGameNoise(new InGameNoise(pos, 7000f, this, 1f));
 
             for (int m = 0; m < abstractPhysicalObject.stuckObjects.Count; m++) abstractPhysicalObject.stuckObjects[m].Deactivate();
-
-            explodeCooldown = ExplodeCooldownDuration;
         }
 
         public override void InitiateSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
-            sLeaser.sprites = new FSprite[TotalSprites];
             base.InitiateSprites(sLeaser, rCam);
-
-            sLeaser.sprites[SpriteGlow] = new FSprite("Futile_White")
-            {
-                shader = rCam.game.rainWorld.Shaders["JaggedCircle"],
-                scale = (firstChunk.rad + 1f) / 10f,
-                alpha = 0f,
-            };
-
-            AddToContainer(sLeaser, rCam, null);
         }
 
         public override void DrawSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
             base.DrawSprites(sLeaser, rCam, timeStacker, camPos);
-            if (slatedForDeletetion || room != rCam.room) return;
+            if (slatedForDeletetion || room != rCam.room || sLeaser?.sprites == null || sLeaser.sprites.Length <= SpriteGlow) return;
 
             Vector2 pos = Vector2.Lerp(firstChunk.lastPos, firstChunk.pos, timeStacker);
 
@@ -225,6 +243,7 @@ namespace lsfUtils.Items.ExplosiveBoomerang
         public override void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
         {
             base.ApplyPalette(sLeaser, rCam, palette);
+            if (slatedForDeletetion || room != rCam.room || sLeaser?.sprites == null || sLeaser.sprites.Length <= SpriteGlow) return;
             sLeaser.sprites[SpriteGlow].color = explodeColor;
         }
     }

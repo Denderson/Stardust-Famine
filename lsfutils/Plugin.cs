@@ -27,6 +27,7 @@ using lsfUtils.DevtoolsObjects.RippleZone;
 using lsfUtils.Effects;
 using lsfUtils.Items.Darts.Dart;
 using lsfUtils.Items.Darts.PoisonDart;
+using lsfUtils.Items.ExplosiveBoomerang;
 using lsfUtils.Items.KarmaMask;
 using lsfUtils.Items.RippleFlower;
 using lsfUtils.RegionParams;
@@ -106,6 +107,8 @@ namespace lsfUtils
                     Content.Register(new RippleFlowerFisob());
                     Content.Register(new PoisonDartFisob());
                     Content.Register(new KarmaMaskFisob());
+                    Content.Register(new ExplosiveBoomerangFisob());
+                    Content.Register(new SingularityBoomerangFisob());
 
                     Log.LogMessage("Done with Fisobs!");
                 }
@@ -262,6 +265,11 @@ namespace lsfUtils
                         On.MoreSlugcats.VultureMaskGraphics.ctor_PhysicalObject_MaskType_int_string += KarmaMaskHooks.VultureMaskGraphics_ctor_PhysicalObject_MaskType_int_string;
                         On.MoreSlugcats.VultureMaskGraphics.DrawSprites += KarmaMaskHooks.VultureMaskGraphics_DrawSprites;
                         On.Player.Grabability += Player_Grabability;
+                    }
+
+                    // explosive boomerang
+                    {
+                        On.Weapon.HitAnotherThrownWeapon += ExplosiveBoomerangHooks.Weapon_HitAnotherThrownWeapon;
                     }
                 }
 

@@ -10,7 +10,7 @@ namespace lsfUtils.Items.ExplosiveBoomerang
     {
         public ExplosiveBoomerangFisob() : base(Enums.AbstractPhysicalObjectType.ExplosiveBoomerang)
         {
-            Icon = new SimpleIcon("atlases/Symbol_Boomerang", new Color(1f, 0.55f, 0.1f));
+            Icon = new SimpleIcon("Symbol_Boomerang", new(1f, 0.4f, 0.3f));
             SandboxPerformanceCost = new SandboxPerformanceCost(0.5f, 0.2f);
             RegisterUnlock(Enums.SandboxUnlockID.ExplosiveBoomerang, MultiplayerUnlocks.SandboxUnlockID.Slugcat, 20);
         }

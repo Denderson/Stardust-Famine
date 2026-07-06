@@ -96,6 +96,7 @@ namespace lsfUtils
             public static MultiplayerUnlocks.SandboxUnlockID PoisonDart = new(nameof(PoisonDart), true);
             public static MultiplayerUnlocks.SandboxUnlockID KarmaMask = new(nameof(KarmaMask), true);
             public static MultiplayerUnlocks.SandboxUnlockID ExplosiveBoomerang = new(nameof(ExplosiveBoomerang), true);
+            public static MultiplayerUnlocks.SandboxUnlockID SingularityBoomerang = new(nameof(SingularityBoomerang), true);
 
             public static MultiplayerUnlocks.SandboxUnlockID WeaverLizard = new(nameof(WeaverLizard), true);
             public static MultiplayerUnlocks.SandboxUnlockID FlameLizard = new(nameof(FlameLizard), true);
@@ -118,12 +119,16 @@ namespace lsfUtils
 
             public void UnregisterValues()
             {
-                KarmaMask?.Unregister();
-                KarmaMask = null;
-                PoisonDart?.Unregister();
-                PoisonDart = null;
                 RippleFlower?.Unregister();
                 RippleFlower = null;
+                PoisonDart?.Unregister();
+                PoisonDart = null;
+                KarmaMask?.Unregister();
+                KarmaMask = null;
+                ExplosiveBoomerang?.Unregister();
+                ExplosiveBoomerang = null;
+                SingularityBoomerang?.Unregister();
+                SingularityBoomerang = null;
 
                 WeaverLizard?.Unregister();
                 WeaverLizard = null;
@@ -167,6 +172,7 @@ namespace lsfUtils
             public static AbstractPhysicalObject.AbstractObjectType PoisonDart = new(nameof(PoisonDart), true);
             public static AbstractPhysicalObject.AbstractObjectType KarmaMask = new(nameof(KarmaMask), true);
             public static AbstractPhysicalObject.AbstractObjectType ExplosiveBoomerang = new(nameof(ExplosiveBoomerang), true);
+            public static AbstractPhysicalObject.AbstractObjectType SingularityBoomerang = new(nameof(SingularityBoomerang), true);
 
             public void UnregisterValues()
             {
@@ -176,6 +182,8 @@ namespace lsfUtils
                 PoisonDart = null;
                 KarmaMask?.Unregister();
                 KarmaMask = null;
+                SingularityBoomerang?.Unregister();
+                SingularityBoomerang = null;
             }
         }
 
