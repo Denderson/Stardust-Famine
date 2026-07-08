@@ -52,6 +52,7 @@ namespace lsfUtils
             public static CreatureTemplate.Type StarElder = new(nameof(StarElder), true);
 
             public static CreatureTemplate.Type PoisonSpider = new(nameof(PoisonSpider), true);
+            public static CreatureTemplate.Type ClimbGrub = new(nameof(ClimbGrub), true);
 
             public void UnregisterValues()
             {
@@ -109,12 +110,15 @@ namespace lsfUtils
             public static MultiplayerUnlocks.SandboxUnlockID ScavSeer = new(nameof(ScavSeer), true);
             public static MultiplayerUnlocks.SandboxUnlockID ScavFlank = new(nameof(ScavFlank), true);
             public static MultiplayerUnlocks.SandboxUnlockID ScavMessenger = new(nameof(ScavMessenger), true);
+
             public static MultiplayerUnlocks.SandboxUnlockID StarSpawn = new(nameof(StarSpawn), true);
             public static MultiplayerUnlocks.SandboxUnlockID StarNoodles = new(nameof(StarNoodles), true);
             public static MultiplayerUnlocks.SandboxUnlockID StarJelly = new(nameof(StarJelly), true);
             public static MultiplayerUnlocks.SandboxUnlockID StarSpider = new(nameof(StarSpider), true);
             public static MultiplayerUnlocks.SandboxUnlockID StarElder = new(nameof(StarElder), true);
+
             public static MultiplayerUnlocks.SandboxUnlockID PoisonSpider = new(nameof(PoisonSpider), true);
+            public static MultiplayerUnlocks.SandboxUnlockID ClimbGrub = new(nameof(ClimbGrub), true);
 
 
             public void UnregisterValues()
@@ -129,6 +133,8 @@ namespace lsfUtils
                 ExplosiveBoomerang = null;
                 SingularityBoomerang?.Unregister();
                 SingularityBoomerang = null;
+                ClimbGrub?.Unregister();
+                ClimbGrub = null;
 
                 WeaverLizard?.Unregister();
                 WeaverLizard = null;

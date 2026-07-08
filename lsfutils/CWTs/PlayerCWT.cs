@@ -30,6 +30,8 @@ namespace lsfUtils.CWTs
 
             public bool karmaMode = false;
             public bool previousKarmaMode = false;
+
+            public int freeClimbTimer = 0;
         }
     }
 }

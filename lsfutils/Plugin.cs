@@ -16,6 +16,7 @@ using lsfUtils.Creatures.Scavs.ScavMessenger;
 using lsfUtils.Creatures.Scavs.ScavSeer;
 using lsfUtils.Creatures.Spawn;
 using lsfUtils.Creatures.Spiders;
+using lsfUtils.Creatures.Worm;
 using lsfUtils.Creatures.Spiders.PoisonSpider;
 using lsfUtils.CreatureTags;
 using lsfUtils.CWTs;
@@ -103,6 +104,7 @@ namespace lsfUtils
                     Content.Register(new StarNoodlesCritob());
                     Content.Register(new StarJellyCritob());
                     Content.Register(new PoisonSpiderCritob());
+                    Content.Register(new ClimbGrubCritob());
 
                     Content.Register(new RippleFlowerFisob());
                     Content.Register(new PoisonDartFisob());

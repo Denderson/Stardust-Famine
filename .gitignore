@@ -47,6 +47,7 @@
 !lsfutils/
 !lsfutils/Mod/
 !lsfutils/Mod/atlases
+!lsfutils/Mod/plugins
 !lsfutils/Creatures/
 !lsfutils/Creatures/*/
 !lsfutils/Creatures/*/*/
