@@ -9,6 +9,12 @@ namespace lsfUtils.Creatures.Worm
         private int grabHoldCounter;
         private const int SmashHoldThreshold = 40;
 
+        public static Color yellowTintColor = new(0.75f, 0.95f, 0.25f);
+        public static Color pinkStripeColor = new(1f, 0.55f, 0.75f);
+
+        public const int freeClimbDuration = 40 * 10;
+        public const int freeClimbDurationMax = 80 * 10;
+
         public ClimbGrub(AbstractCreature abstractCreature, World world) : base(abstractCreature, world)
         {
             grabHoldCounter = 0;
@@ -16,10 +22,7 @@ namespace lsfUtils.Creatures.Worm
 
         public override void InitiateGraphicsModule()
         {
-            if (graphicsModule == null)
-            {
-                graphicsModule = new ClimbGrubGraphics(this);
-            }
+            graphicsModule ??= new ClimbGrubGraphics(this);
         }
 
         public override void Update(bool eu)
@@ -44,6 +47,7 @@ namespace lsfUtils.Creatures.Worm
             if (holder != null && holder.input[0].pckp)
             {
                 grabHoldCounter++;
+                (holder.graphicsModule as PlayerGraphics).LookAtObject(this);
                 if (grabHoldCounter >= SmashHoldThreshold)
                 {
                     Smash(holder);
@@ -58,16 +62,22 @@ namespace lsfUtils.Creatures.Worm
 
         private void Smash(Player player)
         {
+            if (!PlayerCWT.TryGetData(player, out var data)) return;
+
             room.PlaySound(SoundID.Egg_Bug_Drop_Eggs, mainBodyChunk);
 
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < 20; i++)
             {
-                Vector2 vel = Custom.RNV() * Mathf.Lerp(4f, 14f, UnityEngine.Random.value);
-                room.AddObject(new Spark(mainBodyChunk.pos, vel, Color.Lerp(Color.yellow, Color.white, UnityEngine.Random.value), null, 8, 24));
+                Vector2 vel = Custom.RNV() * Mathf.Lerp(4f, 8f, UnityEngine.Random.value);
+                room.AddObject(new Spark(mainBodyChunk.pos, vel, Color.Lerp(yellowTintColor, Color.white, UnityEngine.Random.value), null, 14, 24));
             }
 
-            if (!PlayerCWT.TryGetData(player, out var data)) return;
-            data.freeClimbTimer = 400;
+            data.freeClimbTimer += freeClimbDuration;
+            if (data.freeClimbTimer > freeClimbDurationMax) data.freeClimbTimer = freeClimbDurationMax;
+
+            player.AddMud(freeClimbDuration / 3, freeClimbDurationMax, yellowTintColor);
+            player.AddMud(freeClimbDuration / 3, freeClimbDurationMax, yellowTintColor);
+            player.AddMud(freeClimbDuration / 3, freeClimbDurationMax, yellowTintColor);
 
             Die();
             room.RemoveObject(this);
@@ -76,7 +86,7 @@ namespace lsfUtils.Creatures.Worm
 
         public override Color ShortCutColor()
         {
-            return Color.Lerp(Color.white, new Color(1f, 0.55f, 0.75f), 0.35f);
+            return Color.Lerp(Color.white, pinkStripeColor, 0.35f);
         }
     }
 }

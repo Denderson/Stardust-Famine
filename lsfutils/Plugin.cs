@@ -238,7 +238,6 @@ namespace lsfUtils
                     {
                         On.TubeWorm.Tongue.Shoot += ClimbGrubHooks.Tongue_Shoot;
                         On.Player.Update += ClimbGrubHooks.Player_Update;
-                        On.PlayerGraphics.ApplyPalette += ClimbGrubHooks.PlayerGraphics_ApplyPalette;
                         On.Player.WallJump += ClimbGrubHooks.Player_WallJump;
                     }
                 }
