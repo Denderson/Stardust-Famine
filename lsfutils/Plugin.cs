@@ -16,8 +16,8 @@ using lsfUtils.Creatures.Scavs.ScavMessenger;
 using lsfUtils.Creatures.Scavs.ScavSeer;
 using lsfUtils.Creatures.Spawn;
 using lsfUtils.Creatures.Spiders;
-using lsfUtils.Creatures.Worm;
 using lsfUtils.Creatures.Spiders.PoisonSpider;
+using lsfUtils.Creatures.Worm;
 using lsfUtils.CreatureTags;
 using lsfUtils.CWTs;
 using lsfUtils.DevtoolsObjects.ConditionalFilter;
@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Remoting.Contexts;
 using System.Security.Permissions;
 using UnityEngine;
@@ -231,6 +232,14 @@ namespace lsfUtils
                         On.DartMaggot.Shoot += SpiderCode.DartMaggot_Shoot;
                         On.DartMaggot.Update += SpiderCode.DartMaggot_Update;
                         On.BigSpiderAI.SpiderSpitModule.SpiderHasSpit += SpiderCode.SpiderSpitModule_SpiderHasSpit;
+                    }
+
+                    // worms
+                    {
+                        On.TubeWorm.Tongue.Shoot += ClimbGrubHooks.Tongue_Shoot;
+                        On.Player.Update += ClimbGrubHooks.Player_Update;
+                        On.PlayerGraphics.ApplyPalette += ClimbGrubHooks.PlayerGraphics_ApplyPalette;
+                        On.Player.WallJump += ClimbGrubHooks.Player_WallJump;
                     }
                 }
 
