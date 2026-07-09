@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
+using DevInterface;
 using Fisobs.Core;
 using LizardCosmetics;
 using lsfUtils.Creatures.Lizards;
@@ -22,6 +23,7 @@ using lsfUtils.CreatureTags;
 using lsfUtils.CWTs;
 using lsfUtils.DevtoolsObjects.ConditionalFilter;
 using lsfUtils.DevtoolsObjects.EventRectangle;
+using lsfUtils.DevtoolsObjects.FloatMud;
 using lsfUtils.DevtoolsObjects.LocalGravity;
 using lsfUtils.DevtoolsObjects.RippleTunnel;
 using lsfUtils.DevtoolsObjects.RippleZone;
@@ -287,7 +289,6 @@ namespace lsfUtils
                 {
                     // local gravity
                     {
-                        Log.LogMessage("Gravity override rework!");
                         On.PhysicalObject.Update += LocalGravity.PhysicalObject_Update;
                         On.Player.Update += LocalGravity.Player_Update_CorrectGravityField;
                         On.Player.UpdateBodyMode += LocalGravity.Player_UpdateBodyMode;
@@ -305,6 +306,18 @@ namespace lsfUtils
                     // event zone
                     {
 
+                    }
+
+                    // float mud
+                    {
+                        On.Creature.Update += FloatMudHooks.Creature_Update;
+                        On.Player.Update += FloatMudHooks.Player_Update_CorrectGravityField;
+                        On.Player.UpdateBodyMode += FloatMudHooks.Player_UpdateBodyMode;
+                        On.Player.UpdateAnimation += FloatMudHooks.Player_UpdateAnimation;
+                        On.Player.Update += FloatMudHooks.Player_Update;
+
+                        new Hook(typeof(PhysicalObject).GetProperty(nameof(PhysicalObject.EffectiveRoomGravity)).GetGetMethod(), typeof(FloatMudHooks).GetMethod(nameof(FloatMudHooks.EffectiveRoomGravity)));
+                        new Hook(typeof(Player).GetProperty(nameof(Player.EffectiveRoomGravity)).GetGetMethod(), typeof(FloatMudHooks).GetMethod(nameof(FloatMudHooks.EffectiveRoomGravityForPlayer)));
                     }
                 }
 
@@ -410,9 +423,9 @@ namespace lsfUtils
                 RegisterManagedObject<LocalGravity, LocalGravityData, ManagedRepresentation>("LocalGravity", "lsfUtils");
                 RegisterManagedObject<RippleZone, RippleZoneData, ManagedRepresentation>("RippleZone", "lsfUtils");
                 RegisterManagedObject<EventRect, EventRectData, ManagedRepresentation>("EventRect", "lsfUtils");
-                Log.LogMessage("Registering ripple tunnel!");
                 RegisterManagedObject<RippleTunnel, RippleTunnelData, RippleTunnelRepresentation>("RippleTunnel", "lsfUtils");
-
+                
+                RegisterManagedObject(new ManagedFloatMud());
                 RegisterManagedObject(new ManagedRippleFlower());
                 RegisterManagedObject(new ManagedKarmaMask());
 

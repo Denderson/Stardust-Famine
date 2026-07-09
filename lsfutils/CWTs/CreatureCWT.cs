@@ -27,6 +27,8 @@ namespace lsfUtils.CWTs
 
             public int starveStunTimer = 0;
             public bool starveInit = false;
+
+            public int floatingMudTimer = 0;
         }
     }
 }

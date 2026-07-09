@@ -63,7 +63,6 @@ namespace lsfUtils.DevtoolsObjects.LocalGravity
                 return;
             }
 
-            // Reset from last frame
             physicalobjectdata.shouldOverrideGravity = false;
             physicalobjectdata.overrideGravity = float.NegativeInfinity;
 
@@ -72,8 +71,6 @@ namespace lsfUtils.DevtoolsObjects.LocalGravity
 
                 foreach (LocalGravity localGravity in roomdata.localGravities)
                 {
-                    float dist = Vector2.Distance(self.firstChunk.pos, localGravity.pos);
-                    float radius = localGravity.data.radius.magnitude;
                     bool inRange = localGravity.InRange(self.firstChunk.pos);
 
                     if (inRange)
@@ -140,12 +137,9 @@ namespace lsfUtils.DevtoolsObjects.LocalGravity
         {
             orig(self);
 
-            // After animation update, check if in a normal gravity zone
             if (self.room != null && PhysicalObjectCWT.TryGetData(self, out var data) && data.shouldOverrideGravity && data.overrideGravity > 0.1f)
             {
-                // If stuck in StandUp/DownOnFours with no floor contact, reset animation
-                if ((self.animation == Player.AnimationIndex.StandUp || self.animation == Player.AnimationIndex.DownOnFours)
-                    && self.bodyChunks[1].ContactPoint.y >= 0)  // not on floor
+                if ((self.animation == Player.AnimationIndex.StandUp || self.animation == Player.AnimationIndex.DownOnFours) && self.bodyChunks[1].ContactPoint.y >= 0)
                 {
                     self.animation = Player.AnimationIndex.None;
                     self.bodyMode = Player.BodyModeIndex.Default;
@@ -154,7 +148,6 @@ namespace lsfUtils.DevtoolsObjects.LocalGravity
         }
         public static void Player_UpdateBodyMode(On.Player.orig_UpdateBodyMode orig, Player self)
         {
-            var beforeMode = self.bodyMode;
             orig(self);
             var afterMode = self.bodyMode;
 
