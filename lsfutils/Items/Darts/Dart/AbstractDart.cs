@@ -1,48 +1,48 @@
 ﻿using Fisobs.Core;
-using System;
-using System.Globalization;
-using static lsfUtils.Plugin;
+using lsfUtils.Items.Darts.Dart;
 using static lsfUtils.Enums;
+using static lsfUtils.Plugin;
 
-namespace lsfUtils.Items.Darts.Dart
+public class AbstractDart : AbstractPhysicalObject
 {
-    public class AbstractDart : AbstractPhysicalObject
+    public float poison;
+    public DartType dartType;
+    public Dart realisedDart;
+
+    public AbstractDart(World world, Dart realizedObject, WorldCoordinate pos, EntityID ID, float poison = 0f) : base(world, AbstractPhysicalObjectType.Dart, realizedObject, pos, ID)
     {
-        public float poison;
-        public DartType dartType;
+        this.poison = poison;
+        this.dartType = DartType.Default;
+        Log.LogMessage("Made abstract dart!");
+    }
 
-        public Dart realisedDart;
+    public override void Realize()
+    {
+        base.Realize();
 
-        public AbstractDart(World world, Dart realizedObject, WorldCoordinate pos, EntityID ID, float poison = 0f) : base(world, AbstractPhysicalObjectType.Dart, realizedObject, pos, ID)
+        if (realizedObject == null)
         {
-            this.poison = poison;
-            Log.LogMessage("Made abstract dart!");
-        }
-
-        public override void Realize()
-        {
-            base.Realize();
-            if (realizedObject == null)
+            if (dartType == DartType.Default)
             {
-                if (dartType == DartType.Default)
-                {
-                    Log.LogMessage("Dart type is default!");
-                    realizedObject = new Dart(this);
-                    return;
-                }
-                if (dartType == DartType.Poison)
-                {
-                    Log.LogMessage("Dart type is poison!");
-                    realizedObject = new PoisonDart.PoisonDart(this);
-                    return;
-                }
-                Log.LogMessage("Dart type is none!");
+                Log.LogMessage("Dart type is Default, creating Dart");
+                realizedObject = new Dart(this);
+                return;
             }
-        }
 
-        public override string ToString()
-        {
-            return this.SaveToString($"{poison},{dartType}");
+            if (dartType == DartType.Poison)
+            {
+                Log.LogMessage("Dart type is Poison, creating PoisonDart");
+                realizedObject = new lsfUtils.Items.Darts.PoisonDart.PoisonDart(this);
+                return;
+            }
+
+            Log.LogMessage("Dart type unknown, creating default Dart");
+            realizedObject = new Dart(this);
         }
+    }
+
+    public override string ToString()
+    {
+        return this.SaveToString($"{poison},{dartType}");
     }
 }

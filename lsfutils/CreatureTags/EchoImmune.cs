@@ -43,22 +43,15 @@ namespace lsfUtils.CreatureTags
             try
             {
                 var cursor = new ILCursor(il);
-
                 int patchCount = 0;
-
-                while (cursor.TryGotoNext(MoveType.After, x => x.MatchLdfld<CreatureTemplate>(nameof(CreatureTemplate.ghostSedationImmune))))
+                while (cursor.TryGotoNext(MoveType.Before, x => x.MatchLdfld(out var f) && f.Name == nameof(CreatureTemplate.ghostSedationImmune), x => x.MatchBrtrue(out _)))
                 {
+                    cursor.Index++;
                     cursor.Emit(OpCodes.Ldloc_3);
-
-                    cursor.EmitDelegate<Func<bool, AbstractCreature, bool>>(
-                        (vanillaImmune, abstractCreature) =>
-                            vanillaImmune ||
-                            (abstractCreature?.realizedCreature?.IsEchoImmune() ?? false));
-
+                    cursor.EmitDelegate<Func<bool, AbstractCreature, bool>>((vanillaImmune, abstractCreature) =>  vanillaImmune || (abstractCreature?.realizedCreature?.IsEchoImmune() ?? false));
                     patchCount++;
                 }
-
-                Log.LogMessage("ghostSedationImmune check failure!");
+                Log.LogMessage($"ghostSedationImmune check patch count: {patchCount}");
             }
             catch (Exception ex)
             {

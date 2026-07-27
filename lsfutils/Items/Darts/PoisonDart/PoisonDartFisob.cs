@@ -13,25 +13,27 @@ namespace lsfUtils.Items.Darts.PoisonDart
 {
     public class PoisonDartFisob : Fisob
     {
-        public PoisonDartFisob() : base(Enums.AbstractPhysicalObjectType.PoisonDart)
+        public PoisonDartFisob() : base(lsfUtils.Enums.AbstractPhysicalObjectType.PoisonDart)
         {
-            Icon = new SimpleIcon("atlases/Symbol_Dart", Enums.Colors.PoisonColor);
+            Icon = new SimpleIcon("atlases/Symbol_Dart", lsfUtils.Enums.Colors.PoisonColor);
             SandboxPerformanceCost = new SandboxPerformanceCost(0.35f, 0f);
-            RegisterUnlock(Enums.SandboxUnlockID.PoisonDart, MultiplayerUnlocks.SandboxUnlockID.Slugcat, 15);
+            RegisterUnlock(lsfUtils.Enums.SandboxUnlockID.PoisonDart, MultiplayerUnlocks.SandboxUnlockID.Slugcat, 15);
         }
 
         public override AbstractPhysicalObject Parse(World world, EntitySaveData saveData, SandboxUnlock unlock)
         {
-            Log.LogMessage("Entered parse");
+            Log.LogMessage("PoisonDartFisob.Parse called");
+
             string[] array = saveData.CustomData.Split(';');
             if (array.Length < 1)
             {
-                array = new string[1];
+                array = ["1"];
             }
+
             float remainingPoison = float.TryParse(array[0], out float result) ? result : 1f;
-            PoisonDartAbstract PoisonDartAbstract = new(world, null, saveData.Pos, saveData.ID, remainingPoison);
-            Log.LogMessage("Exited parse");
-            return PoisonDartAbstract;
+            PoisonDartAbstract abstractDart = new(world, null, saveData.Pos, saveData.ID, remainingPoison);
+            Log.LogMessage("PoisonDartFisob.Parse complete, poison: " + remainingPoison);
+            return abstractDart;
         }
 
         public override ItemProperties Properties(PhysicalObject forObject)
