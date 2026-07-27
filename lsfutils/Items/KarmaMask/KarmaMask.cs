@@ -19,9 +19,11 @@ namespace lsfUtils.Items.KarmaMask
         {
             abstractPhysicalObject = abstr;
             abstr.realizedObject = this;
-            maskGfx = new VultureMaskGraphics(this, VultureMask.MaskType.SCAVTEMPLAR, 0, "");
-            maskGfx.glimmer = true;
-            maskGfx.ignoreDarkness = true;
+            maskGfx = new VultureMaskGraphics(this, VultureMask.MaskType.SCAVTEMPLAR, 0, "")
+            {
+                glimmer = true,
+                ignoreDarkness = true
+            };
             maskGfx.GenerateColor(0);
 
             Log.LogMessage("Spawning karma mask!");

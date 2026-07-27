@@ -41,17 +41,19 @@ namespace lsfUtils.Items.KarmaMask
             orig(self);
             if (self.hud?.owner is Player player && PlayerCWT.TryGetData(player, out var data))
             {
-                if (!data.karmaMode && data.previousKarmaMode)
+                if (!data.karmaMode && data.previousKarmaMode) // disabled
                 {
-                    self.karmaSprite.element = Futile.atlasManager.GetElementWithName(HUD.KarmaMeter.RippleSymbolSprite(small: true, 5));
-                    self.forceVisibleCounter = Math.Max(self.forceVisibleCounter, 120);
+                    self.UpdateGraphic();
+                    // should just reset to default state I think
                 }
-                if (data.karmaMode && !data.previousKarmaMode)
+                if (data.karmaMode && !data.previousKarmaMode) // enabled
                 {
                     self.displayKarma.x = 9;
                     self.displayKarma.y = 9;
                     self.karmaSprite.element = Futile.atlasManager.GetElementWithName(HUD.KarmaMeter.KarmaSymbolSprite(small: true, self.displayKarma));
                     self.forceVisibleCounter = Math.Max(self.forceVisibleCounter, 120);
+                    self.baseColor = Futile.white;
+                    self.karmaSprite.color = self.baseColor;
                 }
             }
         }
@@ -96,7 +98,5 @@ namespace lsfUtils.Items.KarmaMask
             }
             data.karmaMode = flag;
         }
-
-
     }
 }
