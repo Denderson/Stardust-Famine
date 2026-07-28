@@ -55,7 +55,7 @@ namespace lsfUtils.RegionParams
         public int ScavPoisonDartChance { get; private set; } = 0;
 
         // Float Mud color override
-        public Color? FloatMudColor { get; private set; } = null;
+        public Color FloatMudColor { get; private set; } = new Color(0.22f, 0.067f, 0.17f);
 
         public static RegionParamsSetup ParseFromUnrecognized(Dictionary<string, string> unrecognized, string regionName)
         {

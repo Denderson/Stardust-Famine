@@ -48,7 +48,7 @@ namespace lsfUtils.DevtoolsObjects.FloatMud
         }
         public Color GetMudColor()
         {
-            if (RegionCWT.TryGetCustomRegionParams(this.room?.world?.region, out var customRegionParams) && customRegionParams.FloatMudColor != null) return customRegionParams.FloatMudColor.Value;
+            if (RegionCWT.TryGetCustomRegionParams(this.room?.world?.region, out var customRegionParams)) return customRegionParams.FloatMudColor;
             return defaultFloatMudColor;
         }
     }
