@@ -136,7 +136,6 @@ namespace lsfUtils.DevtoolsObjects.FloatMud
 
         public static void MudPit_ApplyPalette(On.MudPit.orig_ApplyPalette orig, MudPit self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
         {
-            orig(self, sLeaser, rCam, palette);
             if (self is FloatMud)
             {
                 self.color = (self as FloatMud).GetMudColor();
@@ -147,6 +146,10 @@ namespace lsfUtils.DevtoolsObjects.FloatMud
                 {
                     triangleMesh.verticeColors[i] = self.color;
                 }
+            }
+            else
+            {
+                orig(self, sLeaser, rCam, palette);
             }
         }
 

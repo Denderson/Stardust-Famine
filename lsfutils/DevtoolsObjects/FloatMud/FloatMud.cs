@@ -10,7 +10,7 @@ namespace lsfUtils.DevtoolsObjects.FloatMud
         private readonly PlacedObject myPObj;
         private Rect MyRect => new(myPObj.pos, Data.handlePos);
 
-        public static Color defaultFloatMudColor = new(0.31f, 0.19f, 0.13f);
+        public static Color defaultFloatMudColor = new(0.22f, 0.067f, 0.17f);
 
         public FloatMud(PlacedObject pObj) : base(pObj)
         {
