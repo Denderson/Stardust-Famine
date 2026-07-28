@@ -44,6 +44,7 @@ using RWCustom;
 using Stardust.PlacedObjects;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -315,6 +316,8 @@ namespace lsfUtils
                         On.Player.UpdateBodyMode += FloatMudHooks.Player_UpdateBodyMode;
                         On.Player.UpdateAnimation += FloatMudHooks.Player_UpdateAnimation;
                         On.Player.Update += FloatMudHooks.Player_Update;
+                        On.MudPit.ApplyPalette += FloatMudHooks.MudPit_ApplyPalette;
+                        On.MudPit.SpawnBubbles += FloatMudHooks.MudPit_SpawnBubbles;
 
                         new Hook(typeof(PhysicalObject).GetProperty(nameof(PhysicalObject.EffectiveRoomGravity)).GetGetMethod(), typeof(FloatMudHooks).GetMethod(nameof(FloatMudHooks.EffectiveRoomGravity)));
                         new Hook(typeof(Player).GetProperty(nameof(Player.EffectiveRoomGravity)).GetGetMethod(), typeof(FloatMudHooks).GetMethod(nameof(FloatMudHooks.EffectiveRoomGravityForPlayer)));
@@ -381,7 +384,7 @@ namespace lsfUtils
 
                 // region parameters
                 {
-                    On.Region.ctor_string_int_int_RainWorldGame_Timeline += CustomRegionParams.Region_ctor_string_int_int_RainWorldGame_Timeline;
+                    On.Region.ctor_string_int_int_RainWorldGame_Timeline += RegionParamsSetup.Region_ctor_string_int_int_RainWorldGame_Timeline;
 
                     // scavenger params
                     {
@@ -439,7 +442,6 @@ namespace lsfUtils
                 Logger.LogError(e);
             }
         }
-
         public static Player.ObjectGrabability Player_Grabability(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
         {
             Player.ObjectGrabability value = orig(self, obj);

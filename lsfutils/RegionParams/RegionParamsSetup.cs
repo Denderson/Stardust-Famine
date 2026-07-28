@@ -1,8 +1,10 @@
 ﻿using lsfUtils.CWTs;
+using RWCustom;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using static lsfUtils.Plugin;
 
@@ -51,6 +53,9 @@ namespace lsfUtils.RegionParams
 
         // Chance for a scav to spawn with a poison dart (from 0 to 100)
         public int ScavPoisonDartChance { get; private set; } = 0;
+
+        // Float Mud color override
+        public Color? FloatMudColor { get; private set; } = null;
 
         public static RegionParamsSetup ParseFromUnrecognized(Dictionary<string, string> unrecognized, string regionName)
         {
@@ -116,6 +121,19 @@ namespace lsfUtils.RegionParams
                     case "scavPoisonDartChance":
                         customRegionParams.ScavPoisonDartChance = ParseInt(val);
                         break;
+                    case "floatMudColor":
+                        {
+                            string[] array7 = val.Split(',');
+                            if (array7.Length == 3)
+                            {
+                                customRegionParams.FloatMudColor = new Color(float.Parse(array7[0], NumberStyles.Any, CultureInfo.InvariantCulture), float.Parse(array7[1], NumberStyles.Any, CultureInfo.InvariantCulture), float.Parse(array7[2], NumberStyles.Any, CultureInfo.InvariantCulture));
+                            }
+                            else if (array7.Length == 1 && new Regex("[0-9a-fA-F]{6}").IsMatch(array7[0]))
+                            {
+                                customRegionParams.FloatMudColor = Custom.hexToColor(array7[0]);
+                            }
+                            break;
+                        }
                 }
             }
 

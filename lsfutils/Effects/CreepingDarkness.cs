@@ -33,7 +33,6 @@ public class CreepingDarknessUAD
         expandIdleTimer = 80;
         retractIdleTimer = 120;
         simpleVersion = false;
-        scavLantern = false;
 
         if (RegionCWT.TryGetCustomRegionParams(world?.region, out var p))
         {
@@ -42,7 +41,6 @@ public class CreepingDarknessUAD
             expandIdleTimer = p.CreepingDarknessExpandIdleTimer;
             retractIdleTimer = p.CreepingDarknessRetractIdleTimer;
             simpleVersion = p.CreepingDarknessSimpleVersion;
-            scavLantern = p.ScavLanternChance;
         }
     }
 

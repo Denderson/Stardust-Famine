@@ -1,12 +1,20 @@
 ﻿using System;
 using lsfUtils.CWTs;
 using MonoMod.RuntimeDetour;
+using UnityEngine;
 
 namespace lsfUtils.DevtoolsObjects.FloatMud
 {
     public static class FloatMudHooks
     {
-        public const float floatMudGravityMultiplier = 0.35f;
+        public const float floatMudGravityMultiplier = 0.30f;
+        public const int maxFloatingMudTimer = 2400;
+
+        private static float EffectiveGravityMultiplier(int timer)
+        {
+            float strength = Mathf.Clamp01(timer / (float)maxFloatingMudTimer);
+            return Mathf.Lerp(1f, floatMudGravityMultiplier, strength);
+        }
 
         public static void Creature_Update(On.Creature.orig_Update orig, Creature self, bool eu)
         {
@@ -21,7 +29,7 @@ namespace lsfUtils.DevtoolsObjects.FloatMud
             float origVal = orig(self);
             if (self != null && self is Creature creature && CreatureCWT.TryGetData(creature, out var data) && data.floatingMudTimer > 0)
             {
-                return floatMudGravityMultiplier;
+                return Mathf.Lerp(origVal, floatMudGravityMultiplier, Mathf.Clamp01(data.floatingMudTimer / (float)maxFloatingMudTimer));
             }
             return origVal;
         }
@@ -31,7 +39,7 @@ namespace lsfUtils.DevtoolsObjects.FloatMud
             float origVal = orig(self);
             if (self != null && CreatureCWT.TryGetData(self, out var data) && data.floatingMudTimer > 0)
             {
-                return floatMudGravityMultiplier;
+                return Mathf.Lerp(origVal, floatMudGravityMultiplier, Mathf.Clamp01(data.floatingMudTimer / (float)maxFloatingMudTimer));
             }
             return origVal;
         }
@@ -41,14 +49,13 @@ namespace lsfUtils.DevtoolsObjects.FloatMud
             orig(self, eu);
 
             if (self.room == null) return;
-
             if (!CreatureCWT.TryGetData(self, out var data)) return;
-
             if (data.floatingMudTimer <= 0) return;
 
-            self.gravity = floatMudGravityMultiplier;
+            float effectiveGravity = EffectiveGravityMultiplier(data.floatingMudTimer);
+            self.gravity = effectiveGravity;
 
-            if (self.bodyMode == Player.BodyModeIndex.ZeroG && floatMudGravityMultiplier > 0.1f)
+            if (self.bodyMode == Player.BodyModeIndex.ZeroG && effectiveGravity > 0.1f)
             {
                 self.bodyMode = Player.BodyModeIndex.Default;
 
@@ -63,26 +70,31 @@ namespace lsfUtils.DevtoolsObjects.FloatMud
         {
             orig(self);
 
-            if (self.room != null && CreatureCWT.TryGetData(self, out var data) && data.floatingMudTimer > 0 && floatMudGravityMultiplier > 0.1f)
+            if (self.room == null || !CreatureCWT.TryGetData(self, out var data) || data.floatingMudTimer <= 0) return;
+
+            float effectiveGravity = EffectiveGravityMultiplier(data.floatingMudTimer);
+            if (effectiveGravity <= 0.1f) return;
+
+            if ((self.animation == Player.AnimationIndex.StandUp || self.animation == Player.AnimationIndex.DownOnFours) && self.bodyChunks[1].ContactPoint.y >= 0)
             {
-                if ((self.animation == Player.AnimationIndex.StandUp || self.animation == Player.AnimationIndex.DownOnFours) && self.bodyChunks[1].ContactPoint.y >= 0)
-                {
-                    self.animation = Player.AnimationIndex.None;
-                    self.bodyMode = Player.BodyModeIndex.Default;
-                }
+                self.animation = Player.AnimationIndex.None;
+                self.bodyMode = Player.BodyModeIndex.Default;
             }
         }
+
         public static void Player_UpdateBodyMode(On.Player.orig_UpdateBodyMode orig, Player self)
         {
             orig(self);
             var afterMode = self.bodyMode;
 
-            if (self.room != null && CreatureCWT.TryGetData(self, out var data) && data.floatingMudTimer > 0 && floatMudGravityMultiplier > 0.1f)
+            if (self.room == null || !CreatureCWT.TryGetData(self, out var data) || data.floatingMudTimer <= 0) return;
+
+            float effectiveGravity = EffectiveGravityMultiplier(data.floatingMudTimer);
+            if (effectiveGravity <= 0.1f) return;
+
+            if (afterMode == Player.BodyModeIndex.ZeroG)
             {
-                if (afterMode == Player.BodyModeIndex.ZeroG)
-                {
-                    self.bodyMode = Player.BodyModeIndex.Default;
-                }
+                self.bodyMode = Player.BodyModeIndex.Default;
             }
         }
 
@@ -100,23 +112,47 @@ namespace lsfUtils.DevtoolsObjects.FloatMud
                 return;
             }
 
-            float origRoomGravity = -1f;
-            bool patched = false;
-
-            if (data.floatingMudTimer > 0)
+            if (data.floatingMudTimer <= 0)
             {
-                origRoomGravity = self.room.gravity;
-                self.room.gravity = floatMudGravityMultiplier;
-                patched = true;
+                orig(self, eu);
+                return;
             }
 
-            orig(self, eu);
+            Room targetRoom = self.room;
+            float origRoomGravity = targetRoom.gravity;
+            float effectiveGravity = EffectiveGravityMultiplier(data.floatingMudTimer);
+            targetRoom.gravity = effectiveGravity;
 
-            if (patched)
+            try
             {
-                self.room.gravity = origRoomGravity;
-                self.gravity = floatMudGravityMultiplier;
+                orig(self, eu);
             }
+            finally
+            {
+                targetRoom.gravity = origRoomGravity;
+                self.gravity = effectiveGravity;
+            }
+        }
+
+        public static void MudPit_ApplyPalette(On.MudPit.orig_ApplyPalette orig, MudPit self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
+        {
+            orig(self, sLeaser, rCam, palette);
+            if (self is FloatMud)
+            {
+                self.color = (self as FloatMud).GetMudColor();
+                self.black = palette.blackColor;
+                sLeaser.sprites[1].color = self.color;
+                TriangleMesh triangleMesh = sLeaser.sprites[0] as TriangleMesh;
+                for (int i = 0; i < triangleMesh.verticeColors.Length; i++)
+                {
+                    triangleMesh.verticeColors[i] = self.color;
+                }
+            }
+        }
+
+        public static void MudPit_SpawnBubbles(On.MudPit.orig_SpawnBubbles orig, MudPit self)
+        {
+            if (self is not FloatMud) orig(self);
         }
     }
 }

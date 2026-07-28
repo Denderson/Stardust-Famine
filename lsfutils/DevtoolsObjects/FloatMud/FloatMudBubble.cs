@@ -1,22 +1,17 @@
 ﻿using RWCustom;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace lsfUtils.DevtoolsObjects.FloatMud
 {
     public class FloatMudBubble : CosmeticSprite
     {
-        private float radius;
-        private float floatHeight;
-        private int age;
-        private int popTime;
-        private int riseTime;
-        private int dieTime;
-        private Color color;
+        public float radius;
+        public float floatHeight;
+        public int age;
+        public int popTime;
+        public int riseTime;
+        public int dieTime;
+        public Color color;
 
         public FloatMudBubble(Vector2 pos, float radius, float floatHeight, int lifetime, Color color)
         {
@@ -35,18 +30,18 @@ namespace lsfUtils.DevtoolsObjects.FloatMud
             base.Update(eu);
             age++;
             if (age == popTime) Pop();
-            if (age == dieTime) Destroy();
         }
 
-        private void Pop()
+        public void Pop()
         {
-            int num = UnityEngine.Random.Range(0, 4);
+            int num = UnityEngine.Random.Range(3, 7);
             for (int i = 0; i < num; i++)
             {
-                float y = Mathf.Lerp(5f, 12f, Mathf.Pow(UnityEngine.Random.value, 2f));
-                Vector2 vector = Custom.RotateAroundOrigo(new Vector2(0f, y), UnityEngine.Random.Range(-45f, 45f));
-                room.AddObject(new Spark(pos, vector, color, null, 80, 90));
+                float speed = Mathf.Lerp(4f, 9f, UnityEngine.Random.value);
+                Vector2 vel = Custom.RotateAroundOrigo(new Vector2(0f, speed), UnityEngine.Random.Range(0f, 360f));
+                room.AddObject(new WaterDrip(pos, vel, false));
             }
+            Destroy();
         }
 
         public override void InitiateSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
@@ -69,7 +64,6 @@ namespace lsfUtils.DevtoolsObjects.FloatMud
             ps = rCam.ApplyDepth(ps, 5f);
             sLeaser.sprites[0].SetPosition(ps - camPos);
             sLeaser.sprites[0].scale = radius * riseFrac / 5.5f;
-            sLeaser.sprites[0].scaleX *= 1f - Mathf.InverseLerp(popTime, dieTime, (float)age + timeStacker);
             base.DrawSprites(sLeaser, rCam, timeStacker, camPos);
         }
     }

@@ -8,11 +8,14 @@ namespace lsfUtils.DevtoolsObjects.FloatMud
     public class FloatMud : MudPit
     {
         private readonly PlacedObject myPObj;
-        private Rect MyRect => new Rect(myPObj.pos, Data.handlePos);
+        private Rect MyRect => new(myPObj.pos, Data.handlePos);
+
+        public static Color defaultFloatMudColor = new(0.31f, 0.19f, 0.13f);
 
         public FloatMud(PlacedObject pObj) : base(pObj)
         {
             myPObj = pObj;
+            color = GetMudColor();
         }
 
         public override void Update(bool eu)
@@ -28,7 +31,7 @@ namespace lsfUtils.DevtoolsObjects.FloatMud
                     if (!rect.Overlaps(other)) continue;
 
                     if (!CreatureCWT.TryGetData(crit, out var data)) continue;
-                    data.floatingMudTimer = math.clamp(data.floatingMudTimer + 16, 0, 2400);
+                    data.floatingMudTimer = math.clamp(data.floatingMudTimer + 16, 0, FloatMudHooks.maxFloatingMudTimer);
                 }
             }
 
@@ -39,9 +42,14 @@ namespace lsfUtils.DevtoolsObjects.FloatMud
                 {
                     float radius = UnityEngine.Random.Range(2.5f, 5.5f);
                     int lifetime = UnityEngine.Random.Range(60, 180);
-                    room.AddObject(new FloatMudBubble(pos, radius, 60f, lifetime, Color.Lerp(defaultColor, Color.black, UnityEngine.Random.Range(0.3f, 0.6f))));
+                    room.AddObject(new FloatMudBubble(pos, radius, 60f, lifetime, Color.Lerp(GetMudColor(), Color.black, UnityEngine.Random.Range(0.3f, 0.6f))));
                 }
             }
+        }
+        public Color GetMudColor()
+        {
+            if (RegionCWT.TryGetCustomRegionParams(this.room?.world?.region, out var customRegionParams) && customRegionParams.FloatMudColor != null) return customRegionParams.FloatMudColor.Value;
+            return defaultFloatMudColor;
         }
     }
 }
