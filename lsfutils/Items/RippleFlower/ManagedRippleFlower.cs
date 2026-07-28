@@ -23,7 +23,7 @@ public class ManagedRippleFlower : Pom.Pom.ManagedObjectType
     public override UpdatableAndDeletable MakeObject(PlacedObject placedObject, Room room)
     {
         int pobjIndex = room.roomSettings.placedObjects.IndexOf(placedObject);
-        if (room.game.GetStorySession?.saveState.ItemConsumed(room.world, false, room.abstractRoom.index, pobjIndex) == false)
+        if (room.game.GetStorySession?.saveState.ItemConsumed(room.world, false, room.abstractRoom.index, pobjIndex) == false && room.abstractRoom.firstTimeRealized)
         {
             RippleFlowerAbstract RippleFlowerAbstract = new(room.world, room.GetWorldCoordinate(placedObject.pos), room.game.GetNewID(), room.abstractRoom.index, pobjIndex, placedObject.data as PlacedObject.ConsumableObjectData)
             {

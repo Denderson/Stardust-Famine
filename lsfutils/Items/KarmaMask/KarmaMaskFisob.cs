@@ -9,7 +9,7 @@ namespace lsfUtils.Items.KarmaMask
 {
     public class KarmaMaskFisob : Fisob
     {
-        public KarmaMaskFisob() : base(Enums.AbstractPhysicalObjectType.KarmaMask)
+        public KarmaMaskFisob() : base(Enums.AbstractObjectType.KarmaMask)
         {
             Icon = new SimpleIcon(templarMaskIcon, RainWorld.GoldRGB);
             SandboxPerformanceCost = new SandboxPerformanceCost(0.2f, 0f);

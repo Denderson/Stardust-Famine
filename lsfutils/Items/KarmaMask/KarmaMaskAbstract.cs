@@ -10,7 +10,7 @@ namespace lsfUtils.Items.KarmaMask
             : base(world, AbstractPhysicalObject.AbstractObjectType.VultureMask, null, pos, ID, originRoom, placedObjectIndex, consumableObjectData)
         {
             Log.LogMessage("Spawning karmamaskabstract!");
-            type = Enums.AbstractPhysicalObjectType.KarmaMask;
+            type = Enums.AbstractObjectType.KarmaMask;
             rippleBothSides = true;
             if (world is null) Log.LogMessage("World was null!");
         }

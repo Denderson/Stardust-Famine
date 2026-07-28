@@ -8,7 +8,7 @@ namespace lsfUtils.Items.ExplosiveBoomerang
 {
     public class SingularityBoomerangFisob : Fisob
     {
-        public SingularityBoomerangFisob() : base(Enums.AbstractPhysicalObjectType.SingularityBoomerang)
+        public SingularityBoomerangFisob() : base(Enums.AbstractObjectType.SingularityBoomerang)
         {
             Icon = new SimpleIcon("Symbol_Boomerang", new(0.2f, 0.2f, 1f));
             SandboxPerformanceCost = new SandboxPerformanceCost(0.5f, 0.2f);

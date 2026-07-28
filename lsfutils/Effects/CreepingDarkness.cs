@@ -42,7 +42,7 @@ public class CreepingDarknessUAD
             expandIdleTimer = p.CreepingDarknessExpandIdleTimer;
             retractIdleTimer = p.CreepingDarknessRetractIdleTimer;
             simpleVersion = p.CreepingDarknessSimpleVersion;
-            scavLantern = p.CreepingDarknessScavLantern;
+            scavLantern = p.ScavLanternChance;
         }
     }
 

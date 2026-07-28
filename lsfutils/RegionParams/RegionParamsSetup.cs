@@ -8,7 +8,7 @@ using static lsfUtils.Plugin;
 
 namespace lsfUtils.RegionParams
 {
-    public class CustomRegionParams
+    public class RegionParamsSetup
     {
         // Which looker mechanic is active in this region. Null = no override
         public string LookerMechanicOverride { get; private set; } = null;
@@ -40,12 +40,21 @@ namespace lsfUtils.RegionParams
         // Is CreepingDarkness using the "complex" (retract/expand based on a timer) or "simple" (expand until player reaches a lightsource, then dissapear) version
         public bool CreepingDarknessSimpleVersion { get; private set; } = false;
 
-        // If true, makes all scavengers have lanterns
-        public bool CreepingDarknessScavLantern { get; private set; } = false;
+        // Chance for a scav to spawn with a lantern (from 0 to 100)
+        public int ScavLanternChance { get; private set; } = 0;
 
-        public static CustomRegionParams ParseFromUnrecognized(Dictionary<string, string> unrecognized, string regionName)
+        // Chance for a scav to spawn with an explosive boomerang (from 0 to 100)
+        public int ScavExplosiveBoomerangChance { get; private set; } = 0;
+
+        // Chance for a scav to spawn with a singularity boomerang (from 0 to 100)
+        public int ScavSingularityBoomerangChance { get; private set; } = 0;
+
+        // Chance for a scav to spawn with a poison dart (from 0 to 100)
+        public int ScavPoisonDartChance { get; private set; } = 0;
+
+        public static RegionParamsSetup ParseFromUnrecognized(Dictionary<string, string> unrecognized, string regionName)
         {
-            CustomRegionParams customRegionParams = new();
+            RegionParamsSetup customRegionParams = new();
             if (unrecognized == null || unrecognized.Count == 0) return customRegionParams;
 
             foreach (var keyvalue in unrecognized)
@@ -95,8 +104,17 @@ namespace lsfUtils.RegionParams
                         customRegionParams.CreepingDarknessSimpleVersion = ParseBool(val);
                         break;
 
-                    case "creepingDarknessScavLantern":
-                        customRegionParams.CreepingDarknessScavLantern = ParseBool(val);
+                    case "scavLanternChance":
+                        customRegionParams.ScavLanternChance = ParseInt(val);
+                        break;
+                    case "scavExplosiveBoomerangsChance":
+                        customRegionParams.ScavExplosiveBoomerangChance = ParseInt(val);
+                        break;
+                    case "scavSingularityBoomerangsChance":
+                        customRegionParams.ScavSingularityBoomerangChance = ParseInt(val);
+                        break;
+                    case "scavPoisonDartChance":
+                        customRegionParams.ScavPoisonDartChance = ParseInt(val);
                         break;
                 }
             }
@@ -115,7 +133,7 @@ namespace lsfUtils.RegionParams
             {
                 return;
             }
-            CustomRegionParams customParams = CustomRegionParams.ParseFromUnrecognized(self.regionParams.unrecognizedParams, name);
+            RegionParamsSetup customParams = RegionParamsSetup.ParseFromUnrecognized(self.regionParams.unrecognizedParams, name);
             if (RegionCWT.TryGetData(self, out var data))
             {
                 data.customRegionParams = customParams;

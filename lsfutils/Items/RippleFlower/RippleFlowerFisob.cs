@@ -15,7 +15,7 @@ namespace lsfUtils.Items.RippleFlower
     public class RippleFlowerFisob : Fisob
     {
 
-        public RippleFlowerFisob() : base(Enums.AbstractPhysicalObjectType.RippleFlower)
+        public RippleFlowerFisob() : base(Enums.AbstractObjectType.RippleFlower)
         {
             Icon = new SimpleIcon("Kill_Scavenger", UnityEngine.Color.blue);
             SandboxPerformanceCost = new SandboxPerformanceCost(0.35f, 0f);

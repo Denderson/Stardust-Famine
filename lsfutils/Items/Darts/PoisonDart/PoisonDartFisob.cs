@@ -13,7 +13,7 @@ namespace lsfUtils.Items.Darts.PoisonDart
 {
     public class PoisonDartFisob : Fisob
     {
-        public PoisonDartFisob() : base(lsfUtils.Enums.AbstractPhysicalObjectType.PoisonDart)
+        public PoisonDartFisob() : base(lsfUtils.Enums.AbstractObjectType.PoisonDart)
         {
             Icon = new SimpleIcon("atlases/Symbol_Dart", lsfUtils.Enums.Colors.PoisonColor);
             SandboxPerformanceCost = new SandboxPerformanceCost(0.35f, 0f);

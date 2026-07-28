@@ -171,7 +171,7 @@ namespace lsfUtils
             }
         }
 
-        public class AbstractPhysicalObjectType
+        public class AbstractObjectType
         {
             public static AbstractPhysicalObject.AbstractObjectType RippleFlower = new(nameof(RippleFlower), true);
             public static AbstractPhysicalObject.AbstractObjectType Dart = new(nameof(Dart), true);

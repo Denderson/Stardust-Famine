@@ -9,7 +9,7 @@ public class AbstractDart : AbstractPhysicalObject
     public DartType dartType;
     public Dart realisedDart;
 
-    public AbstractDart(World world, Dart realizedObject, WorldCoordinate pos, EntityID ID, float poison = 0f) : base(world, AbstractPhysicalObjectType.Dart, realizedObject, pos, ID)
+    public AbstractDart(World world, Dart realizedObject, WorldCoordinate pos, EntityID ID, float poison = 0f) : base(world, lsfUtils.Enums.AbstractObjectType.Dart, realizedObject, pos, ID)
     {
         this.poison = poison;
         this.dartType = DartType.Default;
