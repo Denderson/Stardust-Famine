@@ -35,6 +35,7 @@ using lsfUtils.Items.KarmaMask;
 using lsfUtils.Items.RippleFlower;
 using lsfUtils.RegionParams;
 using lsfUtils.Ripplespace;
+using lsfUtils.Items;
 using Menu.Remix.MixedUI;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -247,6 +248,7 @@ namespace lsfUtils
 
                 // items
                 {
+                    On.MoreSlugcats.GourmandCombos.InitCraftingLibrary += ItemCrafting.On_GourmandCombos_InitCraftingLibrary;
                     // ripple flower
                     {
                         Log.LogMessage("Loading ripple flower code!");

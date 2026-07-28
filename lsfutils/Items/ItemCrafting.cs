@@ -8,7 +8,7 @@ using static lsfUtils.Enums;
 
 namespace lsfUtils.Items;
 
-public static class PlayerHooks
+public static class ItemCrafting
 {
     public static void On_GourmandCombos_InitCraftingLibrary(On.MoreSlugcats.GourmandCombos.orig_InitCraftingLibrary orig)
     {
