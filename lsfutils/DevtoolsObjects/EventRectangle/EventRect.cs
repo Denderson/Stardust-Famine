@@ -72,11 +72,11 @@ namespace lsfUtils.DevtoolsObjects.EventRectangle
                     eventValue = null;
                 }
             }
-            
+
         }
         public override void Update(bool eu)
         {
-            
+
             base.Update(eu);
             if (!triggered && room != null && room.PlayersInRoom != null && room.PlayersInRoom.Count > 0)
             {
@@ -98,10 +98,14 @@ namespace lsfUtils.DevtoolsObjects.EventRectangle
 
             if (triggered)
             {
-                timer--;
-                if (timer == 0)
+                EventLogic.TriggerEvent(this, eventType, room, triggerer, eventValue);
+                if (timer <= 0)
                 {
-                    EventLogic.TriggerEvent(this, eventType, room, triggerer, eventValue);
+                    if (data.singleUse && room?.game?.GetStorySession?.saveState != null)
+                    {
+                        // TODO: Set up single-use events?
+                        // Possibly make a unique save system like Slugbase that interacts with processing conditions?
+                    }
                     Destroy();
                 }
             }

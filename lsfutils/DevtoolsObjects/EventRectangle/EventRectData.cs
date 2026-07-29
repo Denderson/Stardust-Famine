@@ -15,9 +15,9 @@ namespace lsfUtils.DevtoolsObjects.EventRectangle
         public string eventType;
 
         [StringField("EventValue", "Event-Value", "Value: ")]
-        public string eventValue;
+        public string eventValue; // TODO
 
         [BooleanField("OncePerSavefile", false, ManagedFieldWithPanel.ControlType.button, "Once per savefile: ")]
-        public bool singleUse;
+        public bool singleUse; // TODO
     }
 }

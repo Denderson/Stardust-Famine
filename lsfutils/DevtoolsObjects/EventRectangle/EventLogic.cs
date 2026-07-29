@@ -68,17 +68,11 @@ namespace lsfUtils.DevtoolsObjects.EventRectangle
 
         public static void EndingEvent(Room room, Player player, string eventValue, int currentTimer, out int timer)
         {
-            timer = currentTimer; // idk if delegates would work with putting default values
+            timer = currentTimer;
+            if (timer == -1) { timer = 120; }
+            else { timer--; }
 
-            if (timer == -1) // When event is first triggered...
-            {
-                // Sets timer to 120
-                timer = 120;
-            }
-            if (timer > 0)
-            {
-                return;
-            }
+            if (timer > 0) { return; }
             if (player == null || room?.game?.cameras == null || room.game.cameras.Length < 1)
             {
                 Log.LogMessage("Error in EndingEvent!");
