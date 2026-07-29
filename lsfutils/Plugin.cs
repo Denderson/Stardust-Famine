@@ -524,7 +524,7 @@ namespace lsfUtils
         private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
         {
             orig(self);
-            if (ModManager.DLCShared)
+            if (ModManager.MSC)
             {
                 On.MoreSlugcats.GourmandCombos.InitCraftingLibrary += ItemCrafting.On_GourmandCombos_InitCraftingLibrary;
             }
