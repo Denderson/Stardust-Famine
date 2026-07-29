@@ -248,7 +248,6 @@ namespace lsfUtils
 
                 // items
                 {
-                    On.MoreSlugcats.GourmandCombos.InitCraftingLibrary += ItemCrafting.On_GourmandCombos_InitCraftingLibrary;
                     // ripple flower
                     {
                         Log.LogMessage("Loading ripple flower code!");
@@ -525,6 +524,10 @@ namespace lsfUtils
         private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
         {
             orig(self);
+            if (ModManager.DLCShared)
+            {
+                On.MoreSlugcats.GourmandCombos.InitCraftingLibrary += ItemCrafting.On_GourmandCombos_InitCraftingLibrary;
+            }
 
             if (initialized)
             {

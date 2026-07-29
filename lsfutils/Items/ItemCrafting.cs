@@ -5,6 +5,7 @@ using RWCustom;
 using System;
 using UnityEngine;
 using static lsfUtils.Enums;
+using static lsfUtils.Plugin;
 
 namespace lsfUtils.Items;
 
@@ -18,17 +19,22 @@ public static class ItemCrafting
 
     public static void InitGourmandCombos()
     {
+        Log.LogMessage("Init gourmand combos!");
         SetCombo(AbstractObjectType.RippleFlower, AbstractPhysicalObject.AbstractObjectType.VultureMask, AbstractObjectType.KarmaMask);
         SetCombo(AbstractObjectType.KarmaMask, AbstractPhysicalObject.AbstractObjectType.KarmaFlower, AbstractPhysicalObject.AbstractObjectType.VultureMask);
 
         SetCombo(AbstractPhysicalObject.AbstractObjectType.KarmaFlower, AbstractObjectType.RippleFlower, DLCSharedEnums.AbstractObjectType.SingularityBomb);
 
-        SetCombo(AbstractObjectType.RippleFlower, AbstractPhysicalObject.AbstractObjectType.ScavengerBomb, AbstractObjectType.ExplosiveBoomerang);
-        SetCombo(AbstractObjectType.RippleFlower, DLCSharedEnums.AbstractObjectType.SingularityBomb, AbstractObjectType.SingularityBoomerang);
-        SetCombo(AbstractObjectType.ExplosiveBoomerang, AbstractPhysicalObject.AbstractObjectType.KarmaFlower, AbstractObjectType.SingularityBoomerang);
-        SetCombo(AbstractObjectType.SingularityBoomerang, AbstractObjectType.RippleFlower, AbstractObjectType.ExplosiveBoomerang);
+        if (ModManager.DLCShared)
+        {
+            SetCombo(AbstractObjectType.RippleFlower, AbstractPhysicalObject.AbstractObjectType.ScavengerBomb, AbstractObjectType.ExplosiveBoomerang);
+            SetCombo(AbstractObjectType.RippleFlower, DLCSharedEnums.AbstractObjectType.SingularityBomb, AbstractObjectType.SingularityBoomerang);
+            SetCombo(AbstractObjectType.ExplosiveBoomerang, AbstractPhysicalObject.AbstractObjectType.KarmaFlower, AbstractObjectType.SingularityBoomerang);
+            SetCombo(AbstractObjectType.SingularityBoomerang, AbstractObjectType.RippleFlower, AbstractObjectType.ExplosiveBoomerang);
+        }
 
         SetCombo(CreatureTemplate.Type.VultureGrub, AbstractObjectType.RippleFlower, CreatureTemplateType.ClimbGrub);
+        Log.LogMessage("Gourmand combos done!");
     }
 
     internal static void ResizeGourmandCombos()
