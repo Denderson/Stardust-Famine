@@ -54,6 +54,9 @@ namespace lsfUtils.RegionParams
         // Chance for a scav to spawn with a poison dart (from 0 to 100)
         public int ScavPoisonDartChance { get; private set; } = 0;
 
+        //Chance for a Dart to replace a spear
+        public int DartFrequency { get; private set; } = 10;
+
         // Float Mud color override
         public Color FloatMudColor { get; private set; } = new Color(0.22f, 0.067f, 0.17f);
 
@@ -120,6 +123,9 @@ namespace lsfUtils.RegionParams
                         break;
                     case "scavPoisonDartChance":
                         customRegionParams.ScavPoisonDartChance = ParseInt(val);
+                        break;
+                    case "dartFrequency":
+                        customRegionParams.DartFrequency = ParseInt(val);
                         break;
                     case "floatMudColor":
                         {

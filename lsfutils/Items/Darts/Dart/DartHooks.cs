@@ -25,6 +25,46 @@ public static class DartHooks
         HandleSelfDartPull(self);
     }
 
+    //Makes it so Darts can replace Spears when a Room is being Loaded
+    public static void Room_Loaded(ILContext il)
+    {
+        ILCursor main = new ILCursor(il);
+        main.GotoNext(
+            MoveType.After,
+            i => i.MatchCall<SlugcatStats>(nameof(SlugcatStats.SpearSpawnModifier)),
+            i => i.MatchBgeUn(out _)
+        );
+        ILCursor dartCursor = new ILCursor(main);
+        dartCursor.GotoNext(
+            MoveType.After,
+            i => i.MatchStfld<AbstractSpear>(nameof(AbstractSpear.electric))
+        );
+        dartCursor.MoveAfterLabels();
+        ILLabel dartCodeLoc = dartCursor.MarkLabel();
+        dartCursor.EmitDelegate(MakeDart);
+        main.Emit(Mono.Cecil.Cil.OpCodes.Ldarg_0);
+        main.EmitDelegate(WillDartSpawn);
+        main.Emit(Mono.Cecil.Cil.OpCodes.Brtrue, dartCodeLoc);
+    }
+
+    public static bool WillDartSpawn(Room self)
+    {
+        int x = (int)(UnityEngine.Random.value * 100);
+        if (!RegionCWT.TryGetCustomRegionParams(self?.world?.region, out var customRegionParams)) return false;
+        return x < customRegionParams.DartFrequency;
+    }
+
+    public static void MakeDart(AbstractPhysicalObject obj, Room self, IntVector2 intVector, EntityID ID)
+    {
+        if (obj is AbstractSpear) return;
+        obj = new AbstractDart(self.world, null, new WorldCoordinate(self.abstractRoom.index, intVector.x, intVector.y, -1), ID);
+        if (UnityEngine.Random.value < 0.1f)
+        {
+            (obj as AbstractDart).dartType = DartType.Poison;
+        }
+    }
+
+
     public static void Creature_Update(On.Creature.orig_Update orig, Creature self, bool eu)
     {
         orig(self, eu);
