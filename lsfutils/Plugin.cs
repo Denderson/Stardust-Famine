@@ -160,7 +160,10 @@ namespace lsfUtils
 
                 // devtools effects
                 {
+                    CreepingDarkness.RegisterCreepingDarkness();
                     CreepingDarknessHooks.ApplyHooks();
+
+                    EvilWater.RegisterEvilWater();
                     EvilWaterHooks.ApplyHooks();
                 }
 
@@ -183,9 +186,6 @@ namespace lsfUtils
                     ScavParamsHooks.ApplyHooks();
                     TypeParamsHooks.ApplyHooks();
                 }
-
-                EvilWater.RegisterEvilWater();
-                CreepingDarkness.RegisterCreepingDarkness();
 
                 On.RainWorld.Start += RainWorld_Start;
 

@@ -120,6 +120,8 @@ namespace lsfUtils
             public static MultiplayerUnlocks.SandboxUnlockID PoisonSpider = new(nameof(PoisonSpider), true);
             public static MultiplayerUnlocks.SandboxUnlockID ClimbGrub = new(nameof(ClimbGrub), true);
 
+            public static MultiplayerUnlocks.SandboxUnlockID BrownFruit = new(nameof(BrownFruit), true);
+
 
             public void UnregisterValues()
             {
@@ -168,6 +170,8 @@ namespace lsfUtils
                 StarElder = null;
                 PoisonSpider?.Unregister();
                 PoisonSpider = null;
+                BrownFruit?.Unregister();
+                BrownFruit = null;
             }
         }
 
@@ -179,6 +183,7 @@ namespace lsfUtils
             public static AbstractPhysicalObject.AbstractObjectType KarmaMask = new(nameof(KarmaMask), true);
             public static AbstractPhysicalObject.AbstractObjectType ExplosiveBoomerang = new(nameof(ExplosiveBoomerang), true);
             public static AbstractPhysicalObject.AbstractObjectType SingularityBoomerang = new(nameof(SingularityBoomerang), true);
+            public static AbstractPhysicalObject.AbstractObjectType BrownFruit = new(nameof(BrownFruit), true);
 
             public void UnregisterValues()
             {
@@ -190,6 +195,8 @@ namespace lsfUtils
                 KarmaMask = null;
                 SingularityBoomerang?.Unregister();
                 SingularityBoomerang = null;
+                BrownFruit?.Unregister();
+                BrownFruit = null;
             }
         }
 
