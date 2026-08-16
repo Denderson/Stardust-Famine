@@ -1,16 +1,6 @@
 *
 !.gitignore
 
-!looker/
-!looker/CWTs/
-!looker/Regions/
-!looker/Mod/
-!looker/Mod/illustrations/
-!looker/Mod/scenes/
-!looker/Mod/scenes/*/
-!looker/Mod/slugbase/
-!looker/Mod/slugbase/scenes/
-
 !stardust/
 !stardust/mod/
 !stardust/Anchors/
@@ -56,7 +46,9 @@
 !lsfutils/DevtoolsObjects/
 !lsfutils/DevtoolsObjects/*/
 !lsfutils/DevtoolsObjects/*/*/
-!lsfutils/Effects/
+!lsfutils/DevtoolsEffects/
+!lsfutils/DevtoolsEffects/*/
+!lsfutils/DevtoolsEffects/*/*/
 !lsfutils/Items/
 !lsfutils/Items/*/
 !lsfutils/ProcessingConditions/
