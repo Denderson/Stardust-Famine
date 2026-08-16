@@ -10,8 +10,13 @@ using static lsfUtils.Plugin;
 
 namespace lsfUtils.CreatureTags
 {
-    public static class PoisonImmune
+    public static class PoisonImmuneHooks
     {
+        public static void ApplyHooks()
+        {
+            On.Creature.InjectPoison += PoisonImmuneHooks.Creature_InjectPoison;
+            On.Creature.Update += PoisonImmuneHooks.Creature_Update;
+        }
         public static void SetupPoisonImmune(this AbstractCreature abstractCreature)
         {
             if (abstractCreature == null)

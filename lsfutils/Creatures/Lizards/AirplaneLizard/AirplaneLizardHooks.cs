@@ -10,6 +10,15 @@ namespace lsfUtils.Creatures.Lizards.AirplaneLizard
 {
     public static class AirplaneLizardHooks
     {
+        public static void ApplyHooks()
+        {
+            On.Lizard.EnterAnimation += AirplaneLizardHooks.Lizard_EnterAnimation;
+            On.LizardGraphics.BodyColor += AirplaneLizardHooks.LizardGraphics_BodyColor;
+            On.LizardGraphics.ColorBody += AirplaneLizardHooks.LizardGraphics_ColorBody;
+            On.LizardCosmetics.SpineSpikes.ctor += AirplaneLizardHooks.SpineSpikes_ctor;
+            On.LizardAI.AggressiveBehavior += AirplaneLizardHooks.LizardAI_AggressiveBehavior;
+        }
+
         public static void LizardGraphics_ColorBody(On.LizardGraphics.orig_ColorBody orig, LizardGraphics self, RoomCamera.SpriteLeaser sLeaser, Color col)
         {
             if (self?.lizard?.Template?.type == Enums.CreatureTemplateType.AirplaneLizard)

@@ -11,8 +11,16 @@ using static lsfUtils.Plugin;
 
 namespace lsfUtils.Creatures.Scavs
 {
-    public static class ScavCode
+    public static class ScavHooks
     {
+        public static void ApplyHooks()
+        {
+            On.Scavenger.SetUpCombatSkills += ScavHooks.Scavenger_SetUpCombatSkills;
+            On.Scavenger.Throw += ScavHooks.Scavenger_Throw;
+            On.ScavengerAI.WantToThrowSpearAtCreature += ScavHooks.ScavengerAI_WantToThrowSpearAtCreature;
+            On.ScavengerAI.DecideBehavior += ScavHooks.ScavengerAI_DecideBehavior;
+            On.ScavengersWorldAI.Trader.ScavScore += ScavHooks.Trader_ScavScore;
+        }
         public static bool IsSeer(this AbstractCreature creature)
         {
             return creature.creatureTemplate.type == Enums.CreatureTemplateType.ScavSeer;

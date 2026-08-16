@@ -150,7 +150,7 @@ namespace lsfUtils.RegionParams
 
         private static bool ParseBool(string s) => s.Trim().ToLowerInvariant() == "true";
 
-        public static void Region_ctor_string_int_int_RainWorldGame_Timeline(On.Region.orig_ctor_string_int_int_RainWorldGame_Timeline orig, Region self, string name, int firstRoomIndex, int regionNumber, RainWorldGame game, SlugcatStats.Timeline timelineIndex)
+        public static void SetupParams(On.Region.orig_ctor_string_int_int_RainWorldGame_Timeline orig, Region self, string name, int firstRoomIndex, int regionNumber, RainWorldGame game, SlugcatStats.Timeline timelineIndex)
         {
             orig(self, name, firstRoomIndex, regionNumber, game, timelineIndex);
             if (self?.regionParams == null)

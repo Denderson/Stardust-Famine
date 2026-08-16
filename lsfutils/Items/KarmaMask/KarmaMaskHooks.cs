@@ -1,4 +1,5 @@
 ﻿using lsfUtils.CWTs;
+using MonoMod.RuntimeDetour;
 using MoreSlugcats;
 using RWCustom;
 using System;
@@ -9,6 +10,15 @@ namespace lsfUtils.Items.KarmaMask
 {
     public static class KarmaMaskHooks
     {
+        public static void ApplyHooks()
+        {
+            new Hook(typeof(RegionGate).GetProperty(nameof(RegionGate.MeetRequirement))!.GetGetMethod(), typeof(KarmaMaskHooks).GetMethod(nameof(KarmaMaskHooks.Meet_Requirement)));
+            On.HUD.KarmaMeter.Update += KarmaMaskHooks.KarmaMeter_Update;
+            On.Player.Update += KarmaMaskHooks.Player_Update;
+            On.MoreSlugcats.VultureMaskGraphics.ctor_PhysicalObject_MaskType_int_string += KarmaMaskHooks.VultureMaskGraphics_ctor_PhysicalObject_MaskType_int_string;
+            On.MoreSlugcats.VultureMaskGraphics.DrawSprites += KarmaMaskHooks.VultureMaskGraphics_DrawSprites;
+            On.Player.Grabability += KarmaMaskHooks.Player_Grabability;
+        }
         public static bool Meet_Requirement(Func<RegionGate, bool> orig, RegionGate self)
         {
             bool value = orig(self);
@@ -97,6 +107,22 @@ namespace lsfUtils.Items.KarmaMask
                 }
             }
             data.karmaMode = flag;
+        }
+
+        public static Player.ObjectGrabability Player_Grabability(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
+        {
+            Player.ObjectGrabability value = orig(self, obj);
+            if (self?.grasps != null && self.grasps.Length > 0 && value == Player.ObjectGrabability.TwoHands && obj is JetFish)
+            {
+                foreach (Creature.Grasp grasp in self.grasps)
+                {
+                    if (grasp?.grabbed != null && grasp.grabbed is KarmaMask)
+                    {
+                        value = Player.ObjectGrabability.OneHand;
+                    }
+                }
+            }
+            return value;
         }
     }
 }

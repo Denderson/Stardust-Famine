@@ -9,6 +9,12 @@ namespace lsfUtils.Creatures.Lizards.WeaverLizard
 {
     public static class WeaverLizardHooks
     {
+        public static void ApplyHooks()
+        {
+            On.LizardGraphics.InitiateSprites += WeaverLizardHooks.LizardGraphics_InitiateSprites;
+            On.LizardCosmetics.LongShoulderScales.ctor += WeaverLizardHooks.LongShoulderScales_ctor;
+            On.LizardCosmetics.TailTuft.ctor += WeaverLizardHooks.TailTuft_ctor;
+        }
         public static void TailTuft_ctor(On.LizardCosmetics.TailTuft.orig_ctor orig, LizardCosmetics.TailTuft self, LizardGraphics lGraphics, int startSprite)
         {
             if (lGraphics?.lizard?.Template?.type == Enums.CreatureTemplateType.WeaverLizard)

@@ -5,8 +5,19 @@ using static lsfUtils.Plugin;
 
 namespace lsfUtils.RegionParams
 {
-    public static class RegionTypeParams
+    public static class TypeParamsHooks
     {
+        public static void ApplyHooks()
+        {
+            On.Region.IsSentientRotRegion += Region_IsSentientRotRegion;
+            On.Region.IsVanillaSentientRotRegion += Region_IsVanillaSentientRotRegion;
+            On.Region.HasSentientRotResistance += Region_HasSentientRotResistance;
+            On.Region.IsDaemonRegion += Region_IsDaemonRegion;
+            On.Region.IsAncientUrbanRegion += Region_IsAncientUrbanRegion;
+            On.Region.IsRubiconRegion += Region_IsRubiconRegion;
+            On.Region.IsShatteredTerraceRegion += Region_IsShatteredTerraceRegion;
+            On.Region.HasWarpFatigueResistance += Region_HasWarpFatigueResistance;
+        }
         public enum RegionMetaParameter { Rotten, VanillaRotten, RotImmune, Daemon, ShatteredTerrace, AncientUrban, WatcherVanilla, Rubicon, NoWarpFatigue }
 
         public struct RegionMeta

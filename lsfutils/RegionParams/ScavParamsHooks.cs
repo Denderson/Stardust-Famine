@@ -4,8 +4,12 @@ using static lsfUtils.Enums;
 
 namespace lsfUtils.RegionParams
 {
-    public static class ScavengerParams
+    public static class ScavParamsHooks
     {
+        public static void ApplyHooks()
+        {
+            On.ScavengerAbstractAI.InitGearUp += ScavParamsHooks.ScavengerAbstractAI_InitGearUp;
+        }
         public static void ScavengerAbstractAI_InitGearUp(On.ScavengerAbstractAI.orig_InitGearUp orig, ScavengerAbstractAI self)
         {
             orig(self);

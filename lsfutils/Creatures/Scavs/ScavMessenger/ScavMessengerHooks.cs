@@ -9,6 +9,14 @@ namespace lsfUtils.Creatures.Scavs.ScavMessenger
 {
     public static class ScavMessengerHooks
     {
+        public static void ApplyHooks()
+        {
+            On.ScavengerAI.SocialEvent += ScavMessengerHooks.ScavengerAI_SocialEvent;
+            On.ScavengerAbstractAI.GoHome += ScavMessengerHooks.ScavengerAbstractAI_GoHome;
+            On.ScavengerAbstractAI.ReGearInDen += ScavMessengerHooks.ScavengerAbstractAI_ReGearInDen;
+            On.ScavengerAI.WeaponScore += ScavMessengerHooks.ScavengerAI_WeaponScore;
+            On.ScavengerAI.CollectScore_PhysicalObject_bool += ScavMessengerHooks.ScavengerAI_CollectScore_PhysicalObject_bool;
+        }
         public static int ScavengerAI_CollectScore_PhysicalObject_bool(On.ScavengerAI.orig_CollectScore_PhysicalObject_bool orig, ScavengerAI self, PhysicalObject obj, bool weaponFiltered)
         {
             int value = orig(self, obj, weaponFiltered);

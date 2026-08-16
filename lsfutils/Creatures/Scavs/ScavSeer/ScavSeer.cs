@@ -13,6 +13,13 @@ namespace lsfUtils.Creatures.Scavs.ScavSeer
         {
             haloActivationTime = 0;
         }
+
+        public override void Update(bool eu)
+        {
+            base.Update(eu);
+            readyToReleaseMask = false;
+        }
+
         public override void InitiateGraphicsModule()
         {
             graphicsModule ??= new ScavSeerGraphics(this);

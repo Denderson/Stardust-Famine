@@ -1,0 +1,73 @@
+{
+	"frames": {
+		"SeerMask0.png": {
+			"frame": {"x":1,"y":1,"w":59,"h":59},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":1,"y":1,"w":59,"h":59},
+			"sourceSize": {"w":61,"h":61}
+		},
+		"SeerMask1.png": {
+			"frame": {"x":62,"y":1,"w":59,"h":59},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":1,"y":1,"w":59,"h":59},
+			"sourceSize": {"w":61,"h":61}
+		},
+		"SeerMask2.png": {
+			"frame": {"x":123,"y":1,"w":59,"h":59},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":1,"y":1,"w":59,"h":59},
+			"sourceSize": {"w":61,"h":61}
+		},
+		"SeerMask3.png": {
+			"frame": {"x":184,"y":1,"w":59,"h":59},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":1,"y":1,"w":59,"h":59},
+			"sourceSize": {"w":61,"h":61}
+		},
+		"SeerMask4.png": {
+			"frame": {"x":245,"y":1,"w":59,"h":59},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":1,"y":1,"w":59,"h":59},
+			"sourceSize": {"w":61,"h":61}
+		},
+		"SeerMask5.png": {
+			"frame": {"x":306,"y":1,"w":59,"h":59},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":1,"y":1,"w":59,"h":59},
+			"sourceSize": {"w":61,"h":61}
+		},
+		"SeerMask6.png": {
+			"frame": {"x":367,"y":1,"w":59,"h":59},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":1,"y":1,"w":59,"h":59},
+			"sourceSize": {"w":61,"h":61}
+		},
+		"SeerMask7.png": {
+			"frame": {"x":428,"y":1,"w":59,"h":59},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":1,"y":1,"w":59,"h":59},
+			"sourceSize": {"w":61,"h":61}
+		},
+		"SeerMask8.png": {
+			"frame": {"x":489,"y":1,"w":59,"h":59},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":1,"y":1,"w":59,"h":59},
+			"sourceSize": {"w":61,"h":61}
+		}
+	},
+	"meta": {
+		"image": "SeerMaskSprites.png",
+		"format": "RGBA8888",
+		"size": {"w":549,"h":61},
+		"scale": "1"
+	}
+}

@@ -16,6 +16,13 @@ namespace lsfUtils.Creatures.Lizards.RaspberryLizard
 {
     public static class RaspberryLizardHooks
     {
+        public static void ApplyHooks()
+        {
+            //IL.LizardCosmetics.Antennae.ctor += Creatures.RaspberryLizard.RaspberryLizardHooks.Antennae_ctor;
+            On.LizardAI.ctor += RaspberryLizardHooks.LizardAI_ctor;
+            On.LizardAI.TravelPreference += RaspberryLizardHooks.LizardAI_TravelPreference;
+            On.LizardPather.HeuristicForCell += RaspberryLizardHooks.LizardPather_HeuristicForCell;
+        }
         public static void Antennae_ctor(ILContext il)
         {
             var c = new ILCursor(il);

@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using static Pom.Pom;
 using DevInterface;
 using static lsfUtils.Plugin;
-using lsfUtils.Ripplespace;
 
 namespace lsfUtils.DevtoolsObjects.RippleZone
 {

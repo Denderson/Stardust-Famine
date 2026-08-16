@@ -10,8 +10,15 @@ using Watcher;
 
 namespace lsfUtils.Creatures.Lizards.PoisonLizard
 {
-    internal class PoisonLizardHooks
+    public static class PoisonLizardHooks
     {
+        public static void ApplyHooks()
+        {
+            On.LizardAI.Update += PoisonLizardHooks.LizardAI_Update;
+            On.Lizard.Bite += PoisonLizardHooks.Lizard_Bite;
+            On.LizardTongue.Impact += PoisonLizardHooks.LizardTongue_Impact;
+            On.LizardAI.IUseARelationshipTracker_UpdateDynamicRelationship += PoisonLizardHooks.LizardAI_IUseARelationshipTracker_UpdateDynamicRelationship;
+        }
         public static CreatureTemplate.Relationship LizardAI_IUseARelationshipTracker_UpdateDynamicRelationship(On.LizardAI.orig_IUseARelationshipTracker_UpdateDynamicRelationship orig, LizardAI self, RelationshipTracker.DynamicRelationship dRelation)
         {
             CreatureTemplate.Relationship value = orig(self, dRelation);

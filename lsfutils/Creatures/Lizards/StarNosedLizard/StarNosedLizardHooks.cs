@@ -1,4 +1,5 @@
-﻿using RWCustom;
+﻿using MonoMod.RuntimeDetour;
+using RWCustom;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,16 @@ using UnityEngine;
 
 namespace lsfUtils.Creatures.Lizards.StarNosedLizard
 {
-    internal class StarNosedLizardHooks
+    public static class StarNosedLizardHooks
     {
+        public static void ApplyHooks()
+        {
+            On.SuperHearing.Update += StarNosedLizardHooks.SuperHearing_Update;
+            IL.LizardCosmetics.Whiskers.ctor += NoseTendrils.Whiskers_ctor;
+            new Hook(typeof(LizardGraphics).GetProperty(nameof(LizardGraphics.effectColor)).GetGetMethod(), typeof(StarNosedLizardHooks).GetMethod(nameof(StarNosedLizardHooks.Lizard_effectColor)));
+            new Hook(typeof(LizardGraphics).GetProperty(nameof(LizardGraphics.HeadLightsUpFromNoise)).GetGetMethod(), typeof(StarNosedLizardHooks).GetMethod(nameof(StarNosedLizardHooks.Lizard_HeadLight)));
+            On.LizardAI.Update += StarNosedLizardHooks.LizardAI_Update;
+        }
         public static bool Lizard_HeadLight(Func<LizardGraphics, bool> orig, LizardGraphics self)
         {
             return orig(self) || self.lizard.Template.type == Enums.CreatureTemplateType.StarNosedLizard;

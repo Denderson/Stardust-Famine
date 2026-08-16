@@ -8,8 +8,15 @@ using UnityEngine;
 
 namespace lsfUtils.Creatures.Lizards.MonitorLizard
 {
-    internal class MonitorLizardHooks
+    public static class MonitorLizardHooks
     {
+        public static void ApplyHooks()
+        {
+            On.LizardGraphics.ColorBody += MonitorLizardHooks.LizardGraphics_ColorBody;
+            On.LizardGraphics.BodyColor += MonitorLizardHooks.LizardGraphics_BodyColor;
+            On.Water.Update += MonitorLizardHooks.Water_Update;
+            On.MudPit.ChunkSlowdown += MonitorLizardHooks.MudPit_ChunkSlowdown;
+        }
         public static void LizardGraphics_ColorBody(On.LizardGraphics.orig_ColorBody orig, LizardGraphics self, RoomCamera.SpriteLeaser sLeaser, Color col)
         {
             if (self?.lizard?.Template?.type != null && self.lizard.Template.type == Enums.CreatureTemplateType.MonitorLizard && (self.lizard as MonitorLizard).IsAlbino())

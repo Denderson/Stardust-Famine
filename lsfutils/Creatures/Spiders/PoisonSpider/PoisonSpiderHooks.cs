@@ -25,12 +25,19 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.Playables;
 using Watcher;
-using lsfUtils.Creatures.Spiders.PoisonSpider;
 
-namespace lsfUtils.Creatures.Spiders
+namespace lsfUtils.Creatures.Spiders.PoisonSpider
 {
-    internal class SpiderCode
+    public static class PoisonSpiderHooks
     {
+        public static void ApplyHooks()
+        {
+            On.DartMaggot.ChangeMode += DartMaggot_ChangeMode;
+            On.BigSpiderAI.SpiderSpitModule.CanSpit += SpiderSpitModule_CanSpit;
+            On.DartMaggot.Shoot += DartMaggot_Shoot;
+            On.DartMaggot.Update += DartMaggot_Update;
+            On.BigSpiderAI.SpiderSpitModule.SpiderHasSpit += SpiderSpitModule_SpiderHasSpit;
+        }
         public static void SpiderSpitModule_SpiderHasSpit(On.BigSpiderAI.SpiderSpitModule.orig_SpiderHasSpit orig, BigSpiderAI.SpiderSpitModule self)
         {
             orig(self);
@@ -44,7 +51,7 @@ namespace lsfUtils.Creatures.Spiders
         public static void DartMaggot_Update(On.DartMaggot.orig_Update orig, DartMaggot self, bool eu)
         {
             orig(self, eu);
-            if (self?.shotBy != null && self.shotBy is PoisonSpider.PoisonSpider && self?.stuckInChunk != null && self.stuckInChunk.owner is Creature)
+            if (self?.shotBy != null && self.shotBy is PoisonSpider && self?.stuckInChunk != null && self.stuckInChunk.owner is Creature)
             {
                 self.sleepCounter = 1000;
                 (self.stuckInChunk.owner as Creature).InjectPoison(1 / 3000f, self.shotBy.ShortCutColor());
@@ -53,7 +60,7 @@ namespace lsfUtils.Creatures.Spiders
 
         public static void DartMaggot_Shoot(On.DartMaggot.orig_Shoot orig, DartMaggot self, Vector2 pos, Vector2 dir, Creature shotBy)
         {
-            if (shotBy is PoisonSpider.PoisonSpider)
+            if (shotBy is PoisonSpider)
             {
                 self.sizeFac = Custom.ClampedRandomVariation(0.95f, 0.05f, 0.5f);
                 self.lifeTime = Mathf.Lerp(2500f, 3500f, UnityEngine.Random.value);
@@ -88,7 +95,7 @@ namespace lsfUtils.Creatures.Spiders
         public static void DartMaggot_ChangeMode(On.DartMaggot.orig_ChangeMode orig, DartMaggot self, DartMaggot.Mode newMode)
         {
             orig(self, newMode);
-            if (newMode == DartMaggot.Mode.StuckInChunk && self?.stuckInChunk?.owner != null && self.stuckInChunk.owner is Creature && self.shotBy != null && self.shotBy is PoisonSpider.PoisonSpider)
+            if (newMode == DartMaggot.Mode.StuckInChunk && self?.stuckInChunk?.owner != null && self.stuckInChunk.owner is Creature && self.shotBy != null && self.shotBy is PoisonSpider)
             {
                 (self.stuckInChunk.owner as Creature).InjectPoison(0.1f, self.shotBy.ShortCutColor());
                 (self.stuckInChunk.owner as Creature).Stun(40);

@@ -1,5 +1,4 @@
-﻿using lsfUtils.Ripplespace;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +7,12 @@ using static lsfUtils.Plugin;
 
 namespace lsfUtils.CreatureTags
 {
-    public static class CreatureFlagSetup
+    public static class CreatureFlagHooks
     {
+        public static void ApplyHooks()
+        {
+            On.AbstractCreature.setCustomFlags += CreatureFlagHooks.AbstractCreature_setCustomFlags;
+        }
         public static void AbstractCreature_setCustomFlags(On.AbstractCreature.orig_setCustomFlags orig, AbstractCreature self)
         {
             orig(self);
@@ -37,25 +40,25 @@ namespace lsfUtils.CreatureTags
                             rippleLayer = 0;
                         }
                     }
-                    RippleHybrid.RipplifyAbstractObject(self, rippleLayer, rippleBoth);
+                    RippleHybridHooks.RipplifyAbstractObject(self, rippleLayer, rippleBoth);
                 }
 
                 if (value.Contains("poisonimmune"))
                 {
-                    Log.LogMessage("PoisonImmune check!");
-                    PoisonImmune.SetupPoisonImmune(self);
+                    Log.LogMessage("PoisonImmuneHooks check!");
+                    PoisonImmuneHooks.SetupPoisonImmune(self);
                 }
 
                 if (value.Contains("echoimmune"))
                 {
-                    Log.LogMessage("EchoImmune check!");
-                    EchoImmune.SetupEchoImmune(self);
+                    Log.LogMessage("EchoImmuneHooks check!");
+                    EchoImmuneHooks.SetupEchoImmune(self);
                 }
 
                 if (value.Contains("starving"))
                 {
                     Log.LogMessage("StarveTag check!");
-                    EchoImmune.SetupEchoImmune(self);
+                    EchoImmuneHooks.SetupEchoImmune(self);
                 }
 
                 if (value.Contains("faction"))
@@ -65,7 +68,7 @@ namespace lsfUtils.CreatureTags
                         string faction = value.Split(':')[1];
                         if (!string.IsNullOrEmpty(faction))
                         {
-                            ScavFactions.SetupFaction(self, value.Split(':')[1]);
+                            Factions.SetupFaction(self, value.Split(':')[1]);
                         }
                         else Log.LogMessage("Invalid faction!");
                     }

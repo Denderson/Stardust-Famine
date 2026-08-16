@@ -1,4 +1,4 @@
-﻿using lsfUtils.Effects;
+﻿using lsfUtils.DevtoolsEffects.CreepingDarkness;
 using System.Runtime.CompilerServices;
 using static lsfUtils.Enums;
 

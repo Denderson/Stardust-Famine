@@ -9,6 +9,13 @@ namespace lsfUtils.Creatures.Worm
 {
     public static class ClimbGrubHooks
     {
+        public static void ApplyHooks()
+        {
+            On.TubeWorm.Tongue.Shoot += ClimbGrubHooks.Tongue_Shoot;
+            On.Player.Update += ClimbGrubHooks.Player_Update;
+            On.Player.WallJump += ClimbGrubHooks.Player_WallJump;
+        }
+
         public static Color yellowTintColor = new(0.75f, 0.95f, 0.25f);
 
         public const float wallBounceFactorX = 0.075f;

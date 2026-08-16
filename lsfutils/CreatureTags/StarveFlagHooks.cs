@@ -12,8 +12,15 @@ using static lsfUtils.Plugin;
 
 namespace lsfUtils.CreatureTags
 {
-    public static class StarveTag
+    public static class StarveFlagHooks
     {
+        public static void ApplyHooks()
+        {
+            On.RelationshipTracker.DynamicRelationship.Update += StarveFlagHooks.DynamicRelationship_Update;
+            On.Creature.Update += StarveFlagHooks.Creature_Update;
+            On.SlugcatStats.NourishmentOfObjectEaten += StarveFlagHooks.SlugcatStats_NourishmentOfObjectEaten;
+            On.LizardAI.ctor += StarveFlagHooks.LizardAI_ctor;
+        }
         public static void SetupStarveTag(this AbstractCreature abstractCreature)
         {
             if (abstractCreature == null)

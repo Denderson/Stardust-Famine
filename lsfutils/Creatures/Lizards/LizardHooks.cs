@@ -1,6 +1,7 @@
 ﻿using lsfUtils.Creatures.Lizards;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using MonoMod.RuntimeDetour;
 using MoreSlugcats;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,18 @@ using static lsfUtils.Plugin;
 
 namespace lsfUtils.Creatures.Lizards
 {
-    public static class LizardCode
+    public static class LizardHooks
     {
+        public static void ApplyHooks()
+        {
+            On.LizardBreeds.BreedTemplate_Type_CreatureTemplate_CreatureTemplate_CreatureTemplate_CreatureTemplate += LizardHooks.On_LizardBreeds_BreedTemplate_Type_CreatureTemplate_CreatureTemplate_CreatureTemplate_CreatureTemplate;
+            On.LizardVoice.GetMyVoiceTrigger += LizardHooks.On_LizardVoice_GetMyVoiceTrigger;
+            On.LizardAI.ctor += LizardHooks.LizardAI_ctor;
+            On.LizardTongue.ctor += LizardHooks.LizardTongue_ctor;
+            On.LizardGraphics.InitiateSprites += LizardHooks.LizardGraphics_InitiateSprites;
+            new Hook(typeof(Lizard).GetProperty(nameof(Lizard.Swimmer)).GetGetMethod(), typeof(LizardHooks).GetMethod(nameof(LizardHooks.Lizard_Swimmer)));
+        }
+
         public static bool IsNotRedOrVariant(bool isNotRed, LizardAI self)
         {
             return isNotRed &&

@@ -12,8 +12,12 @@ using static lsfUtils.Plugin;
 
 namespace lsfUtils.CreatureTags
 {
-    public static class EchoImmune
+    public static class EchoImmuneHooks
     {
+        public static void ApplyHooks()
+        {
+            IL.GhostCreatureSedater.Update += EchoImmuneHooks.GhostCreatureSedater_Update;
+        }
         public static void SetupEchoImmune(this AbstractCreature abstractCreature)
         {
             if (abstractCreature == null)

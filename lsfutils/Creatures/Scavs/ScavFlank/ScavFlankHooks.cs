@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MonoMod.RuntimeDetour;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,15 @@ namespace lsfUtils.Creatures.Scavs.ScavFlank
 {
     public static class ScavFlankHooks
     {
+        public static void ApplyHooks()
+        {
+            On.Scavenger.ctor += ScavFlankHooks.Scavenger_ctor;
+            On.Scavenger.Update += ScavFlankHooks.Scavenger_Update;
+            On.Scavenger.PlaceInRoom += ScavFlankHooks.Scavenger_PlaceInRoom;
+            On.Scavenger.Violence += ScavFlankHooks.Scavenger_Violence;
+
+            new Hook(typeof(Scavenger).GetProperty(nameof(Scavenger.KarmicArmorProtected)).GetGetMethod(), typeof(ScavFlankHooks).GetMethod(nameof(ScavFlankHooks.KarmicArmor_Protected)));
+        }
         public static void Scavenger_Violence(On.Scavenger.orig_Violence orig, Scavenger self, BodyChunk source, Vector2? directionAndMomentum, BodyChunk hitChunk, PhysicalObject.Appendage.Pos hitAppendage, Creature.DamageType type, float damage, float stunBonus)
         {
             bool wasTriggered = self.karmicArmorTriggered;

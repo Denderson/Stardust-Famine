@@ -1,11 +1,20 @@
 ﻿using lsfUtils.CWTs;
 using lsfUtils.Items.Darts.Dart;
+using MonoMod.Cil;
 using RWCustom;
 using Unity.Mathematics;
 using UnityEngine;
+using static lsfUtils.Enums;
 
 public static class DartHooks
 {
+    public static void ApplyHooks()
+    {
+        On.Player.GrabUpdate += DartHooks.Player_GrabUpdate;
+        IL.Room.Loaded += DartHooks.Room_Loaded;
+        On.Creature.Update += DartHooks.Creature_Update;
+    }
+
     public const int pullOutDuration = 80;
     public const float pullOutChance = 0.01f;
 

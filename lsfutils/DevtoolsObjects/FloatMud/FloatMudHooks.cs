@@ -7,6 +7,20 @@ namespace lsfUtils.DevtoolsObjects.FloatMud
 {
     public static class FloatMudHooks
     {
+        public static void ApplyHooks()
+        {
+            On.Creature.Update += FloatMudHooks.Creature_Update;
+            On.Player.Update += FloatMudHooks.Player_Update_CorrectGravityField;
+            On.Player.UpdateBodyMode += FloatMudHooks.Player_UpdateBodyMode;
+            On.Player.UpdateAnimation += FloatMudHooks.Player_UpdateAnimation;
+            On.Player.Update += FloatMudHooks.Player_Update;
+            On.MudPit.ApplyPalette += FloatMudHooks.MudPit_ApplyPalette;
+            On.MudPit.SpawnBubbles += FloatMudHooks.MudPit_SpawnBubbles;
+
+            new Hook(typeof(PhysicalObject).GetProperty(nameof(PhysicalObject.EffectiveRoomGravity)).GetGetMethod(), typeof(FloatMudHooks).GetMethod(nameof(FloatMudHooks.EffectiveRoomGravity)));
+            new Hook(typeof(Player).GetProperty(nameof(Player.EffectiveRoomGravity)).GetGetMethod(), typeof(FloatMudHooks).GetMethod(nameof(FloatMudHooks.EffectiveRoomGravityForPlayer)));
+        }
+
         public const float floatMudGravityMultiplier = 0.30f;
         public const int maxFloatingMudTimer = 2400;
 

@@ -5,10 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using static lsfUtils.Plugin;
 
-namespace lsfUtils.Ripplespace
+namespace lsfUtils.CreatureTags
 {
-    public static class RippleHybrid
+    public static class RippleHybridHooks
     {
+        public static void ApplyHooks()
+        {
+            On.PhysicalObject.InitiateGraphicsModule += RippleHybridHooks.PhysicalObject_InitiateGraphicsModule;
+            On.RoomCamera.SpriteLeaser.ctor += RippleHybridHooks.SpriteLeaser_ctor;
+        }
         public static void RipplifyRealisedObject(this PhysicalObject physicalObject, int rippleLayer = 0, bool rippleBoth = false)
         {
             if (physicalObject?.graphicsModule == null)
@@ -16,7 +21,7 @@ namespace lsfUtils.Ripplespace
                 Log.LogMessage("No graphics module to ripplify!!");
                 return;
             }
-            RipplifyAbstractObject(physicalObject.abstractPhysicalObject, rippleLayer, rippleBoth);
+            physicalObject.abstractPhysicalObject.RipplifyAbstractObject(rippleLayer, rippleBoth);
 
             Watcher.RippleHybridVFX.RippleSide rippleHybridVFX;
             if (rippleBoth)
@@ -90,7 +95,7 @@ namespace lsfUtils.Ripplespace
                 {
                     if (fSprite != null)
                     {
-                        int rippleLayer = (creature.abstractCreature.rippleBothSides) ? -1 : creature.abstractCreature.rippleLayer;
+                        int rippleLayer = creature.abstractCreature.rippleBothSides ? -1 : creature.abstractCreature.rippleLayer;
                         fSprite.shader = RainWorld.TryGetRippleMaskedShaderVariant(rippleLayer, fSprite.shader.name);
                     }
                 }

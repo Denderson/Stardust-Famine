@@ -10,7 +10,7 @@ using static lsfUtils.Plugin;
 
 namespace lsfUtils.CreatureTags
 {
-    public static class ScavFactions
+    public static class Factions
     {
         public static List<FactionData> factions = [];
         public static void LoadAndRegisterAllFactions()
@@ -22,7 +22,7 @@ namespace lsfUtils.CreatureTags
 
                 string[] lines = File.ReadAllLines(path);
                 ParseFactions(lines);
-                Log.LogMessage($"[ScavFactions] Loaded factions from mod '{mod.id}'.");
+                Log.LogMessage($"[Factions] Loaded factions from mod '{mod.id}'.");
             }
 
             string legacyPath = AssetManager.ResolveFilePath("factions.txt");
@@ -30,10 +30,10 @@ namespace lsfUtils.CreatureTags
             {
                 string[] lines = File.ReadAllLines(legacyPath);
                 ParseFactions(lines);
-                Log.LogMessage($"[ScavFactions] Loaded factions from legacy path {legacyPath}.");
+                Log.LogMessage($"[Factions] Loaded factions from legacy path {legacyPath}.");
             }
 
-            Log.LogMessage($"[ScavFactions] Total factions registered: {factions.Count}.");
+            Log.LogMessage($"[Factions] Total factions registered: {factions.Count}.");
         }
 
         public static void SetupFaction(this AbstractCreature abstractCreature, string faction)
@@ -226,7 +226,7 @@ namespace lsfUtils.CreatureTags
                     string name = line.Substring(1, line.Length - 2).Trim().ToLowerInvariant();
                     if (string.IsNullOrEmpty(name))
                     {
-                        Log.LogWarning($"[ScavFactions] Empty faction name at line {lineNum + 1}.");
+                        Log.LogWarning($"[Factions] Empty faction name at line {lineNum + 1}.");
                         current = null;
                         continue;
                     }
@@ -242,7 +242,7 @@ namespace lsfUtils.CreatureTags
 
                 if (current == null)
                 {
-                    Log.LogWarning($"[ScavFactions] Line {lineNum + 1} is outside a faction block, skipping.");
+                    Log.LogWarning($"[Factions] Line {lineNum + 1} is outside a faction block, skipping.");
                     continue;
                 }
 
@@ -256,7 +256,7 @@ namespace lsfUtils.CreatureTags
                 {
                     if (!TryParseReputationLean(value, out float target, out float strength, out string leanErr))
                     {
-                        Log.LogWarning($"[ScavFactions] Line {lineNum + 1}: could not parse reputationlean '{value}': {leanErr}");
+                        Log.LogWarning($"[Factions] Line {lineNum + 1}: could not parse reputationlean '{value}': {leanErr}");
                         continue;
                     }
                     current.reputationLean = target;
@@ -268,7 +268,7 @@ namespace lsfUtils.CreatureTags
                 {
                     if (!TryParseThresholdRelationship(value, out float threshold, out var threshRel, out string threshErr))
                     {
-                        Log.LogWarning($"[ScavFactions] Line {lineNum + 1}: could not parse '{key}' '{value}': {threshErr}");
+                        Log.LogWarning($"[Factions] Line {lineNum + 1}: could not parse '{key}' '{value}': {threshErr}");
                         continue;
                     }
                     if (key == "lowrep") { current.lowRepThreshold = threshold; current.lowRepRelationship = threshRel; }
@@ -278,7 +278,7 @@ namespace lsfUtils.CreatureTags
 
                 if (!TryParseRelationship(value, out var rel, out string err))
                 {
-                    Log.LogWarning($"[ScavFactions] Line {lineNum + 1}: could not parse '{value}': {err}");
+                    Log.LogWarning($"[Factions] Line {lineNum + 1}: could not parse '{value}': {err}");
                     continue;
                 }
 
@@ -318,7 +318,7 @@ namespace lsfUtils.CreatureTags
             }
 
             if (parts.Length > 2)
-                Log.LogWarning($"[ScavFactions] Extra tokens after intensity in '{s}' — they will be ignored.");
+                Log.LogWarning($"[Factions] Extra tokens after intensity in '{s}' — they will be ignored.");
 
             if (!TryParseRelType(parts[0], out var type))
             {
@@ -452,8 +452,16 @@ namespace lsfUtils.CreatureTags
         public CreatureTemplate.Relationship? highRepRelationship = null;
     }
 
-    public static class ScavFactionHooks
+    public static class FactionHooks
     {
+        public static void ApplyHooks()
+        {
+            IL.ScavengerAI.IUseARelationshipTracker_UpdateDynamicRelationship += FactionHooks.IL_UpdateDynamicRelationship;
+            On.ScavengerAbstractAI.ScavengerSquad.DoesScavengerWantToBeInSquad += FactionHooks.Squad_DoesScavengerWantToBeInSquad;
+            On.ScavengerAbstractAI.ScavengerSquad.AddMember += FactionHooks.Squad_AddMember;
+            On.CreatureCommunities.LoadDefaultCommunityAlignments += FactionHooks.LoadDefaultCommunityAlignments_Post;
+            On.CreatureCommunities.CycleTick += FactionHooks.CycleTick_Post;
+        }
 
         public static void IL_UpdateDynamicRelationship(ILContext il)
         {
@@ -483,7 +491,7 @@ namespace lsfUtils.CreatureTags
 
             if (selfFaction == "default" || otherFaction == "default") return vanillaResult;
 
-            return ScavFactions.GetRelationship(selfFaction, otherFaction);
+            return Factions.GetRelationship(selfFaction, otherFaction);
         }
 
         public static bool Squad_DoesScavengerWantToBeInSquad(On.ScavengerAbstractAI.ScavengerSquad.orig_DoesScavengerWantToBeInSquad orig, ScavengerAbstractAI.ScavengerSquad self, ScavengerAbstractAI testScav)
@@ -493,7 +501,7 @@ namespace lsfUtils.CreatureTags
             string leaderFaction = self.leader.GetFaction();
             string recruitFaction = testScav.parent.GetFaction();
 
-            CreatureTemplate.Relationship rel = ScavFactions.GetRelationship(leaderFaction, recruitFaction);
+            CreatureTemplate.Relationship rel = Factions.GetRelationship(leaderFaction, recruitFaction);
 
             return rel.type == CreatureTemplate.Relationship.Type.Pack;
         }
@@ -509,7 +517,7 @@ namespace lsfUtils.CreatureTags
             string leaderFaction = self.leader.GetFaction();
             string memberFaction = newMember.GetFaction();
 
-            CreatureTemplate.Relationship rel = ScavFactions.GetRelationship(leaderFaction, memberFaction);
+            CreatureTemplate.Relationship rel = Factions.GetRelationship(leaderFaction, memberFaction);
 
             if (rel.type != CreatureTemplate.Relationship.Type.Pack) return;
 
@@ -519,13 +527,13 @@ namespace lsfUtils.CreatureTags
         public static void LoadDefaultCommunityAlignments_Post(On.CreatureCommunities.orig_LoadDefaultCommunityAlignments orig, CreatureCommunities self, SlugcatStats.Name saveStateNumber)
         {
             orig(self, saveStateNumber);
-            ScavFactions.ApplyReputationLeans(self);
+            Factions.ApplyReputationLeans(self);
         }
 
         public static void CycleTick_Post(On.CreatureCommunities.orig_CycleTick orig, CreatureCommunities self, int cycle, SlugcatStats.Name saveStateNumber)
         {
             orig(self, cycle, saveStateNumber);
-            ScavFactions.ApplyCycleTickLeans(self);
+            Factions.ApplyCycleTickLeans(self);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using lsfUtils.Creatures.Scavs.ScavSeer;
+﻿using lsfUtils.Creatures.Scavs.ScavFlank;
+using lsfUtils.Creatures.Scavs.ScavMessenger;
+using lsfUtils.Creatures.Scavs.ScavSeer;
 using MoreSlugcats;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,17 @@ namespace lsfUtils.Creatures.Scavs.ScavSeer
 {
     public static class ScavSeerHooks
     {
+        public static void ApplyHooks()
+        {
+            On.ScavengerGraphics.ShockReaction += ScavSeerHooks.ScavengerGraphics_ShockReaction;
+            On.ScavengerAbstractAI.InOffscreenDen += ScavFlankHooks.ScavengerAbstractAI_InOffscreenDen;
+            On.ScavengerAI.ScavPlayerRelationChange += ScavMessengerHooks.ScavengerAI_ScavPlayerRelationChange;
+            On.ScavengerAI.WantToStayInDenUntilEndOfCycle += ScavMessengerHooks.ScavengerAI_WantToStayInDenUntilEndOfCycle;
+            On.ScavengerGraphics.ctor += ScavSeerHooks.ScavengerGraphics_ctor;
+            On.ScavengerAbstractAI.ScavengerSquad.UpdateLeader += ScavSeerHooks.ScavengerSquad_UpdateLeader;
+            On.ScavengerAI.ReactToNoise += ScavSeerHooks.ScavengerAI_ReactToNoise;
+            On.ScavengerAI.Update += ScavSeerHooks.ScavengerAI_Update;
+        }
         public static void ScavengerGraphics_ctor(On.ScavengerGraphics.orig_ctor orig, ScavengerGraphics self, PhysicalObject ow)
         {
             orig(self, ow);
