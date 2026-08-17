@@ -215,6 +215,8 @@ namespace lsfUtils
                 RegisterManagedObject(new ManagedKarmaMask());
                 RegisterManagedObject(new ManagedBrownFruit());
 
+                //hi
+
                 EventLogic.RegisterBuiltInEvents();
 
                 Logger.LogMessage("LSF Utils success!");
