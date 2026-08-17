@@ -23,7 +23,6 @@ using lsfUtils.CWTs;
 using lsfUtils.DevtoolsObjects.ConditionalFilter;
 using lsfUtils.DevtoolsObjects.EventRectangle;
 using lsfUtils.DevtoolsObjects.FloatMud;
-using lsfUtils.DevtoolsObjects.LocalGravity;
 using lsfUtils.DevtoolsObjects.RippleTunnel;
 using lsfUtils.DevtoolsObjects.RippleZone;
 using lsfUtils.Items.Darts.Dart;
@@ -55,6 +54,9 @@ using static Pom.Pom;
 using lsfUtils.DevtoolsObjects.BackgroundMud;
 using lsfUtils.DevtoolsEffects.CreepingDarkness;
 using lsfUtils.DevtoolsEffects.EvilWater;
+using lsfUtils.DevtoolsObjects.LocalGravity;
+using lsfUtils.Items.BrownFruit;
+using lsfUtils.DevtoolsObjects.CustomPushback;
 
 #pragma warning disable CS0618
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -203,12 +205,15 @@ namespace lsfUtils
                 RegisterManagedObject<LocalGravity, LocalGravityData, ManagedRepresentation>("LocalGravity", "lsfUtils");
                 RegisterManagedObject<RippleZone, RippleZoneData, ManagedRepresentation>("RippleZone", "lsfUtils");
                 RegisterManagedObject<EventRect, EventRectData, ManagedRepresentation>("EventRect", "lsfUtils");
-                RegisterManagedObject<RippleTunnel, RippleTunnelData, RippleTunnelRepresentation>("RippleTunnel", "lsfUtils");
+                RegisterManagedObject<CustomPushback, CustomPushbackData, ManagedRepresentation>("CustomPushback", "lsfUtils");
+
+                //RegisterManagedObject<RippleTunnel, RippleTunnelData, RippleTunnelRepresentation>("RippleTunnel", "lsfUtils");
                 
                 RegisterManagedObject(new ManagedFloatMud());
                 RegisterManagedObject(new ManagedBackgroundMud());
                 RegisterManagedObject(new ManagedRippleFlower());
                 RegisterManagedObject(new ManagedKarmaMask());
+                RegisterManagedObject(new ManagedBrownFruit());
 
                 EventLogic.RegisterBuiltInEvents();
 

@@ -14,13 +14,13 @@ namespace lsfUtils.DevtoolsObjects.LocalGravity
     {
         public static void ApplyHooks()
         {
-            On.PhysicalObject.Update += LocalGravityHooks.PhysicalObject_Update;
-            On.Player.Update += LocalGravityHooks.Player_Update_CorrectGravityField;
-            On.Player.UpdateBodyMode += LocalGravityHooks.Player_UpdateBodyMode;
-            On.Player.UpdateAnimation += LocalGravityHooks.Player_UpdateAnimation;
-            On.Player.Update += LocalGravityHooks.Player_Update;
-            new Hook(typeof(PhysicalObject).GetProperty(nameof(PhysicalObject.EffectiveRoomGravity)).GetGetMethod(), typeof(LocalGravityHooks).GetMethod(nameof(LocalGravityHooks.EffectiveRoomGravity)));
-            new Hook(typeof(Player).GetProperty(nameof(Player.EffectiveRoomGravity)).GetGetMethod(), typeof(LocalGravityHooks).GetMethod(nameof(LocalGravityHooks.EffectiveRoomGravityForPlayer)));
+            On.PhysicalObject.Update += PhysicalObject_Update;
+            On.Player.Update += Player_Update_CorrectGravityField;
+            On.Player.UpdateBodyMode += Player_UpdateBodyMode;
+            On.Player.UpdateAnimation += Player_UpdateAnimation;
+            On.Player.Update += Player_Update;
+            new Hook(typeof(PhysicalObject).GetProperty(nameof(PhysicalObject.EffectiveRoomGravity)).GetGetMethod(), typeof(LocalGravityHooks).GetMethod(nameof(EffectiveRoomGravity)));
+            new Hook(typeof(Player).GetProperty(nameof(Player.EffectiveRoomGravity)).GetGetMethod(), typeof(LocalGravityHooks).GetMethod(nameof(EffectiveRoomGravityForPlayer)));
         }
 
         public static void PhysicalObject_Update(On.PhysicalObject.orig_Update orig, PhysicalObject self, bool eu)

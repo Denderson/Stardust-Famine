@@ -51,6 +51,8 @@
 !lsfutils/DevtoolsEffects/*/*/
 !lsfutils/Items/
 !lsfutils/Items/*/
+!lsfutils/Items/*/*/
+!lsfutils/Items/*/*/*/
 !lsfutils/ProcessingConditions/
 !lsfutils/Ripplespace/
 !lsfutils/CreatureTags/
