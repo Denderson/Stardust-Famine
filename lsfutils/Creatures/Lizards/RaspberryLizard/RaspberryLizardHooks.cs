@@ -62,6 +62,8 @@ namespace lsfUtils.Creatures.Lizards.RaspberryLizard
         {
             if (self?.creature?.creatureTemplate?.type == Enums.CreatureTemplateType.RaspberryLizard)
             {
+                if (self.yellowAI?.pack == null || self.yellowAI.pack.members.Count == 0) return orig(self, connection, cost);
+
                 return self.yellowAI.TravelPreference(connection, cost);
             }
             return orig(self, connection, cost);
