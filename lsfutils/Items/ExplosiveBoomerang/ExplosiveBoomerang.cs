@@ -271,6 +271,9 @@ namespace lsfUtils.Items.ExplosiveBoomerang
         {
             base.ApplyPalette(sLeaser, rCam, palette);
             if (slatedForDeletetion || room != rCam.room || sLeaser?.sprites == null || sLeaser.sprites.Length <= SpriteGlow) return;
+
+            this.gradColor = ExplosionColor;
+
             sLeaser.sprites[0].color = ExplosionColor;
             sLeaser.sprites[2].color = Color.Lerp(ExplosionColor, Color.black, 0.4f);
             sLeaser.sprites[SpriteGlow].color = ExplosionColor;

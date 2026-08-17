@@ -9,56 +9,59 @@
     <PathMap>$(MSBuildThisFileDirectory.Replace(',', ',,').Replace('=', '=='))=/</PathMap>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="lib\Assembly-CSharp-firstpass.dll">
-      <Private>False</Private>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="lib\BepInEx.dll">
-      <Private>False</Private>
+    <Reference Include="BepInEx">
+      <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\BepInEx.dll</HintPath>
     </Reference>
-    <Reference Include="lib\Fisobs.dll">
-      <Private>False</Private>
+    <Reference Include="Fisobs">
+      <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\Fisobs.dll</HintPath>
     </Reference>
-    <Reference Include="lib\HOOKS-Assembly-CSharp.dll">
-      <Private>False</Private>
+    <Reference Include="HOOKS-Assembly-CSharp">
+      <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\HOOKS-Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="lib\Mono.Cecil.dll">
-      <Private>False</Private>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\Mono.Cecil.dll</HintPath>
     </Reference>
-    <Reference Include="lib\MonoMod.Common.dll">
-      <Private>False</Private>
+    <Reference Include="MonoMod.Common">
+      <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\MonoMod.Common.dll</HintPath>
     </Reference>
-    <Reference Include="lib\MonoMod.RuntimeDetour.dll">
-      <Private>False</Private>
+    <Reference Include="MonoMod.RuntimeDetour">
+      <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\MonoMod.RuntimeDetour.dll</HintPath>
     </Reference>
-    <Reference Include="lib\MonoMod.Utils.dll">
-      <Private>False</Private>
+    <Reference Include="MonoMod.Utils">
+      <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\MonoMod.Utils.dll</HintPath>
     </Reference>
-    <Reference Include="lib\Newtonsoft.Json.dll">
-      <Private>False</Private>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="lib\Pom.dll">
-      <Private>False</Private>
+    <Reference Include="Pom">
+      <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\Pom.dll</HintPath>
     </Reference>
-    <Reference Include="lib\PUBLIC-Assembly-CSharp.dll">
-      <Private>False</Private>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\PUBLIC-Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="lib\Unity.Mathematics.dll">
-      <Private>False</Private>
+    <Reference Include="SlugBase">
+      <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\SlugBase.dll</HintPath>
     </Reference>
-    <Reference Include="lib\UnityEngine.CoreModule.dll">
-      <Private>False</Private>
+    <Reference Include="Unity.Mathematics">
+      <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\Unity.Mathematics.dll</HintPath>
     </Reference>
-    <Reference Include="lib\UnityEngine.dll">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="lib\UnityEngine.InputLegacyModule.dll">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="lib\UnityEngine.InputModule.dll">
-      <Private>False</Private>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AssetBundleModule">
       <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputModule">
+      <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\UnityEngine.InputModule.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
