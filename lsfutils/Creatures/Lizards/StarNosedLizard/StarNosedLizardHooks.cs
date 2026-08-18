@@ -37,7 +37,7 @@ namespace lsfUtils.Creatures.Lizards.StarNosedLizard
             if (self?.lizard == null)
                 return;
             if (self.lizard.Template?.type == Enums.CreatureTemplateType.StarNosedLizard && self.noiseTracker?.hearingSkill != null)
-                self.noiseTracker.hearingSkill = 2f;
+                self.noiseTracker.hearingSkill = 1f;
         }
 
         public static void SuperHearing_Update(On.SuperHearing.orig_Update orig, SuperHearing self)
@@ -74,10 +74,9 @@ namespace lsfUtils.Creatures.Lizards.StarNosedLizard
                 }
                 orig(self);
                 self.superHearingSkill = superHearingOrig;
+                return;
             }
             else orig(self);
         }
-
-
     }
 }
