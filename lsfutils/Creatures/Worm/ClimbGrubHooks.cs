@@ -11,9 +11,9 @@ namespace lsfUtils.Creatures.Worm
     {
         public static void ApplyHooks()
         {
-            On.TubeWorm.Tongue.Shoot += ClimbGrubHooks.Tongue_Shoot;
-            On.Player.Update += ClimbGrubHooks.Player_Update;
-            On.Player.WallJump += ClimbGrubHooks.Player_WallJump;
+            On.TubeWorm.Tongue.Shoot += ClimbGrubHooks.Tongue_Shoot; // Climb grub doesnt have a tongue
+            On.Player.Update += ClimbGrubHooks.Player_Update; // While under climb grub effect, player can jump on poles without being slowed down
+            On.Player.WallJump += ClimbGrubHooks.Player_WallJump; // While under climb grub effect, player can climb walls without bouncing off of them
         }
 
         public static Color yellowTintColor = new(0.75f, 0.95f, 0.25f);
@@ -50,10 +50,7 @@ namespace lsfUtils.Creatures.Worm
 
         public static void Tongue_Shoot(On.TubeWorm.Tongue.orig_Shoot orig, TubeWorm.Tongue self, Vector2 dir)
         {
-            if (self?.worm != null && self.worm is ClimbGrub)
-            {
-                return;
-            }
+            if (self?.worm != null && self.worm is ClimbGrub) return;
             orig(self, dir);
         }
 
@@ -64,6 +61,9 @@ namespace lsfUtils.Creatures.Worm
             if (data.freeClimbTimer >= 0)
             {
                 data.freeClimbTimer--;
+                self.poleSkipPenalty = 0;
+                self.slowMovementStun = 0;
+                if (self.slideUpPole < 8 && self.slideUpPole > 0) self.slideUpPole = 1;
             }
         }
 
