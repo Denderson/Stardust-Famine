@@ -11,7 +11,7 @@ public static class DartHooks
     public static void ApplyHooks()
     {
         On.Player.GrabUpdate += DartHooks.Player_GrabUpdate;
-        IL.Room.Loaded += DartHooks.Room_Loaded;
+        //IL.Room.Loaded += DartHooks.Room_Loaded;
         On.Creature.Update += DartHooks.Creature_Update;
     }
 
