@@ -35,7 +35,7 @@ public static class DartHooks
     }
 
     //Makes it so Darts can replace Spears when a Room is being Loaded
-    public static void Room_Loaded(ILContext il)
+    /*public static void Room_Loaded(ILContext il)
     {
         ILCursor main = new ILCursor(il);
         main.GotoNext(
@@ -54,7 +54,7 @@ public static class DartHooks
         main.Emit(Mono.Cecil.Cil.OpCodes.Ldarg_0);
         main.EmitDelegate(WillDartSpawn);
         main.Emit(Mono.Cecil.Cil.OpCodes.Brtrue, dartCodeLoc);
-    }
+    }*/
 
     public static bool WillDartSpawn(Room self)
     {
