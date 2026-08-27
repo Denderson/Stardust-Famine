@@ -57,6 +57,7 @@ using lsfUtils.DevtoolsEffects.EvilWater;
 using lsfUtils.DevtoolsObjects.LocalGravity;
 using lsfUtils.Items.BrownFruit;
 using lsfUtils.DevtoolsObjects.CustomPushback;
+using lsfUtils.DevtoolsObjects.WaveLight;
 
 #pragma warning disable CS0618
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -158,6 +159,7 @@ namespace lsfUtils
                     ConditionalFilterHooks.ApplyHooks();
                     FloatMudHooks.ApplyHooks();
                     BackgroundMudHooks.ApplyHooks();
+                    WaveLightHooks.Apply();
                 }
 
                 // devtools effects
@@ -206,9 +208,10 @@ namespace lsfUtils
                 RegisterManagedObject<RippleZone, RippleZoneData, ManagedRepresentation>("RippleZone", "lsfUtils");
                 RegisterManagedObject<EventRect, EventRectData, ManagedRepresentation>("EventRect", "lsfUtils");
                 RegisterManagedObject<CustomPushback, CustomPushbackData, ManagedRepresentation>("CustomPushback", "lsfUtils");
+                RegisterManagedObject<WaveLight, WaveLightData, WaveLightRepresentation>("WaveLight", "lsfUtils");
 
                 //RegisterManagedObject<RippleTunnel, RippleTunnelData, RippleTunnelRepresentation>("RippleTunnel", "lsfUtils");
-                
+
                 RegisterManagedObject(new ManagedFloatMud());
                 RegisterManagedObject(new ManagedBackgroundMud());
                 RegisterManagedObject(new ManagedRippleFlower());
@@ -335,6 +338,7 @@ namespace lsfUtils
                 RegisterShader(self, bundle, "Assets/Shaders/RippleSpawnBodyGreen.shader", "RippleSpawnBodyGreen");
                 RegisterShader(self, bundle, "Assets/Shaders/RippleGlowGreen.shader", "RippleGlowGreen");
                 RegisterShader(self, bundle, "Assets/Shaders/SeerHalo.shader", "SeerHalo");
+                //RegisterShader(self, bundle, "Assets/Shaders/WaveLightOverlay.shader", "WaveLightOverlay");
                 bundle.Unload(false);
             }
             else

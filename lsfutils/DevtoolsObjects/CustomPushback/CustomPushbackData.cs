@@ -10,7 +10,7 @@ namespace lsfUtils.DevtoolsObjects.CustomPushback
 {
     public class CustomPushbackData(PlacedObject po) : ManagedData(po, [])
     {
-        [FloatField("Strength", -20, 20, 5, 0.2f, ManagedFieldWithPanel.ControlType.slider, "Strength: ")]
+        [FloatField("Strength", -100, 100, 10, 1f, ManagedFieldWithPanel.ControlType.slider, "Strength: ")]
         public float strength;
 
         [BooleanField("Directed", true, ManagedFieldWithPanel.ControlType.button, "Directed: ")]
