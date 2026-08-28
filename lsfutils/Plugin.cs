@@ -210,7 +210,7 @@ namespace lsfUtils
                 RegisterManagedObject<CustomPushback, CustomPushbackData, ManagedRepresentation>("CustomPushback", "lsfUtils");
                 RegisterManagedObject<WaveLight, WaveLightData, WaveLightRepresentation>("WaveLight", "lsfUtils");
 
-                //RegisterManagedObject<RippleTunnel, RippleTunnelData, RippleTunnelRepresentation>("RippleTunnel", "lsfUtils");
+                RegisterManagedObject<RippleTunnel, RippleTunnelData, RippleTunnelRepresentation>("RippleTunnel", "lsfUtils");
 
                 RegisterManagedObject(new ManagedFloatMud());
                 RegisterManagedObject(new ManagedBackgroundMud());
@@ -338,7 +338,7 @@ namespace lsfUtils
                 RegisterShader(self, bundle, "Assets/Shaders/RippleSpawnBodyGreen.shader", "RippleSpawnBodyGreen");
                 RegisterShader(self, bundle, "Assets/Shaders/RippleGlowGreen.shader", "RippleGlowGreen");
                 RegisterShader(self, bundle, "Assets/Shaders/SeerHalo.shader", "SeerHalo");
-                //RegisterShader(self, bundle, "Assets/Shaders/WaveLightOverlay.shader", "WaveLightOverlay");
+                RegisterShader(self, bundle, "Assets/Shaders/WaveLightOverlay.shader", "WaveLightOverlay");
                 bundle.Unload(false);
             }
             else
