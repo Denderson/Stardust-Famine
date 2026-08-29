@@ -34,7 +34,7 @@ public static class DartHooks
         HandleSelfDartPull(self);
     }
 
-    Makes it so Darts can replace Spears when a Room is being Loaded
+    //Makes it so Darts can replace Spears when a Room is being Loaded
     public static void Room_Loaded(ILContext il)
     {
         try
