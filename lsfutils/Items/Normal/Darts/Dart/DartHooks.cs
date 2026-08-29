@@ -5,6 +5,9 @@ using RWCustom;
 using Unity.Mathematics;
 using UnityEngine;
 using static lsfUtils.Enums;
+using System;
+using static lsfUtils.Plugin;
+
 
 public static class DartHooks
 {
@@ -56,7 +59,7 @@ public static class DartHooks
             main.Emit(Mono.Cecil.Cil.OpCodes.Ldarg_0);
             main.EmitDelegate(WillDartSpawn);
             main.Emit(Mono.Cecil.Cil.OpCodes.Brtrue, dartCodeLoc);
-            Log.LogMessage(il)
+            Log.LogMessage(il);
         }
         catch (Exception e)
         {
