@@ -5,13 +5,16 @@ using RWCustom;
 using Unity.Mathematics;
 using UnityEngine;
 using static lsfUtils.Enums;
+using System;
+using static lsfUtils.Plugin;
+
 
 public static class DartHooks
 {
     public static void ApplyHooks()
     {
         On.Player.GrabUpdate += DartHooks.Player_GrabUpdate;
-        //IL.Room.Loaded += DartHooks.Room_Loaded;
+        IL.Room.Loaded += DartHooks.Room_Loaded;
         On.Creature.Update += DartHooks.Creature_Update;
     }
 
@@ -35,26 +38,34 @@ public static class DartHooks
     }
 
     //Makes it so Darts can replace Spears when a Room is being Loaded
-    /*public static void Room_Loaded(ILContext il)
+    public static void Room_Loaded(ILContext il)
     {
-        ILCursor main = new ILCursor(il);
-        main.GotoNext(
-            MoveType.After,
-            i => i.MatchCall<SlugcatStats>(nameof(SlugcatStats.SpearSpawnModifier)),
-            i => i.MatchBgeUn(out _)
-        );
-        ILCursor dartCursor = new ILCursor(main);
-        dartCursor.GotoNext(
-            MoveType.After,
-            i => i.MatchStfld<AbstractSpear>(nameof(AbstractSpear.electric))
-        );
-        dartCursor.MoveAfterLabels();
-        ILLabel dartCodeLoc = dartCursor.MarkLabel();
-        dartCursor.EmitDelegate(MakeDart);
-        main.Emit(Mono.Cecil.Cil.OpCodes.Ldarg_0);
-        main.EmitDelegate(WillDartSpawn);
-        main.Emit(Mono.Cecil.Cil.OpCodes.Brtrue, dartCodeLoc);
-    }*/
+        try
+        {
+            ILCursor main = new ILCursor(il);
+            main.GotoNext(
+                MoveType.After,
+                i => i.MatchCall<SlugcatStats>(nameof(SlugcatStats.SpearSpawnModifier)),
+                i => i.MatchBgeUn(out _)
+            );
+            ILCursor dartCursor = new ILCursor(main);
+            dartCursor.GotoNext(
+                MoveType.After,
+                i => i.MatchStfld<AbstractSpear>(nameof(AbstractSpear.electric))
+            );
+            dartCursor.MoveAfterLabels();
+            ILLabel dartCodeLoc = dartCursor.MarkLabel();
+            dartCursor.EmitDelegate(MakeDart);
+            main.Emit(Mono.Cecil.Cil.OpCodes.Ldarg_0);
+            main.EmitDelegate(WillDartSpawn);
+            main.Emit(Mono.Cecil.Cil.OpCodes.Brtrue, dartCodeLoc);
+            Log.LogMessage(il);
+        }
+        catch (Exception e)
+        {
+            Log.LogMessage(e);
+        }
+    }
 
     public static bool WillDartSpawn(Room self)
     {
