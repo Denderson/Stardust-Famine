@@ -20,18 +20,27 @@ using lsfUtils.Creatures.Spiders.PoisonSpider;
 using lsfUtils.Creatures.Worm;
 using lsfUtils.CreatureTags;
 using lsfUtils.CWTs;
+using lsfUtils.DevtoolsEffects.CreepingDarkness;
+using lsfUtils.DevtoolsEffects.EvilWater;
+using lsfUtils.DevtoolsObjects.BackgroundMud;
+using lsfUtils.DevtoolsObjects.Bumper;
 using lsfUtils.DevtoolsObjects.ConditionalFilter;
+using lsfUtils.DevtoolsObjects.CustomPushback;
 using lsfUtils.DevtoolsObjects.EventRectangle;
 using lsfUtils.DevtoolsObjects.FloatMud;
+using lsfUtils.DevtoolsObjects.LocalGravity;
+using lsfUtils.DevtoolsObjects.MudBonePile;
 using lsfUtils.DevtoolsObjects.RippleTunnel;
 using lsfUtils.DevtoolsObjects.RippleZone;
+using lsfUtils.DevtoolsObjects.WaveLight;
+using lsfUtils.Items;
+using lsfUtils.Items.BrownFruit;
 using lsfUtils.Items.Darts.Dart;
 using lsfUtils.Items.Darts.PoisonDart;
 using lsfUtils.Items.ExplosiveBoomerang;
 using lsfUtils.Items.KarmaMask;
 using lsfUtils.Items.RippleFlower;
 using lsfUtils.RegionParams;
-using lsfUtils.Items;
 using Menu.Remix.MixedUI;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -51,13 +60,6 @@ using UnityEngine;
 using Watcher;
 using static lsfUtils.RegionParams.TypeParamsHooks;
 using static Pom.Pom;
-using lsfUtils.DevtoolsObjects.BackgroundMud;
-using lsfUtils.DevtoolsEffects.CreepingDarkness;
-using lsfUtils.DevtoolsEffects.EvilWater;
-using lsfUtils.DevtoolsObjects.LocalGravity;
-using lsfUtils.Items.BrownFruit;
-using lsfUtils.DevtoolsObjects.CustomPushback;
-using lsfUtils.DevtoolsObjects.WaveLight;
 
 #pragma warning disable CS0618
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -209,6 +211,9 @@ namespace lsfUtils
                 RegisterManagedObject<EventRect, EventRectData, ManagedRepresentation>("EventRect", "lsfUtils");
                 RegisterManagedObject<CustomPushback, CustomPushbackData, ManagedRepresentation>("CustomPushback", "lsfUtils");
                 RegisterManagedObject<WaveLight, WaveLightData, WaveLightRepresentation>("WaveLight", "lsfUtils");
+                RegisterManagedObject<Bumper, BumperData, ManagedRepresentation>("Bumper", "lsfUtils");
+
+                RegisterManagedObject(new ManagedObjectType("MudBonePile", "lsfUtils", typeof(MudBonePile), typeof(MudBonePileData), typeof(MudBonePileRepresentation)));
 
                 RegisterManagedObject<RippleTunnel, RippleTunnelData, RippleTunnelRepresentation>("RippleTunnel", "lsfUtils");
 
@@ -219,6 +224,7 @@ namespace lsfUtils
                 RegisterManagedObject(new ManagedBrownFruit());
 
                 //hi
+                //hello
 
                 EventLogic.RegisterBuiltInEvents();
 
@@ -267,10 +273,6 @@ namespace lsfUtils
                     return true;
                 }
             }
-            else
-            {
-                Log.LogMessage("Error in GetNameFromAnywhere!");
-            }
             return false;
         }
 
@@ -284,10 +286,6 @@ namespace lsfUtils
                     timeline = game.TimelinePoint;
                     return true;
                 }
-            }
-            else
-            {
-                Log.LogMessage("Error in GetTimelineFromAnywhere!");
             }
             return false;
         }
@@ -314,7 +312,11 @@ namespace lsfUtils
             Futile.atlasManager.LoadImage("atlases/Dart");
             Futile.atlasManager.LoadImage("atlases/PoisonDart");
 
+            Futile.atlasManager.LoadImage("atlases/Bumper1");
+            Futile.atlasManager.LoadImage("atlases/Bumper2");
+
             Futile.atlasManager.LoadAtlas("atlases/lsfLizardStuff");
+            Futile.atlasManager.LoadAtlas("atlases/corrodedskylines");
 
             Futile.atlasManager.LoadImage(templarMaskIcon);
 
