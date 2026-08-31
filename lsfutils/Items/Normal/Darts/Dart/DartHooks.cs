@@ -14,7 +14,7 @@ public static class DartHooks
     public static void ApplyHooks()
     {
         On.Player.GrabUpdate += DartHooks.Player_GrabUpdate;
-        IL.Room.Loaded += DartHooks.Room_Loaded;
+        //IL.Room.Loaded += DartHooks.Room_Loaded;
         On.Creature.Update += DartHooks.Creature_Update;
     }
 
@@ -38,7 +38,7 @@ public static class DartHooks
     }
 
     //Makes it so Darts can replace Spears when a Room is being Loaded
-    public static void Room_Loaded(ILContext il)
+    /*public static void Room_Loaded(ILContext il)
     {
         try
         {
@@ -65,7 +65,7 @@ public static class DartHooks
         {
             Log.LogMessage(e);
         }
-    }
+    }*/
 
     public static bool WillDartSpawn(Room self)
     {

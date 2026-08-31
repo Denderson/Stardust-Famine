@@ -9,7 +9,7 @@ namespace lsfUtils.DevtoolsObjects.WaveLight
         private static RenderTexture baseLightmapSnapshot;
         private static RenderTexture trackedLightmapRef;
 
-        public static void Apply()
+        public static void ApplyHooks()
         {
             On.RoomCamera.ApproximateLightmap += RoomCamera_ApproximateLightmap;
             On.RoomCamera.DrawUpdate += RoomCamera_DrawUpdate;

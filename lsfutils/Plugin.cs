@@ -39,6 +39,7 @@ using lsfUtils.Items.Darts.Dart;
 using lsfUtils.Items.Darts.PoisonDart;
 using lsfUtils.Items.ExplosiveBoomerang;
 using lsfUtils.Items.KarmaMask;
+using lsfUtils.Items.Normal.TorchSpears;
 using lsfUtils.Items.RippleFlower;
 using lsfUtils.RegionParams;
 using Menu.Remix.MixedUI;
@@ -121,6 +122,7 @@ namespace lsfUtils
                     Content.Register(new KarmaMaskFisob());
                     Content.Register(new ExplosiveBoomerangFisob());
                     Content.Register(new SingularityBoomerangFisob());
+                    Content.Register(new TorchSpearFisob());
 
                     Log.LogMessage("Done with Fisobs!");
                 }
@@ -153,6 +155,7 @@ namespace lsfUtils
                     DartHooks.ApplyHooks();
                     KarmaMaskHooks.ApplyHooks();
                     ExplosiveBoomerangHooks.ApplyHooks();
+                    TorchSpearHooks.ApplyHooks();
                 }
 
                 // devtools objects
@@ -161,7 +164,7 @@ namespace lsfUtils
                     ConditionalFilterHooks.ApplyHooks();
                     FloatMudHooks.ApplyHooks();
                     BackgroundMudHooks.ApplyHooks();
-                    WaveLightHooks.Apply();
+                    WaveLightHooks.ApplyHooks();
                 }
 
                 // devtools effects
@@ -222,6 +225,7 @@ namespace lsfUtils
                 RegisterManagedObject(new ManagedRippleFlower());
                 RegisterManagedObject(new ManagedKarmaMask());
                 RegisterManagedObject(new ManagedBrownFruit());
+                RegisterManagedObject(new ManagedTorchSpear());
 
                 //hi
                 //hello
@@ -341,6 +345,10 @@ namespace lsfUtils
                 RegisterShader(self, bundle, "Assets/Shaders/RippleGlowGreen.shader", "RippleGlowGreen");
                 RegisterShader(self, bundle, "Assets/Shaders/SeerHalo.shader", "SeerHalo");
                 RegisterShader(self, bundle, "Assets/Shaders/WaveLightOverlay.shader", "WaveLightOverlay");
+                RegisterShader(self, bundle, "Assets/Shaders/ClothBurnShader.shader", "ClothBurnShader");
+                RegisterShader(self, bundle, "Assets/Shaders/ProceduralFireShader.shader", "ProceduralFireShader");
+                RegisterShader(self, bundle, "Assets/Shaders/ScorchBurnShader.shader", "ScorchBurnShader");
+
                 bundle.Unload(false);
             }
             else

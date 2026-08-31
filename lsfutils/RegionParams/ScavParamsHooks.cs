@@ -23,15 +23,19 @@ namespace lsfUtils.RegionParams
             }
             if ((int)UnityEngine.Random.value * 100 < customRegionParams.ScavExplosiveBoomerangChance)
             {
-                AddItemToScav(scav, Enums.AbstractObjectType.ExplosiveBoomerang);
+                AddItemToScav(scav, AbstractObjectType.ExplosiveBoomerang);
             }
             if ((int)UnityEngine.Random.value * 100 < customRegionParams.ScavSingularityBoomerangChance)
             {
-                AddItemToScav(scav, Enums.AbstractObjectType.SingularityBoomerang);
+                AddItemToScav(scav, AbstractObjectType.SingularityBoomerang);
             }
             if ((int)UnityEngine.Random.value * 100 < customRegionParams.ScavPoisonDartChance)
             {
-                AddItemToScav(scav, Enums.AbstractObjectType.PoisonDart);
+                AddItemToScav(scav, AbstractObjectType.PoisonDart);
+            }
+            if ((int)UnityEngine.Random.value * 100 < customRegionParams.ScavTorchSpearChance)
+            {
+                AddItemToScav(scav, AbstractObjectType.TorchSpear);
             }
         }
 

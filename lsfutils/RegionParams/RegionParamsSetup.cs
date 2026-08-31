@@ -54,6 +54,9 @@ namespace lsfUtils.RegionParams
         // Chance for a scav to spawn with a poison dart (from 0 to 100)
         public int ScavPoisonDartChance { get; private set; } = 0;
 
+        // Chance for a scav to spawn with a torch spear (from 0 to 100)
+        public int ScavTorchSpearChance { get; private set; } = 0;
+
         //Chance for a Dart to replace a spear
         public int DartFrequency { get; private set; } = 10;
 
@@ -123,6 +126,9 @@ namespace lsfUtils.RegionParams
                         break;
                     case "scavPoisonDartChance":
                         customRegionParams.ScavPoisonDartChance = ParseInt(val);
+                        break;
+                    case "scavTorchSpearChance":
+                        customRegionParams.ScavTorchSpearChance = ParseInt(val);
                         break;
                     case "dartFrequency":
                         customRegionParams.DartFrequency = ParseInt(val);

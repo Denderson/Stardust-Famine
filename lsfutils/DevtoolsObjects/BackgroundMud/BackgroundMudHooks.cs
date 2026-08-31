@@ -43,7 +43,6 @@ namespace lsfUtils.DevtoolsObjects.BackgroundMud
             if (spawnBackgroundBubble)
             {
                 spawnBackgroundBubble = false;
-
             }
         }
     }
