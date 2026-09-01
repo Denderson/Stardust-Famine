@@ -20,22 +20,25 @@ namespace Stardust.Slugcats.Bitter
             if (self?.room == null)
             {
                 Log.LogMessage("Room is null in SaveArmorOnHibernation!");
+                orig(self);
                 return;
             }
             if (self.room.game?.StoryCharacter != Enums.SlugcatStatsName.bitter)
             {
+                orig(self);
                 return;
             }
             if (self.room.PlayersInRoom == null || self.room.PlayersInRoom.Count <= 0)
             {
                 Log.LogMessage("No players in SaveArmorOnHibernation!");
+                orig(self);
                 return;
             }
             float armor = 0f;
             bool anyoneHasArmor = false;
             foreach (Player player in self.room.PlayersInRoom)
             {
-                if (player != null && player.SlugCatClass == Enums.SlugcatStatsName.bitter && PlayerCWT.TryGetData(player, out var data))
+                if (player?.SlugCatClass == Enums.SlugcatStatsName.bitter && PlayerCWT.TryGetData(player, out var data))
                 {
                     anyoneHasArmor = true;
                     armor = math.max(armor, data.armorHealth);
