@@ -16,8 +16,11 @@ public static class ShelterLinks
     
     public static readonly Dictionary<string, ShelterLinkEntry> byShelter = [];
 
+    public static readonly string ConfigPath = AssetManager.ResolveFilePath("lsf/shelterLinkstxt");
+
     public static void ApplyHooks()
     {
+        LoadConfig(ConfigPath);
         On.SaveState.BringUpToDate += SaveState_BringUpToDate;
     }
     
@@ -80,16 +83,10 @@ public static class ShelterLinks
         orig(self, game);
 
         string fromShelter = self.denPosition;
-        if (fromShelter == null || !byShelter.TryGetValue(fromShelter, out ShelterLinkEntry entry))
-        {
-            return;
-        }
+        if (fromShelter == null || !byShelter.TryGetValue(fromShelter, out ShelterLinkEntry entry)) return;
 
         string toShelter = SelectTarget(entry, self, game);
-        if (toShelter == null || !ShouldRedirect(self, game, fromShelter, toShelter))
-        {
-            return;
-        }
+        if (toShelter == null || !ShouldRedirect(self, game, fromShelter, toShelter)) return;
 
         RedirectDen(self, game, fromShelter, toShelter);
     }
@@ -110,17 +107,11 @@ public static class ShelterLinks
         save.TrySetVanillaDen(toShelter);
         
         AbstractRoom fromRoom = game.world.GetAbstractRoom(fromShelter);
-        if (fromRoom == null)
-        {
-            return;
-        }
+        if (fromRoom == null) return;
 
         for (int i = fromRoom.entities.Count - 1; i >= 0; i--)
         {
-            if (!(fromRoom.entities[i] is AbstractPhysicalObject obj))
-            {
-                continue;
-            }
+            if (fromRoom.entities[i] is not AbstractPhysicalObject obj) continue;
             if (obj is AbstractCreature crit && crit.creatureTemplate.type == CreatureTemplate.Type.Slugcat)  continue;
             if (HeldByPlayer(obj, game)) continue;
 
@@ -132,10 +123,8 @@ public static class ShelterLinks
     {
         for (int p = 0; p < game.session.Players.Count; p++)
         {
-            if (!(game.session.Players[p].realizedCreature is Player player))
-            {
-                continue;
-            }
+            if (game.session.Players[p].realizedCreature is not Player player) continue;
+
             for (int g = 0; g < player.grasps.Length; g++)
             {
                 if (player.grasps[g]?.grabbed?.abstractPhysicalObject == obj)

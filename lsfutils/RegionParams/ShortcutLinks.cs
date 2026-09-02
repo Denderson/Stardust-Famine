@@ -9,14 +9,14 @@ using static lsfUtils.Plugin;
 
 public static class ShortcutLinks
 {
-    public class PipeConfigEntry
+    public class ShortcutLinkEntry
     {
         public string sourceRoom;
         public int sourceNode;
         public List<(string room, int node)> candidates = [];
     }
 
-    public static List<PipeConfigEntry> rawConfig;
+    public static List<ShortcutLinkEntry> rawConfig;
 
     public static readonly string ConfigPath = AssetManager.ResolveFilePath("lsf/shortcutLinks.txt");
 
@@ -52,7 +52,7 @@ public static class ShortcutLinks
                 continue;
             }
 
-            PipeConfigEntry entry = new PipeConfigEntry
+            ShortcutLinkEntry entry = new ShortcutLinkEntry
             {
                 sourceRoom = srcParts[0].Trim().ToUpperInvariant(),
                 sourceNode = srcNode
@@ -90,12 +90,12 @@ public static class ShortcutLinks
 
         if (rawConfig == null) return;
 
-        foreach (PipeConfigEntry entry in rawConfig)
+        foreach (ShortcutLinkEntry entry in rawConfig)
         {
             AbstractRoom srcRoom = world.GetAbstractRoom(entry.sourceRoom);
             if (srcRoom == null)
             {
-                Log.LogMessage("ShortcutLinks: unknown source room: " + entry.sourceRoom);
+                Log.LogMessage("Unknown source room: " + entry.sourceRoom);
                 continue;
             }
 
@@ -105,7 +105,7 @@ public static class ShortcutLinks
                 AbstractRoom destRoom = world.GetAbstractRoom(roomName);
                 if (destRoom == null)
                 {
-                    Custom.LogWarning("ShortcutLinks: unknown destination room", roomName);
+                    Log.LogMessage("Unknown destination room: " + roomName);
                     continue;
                 }
                 candidates.Add((destRoom.index, node));

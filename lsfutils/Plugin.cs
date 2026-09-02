@@ -196,6 +196,7 @@ namespace lsfUtils
                     TypeParamsHooks.ApplyHooks();
                     ShortcutLinks.ApplyHooks();
                     ShelterLinks.ApplyHooks();
+                    ConditionalGates.ApplyHooks();
                 }
 
                 On.RainWorld.Start += RainWorld_Start;
