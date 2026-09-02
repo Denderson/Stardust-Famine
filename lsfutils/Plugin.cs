@@ -194,7 +194,8 @@ namespace lsfUtils
 
                     ScavParamsHooks.ApplyHooks();
                     TypeParamsHooks.ApplyHooks();
-                    RandomShortcuts.ApplyHooks();
+                    ShortcutLinks.ApplyHooks();
+                    ShelterLinks.ApplyHooks();
                 }
 
                 On.RainWorld.Start += RainWorld_Start;

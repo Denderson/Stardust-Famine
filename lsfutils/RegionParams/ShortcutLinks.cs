@@ -7,18 +7,18 @@ using RWCustom;
 using UnityEngine;
 using static lsfUtils.Plugin;
 
-public static class RandomShortcuts
+public static class ShortcutLinks
 {
-    private class PipeConfigEntry
+    public class PipeConfigEntry
     {
         public string sourceRoom;
         public int sourceNode;
         public List<(string room, int node)> candidates = [];
     }
 
-    private static List<PipeConfigEntry> rawConfig;
+    public static List<PipeConfigEntry> rawConfig;
 
-    private static readonly string ConfigPath = AssetManager.ResolveFilePath("lsf/connectionOverrides.txt");
+    public static readonly string ConfigPath = AssetManager.ResolveFilePath("lsf/shortcutLinks.txt");
 
     public static void LoadConfig(string path)
     {
@@ -76,11 +76,11 @@ public static class RandomShortcuts
         }
     }
 
-    private static World resolvedForWorld;
-    private static Dictionary<(int room, int node), List<(int room, int node)>> resolved;
-    private static readonly Dictionary<(int destRoom, int sourceRoom), int> activeExitOverrides = [];
+    public static World resolvedForWorld;
+    public static Dictionary<(int room, int node), List<(int room, int node)>> resolved;
+    public static readonly Dictionary<(int destRoom, int sourceRoom), int> activeExitOverrides = [];
 
-    private static void EnsureResolved(World world)
+    public static void EnsureResolved(World world)
     {
         if (resolvedForWorld == world && resolved != null) return;
 
@@ -95,7 +95,7 @@ public static class RandomShortcuts
             AbstractRoom srcRoom = world.GetAbstractRoom(entry.sourceRoom);
             if (srcRoom == null)
             {
-                Log.LogMessage("RandomShortcuts: unknown source room: " + entry.sourceRoom);
+                Log.LogMessage("ShortcutLinks: unknown source room: " + entry.sourceRoom);
                 continue;
             }
 
@@ -105,7 +105,7 @@ public static class RandomShortcuts
                 AbstractRoom destRoom = world.GetAbstractRoom(roomName);
                 if (destRoom == null)
                 {
-                    Custom.LogWarning("RandomShortcuts: unknown destination room", roomName);
+                    Custom.LogWarning("ShortcutLinks: unknown destination room", roomName);
                     continue;
                 }
                 candidates.Add((destRoom.index, node));
@@ -118,14 +118,14 @@ public static class RandomShortcuts
         }
     }
 
-    private class PendingDest
+    public class PendingDest
     {
         public int sourceNode;
         public int destRoomIndex;
         public int destNodeIndex;
     }
 
-    private static readonly ConditionalWeakTable<ShortcutHandler.ShortCutVessel, PendingDest> pending = new ConditionalWeakTable<ShortcutHandler.ShortCutVessel, PendingDest>();
+    public static readonly ConditionalWeakTable<ShortcutHandler.ShortCutVessel, PendingDest> pending = new ConditionalWeakTable<ShortcutHandler.ShortCutVessel, PendingDest>();
 
     public static void ApplyHooks()
     {
@@ -135,19 +135,19 @@ public static class RandomShortcuts
         On.AbstractRoom.ExitIndex += AbstractRoom_ExitIndex;
     }
 
-    private static int AbstractRoom_ExitIndex(On.AbstractRoom.orig_ExitIndex orig, AbstractRoom self, int targetRoom)
+    public static int AbstractRoom_ExitIndex(On.AbstractRoom.orig_ExitIndex orig, AbstractRoom self, int targetRoom)
     {
         if (activeExitOverrides.TryGetValue((self.index, targetRoom), out int node)) return node;
         return orig(self, targetRoom);
     }
 
-    private static void SetReverseConnection(AbstractRoom destRoom, int destNodeIndex, int sourceRoomIndex)
+    public static void SetReverseConnection(AbstractRoom destRoom, int destNodeIndex, int sourceRoomIndex)
     {
         destRoom.connections[destNodeIndex] = sourceRoomIndex;
         activeExitOverrides[(destRoom.index, sourceRoomIndex)] = destNodeIndex;
     }
 
-    private static void ShortcutHandler_SuckInCreature(On.ShortcutHandler.orig_SuckInCreature orig, ShortcutHandler self, Creature creature, Room room, ShortcutData shortCut)
+    public static void ShortcutHandler_SuckInCreature(On.ShortcutHandler.orig_SuckInCreature orig, ShortcutHandler self, Creature creature, Room room, ShortcutData shortCut)
     {
         if (shortCut.shortCutType != ShortcutData.Type.RoomExit)
         {
@@ -187,7 +187,7 @@ public static class RandomShortcuts
         });
     }
 
-    private static void ShortcutHandler_Update(On.ShortcutHandler.orig_Update orig, ShortcutHandler self)
+    public static void ShortcutHandler_Update(On.ShortcutHandler.orig_Update orig, ShortcutHandler self)
     {
         HashSet<(int room, int node)> claimedThisTick = [];
 
