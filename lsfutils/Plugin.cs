@@ -3,6 +3,7 @@ using BepInEx.Logging;
 using DevInterface;
 using Fisobs.Core;
 using LizardCosmetics;
+using lsfUtils.Creatures;
 using lsfUtils.Creatures.Lizards;
 using lsfUtils.Creatures.Lizards.AirplaneLizard;
 using lsfUtils.Creatures.Lizards.FlameLizard;
@@ -119,6 +120,9 @@ namespace lsfUtils
 
                     ItemRegistryCore.ApplyHooks();
                     ItemRegistry.RegisterAll();
+
+                    CreatureRegistryHooks.ApplyHooks();
+                    //CreatureRegistry.RegisterAll();
 
                     Log.LogMessage("Done with Fisobs!");
                 }

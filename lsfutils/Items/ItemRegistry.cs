@@ -55,10 +55,10 @@ namespace lsfUtils.Items
         {
             var entry = new ItemRegistryEntry(Enums.AbstractObjectType.PoisonDart)
             {
-                IconSprite = "atlases/Symbol_Dart",
-                IconColor = Enums.Colors.PoisonColor,
-                UnlockID = Enums.SandboxUnlockID.PoisonDart,
-                Points = 15,
+                iconSprite = "atlases/Symbol_Dart",
+                iconColor = Enums.Colors.PoisonColor,
+                unlockID = Enums.SandboxUnlockID.PoisonDart,
+                points = 15,
 
                 SandboxFactory = (world, pos, id) => new PoisonDartAbstract(world, null, pos, id, 1f),
 
@@ -83,11 +83,9 @@ namespace lsfUtils.Items
                 {
                     if (obj is PoisonDart dart)
                     {
-                        return dart.mode == Weapon.Mode.StuckInCreature && dart.pullOutTimer > 0
-                            ? Player.ObjectGrabability.Drag
-                            : Player.ObjectGrabability.OneHand;
+                        return dart.mode == Weapon.Mode.StuckInCreature && dart.pullOutTimer > 0 ? Player.ObjectGrabability.Drag : Player.ObjectGrabability.OneHand;
                     }
-                    return null;
+                    return Player.ObjectGrabability.OneHand;
                 }
             };
 
@@ -98,9 +96,9 @@ namespace lsfUtils.Items
         {
             var entry = new ItemRegistryEntry(Enums.AbstractObjectType.BrownFruit)
             {
-                IconSprite = templarMaskIcon,
-                IconColor = RainWorld.GoldRGB,
-                UnlockID = Enums.SandboxUnlockID.BrownFruit,
+                iconSprite = templarMaskIcon,
+                iconColor = RainWorld.GoldRGB,
+                unlockID = Enums.SandboxUnlockID.BrownFruit,
 
                 SandboxFactory = (world, pos, id) =>
                     new BrownFruitAbstract(world, pos, id, -1, -1, null) { isConsumed = false },
@@ -116,10 +114,10 @@ namespace lsfUtils.Items
         {
             var entry = new ItemRegistryEntry(Enums.AbstractObjectType.ExplosiveBoomerang)
             {
-                IconSprite = "Symbol_Boomerang",
-                IconColor = new Color(1f, 0.4f, 0.3f),
-                UnlockID = Enums.SandboxUnlockID.ExplosiveBoomerang,
-                Points = 20,
+                iconSprite = "Symbol_Boomerang",
+                iconColor = new Color(1f, 0.4f, 0.3f),
+                unlockID = Enums.SandboxUnlockID.ExplosiveBoomerang,
+                points = 20,
 
                 SandboxFactory = (world, pos, id) => new AbstractExplosiveBoomerang(world, pos, id),
                 SaveParser = (world, objString, obj) => new AbstractExplosiveBoomerang(world, obj.pos, obj.ID),
@@ -136,10 +134,10 @@ namespace lsfUtils.Items
         {
             var entry = new ItemRegistryEntry(Enums.AbstractObjectType.SingularityBoomerang)
             {
-                IconSprite = "Symbol_Boomerang",
-                IconColor = new Color(0.2f, 0.2f, 1f),
-                UnlockID = Enums.SandboxUnlockID.SingularityBoomerang,
-                Points = 20,
+                iconSprite = "Symbol_Boomerang",
+                iconColor = new Color(0.2f, 0.2f, 1f),
+                unlockID = Enums.SandboxUnlockID.SingularityBoomerang,
+                points = 20,
 
                 SandboxFactory = (world, pos, id) => new AbstractExplosiveBoomerang(world, pos, id, true),
                 SaveParser = (world, objString, obj) => new AbstractExplosiveBoomerang(world, obj.pos, obj.ID, true),
@@ -152,7 +150,7 @@ namespace lsfUtils.Items
                     {
                         return boom.mode == Weapon.Mode.Thrown ? Player.ObjectGrabability.CantGrab : Player.ObjectGrabability.OneHand;
                     }
-                    return null;
+                    return Player.ObjectGrabability.OneHand;
                 }
             };
 
@@ -163,9 +161,9 @@ namespace lsfUtils.Items
         {
             var entry = new ItemRegistryEntry(Enums.AbstractObjectType.KarmaMask)
             {
-                IconSprite = templarMaskIcon,
-                IconColor = RainWorld.GoldRGB,
-                UnlockID = Enums.SandboxUnlockID.KarmaMask,
+                iconSprite = templarMaskIcon,
+                iconColor = RainWorld.GoldRGB,
+                unlockID = Enums.SandboxUnlockID.KarmaMask,
 
                 SandboxFactory = (world, pos, id) =>
                     new KarmaMaskAbstract(world, pos, id, -1, -1, null) { isConsumed = false },
@@ -181,9 +179,9 @@ namespace lsfUtils.Items
         {
             var entry = new ItemRegistryEntry(Enums.AbstractObjectType.RippleFlower)
             {
-                IconSprite = "Kill_Scavenger",
-                IconColor = Color.blue,
-                UnlockID = Enums.SandboxUnlockID.RippleFlower,
+                iconSprite = "Kill_Scavenger",
+                iconColor = Color.blue,
+                unlockID = Enums.SandboxUnlockID.RippleFlower,
 
                 SandboxFactory = (world, pos, id) =>
                 {
@@ -222,10 +220,10 @@ namespace lsfUtils.Items
         {
             var entry = new ItemRegistryEntry(Enums.AbstractObjectType.TorchSpear)
             {
-                IconSprite = "Symbol_Boomerang",
-                IconColor = new Color(0.5f, 0.5f, 0.5f),
-                UnlockID = Enums.SandboxUnlockID.TorchSpear,
-                Points = 20,
+                iconSprite = "Symbol_Boomerang",
+                iconColor = new Color(0.5f, 0.5f, 0.5f),
+                unlockID = Enums.SandboxUnlockID.TorchSpear,
+                points = 20,
 
                 SandboxFactory = (world, pos, id) => new TorchSpearAbstract(world, pos, id),
 

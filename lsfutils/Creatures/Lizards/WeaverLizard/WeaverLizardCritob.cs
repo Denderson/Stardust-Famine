@@ -4,8 +4,6 @@ using Fisobs.Sandbox;
 using UnityEngine;
 using System.Collections.Generic;
 using DevInterface;
-using IL.Watcher;
-using On.Watcher;
 
 namespace lsfUtils.Creatures.Lizards.WeaverLizard;
 
@@ -26,7 +24,7 @@ public class WeaverLizardCritsob : Critob
 
     public override string DevtoolsMapName(AbstractCreature acrit) => "WLz";
     public override IEnumerable<string> WorldFileAliases() => new string[] { "weaverlizard", "weaver lizard" };
-    public override IEnumerable<RoomAttractivenessPanel.Category> DevtoolsRoomAttraction() => new RoomAttractivenessPanel.Category[] { RoomAttractivenessPanel.Category.Lizards };
+    public override IEnumerable<RoomAttractivenessPanel.Category> DevtoolsRoomAttraction() => [RoomAttractivenessPanel.Category.Lizards];
 
     public override CreatureTemplate CreateTemplate() => LizardBreeds.BreedTemplate(Type, StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.LizardTemplate), StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.PinkLizard), StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.BlueLizard), StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.GreenLizard));
 

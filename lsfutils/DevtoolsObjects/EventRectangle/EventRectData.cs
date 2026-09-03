@@ -11,7 +11,7 @@ namespace lsfUtils.DevtoolsObjects.EventRectangle
     {
         [BackedByField("01p2")]
         public Vector2 p2;
-        [StringField("EventType", "Event-Type", "Type: ")]
+        [StringField("EventType", "Event-type", "type: ")]
         public string eventType;
 
         [StringField("EventValue", "Event-Value", "Value: ")]

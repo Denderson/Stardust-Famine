@@ -24,28 +24,19 @@ namespace lsfUtils.Items
         public static IconSymbol.IconSymbolData MultiplayerUnlocks_SymbolDataForSandboxUnlock(On.MultiplayerUnlocks.orig_SymbolDataForSandboxUnlock orig, MultiplayerUnlocks.SandboxUnlockID unlockID)
         {
             ItemRegistryEntry entry = ItemRegistryTemplate.ForUnlock(unlockID);
-            if (entry != null)
-            {
-                return new IconSymbol.IconSymbolData(entry.IconCreatureType, entry.Type, 0);
-            }
+            if (entry != null) return new IconSymbol.IconSymbolData(entry.iconCreatureType, entry.Type, 0);
             return orig(unlockID);
         }
 
         public static MultiplayerUnlocks.SandboxUnlockID MultiplayerUnlocks_SandboxUnlockForSymbolData(On.MultiplayerUnlocks.orig_SandboxUnlockForSymbolData orig, IconSymbol.IconSymbolData data)
         {
-            if (ItemRegistryTemplate.TryGet(data.itemType, out ItemRegistryEntry entry) && entry.UnlockID != null)
-            {
-                return entry.UnlockID;
-            }
+            if (ItemRegistryTemplate.TryGet(data.itemType, out ItemRegistryEntry entry) && entry.unlockID != null) return entry.unlockID;
             return orig(data);
         }
 
         public static bool MultiplayerUnlocks_SandboxItemUnlocked(On.MultiplayerUnlocks.orig_SandboxItemUnlocked orig, MultiplayerUnlocks self, MultiplayerUnlocks.SandboxUnlockID unlockID)
         {
-            if (ItemRegistryTemplate.ForUnlock(unlockID) != null)
-            {
-                return true;
-            }
+            if (ItemRegistryTemplate.ForUnlock(unlockID) != null) return true;
             return orig(self, unlockID);
         }
 
@@ -62,27 +53,27 @@ namespace lsfUtils.Items
 
         public static string ItemSymbol_SpriteNameForItem(On.ItemSymbol.orig_SpriteNameForItem orig, AbstractPhysicalObject.AbstractObjectType itemType, int intData)
         {
-            if (ItemRegistryTemplate.TryGet(itemType, out ItemRegistryEntry entry) && entry.IconSprite != null)
+            if (ItemRegistryTemplate.TryGet(itemType, out ItemRegistryEntry entry) && entry.iconSprite != null)
             {
-                return entry.IconSprite;
+                return entry.iconSprite;
             }
             return orig(itemType, intData);
         }
 
         public static Color ItemSymbol_ColorForItem(On.ItemSymbol.orig_ColorForItem orig, AbstractPhysicalObject.AbstractObjectType itemType, int intData)
         {
-            if (ItemRegistryTemplate.TryGet(itemType, out ItemRegistryEntry entry) && entry.IconSprite != null)
+            if (ItemRegistryTemplate.TryGet(itemType, out ItemRegistryEntry entry) && entry.iconSprite != null)
             {
-                return entry.IconColor;
+                return entry.iconColor;
             }
             return orig(itemType, intData);
         }
 
         public static IconSymbol.IconSymbolData? ItemSymbol_SymbolDataFromItem(On.ItemSymbol.orig_SymbolDataFromItem orig, AbstractPhysicalObject item)
         {
-            if (ItemRegistryTemplate.TryGet(item.type, out ItemRegistryEntry entry) && entry.IconSprite != null)
+            if (ItemRegistryTemplate.TryGet(item.type, out ItemRegistryEntry entry) && entry.iconSprite != null)
             {
-                return new IconSymbol.IconSymbolData(entry.IconCreatureType, entry.Type, 0);
+                return new IconSymbol.IconSymbolData(entry.iconCreatureType, entry.Type, 0);
             }
             return orig(item);
         }

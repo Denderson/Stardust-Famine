@@ -8,20 +8,20 @@ namespace lsfUtils.Items
     {
         public readonly AbstractPhysicalObject.AbstractObjectType Type;
 
-        public string IconSprite = null;
-        public Color IconColor = Color.white;
-        public CreatureTemplate.Type IconCreatureType = CreatureTemplate.Type.StandardGroundCreature;
+        public string iconSprite = null;
+        public Color iconColor = Color.white;
+        public CreatureTemplate.Type iconCreatureType = CreatureTemplate.Type.StandardGroundCreature;
+        public int points = 0;
 
-        public MultiplayerUnlocks.SandboxUnlockID UnlockID = MultiplayerUnlocks.SandboxUnlockID.Slugcat;
-        public MultiplayerUnlocks.SandboxUnlockID UnlockParent = MultiplayerUnlocks.SandboxUnlockID.Slugcat;
-        public int Points;
+        public MultiplayerUnlocks.SandboxUnlockID unlockID = MultiplayerUnlocks.SandboxUnlockID.Slugcat;
+        public MultiplayerUnlocks.SandboxUnlockID unlockParent = MultiplayerUnlocks.SandboxUnlockID.Slugcat;
 
         public Func<World, WorldCoordinate, EntityID, AbstractPhysicalObject> SandboxFactory;
         public Func<World, string, AbstractPhysicalObject, AbstractPhysicalObject> SaveParser;
 
         public Func<Scavenger, PhysicalObject, int> ScavCollectScore;
         public Func<Scavenger, PhysicalObject, int> ScavWeaponPickupScore;
-        public Func<Player, PhysicalObject, Player.ObjectGrabability?> Grabability;
+        public Func<Player, PhysicalObject, Player.ObjectGrabability> Grabability;
 
         public ItemRegistryEntry(AbstractPhysicalObject.AbstractObjectType type)
         {
@@ -65,7 +65,7 @@ namespace lsfUtils.Items
         {
             foreach (ItemRegistryEntry entry in Entries.Values)
             {
-                if (entry?.UnlockID != null && unlockID != null && entry.UnlockID == unlockID) return entry;
+                if (entry?.unlockID != null && unlockID != null && entry.unlockID == unlockID) return entry;
             }
             return null;
         }
@@ -87,19 +87,19 @@ namespace lsfUtils.Items
 
         public static void TryAddUnlock(ItemRegistryEntry entry)
         {
-            if (entry.UnlockID == null) return;
+            if (entry.unlockID == null) return;
             if (MultiplayerUnlocks.ItemUnlockList == null) return;
-            if (!MultiplayerUnlocks.ItemUnlockList.Contains(entry.UnlockID))
+            if (!MultiplayerUnlocks.ItemUnlockList.Contains(entry.unlockID))
             {
-                MultiplayerUnlocks.ItemUnlockList.Add(entry.UnlockID);
+                MultiplayerUnlocks.ItemUnlockList.Add(entry.unlockID);
             }
         }
 
         public static void TryRemoveUnlock(ItemRegistryEntry entry)
         {
-            if (entry.UnlockID == null) return;
+            if (entry.unlockID == null) return;
             if (MultiplayerUnlocks.ItemUnlockList == null) return;
-            MultiplayerUnlocks.ItemUnlockList.Remove(entry.UnlockID);
+            MultiplayerUnlocks.ItemUnlockList.Remove(entry.unlockID);
         }
     }
 }
