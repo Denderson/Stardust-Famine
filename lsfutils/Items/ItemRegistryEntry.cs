@@ -15,7 +15,7 @@ namespace lsfUtils.Items
         public MultiplayerUnlocks.SandboxUnlockID UnlockID = MultiplayerUnlocks.SandboxUnlockID.Slugcat;
         public MultiplayerUnlocks.SandboxUnlockID UnlockParent = MultiplayerUnlocks.SandboxUnlockID.Slugcat;
         public int Points;
-        
+
         public Func<World, WorldCoordinate, EntityID, AbstractPhysicalObject> SandboxFactory;
         public Func<World, string, AbstractPhysicalObject, AbstractPhysicalObject> SaveParser;
 
@@ -33,24 +33,20 @@ namespace lsfUtils.Items
     {
         public static readonly Dictionary<AbstractPhysicalObject.AbstractObjectType, ItemRegistryEntry> Entries = new();
 
+        public static bool unlockHookApplied = false;
+
         public static void Register(ItemRegistryEntry entry)
         {
             Entries[entry.Type] = entry;
-
-            if (entry.UnlockID != null && !MultiplayerUnlocks.ItemUnlockList.Contains(entry.UnlockID))
-            {
-                MultiplayerUnlocks.ItemUnlockList.Add(entry.UnlockID);
-            }
+            EnsureUnlockHook();
+            TryAddUnlock(entry);
         }
 
         public static void Unregister(AbstractPhysicalObject.AbstractObjectType type)
         {
             if (Entries.TryGetValue(type, out ItemRegistryEntry entry))
             {
-                if (entry.UnlockID != null)
-                {
-                    MultiplayerUnlocks.ItemUnlockList.Remove(entry.UnlockID);
-                }
+                TryRemoveUnlock(entry);
                 Entries.Remove(type);
             }
         }
@@ -69,9 +65,41 @@ namespace lsfUtils.Items
         {
             foreach (ItemRegistryEntry entry in Entries.Values)
             {
-                if (entry.UnlockID == unlockID) return entry;
+                if (entry?.UnlockID != null && unlockID != null && entry.UnlockID == unlockID) return entry;
             }
             return null;
+        }
+
+        public static void EnsureUnlockHook()
+        {
+            if (unlockHookApplied) return;
+            unlockHookApplied = true;
+
+            On.RainWorld.OnModsInit += (orig, self) =>
+            {
+                orig(self);
+                foreach (ItemRegistryEntry entry in Entries.Values)
+                {
+                    TryAddUnlock(entry);
+                }
+            };
+        }
+
+        public static void TryAddUnlock(ItemRegistryEntry entry)
+        {
+            if (entry.UnlockID == null) return;
+            if (MultiplayerUnlocks.ItemUnlockList == null) return;
+            if (!MultiplayerUnlocks.ItemUnlockList.Contains(entry.UnlockID))
+            {
+                MultiplayerUnlocks.ItemUnlockList.Add(entry.UnlockID);
+            }
+        }
+
+        public static void TryRemoveUnlock(ItemRegistryEntry entry)
+        {
+            if (entry.UnlockID == null) return;
+            if (MultiplayerUnlocks.ItemUnlockList == null) return;
+            MultiplayerUnlocks.ItemUnlockList.Remove(entry.UnlockID);
         }
     }
 }
