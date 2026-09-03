@@ -519,7 +519,7 @@ namespace lsfUtils.Creatures.Lizards
                 breedParams.neckStiffness = 0.2f;
                 breedParams.jawOpenAngle = 150f; //
                 breedParams.jawOpenLowerJawFac = .7666667f;
-                breedParams.jawOpenMoveJawsApart = 50f;
+                breedParams.jawOpenMoveJawsApart = 25f;
 
                 temp.waterRelationship = CreatureTemplate.WaterRelationship.Amphibious;
                 temp.canSwim = true;
@@ -582,7 +582,7 @@ namespace lsfUtils.Creatures.Lizards
                 breedParams.neckStiffness = 0.2f;
                 breedParams.jawOpenAngle = 150f; //
                 breedParams.jawOpenLowerJawFac = .7666667f;
-                breedParams.jawOpenMoveJawsApart = 50f;
+                breedParams.jawOpenMoveJawsApart = 25f;
 
                 temp.canSwim = false;
                 temp.dangerousToPlayer = breedParams.danger;

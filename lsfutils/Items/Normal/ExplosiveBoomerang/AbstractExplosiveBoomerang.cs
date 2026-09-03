@@ -1,7 +1,7 @@
 ﻿using Fisobs.Core;
 using static lsfUtils.Plugin;
 
-namespace lsfUtils.Items.ExplosiveBoomerang
+namespace lsfUtils.Items.Normal.ExplosiveBoomerang
 {
     public class AbstractExplosiveBoomerang : AbstractPhysicalObject
     {

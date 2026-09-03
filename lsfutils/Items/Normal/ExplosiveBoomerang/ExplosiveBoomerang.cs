@@ -5,7 +5,7 @@ using Smoke;
 using UnityEngine;
 using Watcher;
 
-namespace lsfUtils.Items.ExplosiveBoomerang
+namespace lsfUtils.Items.Normal.ExplosiveBoomerang
 {
     public class ExplosiveBoomerang : Boomerang
     {
@@ -150,7 +150,7 @@ namespace lsfUtils.Items.ExplosiveBoomerang
 
             for (int k = 0; k < 6; k++)
             {
-                room.AddObject(new SingularityBomb.BombFragment(pos, Custom.DegToVec(((float)k + Random.value) / 6f * 360f) * Mathf.Lerp(18f, 38f, Random.value)));
+                room.AddObject(new SingularityBomb.BombFragment(pos, Custom.DegToVec((k + Random.value) / 6f * 360f) * Mathf.Lerp(18f, 38f, Random.value)));
             }
 
             if (smoke != null)
@@ -222,7 +222,7 @@ namespace lsfUtils.Items.ExplosiveBoomerang
 
             for (int k = 0; k < 6; k++)
             {
-                room.AddObject(new SingularityBomb.BombFragment(pos, Custom.DegToVec(((float)k + Random.value) / 6f * 360f) * Mathf.Lerp(18f, 38f, Random.value)));
+                room.AddObject(new SingularityBomb.BombFragment(pos, Custom.DegToVec((k + Random.value) / 6f * 360f) * Mathf.Lerp(18f, 38f, Random.value)));
             }
 
             for (int m = 0; m < room.physicalObjects.Length; m++)
@@ -272,7 +272,7 @@ namespace lsfUtils.Items.ExplosiveBoomerang
             base.ApplyPalette(sLeaser, rCam, palette);
             if (slatedForDeletetion || room != rCam.room || sLeaser?.sprites == null || sLeaser.sprites.Length <= SpriteGlow) return;
 
-            this.gradColor = ExplosionColor;
+            gradColor = ExplosionColor;
 
             sLeaser.sprites[0].color = ExplosionColor;
             sLeaser.sprites[2].color = Color.Lerp(ExplosionColor, Color.black, 0.4f);

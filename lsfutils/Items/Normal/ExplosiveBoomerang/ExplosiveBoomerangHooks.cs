@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace lsfUtils.Items.ExplosiveBoomerang
+namespace lsfUtils.Items.Normal.ExplosiveBoomerang
 {
     public static class ExplosiveBoomerangHooks
     {
         public static void ApplyHooks()
         {
-            On.Weapon.HitAnotherThrownWeapon += ExplosiveBoomerangHooks.Weapon_HitAnotherThrownWeapon;
+            On.Weapon.HitAnotherThrownWeapon += Weapon_HitAnotherThrownWeapon;
         }
         public static void Weapon_HitAnotherThrownWeapon(On.Weapon.orig_HitAnotherThrownWeapon orig, Weapon self, Weapon obj)
         {

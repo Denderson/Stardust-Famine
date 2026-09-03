@@ -37,8 +37,8 @@ using lsfUtils.Items;
 using lsfUtils.Items.BrownFruit;
 using lsfUtils.Items.Darts.Dart;
 using lsfUtils.Items.Darts.PoisonDart;
-using lsfUtils.Items.ExplosiveBoomerang;
 using lsfUtils.Items.KarmaMask;
+using lsfUtils.Items.Normal.ExplosiveBoomerang;
 using lsfUtils.Items.Normal.TorchSpears;
 using lsfUtils.Items.RippleFlower;
 using lsfUtils.RegionParams;
@@ -117,12 +117,8 @@ namespace lsfUtils
                     Content.Register(new PoisonSpiderCritob());
                     Content.Register(new ClimbGrubCritob());
 
-                    Content.Register(new RippleFlowerFisob());
-                    Content.Register(new PoisonDartFisob());
-                    Content.Register(new KarmaMaskFisob());
-                    Content.Register(new ExplosiveBoomerangFisob());
-                    Content.Register(new SingularityBoomerangFisob());
-                    Content.Register(new TorchSpearFisob());
+                    ItemRegistryCore.ApplyHooks();
+                    ItemRegistry.RegisterAll();
 
                     Log.LogMessage("Done with Fisobs!");
                 }

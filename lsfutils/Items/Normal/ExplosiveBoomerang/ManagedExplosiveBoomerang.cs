@@ -2,7 +2,7 @@
 using static lsfUtils.Plugin;
 using static Pom.Pom;
 
-namespace lsfUtils.Items.ExplosiveBoomerang
+namespace lsfUtils.Items.Normal.ExplosiveBoomerang
 {
     public class ManagedExplosiveBoomerang : ManagedObjectType
     {
