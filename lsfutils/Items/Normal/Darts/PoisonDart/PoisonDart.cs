@@ -32,7 +32,7 @@ namespace lsfUtils.Items.Darts.PoisonDart
                 {
                     if (stuckInObject is Creature creature)
                     {
-                        creature.InjectPoison(poisonPrecentagePerTick, Enums.Colors.PoisonColor);
+                        creature.InjectPoison(poisonPrecentagePerTick, Enums.Colors.PoisonLizardColor);
                         poison = Mathf.Max(poison - poisonPrecentagePerTick, 0f);
                     }
                 }

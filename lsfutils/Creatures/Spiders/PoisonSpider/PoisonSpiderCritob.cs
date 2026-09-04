@@ -14,7 +14,7 @@ namespace lsfUtils.Creatures.Spiders.PoisonSpider
     {
         internal PoisonSpiderCritob() : base(Enums.CreatureTemplateType.PoisonSpider)
         {
-            Icon = new SimpleIcon("Kill_BigSpider", Enums.Colors.PoisonColor);
+            Icon = new SimpleIcon("Kill_BigSpider", Enums.Colors.PoisonLizardColor);
             LoadedPerformanceCost = 50f;
             SandboxPerformanceCost = new(.25f, .25f);
             RegisterUnlock(KillScore.Configurable(1), Enums.SandboxUnlockID.PoisonSpider, MultiplayerUnlocks.SandboxUnlockID.Slugcat);
@@ -26,7 +26,7 @@ namespace lsfUtils.Creatures.Spiders.PoisonSpider
         }
 
         public override int ExpeditionScore() => 8;
-        public override Color DevtoolsMapColor(AbstractCreature acrit) => Enums.Colors.PoisonColor;
+        public override Color DevtoolsMapColor(AbstractCreature acrit) => Enums.Colors.PoisonLizardColor;
         public override string DevtoolsMapName(AbstractCreature acrit) => "PS";
         public override IEnumerable<string> WorldFileAliases() => new string[] { "poisonspider", "venomspider" };
         public override CreatureTemplate CreateTemplate()

@@ -19,11 +19,11 @@ namespace lsfUtils.Creatures.Spiders.PoisonSpider
             bodyChunkConnections = new BodyChunkConnection[1];
             bodyChunkConnections[0] = new BodyChunkConnection(bodyChunks[0], bodyChunks[1], 25f, BodyChunkConnection.Type.Normal, 1f, 0.5f);
             grabChunks = new BodyChunk[2, 4];
-            yellowCol = Color.Lerp(Enums.Colors.PoisonColor, Custom.HSL2RGB(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value), UnityEngine.Random.value * 0.2f);
+            yellowCol = Color.Lerp(Enums.Colors.PoisonLizardColor, Custom.HSL2RGB(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value), UnityEngine.Random.value * 0.2f);
         }
         public override Color ShortCutColor()
         {
-            return abstractCreature.IsVoided() ? RainWorld.SaturatedGold : Enums.Colors.PoisonColor;
+            return abstractCreature.IsVoided() ? RainWorld.SaturatedGold : Enums.Colors.PoisonLizardColor;
         }
         public override void LoseAllGrasps()
         {

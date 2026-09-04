@@ -13,34 +13,36 @@ namespace lsfUtils.Creatures
 
         public string name = "unknown";
         public string mapName = "un";
-        public Color MapColor = Color.white;
+        public Color mapColor = Color.white;
 
-        public string spriteName = null;
+        public string symbolName = null;
         public IconSymbol.IconSymbolData symbolData;
 
         public bool isHostileForShelter = false;
-        public float performanceEstimation = 10f;
+        public bool isBigForShelter = false;
+        public float performanceCost = 10f;
 
         public MultiplayerUnlocks.SandboxUnlockID unlockID = MultiplayerUnlocks.SandboxUnlockID.Slugcat;
         public MultiplayerUnlocks.SandboxUnlockID unlockParent = MultiplayerUnlocks.SandboxUnlockID.Slugcat;
 
         public DevInterface.RoomAttractivenessPanel.Category[] roomAttractivenessCategories;
 
-        public CreatureTemplate.Type arenaFallbackType = CreatureTemplate.Type.PinkLizard;
+        public Action<AbstractCreature, World, WorldCoordinate> AbstractCtor;
+        public Func<AbstractCreature, World, Creature> RealisedCtor;
+        public Action<AbstractCreature, World> AICtor;
+        public Func<AbstractCreature, CreatureState> StateCtor;
 
-        public Action<AbstractCreature, World, WorldCoordinate> CtorInit;
-        public Func<AbstractCreature, World, Creature> RealizedCreatureFactory;
-        public Action<AbstractCreature, World> AIFactory;
-       
         public Func<Player, PhysicalObject, Player.ObjectGrabability> Grabability;
 
-        public Action setTemplate;
+        public Func<CreatureTemplate> setTemplate;
         public Action setRelationships;
 
-        public CreatureRegistryEntry(CreatureTemplate.Type type, List<string> aliases)
+        public CreatureRegistryEntry(CreatureTemplate.Type type, List<string> aliases = null)
         {
             this.type = type;
-            if (aliases == null || aliases.Count <= 0) return;
+            this.symbolData = new IconSymbol.IconSymbolData(type, AbstractPhysicalObject.AbstractObjectType.Creature, 0);
+            this.name = type.ToString();
+            aliases ??= [type.ToString()];
             foreach (string alias in aliases)
             {
                 globalAliases.Add(alias, type);

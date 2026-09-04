@@ -432,7 +432,7 @@ namespace lsfUtils.Items.Darts.Dart
                 sLeaser.sprites[0].x = vector4.x - camPos.x;
                 sLeaser.sprites[0].y = vector4.y - camPos.y;
                 //Color rgb = new HSLColor(Enums.Colors.PoisonColor, 1f, 0.5f).rgb;
-                Color rgb = Enums.Colors.PoisonColor;
+                Color rgb = Enums.Colors.PoisonLizardColor;
                 rgb = new Color(rgb.r, rgb.g, rgb.b, abstractDart.poison);
                 Color b = new Color(color.r, color.g, color.b, abstractDart.poison);
                 for (int i = 0; i < 2; i++)

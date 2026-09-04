@@ -631,7 +631,7 @@ namespace lsfUtils.Creatures.Lizards
                 breedParams.tailLengthFactor = 1f;
                 breedParams.tailColorationStart = 0.3f;
                 breedParams.tailColorationExponent = 2f;
-                breedParams.standardColor = Enums.Colors.PoisonColor;
+                breedParams.standardColor = Enums.Colors.PoisonLizardColor;
                 breedParams.toughness = 3f;
                 breedParams.swimSpeed = 1f; 
                 breedParams.idleCounterSubtractWhenCloseToIdlePos = 100;

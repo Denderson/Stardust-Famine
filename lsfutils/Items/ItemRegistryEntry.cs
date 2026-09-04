@@ -11,7 +11,6 @@ namespace lsfUtils.Items
         public string iconSprite = null;
         public Color iconColor = Color.white;
         public CreatureTemplate.Type iconCreatureType = CreatureTemplate.Type.StandardGroundCreature;
-        public int points = 0;
 
         public MultiplayerUnlocks.SandboxUnlockID unlockID = MultiplayerUnlocks.SandboxUnlockID.Slugcat;
         public MultiplayerUnlocks.SandboxUnlockID unlockParent = MultiplayerUnlocks.SandboxUnlockID.Slugcat;

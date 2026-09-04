@@ -102,13 +102,15 @@ namespace lsfUtils
 
                 // fisobs
                 {
-                    Content.Register(new WeaverLizardCritsob());
-                    Content.Register(new FlameLizardCritsob());
-                    Content.Register(new AirplaneLizardCritsob());
-                    Content.Register(new RaspberryLizardCritsob());
-                    Content.Register(new MonitorLizardCritob());
-                    Content.Register(new StarNosedLizardCritob());
-                    Content.Register(new PoisonLizardCritob());
+                    
+                    //Content.Register(new WeaverLizardCritsob());
+                    //Content.Register(new FlameLizardCritsob());
+                    //Content.Register(new AirplaneLizardCritsob());
+                    //Content.Register(new RaspberryLizardCritsob());
+                    //Content.Register(new MonitorLizardCritob());
+                    //Content.Register(new StarNosedLizardCritob());
+                    //Content.Register(new PoisonLizardCritob());
+
                     Content.Register(new ScavSeerCritob());
                     Content.Register(new ScavMessengerCritob());
                     Content.Register(new ScavFlankCritob());
@@ -121,8 +123,8 @@ namespace lsfUtils
                     ItemRegistryCore.ApplyHooks();
                     ItemRegistry.RegisterAll();
 
-                    CreatureRegistryHooks.ApplyHooks();
-                    //CreatureRegistry.RegisterAll();
+                    CreatureRegistryCore.ApplyHooks();
+                    CreatureRegistry.RegisterAll();
 
                     Log.LogMessage("Done with Fisobs!");
                 }

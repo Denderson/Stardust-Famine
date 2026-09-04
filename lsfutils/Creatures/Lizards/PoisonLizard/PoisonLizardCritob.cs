@@ -12,14 +12,14 @@ public class PoisonLizardCritob : Critob
 {
     public PoisonLizardCritob() : base(Enums.CreatureTemplateType.PoisonLizard)
     {
-        Icon = new SimpleIcon("Kill_Green_Lizard", Enums.Colors.PoisonColor);
+        Icon = new SimpleIcon("Kill_Green_Lizard", Enums.Colors.PoisonLizardColor);
         LoadedPerformanceCost = 50f;
         SandboxPerformanceCost = new(.25f, .25f);
         RegisterUnlock(KillScore.Configurable(1), Enums.SandboxUnlockID.PoisonLizard, MultiplayerUnlocks.SandboxUnlockID.Slugcat);
     }
 
     public override int ExpeditionScore() => 10;
-    public override Color DevtoolsMapColor(AbstractCreature acrit) => Enums.Colors.PoisonColor;
+    public override Color DevtoolsMapColor(AbstractCreature acrit) => Enums.Colors.PoisonLizardColor;
     public override string DevtoolsMapName(AbstractCreature acrit) => "PLz";
     public override IEnumerable<string> WorldFileAliases() => new string[] { "Poisonlizard", "Poison lizard" };
     public override IEnumerable<RoomAttractivenessPanel.Category> DevtoolsRoomAttraction() => new RoomAttractivenessPanel.Category[] { RoomAttractivenessPanel.Category.Lizards };

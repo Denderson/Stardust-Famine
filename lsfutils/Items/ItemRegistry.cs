@@ -32,7 +32,7 @@ namespace lsfUtils.Items
             {
                 SaveParser = (world, objString, obj) =>
                 {
-                    string[] array = objString.Split(new[] { "<oA>" }, StringSplitOptions.None);
+                    string[] array = objString.Split(["<oA>"], StringSplitOptions.None);
 
                     float poison = 0f;
                     if (array.Length > 3)
@@ -56,9 +56,8 @@ namespace lsfUtils.Items
             var entry = new ItemRegistryEntry(Enums.AbstractObjectType.PoisonDart)
             {
                 iconSprite = "atlases/Symbol_Dart",
-                iconColor = Enums.Colors.PoisonColor,
+                iconColor = Enums.Colors.PoisonLizardColor,
                 unlockID = Enums.SandboxUnlockID.PoisonDart,
-                points = 15,
 
                 SandboxFactory = (world, pos, id) => new PoisonDartAbstract(world, null, pos, id, 1f),
 
@@ -117,7 +116,6 @@ namespace lsfUtils.Items
                 iconSprite = "Symbol_Boomerang",
                 iconColor = new Color(1f, 0.4f, 0.3f),
                 unlockID = Enums.SandboxUnlockID.ExplosiveBoomerang,
-                points = 20,
 
                 SandboxFactory = (world, pos, id) => new AbstractExplosiveBoomerang(world, pos, id),
                 SaveParser = (world, objString, obj) => new AbstractExplosiveBoomerang(world, obj.pos, obj.ID),
@@ -137,7 +135,6 @@ namespace lsfUtils.Items
                 iconSprite = "Symbol_Boomerang",
                 iconColor = new Color(0.2f, 0.2f, 1f),
                 unlockID = Enums.SandboxUnlockID.SingularityBoomerang,
-                points = 20,
 
                 SandboxFactory = (world, pos, id) => new AbstractExplosiveBoomerang(world, pos, id, true),
                 SaveParser = (world, objString, obj) => new AbstractExplosiveBoomerang(world, obj.pos, obj.ID, true),
@@ -223,7 +220,6 @@ namespace lsfUtils.Items
                 iconSprite = "Symbol_Boomerang",
                 iconColor = new Color(0.5f, 0.5f, 0.5f),
                 unlockID = Enums.SandboxUnlockID.TorchSpear,
-                points = 20,
 
                 SandboxFactory = (world, pos, id) => new TorchSpearAbstract(world, pos, id),
 
