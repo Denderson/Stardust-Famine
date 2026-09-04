@@ -1,4 +1,5 @@
 ﻿using DevInterface;
+using lsfUtils.Items;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,33 +8,25 @@ namespace lsfUtils.Creatures
 {
     public class CreatureRegistryEntry
     {
-        public static Dictionary<string, CreatureTemplate.Type> globalAliases;
-        
-        public readonly CreatureTemplate.Type type;
+        public static Dictionary<string, CreatureTemplate.Type> globalAliases = new();
 
+        public readonly CreatureTemplate.Type type;
         public string name = "unknown";
         public string mapName = "un";
         public Color mapColor = Color.white;
-
         public string symbolName = null;
         public IconSymbol.IconSymbolData symbolData;
-
         public bool isHostileForShelter = false;
         public bool isBigForShelter = false;
         public float performanceCost = 10f;
-
         public MultiplayerUnlocks.SandboxUnlockID unlockID = MultiplayerUnlocks.SandboxUnlockID.Slugcat;
         public MultiplayerUnlocks.SandboxUnlockID unlockParent = MultiplayerUnlocks.SandboxUnlockID.Slugcat;
-
         public DevInterface.RoomAttractivenessPanel.Category[] roomAttractivenessCategories;
-
         public Action<AbstractCreature, World, WorldCoordinate> AbstractCtor;
         public Func<AbstractCreature, World, Creature> RealisedCtor;
-        public Action<AbstractCreature, World> AICtor;
+        public Func<AbstractCreature, World, ArtificialIntelligence> AICtor;
         public Func<AbstractCreature, CreatureState> StateCtor;
-
         public Func<Player, PhysicalObject, Player.ObjectGrabability> Grabability;
-
         public Func<CreatureTemplate> setTemplate;
         public Action setRelationships;
 
@@ -54,14 +47,22 @@ namespace lsfUtils.Creatures
     {
         public static readonly Dictionary<CreatureTemplate.Type, CreatureRegistryEntry> Entries = [];
 
+        public static bool unlockHookApplied = false;
+
         public static void Register(CreatureRegistryEntry entry)
         {
+            EnsureUnlockHook();
+            TryAddUnlock(entry);
             Entries[entry.type] = entry;
         }
 
         public static void Unregister(CreatureTemplate.Type type)
         {
-            Entries.Remove(type);
+            if (Entries.TryGetValue(type, out CreatureRegistryEntry entry))
+            {
+                TryRemoveUnlock(entry);
+                Entries.Remove(type);
+            }
         }
 
         public static bool TryGet(CreatureTemplate.Type type, out CreatureRegistryEntry entry)
@@ -72,6 +73,47 @@ namespace lsfUtils.Creatures
                 return false;
             }
             return Entries.TryGetValue(type, out entry);
+        }
+
+        public static void EnsureUnlockHook()
+        {
+            if (unlockHookApplied) return;
+            unlockHookApplied = true;
+
+            On.RainWorld.OnModsInit += (orig, self) =>
+            {
+                orig(self);
+                foreach (CreatureRegistryEntry entry in Entries.Values)
+                {
+                    TryAddUnlock(entry);
+                }
+            };
+        }
+
+        public static void TryAddUnlock(CreatureRegistryEntry entry)
+        {
+            if (entry.unlockID == null) return;
+            if (MultiplayerUnlocks.ItemUnlockList == null) return;
+            if (!MultiplayerUnlocks.ItemUnlockList.Contains(entry.unlockID))
+            {
+                MultiplayerUnlocks.ItemUnlockList.Add(entry.unlockID);
+            }
+        }
+
+        public static void TryRemoveUnlock(CreatureRegistryEntry entry)
+        {
+            if (entry.unlockID == null) return;
+            if (MultiplayerUnlocks.ItemUnlockList == null) return;
+            MultiplayerUnlocks.ItemUnlockList.Remove(entry.unlockID);
+        }
+
+        public static CreatureRegistryEntry ForUnlock(MultiplayerUnlocks.SandboxUnlockID unlockID)
+        {
+            foreach (CreatureRegistryEntry entry in Entries.Values)
+            {
+                if (entry?.unlockID != null && unlockID != null && entry.unlockID == unlockID) return entry;
+            }
+            return null;
         }
     }
 }

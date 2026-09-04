@@ -1,14 +1,15 @@
 ﻿using DevInterface;
+using EffExt;
 using lsfUtils.Items;
 using RWCustom;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Color = UnityEngine.Color;
-using static lsfUtils.Plugin;
-using static lsfUtils.Enums;
 using static lsfUtils.Creatures.CreatureRegistryEntry;
+using static lsfUtils.Enums;
+using static lsfUtils.Plugin;
+using Color = UnityEngine.Color;
 
 namespace lsfUtils.Creatures
 {
@@ -37,7 +38,30 @@ namespace lsfUtils.Creatures
 
             On.Player.Grabability += Player_Grabability;
             On.RoomRealizer.GetCreaturePerformanceEstimation += RoomRealizer_GetCreaturePerformanceEstimation;
+
             On.MultiplayerUnlocks.FallBackCrit += ArenaFallback;
+            On.MultiplayerUnlocks.SymbolDataForSandboxUnlock += MultiplayerUnlocks_SymbolDataForSandboxUnlock;
+            On.MultiplayerUnlocks.SandboxUnlockForSymbolData += MultiplayerUnlocks_SandboxUnlockForSymbolData;
+            On.MultiplayerUnlocks.SandboxItemUnlocked += MultiplayerUnlocks_SandboxItemUnlocked;
+        }
+
+        public static IconSymbol.IconSymbolData MultiplayerUnlocks_SymbolDataForSandboxUnlock(On.MultiplayerUnlocks.orig_SymbolDataForSandboxUnlock orig, MultiplayerUnlocks.SandboxUnlockID unlockID)
+        {
+            CreatureRegistryEntry entry = CreatureRegistryTemplate.ForUnlock(unlockID);
+            if (entry != null) return entry.symbolData;
+            return orig(unlockID);
+        }
+
+        public static MultiplayerUnlocks.SandboxUnlockID MultiplayerUnlocks_SandboxUnlockForSymbolData(On.MultiplayerUnlocks.orig_SandboxUnlockForSymbolData orig, IconSymbol.IconSymbolData data)
+        {
+            if (CreatureRegistryTemplate.TryGet(data.critType, out CreatureRegistryEntry entry) && entry.unlockID != null) return entry.unlockID;
+            return orig(data);
+        }
+
+        public static bool MultiplayerUnlocks_SandboxItemUnlocked(On.MultiplayerUnlocks.orig_SandboxItemUnlocked orig, MultiplayerUnlocks self, MultiplayerUnlocks.SandboxUnlockID unlockID)
+        {
+            if (CreatureRegistryTemplate.ForUnlock(unlockID) != null) return true;
+            return orig(self, unlockID);
         }
 
         private static bool ShelterDoor_IsThisBigCreatureForShelter(On.ShelterDoor.orig_IsThisBigCreatureForShelter orig, AbstractCreature creature)
@@ -89,12 +113,12 @@ namespace lsfUtils.Creatures
 
         public static void AbstractCreature_InitiateAI(On.AbstractCreature.orig_InitiateAI orig, AbstractCreature self)
         {
-            if (!CreatureRegistryTemplate.TryGet(self.creatureTemplate.type, out var entry))
+            if (!CreatureRegistryTemplate.TryGet(self?.creatureTemplate?.type, out var entry) || entry.AICtor == null)
             {
                 orig(self);
                 return;
             }
-            entry.AICtor(self, self.world);
+            self.abstractAI.RealAI = entry.AICtor(self, self.world);
         }
 
         public static void AbstractCreature_ctor(On.AbstractCreature.orig_ctor orig, AbstractCreature self, World world, CreatureTemplate creatureTemplate, Creature realizedCreature, WorldCoordinate pos, EntityID ID)

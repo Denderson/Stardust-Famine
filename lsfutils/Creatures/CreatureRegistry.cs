@@ -33,7 +33,6 @@ namespace lsfUtils.Creatures
         public static void RegisterAirplaneLizard()
         {
             CreatureTemplate.Type type = AirplaneLizard;
-            CreatureTemplate template = LizardTemplate(type);
             var entry = new CreatureRegistryEntry(type, [type.ToString()])
             {
                 mapName = "alz",
@@ -93,7 +92,6 @@ namespace lsfUtils.Creatures
         public static void RegisterFlameLizard()
         {
             CreatureTemplate.Type type = FlameLizard;
-            CreatureTemplate template = LizardTemplate(type);
             var entry = new CreatureRegistryEntry(type, [type.ToString()])
             {
                 mapName = "flz",
@@ -153,7 +151,6 @@ namespace lsfUtils.Creatures
         public static void RegisterMonitorLizard()
         {
             CreatureTemplate.Type type = MonitorLizard;
-            CreatureTemplate template = LizardTemplate(type);
             var entry = new CreatureRegistryEntry(type, [type.ToString()])
             {
                 mapName = "mlz",
@@ -217,7 +214,6 @@ namespace lsfUtils.Creatures
         public static void RegisterPoisonLizard()
         {
             CreatureTemplate.Type type = PoisonLizard;
-            CreatureTemplate template = LizardTemplate(type);
             var entry = new CreatureRegistryEntry(type, [type.ToString()])
             {
                 mapName = "plz",
@@ -281,7 +277,6 @@ namespace lsfUtils.Creatures
         public static void RegisterRaspberryLizard()
         {
             CreatureTemplate.Type type = RaspberryLizard;
-            CreatureTemplate template = LizardTemplate(type);
             var entry = new CreatureRegistryEntry(type, [type.ToString()])
             {
                 mapName = "rlz",
@@ -343,7 +338,6 @@ namespace lsfUtils.Creatures
         public static void RegisterStarnosedLizard()
         {
             CreatureTemplate.Type type = StarNosedLizard;
-            CreatureTemplate template = LizardTemplate(type);
             var entry = new CreatureRegistryEntry(type, [type.ToString()])
             {
                 mapName = "slz",
@@ -407,7 +401,6 @@ namespace lsfUtils.Creatures
         public static void RegisterWeaverLizard()
         {
             CreatureTemplate.Type type = WeaverLizard;
-            CreatureTemplate template = LizardTemplate(type);
             var entry = new CreatureRegistryEntry(type, [type.ToString()])
             {
                 mapName = "wlz",
