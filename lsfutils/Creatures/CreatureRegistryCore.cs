@@ -63,9 +63,8 @@ namespace lsfUtils.Creatures
 
         private static void AbstractCreature_Realize(On.AbstractCreature.orig_Realize orig, AbstractCreature self)
         {
-            if (self.Room != null && self.realizedCreature == null)
+            if (self?.Room != null && self.realizedCreature == null && CreatureRegistryTemplate.TryGet(self.creatureTemplate.type, out var entry))
             {
-                if (!CreatureRegistryTemplate.TryGet(self.creatureTemplate.type, out var entry)) return;
                 self.realizedCreature = entry.RealizedCreatureFactory(self, self.world);
                 self.InitiateAI();
                 foreach (AbstractPhysicalObject.AbstractObjectStick abstractObjectStick in self.stuckObjects)
@@ -78,7 +77,7 @@ namespace lsfUtils.Creatures
             orig(self);
         }
 
-        private static void AbstractCreature_InitiateAI(On.AbstractCreature.orig_InitiateAI orig, AbstractCreature self)
+        public static void AbstractCreature_InitiateAI(On.AbstractCreature.orig_InitiateAI orig, AbstractCreature self)
         {
             if (!CreatureRegistryTemplate.TryGet(self.creatureTemplate.type, out var entry))
             {
@@ -88,7 +87,7 @@ namespace lsfUtils.Creatures
             entry.AIFactory(self, self.world);
         }
 
-        private static void AbstractCreature_ctor(On.AbstractCreature.orig_ctor orig, AbstractCreature self, World world, CreatureTemplate creatureTemplate, Creature realizedCreature, WorldCoordinate pos, EntityID ID)
+        public static void AbstractCreature_ctor(On.AbstractCreature.orig_ctor orig, AbstractCreature self, World world, CreatureTemplate creatureTemplate, Creature realizedCreature, WorldCoordinate pos, EntityID ID)
         {
             if (!CreatureRegistryTemplate.TryGet(creatureTemplate.type, out var entry))
             {
@@ -98,7 +97,7 @@ namespace lsfUtils.Creatures
             entry.CtorInit(self, world, pos);
         }
 
-        private static CreatureTemplate.Type WorldLoader_CreatureTypeFromString(On.WorldLoader.orig_CreatureTypeFromString orig, string s)
+        public static CreatureTemplate.Type WorldLoader_CreatureTypeFromString(On.WorldLoader.orig_CreatureTypeFromString orig, string s)
         {
             var value = orig(s);
             string text = s.ToLowerInvariant().Trim();
@@ -106,14 +105,14 @@ namespace lsfUtils.Creatures
             return value;
         }
 
-        private static bool ShelterDoor_IsThisHostileCreatureForShelter(On.ShelterDoor.orig_IsThisHostileCreatureForShelter orig, AbstractCreature creature)
+        public static bool ShelterDoor_IsThisHostileCreatureForShelter(On.ShelterDoor.orig_IsThisHostileCreatureForShelter orig, AbstractCreature creature)
         {
             var value = orig(creature);
             if (!CreatureRegistryTemplate.TryGet(creature.creatureTemplate.type, out var entry)) return value;
             return entry.isHostileForShelter;
         }
 
-        private static void RoomAttractivenessPanel_ctor(On.DevInterface.RoomAttractivenessPanel.orig_ctor orig, RoomAttractivenessPanel self, DevUI owner, World world, string IDstring, DevUINode parentNode, Vector2 pos, string title, MapPage mapPage)
+        public static void RoomAttractivenessPanel_ctor(On.DevInterface.RoomAttractivenessPanel.orig_ctor orig, RoomAttractivenessPanel self, DevUI owner, World world, string IDstring, DevUINode parentNode, Vector2 pos, string title, MapPage mapPage)
         {
             orig(self, owner, world, IDstring, parentNode, pos, title, mapPage);
             if (CreatureRegistryTemplate.Entries == null) return;
@@ -125,42 +124,42 @@ namespace lsfUtils.Creatures
             self.Refresh();
         }
 
-        private static string CreatureVis_CritString(On.DevInterface.MapPage.CreatureVis.orig_CritString orig, AbstractCreature crit)
+        public static string CreatureVis_CritString(On.DevInterface.MapPage.CreatureVis.orig_CritString orig, AbstractCreature crit)
         {
             var value = orig(crit);
             if (!CreatureRegistryTemplate.TryGet(crit.creatureTemplate.type, out var entry)) return value;
             return entry.mapName;
         }
 
-        private static Color CreatureVis_CritCol(On.DevInterface.MapPage.CreatureVis.orig_CritCol orig, AbstractCreature crit)
+        public static Color CreatureVis_CritCol(On.DevInterface.MapPage.CreatureVis.orig_CritCol orig, AbstractCreature crit)
         {
             var value = orig(crit);
             if (!CreatureRegistryTemplate.TryGet(crit.creatureTemplate.type, out var entry)) return value;
             return entry.MapColor;
         }
 
-        private static IconSymbol.IconSymbolData CreatureSymbol_SymbolDataFromCreature(On.CreatureSymbol.orig_SymbolDataFromCreature orig, AbstractCreature creature)
+        public static IconSymbol.IconSymbolData CreatureSymbol_SymbolDataFromCreature(On.CreatureSymbol.orig_SymbolDataFromCreature orig, AbstractCreature creature)
         {
             var value = orig(creature);
             if (!CreatureRegistryTemplate.TryGet(creature.creatureTemplate.type, out var entry)) return value;
             return entry.symbolData;
         }
 
-        private static Color CreatureSymbol_ColorOfCreature(On.CreatureSymbol.orig_ColorOfCreature orig, IconSymbol.IconSymbolData iconData)
+        public static Color CreatureSymbol_ColorOfCreature(On.CreatureSymbol.orig_ColorOfCreature orig, IconSymbol.IconSymbolData iconData)
         {
             var value = orig(iconData);
             if (!CreatureRegistryTemplate.TryGet(iconData.critType, out var entry)) return value;
             return entry.MapColor;
         }
 
-        private static string CreatureSymbol_SpriteNameOfCreature(On.CreatureSymbol.orig_SpriteNameOfCreature orig, IconSymbol.IconSymbolData iconData)
+        public static string CreatureSymbol_SpriteNameOfCreature(On.CreatureSymbol.orig_SpriteNameOfCreature orig, IconSymbol.IconSymbolData iconData)
         {
             var value = orig(iconData);
             if (!CreatureRegistryTemplate.TryGet(iconData.critType, out var entry)) return value;
             return entry.spriteName;
         }
 
-        private static Player.ObjectGrabability Player_Grabability(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
+        public static Player.ObjectGrabability Player_Grabability(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
         {
             var value = orig(self, obj);
             if (obj is not Creature creature) return value;
@@ -168,27 +167,27 @@ namespace lsfUtils.Creatures
             return entry.Grabability(self, creature);
         }
 
-        private static CreatureTemplate.Type ArenaFallback(On.MultiplayerUnlocks.orig_FallBackCrit orig, CreatureTemplate.Type type)
+        public static CreatureTemplate.Type ArenaFallback(On.MultiplayerUnlocks.orig_FallBackCrit orig, CreatureTemplate.Type type)
         {
             var value = orig(type);
             if (!CreatureRegistryTemplate.TryGet(type, out var entry)) return value;
             return entry.arenaFallbackType;
         }
 
-        private static float RoomRealizer_GetCreaturePerformanceEstimation(On.RoomRealizer.orig_GetCreaturePerformanceEstimation orig, AbstractCreature crit)
+        public static float RoomRealizer_GetCreaturePerformanceEstimation(On.RoomRealizer.orig_GetCreaturePerformanceEstimation orig, AbstractCreature crit)
         {
             var value = orig(crit);
             if (!CreatureRegistryTemplate.TryGet(crit.creatureTemplate.type, out var entry)) return value;
             return entry.performanceEstimation;
         }
 
-        internal static void SetTemplate(CreatureTemplate.Type type, CreatureTemplate template)
+        public static void SetTemplate(CreatureTemplate.Type type, CreatureTemplate template)
         {
             int index = type.Index;
             if (index > -1) StaticWorld.creatureTemplates[index] = template;
         }
 
-        internal static void AddRoomAttractivenessFor(RoomAttractivenessPanel panel, CreatureTemplate.Type type, RoomAttractivenessPanel.Category[] categories)
+        public static void AddRoomAttractivenessFor(RoomAttractivenessPanel panel, CreatureTemplate.Type type, RoomAttractivenessPanel.Category[] categories)
         {
             if (type.Index == -1) return;
             int index = StaticWorld.GetCreatureTemplate(type).index;
@@ -203,7 +202,7 @@ namespace lsfUtils.Creatures
             }
         }
 
-        /*internal static CreatureTemplate CreateFoxTemplate()
+        /*public static CreatureTemplate CreateFoxTemplate()
         {
             List<TileTypeResistance> tRs =
             [
@@ -252,7 +251,7 @@ namespace lsfUtils.Creatures
             return template;
         }*/
 
-        /*internal static void SetupFoxRelationships()
+        /*public static void SetupFoxRelationships()
         {
             foreach (var t in StaticWorld.creatureTemplates)
             {
