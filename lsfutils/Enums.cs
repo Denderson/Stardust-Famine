@@ -26,8 +26,8 @@ namespace lsfUtils
             public static Color PoisonLizardColor = new(0.31f, 0.46f, 0.10f);
             public static Color RaspberryLizardColor = new(0.8f, 0f, 0.26f);
             public static Color StarNosedLizardColor = new(0.16f, 0.16f, 0.19f);
-
-            public static Color WeaverLizardColor = new(0.41f, 0.04f, 0.04f);
+            public static Color WeaverLizardColor = RainWorld.SaturatedGold;
+            public static Color ClimbGrubColor = new(1f, 0.6f, 0.8f);
         }
 
         public class EffectTypes

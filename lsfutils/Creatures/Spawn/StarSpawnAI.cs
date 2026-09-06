@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static CreatureTemplate.Relationship.Type;
+using static lsfUtils.Plugin;
 
 namespace lsfUtils.Creatures.Spawn;
 
@@ -36,10 +37,15 @@ public class StarSpawnAI : ArtificialIntelligence, IUseARelationshipTracker
     public int foodCounter = 1000;
     public List<PhysicalObject> foodInRoom = new();
 
-    public StarSpawnAI(AbstractCreature acrit, StarSpawn spawn) : base(acrit, acrit.world)
+    public StarSpawnAI(AbstractCreature acrit, World world) : base(acrit, acrit.world)
     {
-        this.spawn = spawn;
-        spawn.AI = this;
+        if (acrit?.realizedCreature is StarSpawn spawn)
+        {
+            this.spawn = acrit.realizedCreature as StarSpawn;
+            spawn.AI = this;
+        }
+        else Log.LogMessage("Starspawn AI cannot get starspawn!");
+        
         AddModule(new StandardPather(this, acrit.world, acrit));
         pathFinder.stepsPerFrame = 20;
         AddModule(new Tracker(this, 10, 10, 600, 0.5f, 5, 5, 10));
@@ -59,7 +65,7 @@ public class StarSpawnAI : ArtificialIntelligence, IUseARelationshipTracker
         utilityComparer.AddComparedModule(preyTracker, null, 0.4f, 1.1f);
         noiseTracker.hearingSkill = 0.5f;
         behavior = Behavior.Idle;
-        Debug.Log("Star spawn AI start");
+        Log.LogMessage("Star spawn AI start");
     }
 
     AIModule IUseARelationshipTracker.ModuleToTrackRelationship(CreatureTemplate.Relationship relationship)
@@ -136,7 +142,7 @@ public class StarSpawnAI : ArtificialIntelligence, IUseARelationshipTracker
     {
         base.Update();
 
-        if (spawn.room == null)
+        if (spawn?.room == null || utilityComparer == null)
         {
             return;
         }

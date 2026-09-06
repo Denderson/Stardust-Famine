@@ -97,29 +97,12 @@ namespace lsfUtils
             try
             {
                 Log = Logger;
+                Log.LogMessage("Scream for help");
 
                 On.RainWorld.OnModsInit += RainWorld_OnModsInit;
 
                 // fisobs
                 {
-                    
-                    //Content.Register(new WeaverLizardCritsob());
-                    //Content.Register(new FlameLizardCritsob());
-                    //Content.Register(new AirplaneLizardCritsob());
-                    //Content.Register(new RaspberryLizardCritsob());
-                    //Content.Register(new MonitorLizardCritob());
-                    //Content.Register(new StarNosedLizardCritob());
-                    //Content.Register(new PoisonLizardCritob());
-
-                    Content.Register(new ScavSeerCritob());
-                    Content.Register(new ScavMessengerCritob());
-                    Content.Register(new ScavFlankCritob());
-                    Content.Register(new StarSpawnCritob());
-                    Content.Register(new StarNoodlesCritob());
-                    Content.Register(new StarJellyCritob());
-                    Content.Register(new PoisonSpiderCritob());
-                    Content.Register(new ClimbGrubCritob());
-
                     ItemRegistryCore.ApplyHooks();
                     ItemRegistry.RegisterAll();
 
@@ -196,9 +179,9 @@ namespace lsfUtils
 
                     ScavParamsHooks.ApplyHooks();
                     TypeParamsHooks.ApplyHooks();
-                    ShortcutLinks.ApplyHooks();
-                    ShelterLinks.ApplyHooks();
-                    ConditionalGates.ApplyHooks();
+                    //ShortcutLinks.ApplyHooks();
+                    //ShelterLinks.ApplyHooks();
+                    //ConditionalGates.ApplyHooks();
                 }
 
                 On.RainWorld.Start += RainWorld_Start;

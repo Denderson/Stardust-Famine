@@ -89,7 +89,7 @@ namespace lsfUtils.Items.Normal.TorchSpears
         {
             bool hitResult = orig(self, result, eu);
 
-            if (result.obj is Creature targetCreature && self is TorchSpear torch && torch.isLit)
+            if (result.obj is Creature targetCreature && self is TorchSpear torch && torch.isLit && targetCreature.SpearStick(self, self.spearDamageBonus, result.chunk, null, self.firstChunk.vel))
             {
                 if (self.room != null)
                 {

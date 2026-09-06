@@ -22,9 +22,9 @@ namespace lsfUtils.Creatures
         public MultiplayerUnlocks.SandboxUnlockID unlockID = MultiplayerUnlocks.SandboxUnlockID.Slugcat;
         public MultiplayerUnlocks.SandboxUnlockID unlockParent = MultiplayerUnlocks.SandboxUnlockID.Slugcat;
         public DevInterface.RoomAttractivenessPanel.Category[] roomAttractivenessCategories;
-        public Action<AbstractCreature, World, WorldCoordinate> AbstractCtor;
         public Func<AbstractCreature, World, Creature> RealisedCtor;
         public Func<AbstractCreature, World, ArtificialIntelligence> AICtor;
+        public Func<World, AbstractCreature, AbstractCreatureAI> AbstractAICtor;
         public Func<AbstractCreature, CreatureState> StateCtor;
         public Func<Player, PhysicalObject, Player.ObjectGrabability> Grabability;
         public Func<CreatureTemplate> setTemplate;
@@ -93,18 +93,18 @@ namespace lsfUtils.Creatures
         public static void TryAddUnlock(CreatureRegistryEntry entry)
         {
             if (entry.unlockID == null) return;
-            if (MultiplayerUnlocks.ItemUnlockList == null) return;
-            if (!MultiplayerUnlocks.ItemUnlockList.Contains(entry.unlockID))
+            if (MultiplayerUnlocks.CreatureUnlockList == null) return;
+            if (!MultiplayerUnlocks.CreatureUnlockList.Contains(entry.unlockID))
             {
-                MultiplayerUnlocks.ItemUnlockList.Add(entry.unlockID);
+                MultiplayerUnlocks.CreatureUnlockList.Add(entry.unlockID);
             }
         }
 
         public static void TryRemoveUnlock(CreatureRegistryEntry entry)
         {
             if (entry.unlockID == null) return;
-            if (MultiplayerUnlocks.ItemUnlockList == null) return;
-            MultiplayerUnlocks.ItemUnlockList.Remove(entry.unlockID);
+            if (MultiplayerUnlocks.CreatureUnlockList == null) return;
+            MultiplayerUnlocks.CreatureUnlockList.Remove(entry.unlockID);
         }
 
         public static CreatureRegistryEntry ForUnlock(MultiplayerUnlocks.SandboxUnlockID unlockID)

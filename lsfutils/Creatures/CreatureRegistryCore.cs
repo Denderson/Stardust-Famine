@@ -98,9 +98,24 @@ namespace lsfUtils.Creatures
         {
             if (self?.Room != null && self.realizedCreature == null && CreatureRegistryTemplate.TryGet(self.creatureTemplate.type, out var entry))
             {
-                self.realizedCreature = entry.RealisedCtor(self, self.world);
-                self.InitiateAI();
-                self.state = entry.StateCtor(self);
+                try
+                {
+                    self.realizedCreature = entry.RealisedCtor(self, self.world);
+                }
+                catch (Exception e)
+                {
+                    Custom.LogImportant($"{self.creatureTemplate.type} RealisedCtor threw: {e}");
+                    throw;
+                }
+                try
+                {
+                    self.InitiateAI();
+                }
+                catch (Exception e)
+                {
+                    Custom.LogImportant($"{self.creatureTemplate.type} InitiateAI (from Realize) threw: {e}");
+                    throw;
+                }
                 foreach (AbstractPhysicalObject.AbstractObjectStick abstractObjectStick in self.stuckObjects)
                 {
                     if (abstractObjectStick.A.realizedObject == null) abstractObjectStick.A.Realize();
@@ -118,17 +133,38 @@ namespace lsfUtils.Creatures
                 orig(self);
                 return;
             }
-            self.abstractAI.RealAI = entry.AICtor(self, self.world);
+            try
+            {
+                self.abstractAI.RealAI = entry.AICtor(self, self.world);
+            }
+            catch (Exception e)
+            {
+                Custom.LogImportant($"{self.creatureTemplate.type} AICtor threw: {e}");
+                throw;
+            }
         }
 
         public static void AbstractCreature_ctor(On.AbstractCreature.orig_ctor orig, AbstractCreature self, World world, CreatureTemplate creatureTemplate, Creature realizedCreature, WorldCoordinate pos, EntityID ID)
         {
-            if (!CreatureRegistryTemplate.TryGet(creatureTemplate.type, out var entry) || entry?.AbstractCtor == null)
+            orig(self, world, creatureTemplate, realizedCreature, pos, ID);
+            if (!CreatureRegistryTemplate.TryGet(creatureTemplate.type, out var entry)) return;
+            if (entry?.StateCtor != null) self.state = entry.StateCtor(self);
+            if (entry?.AbstractAICtor != null)
             {
-                orig(self, world, creatureTemplate, realizedCreature, pos, ID);
-                return;
+                try
+                {
+                    self.abstractAI = entry.AbstractAICtor(world, self);
+                }
+                catch (Exception e)
+                {
+                    Custom.LogImportant($"{creatureTemplate.type} AbstractAICtor threw: {e}");
+                    throw;
+                }
+                if (self.Room != null && pos.abstractNode > -1 && pos.abstractNode < self.Room.nodes.Length && self.Room.nodes[pos.abstractNode].type == AbstractRoomNode.Type.Den && !pos.TileDefined)
+                {
+                    self.abstractAI.denPosition = pos;
+                }
             }
-            entry.AbstractCtor(self, world, pos);
         }
 
         public static CreatureTemplate.Type WorldLoader_CreatureTypeFromString(On.WorldLoader.orig_CreatureTypeFromString orig, string s)
@@ -204,7 +240,7 @@ namespace lsfUtils.Creatures
         public static CreatureTemplate.Type ArenaFallback(On.MultiplayerUnlocks.orig_FallBackCrit orig, CreatureTemplate.Type type)
         {
             var value = orig(type);
-            if (!CreatureRegistryTemplate.TryGet(type, out var entry)) return value;
+            if (!CreatureRegistryTemplate.TryGet(type, out var _)) return value;
             return CreatureTemplate.Type.SeaLeech;
         }
 
