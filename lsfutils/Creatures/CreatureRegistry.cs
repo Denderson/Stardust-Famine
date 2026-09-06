@@ -23,9 +23,9 @@ namespace lsfUtils.Creatures
             RegisterRaspberryLizard();
             RegisterStarnosedLizard();
             RegisterWeaverLizard();
-            RegisterScavFlank();
-            RegisterScavMessenger();
-            RegisterScavSeer();
+            //RegisterScavFlank();
+            //RegisterScavMessenger();
+            //RegisterScavSeer();
             RegisterStarSpawn();
             RegisterStarNoodles();
             RegisterStarJelly();
