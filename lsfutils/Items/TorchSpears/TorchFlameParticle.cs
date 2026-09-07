@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace lsfUtils.Items.Normal.TorchSpears
+namespace lsfUtils.Items.TorchSpears
 {
     public class TorchFlameParticle : CosmeticSprite // added object pooling for optimizing, though tbh i have no clue if theres any reason for adding this lmao, just wasted 2 hours
     {

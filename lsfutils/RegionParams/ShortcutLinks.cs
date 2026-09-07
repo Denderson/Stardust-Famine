@@ -18,12 +18,12 @@ public static class ShortcutLinks
 
     public static List<ShortcutLinkEntry> rawConfig;
 
-    public static readonly string ConfigPath = AssetManager.ResolveFilePath("lsf/shortcutLinks.txt");
+    public static readonly string ConfigPath = "lsf/shortcutLinks.txt";
 
-    public static void LoadConfig(string path)
+    public static void Load()
     {
         rawConfig = [];
-
+        string path = AssetManager.ResolveFilePath(ConfigPath);
         if (!File.Exists(path))
         {
             Log.LogMessage("Config file not found!, " + path);
@@ -129,7 +129,6 @@ public static class ShortcutLinks
 
     public static void ApplyHooks()
     {
-        LoadConfig(ConfigPath);
         On.ShortcutHandler.SuckInCreature += ShortcutHandler_SuckInCreature;
         On.ShortcutHandler.Update += ShortcutHandler_Update;
         On.AbstractRoom.ExitIndex += AbstractRoom_ExitIndex;

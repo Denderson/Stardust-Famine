@@ -3,7 +3,7 @@ using RWCustom;
 using System;
 using UnityEngine;
 
-namespace lsfUtils.Items.Normal.TorchSpears
+namespace lsfUtils.Items.TorchSpears
 {
     public class TorchSpear : Spear
     {

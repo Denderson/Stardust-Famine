@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace lsfUtils.Items.Normal.ExplosiveBoomerang
+namespace lsfUtils.Items.ExplosiveBoomerang
 {
     public static class ExplosiveBoomerangHooks
     {

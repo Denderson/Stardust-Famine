@@ -1,10 +1,8 @@
-﻿using lsfUtils;
-using lsfUtils.Items.Normal.TorchSpears;
-using RWCustom;
+﻿using RWCustom;
 using UnityEngine;
 using static lsfUtils.Enums;
 
-namespace lsfUtils.Items.Normal.TorchSpears
+namespace lsfUtils.Items.TorchSpears
 {
     public static class TorchSpearHooks
     {
@@ -56,7 +54,7 @@ namespace lsfUtils.Items.Normal.TorchSpears
 
         private static void AbstractPhysicalObject_Realize(On.AbstractPhysicalObject.orig_Realize orig, AbstractPhysicalObject self)
         {
-            if (self.type == Enums.AbstractObjectType.TorchSpear)
+            if (self.type == AbstractObjectType.TorchSpear)
             {
                 if (self.realizedObject != null) return;
 

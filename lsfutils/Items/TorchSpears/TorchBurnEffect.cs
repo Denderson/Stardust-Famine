@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace lsfUtils.Items.Normal.TorchSpears
+namespace lsfUtils.Items.TorchSpears
 {
     public class TorchBurnEffect : UpdatableAndDeletable // patoma fire logic, pissing me off early in the morning, removed unnecesarry 2 am hook
     {
@@ -51,7 +51,7 @@ namespace lsfUtils.Items.Normal.TorchSpears
                 return;
             }
 
-            int decayRate = (attachedChunk.vel.magnitude > 2.5f) ? 2 : 1;
+            int decayRate = attachedChunk.vel.magnitude > 2.5f ? 2 : 1;
             burnDuration -= decayRate;
             tickCounter++;
 
@@ -59,12 +59,12 @@ namespace lsfUtils.Items.Normal.TorchSpears
             for (int i = 0; i < flicker.GetLength(0); i++)
             {
                 flicker[i, 1] = flicker[i, 0];
-                flicker[i, 0] += Mathf.Pow(UnityEngine.Random.value, 3f) * 0.1f * ((UnityEngine.Random.value < 0.5f) ? (-1f) : 1f);
+                flicker[i, 0] += Mathf.Pow(UnityEngine.Random.value, 3f) * 0.1f * (UnityEngine.Random.value < 0.5f ? -1f : 1f);
                 flicker[i, 0] = Custom.LerpAndTick(flicker[i, 0], flicker[i, 2], 0.05f, 0.033333335f);
 
                 if (UnityEngine.Random.value < 0.2f)
                 {
-                    flicker[i, 2] = 1f + Mathf.Pow(UnityEngine.Random.value, 3f) * 0.2f * ((UnityEngine.Random.value < 0.5f) ? (-1f) : 1f);
+                    flicker[i, 2] = 1f + Mathf.Pow(UnityEngine.Random.value, 3f) * 0.2f * (UnityEngine.Random.value < 0.5f ? -1f : 1f);
                 }
                 flicker[i, 2] = Mathf.Lerp(flicker[i, 2], 1f, 0.01f);
             }
@@ -83,7 +83,7 @@ namespace lsfUtils.Items.Normal.TorchSpears
 
                     float spreadRad = Mathf.Min(attachedChunk.rad * 0.8f, 15f);
                     Vector2 particlePos = attachedChunk.pos + UnityEngine.Random.insideUnitCircle * spreadRad;
-                    Vector2 flameVel = (attachedChunk.vel * 0.5f) + new Vector2(0f, 2.5f) + (Custom.RNV() * UnityEngine.Random.value * 2f);
+                    Vector2 flameVel = attachedChunk.vel * 0.5f + new Vector2(0f, 2.5f) + Custom.RNV() * UnityEngine.Random.value * 2f;
 
                     flamePool.Emit(particlePos, flameVel, 1.5f + effectiveness);
                 }
@@ -105,7 +105,7 @@ namespace lsfUtils.Items.Normal.TorchSpears
 
                 lightSource.stayAlive = true;
                 lightSource.setPos = attachedChunk.pos;
-                lightSource.setRad = (150f + (60f * effectiveness)) * flicker[0, 0];
+                lightSource.setRad = (150f + 60f * effectiveness) * flicker[0, 0];
                 lightSource.color = new Color(1f, 0.4f, 0.1f);
                 lightSource.setAlpha = effectiveness;
             }

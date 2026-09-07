@@ -5,7 +5,7 @@ using Smoke;
 using UnityEngine;
 using Watcher;
 
-namespace lsfUtils.Items.Normal.ExplosiveBoomerang
+namespace lsfUtils.Items.ExplosiveBoomerang
 {
     public class ExplosiveBoomerang : Boomerang
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace lsfUtils.Items.Normal.TorchSpears
+namespace lsfUtils.Items.TorchSpears
 {
     public class TorchSpearAbstract : AbstractSpear
     {

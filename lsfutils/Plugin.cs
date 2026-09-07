@@ -38,10 +38,11 @@ using lsfUtils.Items;
 using lsfUtils.Items.BrownFruit;
 using lsfUtils.Items.Darts.Dart;
 using lsfUtils.Items.Darts.PoisonDart;
+using lsfUtils.Items.ExplosiveBoomerang;
 using lsfUtils.Items.KarmaMask;
-using lsfUtils.Items.Normal.ExplosiveBoomerang;
-using lsfUtils.Items.Normal.TorchSpears;
+using lsfUtils.Items.KnotSpawnV2;
 using lsfUtils.Items.RippleFlower;
+using lsfUtils.Items.TorchSpears;
 using lsfUtils.RegionParams;
 using Menu.Remix.MixedUI;
 using Mono.Cecil.Cil;
@@ -60,7 +61,7 @@ using System.Runtime.Remoting.Contexts;
 using System.Security.Permissions;
 using UnityEngine;
 using Watcher;
-using static lsfUtils.RegionParams.TypeParamsHooks;
+using static lsfUtils.RegionParams.TypeParams;
 using static Pom.Pom;
 
 #pragma warning disable CS0618
@@ -97,7 +98,6 @@ namespace lsfUtils
             try
             {
                 Log = Logger;
-                Log.LogMessage("Scream for help");
 
                 On.RainWorld.OnModsInit += RainWorld_OnModsInit;
 
@@ -109,7 +109,7 @@ namespace lsfUtils
                     CreatureRegistryCore.ApplyHooks();
                     CreatureRegistry.RegisterAll();
 
-                    Log.LogMessage("Done with Fisobs!");
+                    Log.LogMessage("Done with non-Fisobs!!!");
                 }
 
                 // creatures
@@ -178,10 +178,10 @@ namespace lsfUtils
                     On.Region.ctor_string_int_int_RainWorldGame_Timeline += RegionParams.RegionParamsSetup.SetupParams;
 
                     ScavParamsHooks.ApplyHooks();
-                    TypeParamsHooks.ApplyHooks();
-                    //ShortcutLinks.ApplyHooks();
-                    //ShelterLinks.ApplyHooks();
-                    //ConditionalGates.ApplyHooks();
+                    TypeParams.ApplyHooks();
+                    ShortcutLinks.ApplyHooks();
+                    ShelterLinks.ApplyHooks();
+                    ConditionalGates.ApplyHooks();
                 }
 
                 On.RainWorld.Start += RainWorld_Start;
@@ -214,6 +214,7 @@ namespace lsfUtils
                 RegisterManagedObject(new ManagedKarmaMask());
                 RegisterManagedObject(new ManagedBrownFruit());
                 RegisterManagedObject(new ManagedTorchSpear());
+                RegisterManagedObject(new ManagedKnotSpawnV2());
 
                 //hi
                 //hello
@@ -241,7 +242,7 @@ namespace lsfUtils
             }
             catch (Exception ex)
             {
-                Log.LogWarning($"TypeParamsHooks.Load: AssetManager not ready or path resolution failed: {ex.Message}");
+                Log.LogWarning($"TypeParams.Load: AssetManager not ready or path resolution failed: {ex.Message}");
                 return;
             }
 
@@ -251,7 +252,10 @@ namespace lsfUtils
                 return;
             }
 
-            TypeParamsHooks.Load();
+            TypeParams.Load();
+            ShelterLinks.Load();
+            ShortcutLinks.Load();
+            ConditionalGates.Load();
         }
 
         public static bool GetNameFromAnywhere(out SlugcatStats.Name name)

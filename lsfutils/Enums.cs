@@ -5,223 +5,229 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace lsfUtils
+namespace lsfUtils;
+
+public class Enums
 {
-    public class Enums
+    public static void Unregister<T>(ExtEnum<T> extEnum) where T : ExtEnum<T>
     {
-        public static void Unregister<T>(ExtEnum<T> extEnum) where T : ExtEnum<T>
+        extEnum?.Unregister();
+    }
+
+    public enum DartType {Default, Poison, Quill, Sharpnel}
+
+    public enum DarknessPhase { None, Increasing, Decreasing }
+
+    public class Colors
+    {
+        public static Color AirplaneLizardColor = new(0.53f, 0.00f, 0.78f);
+        public static Color FlameLizardColor = new(0.41f, 0.04f, 0.04f);
+        public static Color MonitorLizardColor = new(0.89f, 0.98f, 0.37f);
+        public static Color PoisonLizardColor = new(0.31f, 0.46f, 0.10f);
+        public static Color RaspberryLizardColor = new(0.8f, 0f, 0.26f);
+        public static Color StarNosedLizardColor = new(0.16f, 0.16f, 0.19f);
+        public static Color WeaverLizardColor = RainWorld.SaturatedGold;
+        public static Color ClimbGrubColor = new(1f, 0.6f, 0.8f);
+        public static Color KnotSpawnColor = RainWorld.SaturatedGold;
+    }
+
+    public class EffectTypes
+    {
+        public static RoomSettings.RoomEffect.Type EvilWater = new(nameof(EvilWater), true);
+        public static RoomSettings.RoomEffect.Type CreepingDarkness = new(nameof(CreepingDarkness), true);
+        public static RoomSettings.RoomEffect.Type LookerMechanicOverride = new(nameof(LookerMechanicOverride), true);
+    }
+
+    public class CreatureTemplateType
+    {
+        public static CreatureTemplate.Type WeaverLizard = new(nameof(WeaverLizard), true);
+        public static CreatureTemplate.Type FlameLizard = new(nameof(FlameLizard), true);
+        public static CreatureTemplate.Type AirplaneLizard = new(nameof(AirplaneLizard), true);
+        public static CreatureTemplate.Type RaspberryLizard = new(nameof(RaspberryLizard), true);
+
+        public static CreatureTemplate.Type MonitorLizard = new(nameof(MonitorLizard), true);
+        public static CreatureTemplate.Type StarNosedLizard = new(nameof(StarNosedLizard), true);
+        public static CreatureTemplate.Type PoisonLizard = new(nameof(PoisonLizard), true);
+
+        public static CreatureTemplate.Type ScavSeer = new(nameof(ScavSeer), true);
+        public static CreatureTemplate.Type ScavFlank = new(nameof(ScavFlank), true);
+        public static CreatureTemplate.Type ScavMessenger = new(nameof(ScavMessenger), true);
+
+        public static CreatureTemplate.Type StarSpawn = new(nameof(StarSpawn), true);
+        public static CreatureTemplate.Type StarNoodles = new(nameof(StarNoodles), true);
+        public static CreatureTemplate.Type StarJelly = new(nameof(StarJelly), true);
+        public static CreatureTemplate.Type StarSpider = new(nameof(StarSpider), true);
+        public static CreatureTemplate.Type StarElder = new(nameof(StarElder), true);
+
+        public static CreatureTemplate.Type PoisonSpider = new(nameof(PoisonSpider), true);
+        public static CreatureTemplate.Type ClimbGrub = new(nameof(ClimbGrub), true);
+
+        public void UnregisterValues()
         {
-            extEnum?.Unregister();
+            WeaverLizard?.Unregister();
+            WeaverLizard = null;
+            FlameLizard?.Unregister();
+            FlameLizard = null;
+            AirplaneLizard?.Unregister();
+            AirplaneLizard = null;
+            RaspberryLizard?.Unregister();
+            RaspberryLizard = null;
+            MonitorLizard?.Unregister();
+            MonitorLizard = null;
+            StarNosedLizard?.Unregister();
+            StarNosedLizard = null;
+            PoisonLizard?.Unregister();
+            PoisonLizard = null;
+            ScavSeer?.Unregister();
+            ScavSeer = null;
+            ScavFlank?.Unregister();
+            ScavFlank = null;
+            ScavMessenger?.Unregister();
+            ScavMessenger = null;
+            StarSpawn?.Unregister();
+            StarSpawn = null;
+            StarNoodles?.Unregister();
+            StarNoodles = null;
+            StarJelly?.Unregister();
+            StarJelly = null;
+            StarSpider?.Unregister();
+            StarSpider = null;
+            StarElder?.Unregister();
+            StarElder = null;
+            PoisonSpider?.Unregister();
+            PoisonSpider = null;
         }
+    }
 
-        public enum DartType {Default, Poison, Quill, Sharpnel}
+    public class SandboxUnlockID
+    {
+        public static MultiplayerUnlocks.SandboxUnlockID RippleFlower = new(nameof(RippleFlower), true);
+        public static MultiplayerUnlocks.SandboxUnlockID PoisonDart = new(nameof(PoisonDart), true);
+        public static MultiplayerUnlocks.SandboxUnlockID KarmaMask = new(nameof(KarmaMask), true);
+        public static MultiplayerUnlocks.SandboxUnlockID ExplosiveBoomerang = new(nameof(ExplosiveBoomerang), true);
+        public static MultiplayerUnlocks.SandboxUnlockID SingularityBoomerang = new(nameof(SingularityBoomerang), true);
 
-        public enum DarknessPhase { None, Increasing, Decreasing }
+        public static MultiplayerUnlocks.SandboxUnlockID WeaverLizard = new(nameof(WeaverLizard), true);
+        public static MultiplayerUnlocks.SandboxUnlockID FlameLizard = new(nameof(FlameLizard), true);
+        public static MultiplayerUnlocks.SandboxUnlockID AirplaneLizard = new(nameof(AirplaneLizard), true);
+        public static MultiplayerUnlocks.SandboxUnlockID RaspberryLizard = new(nameof(RaspberryLizard), true);
+        public static MultiplayerUnlocks.SandboxUnlockID MonitorLizard = new(nameof(MonitorLizard), true);
+        public static MultiplayerUnlocks.SandboxUnlockID StarNosedLizard = new(nameof(StarNosedLizard), true);
+        public static MultiplayerUnlocks.SandboxUnlockID PoisonLizard = new(nameof(PoisonLizard), true);
 
-        public class Colors
+        public static MultiplayerUnlocks.SandboxUnlockID ScavSeer = new(nameof(ScavSeer), true);
+        public static MultiplayerUnlocks.SandboxUnlockID ScavFlank = new(nameof(ScavFlank), true);
+        public static MultiplayerUnlocks.SandboxUnlockID ScavMessenger = new(nameof(ScavMessenger), true);
+
+        public static MultiplayerUnlocks.SandboxUnlockID StarSpawn = new(nameof(StarSpawn), true);
+        public static MultiplayerUnlocks.SandboxUnlockID StarNoodles = new(nameof(StarNoodles), true);
+        public static MultiplayerUnlocks.SandboxUnlockID StarJelly = new(nameof(StarJelly), true);
+        public static MultiplayerUnlocks.SandboxUnlockID StarSpider = new(nameof(StarSpider), true);
+        public static MultiplayerUnlocks.SandboxUnlockID StarElder = new(nameof(StarElder), true);
+
+        public static MultiplayerUnlocks.SandboxUnlockID PoisonSpider = new(nameof(PoisonSpider), true);
+        public static MultiplayerUnlocks.SandboxUnlockID ClimbGrub = new(nameof(ClimbGrub), true);
+
+        public static MultiplayerUnlocks.SandboxUnlockID BrownFruit = new(nameof(BrownFruit), true);
+        public static MultiplayerUnlocks.SandboxUnlockID TorchSpear = new(nameof(TorchSpear), true);
+
+        public static MultiplayerUnlocks.SandboxUnlockID KnotSpawnV2 = new(nameof(KnotSpawnV2), true);
+
+        public void UnregisterValues()
         {
-            public static Color AirplaneLizardColor = new(0.53f, 0.00f, 0.78f);
-            public static Color FlameLizardColor = new(0.41f, 0.04f, 0.04f);
-            public static Color MonitorLizardColor = new(0.89f, 0.98f, 0.37f);
-            public static Color PoisonLizardColor = new(0.31f, 0.46f, 0.10f);
-            public static Color RaspberryLizardColor = new(0.8f, 0f, 0.26f);
-            public static Color StarNosedLizardColor = new(0.16f, 0.16f, 0.19f);
-            public static Color WeaverLizardColor = RainWorld.SaturatedGold;
-            public static Color ClimbGrubColor = new(1f, 0.6f, 0.8f);
+            RippleFlower?.Unregister();
+            RippleFlower = null;
+            PoisonDart?.Unregister();
+            PoisonDart = null;
+            KarmaMask?.Unregister();
+            KarmaMask = null;
+            ExplosiveBoomerang?.Unregister();
+            ExplosiveBoomerang = null;
+            SingularityBoomerang?.Unregister();
+            SingularityBoomerang = null;
+            ClimbGrub?.Unregister();
+            ClimbGrub = null;
+
+            WeaverLizard?.Unregister();
+            WeaverLizard = null;
+            FlameLizard?.Unregister();
+            FlameLizard = null;
+            AirplaneLizard?.Unregister();
+            AirplaneLizard = null;
+            RaspberryLizard?.Unregister();
+            RaspberryLizard = null;
+            MonitorLizard?.Unregister();
+            MonitorLizard = null;
+            StarNosedLizard?.Unregister();
+            StarNosedLizard = null;
+            PoisonLizard?.Unregister();
+            PoisonLizard = null;
+            ScavSeer?.Unregister();
+            ScavSeer = null;
+            ScavFlank?.Unregister();
+            ScavFlank = null;
+            ScavMessenger?.Unregister();
+            ScavMessenger = null;
+            StarSpawn?.Unregister();
+            StarSpawn = null;
+            StarNoodles?.Unregister();
+            StarNoodles = null;
+            StarJelly?.Unregister();
+            StarJelly = null;
+            StarSpider?.Unregister();
+            StarSpider = null;
+            StarElder?.Unregister();
+            StarElder = null;
+            PoisonSpider?.Unregister();
+            PoisonSpider = null;
+            BrownFruit?.Unregister();
+            BrownFruit = null;
+            TorchSpear?.Unregister();
+            TorchSpear = null;
+            KnotSpawnV2?.Unregister();
+            KnotSpawnV2 = null;
         }
+    }
 
-        public class EffectTypes
+    public class AbstractObjectType
+    {
+        public static AbstractPhysicalObject.AbstractObjectType RippleFlower = new(nameof(RippleFlower), true);
+        public static AbstractPhysicalObject.AbstractObjectType Dart = new(nameof(Dart), true);
+        public static AbstractPhysicalObject.AbstractObjectType PoisonDart = new(nameof(PoisonDart), true);
+        public static AbstractPhysicalObject.AbstractObjectType KarmaMask = new(nameof(KarmaMask), true);
+        public static AbstractPhysicalObject.AbstractObjectType ExplosiveBoomerang = new(nameof(ExplosiveBoomerang), true);
+        public static AbstractPhysicalObject.AbstractObjectType SingularityBoomerang = new(nameof(SingularityBoomerang), true);
+        public static AbstractPhysicalObject.AbstractObjectType BrownFruit = new(nameof(BrownFruit), true);
+        public static AbstractPhysicalObject.AbstractObjectType TorchSpear = new(nameof(TorchSpear), true);
+        public static AbstractPhysicalObject.AbstractObjectType KnotSpawnV2 = new(nameof(KnotSpawnV2), true);
+
+        public void UnregisterValues()
         {
-            public static RoomSettings.RoomEffect.Type EvilWater = new(nameof(EvilWater), true);
-            public static RoomSettings.RoomEffect.Type CreepingDarkness = new(nameof(CreepingDarkness), true);
-            public static RoomSettings.RoomEffect.Type LookerMechanicOverride = new(nameof(LookerMechanicOverride), true);
+            RippleFlower?.Unregister();
+            RippleFlower = null;
+            PoisonDart?.Unregister();
+            PoisonDart = null;
+            KarmaMask?.Unregister();
+            KarmaMask = null;
+            SingularityBoomerang?.Unregister();
+            SingularityBoomerang = null;
+            BrownFruit?.Unregister();
+            BrownFruit = null;
+            TorchSpear?.Unregister();
+            TorchSpear = null;
+            KnotSpawnV2?.Unregister();
+            KnotSpawnV2 = null;
         }
+    }
 
-        public class CreatureTemplateType
+    public class CreatureCommunityID
+    {
+        public static CreatureCommunities.CommunityID StarSpawn = new(nameof(StarSpawn), true);
+
+        public void UnregisterValues()
         {
-            public static CreatureTemplate.Type WeaverLizard = new(nameof(WeaverLizard), true);
-            public static CreatureTemplate.Type FlameLizard = new(nameof(FlameLizard), true);
-            public static CreatureTemplate.Type AirplaneLizard = new(nameof(AirplaneLizard), true);
-            public static CreatureTemplate.Type RaspberryLizard = new(nameof(RaspberryLizard), true);
-
-            public static CreatureTemplate.Type MonitorLizard = new(nameof(MonitorLizard), true);
-            public static CreatureTemplate.Type StarNosedLizard = new(nameof(StarNosedLizard), true);
-            public static CreatureTemplate.Type PoisonLizard = new(nameof(PoisonLizard), true);
-
-            public static CreatureTemplate.Type ScavSeer = new(nameof(ScavSeer), true);
-            public static CreatureTemplate.Type ScavFlank = new(nameof(ScavFlank), true);
-            public static CreatureTemplate.Type ScavMessenger = new(nameof(ScavMessenger), true);
-
-            public static CreatureTemplate.Type StarSpawn = new(nameof(StarSpawn), true);
-            public static CreatureTemplate.Type StarNoodles = new(nameof(StarNoodles), true);
-            public static CreatureTemplate.Type StarJelly = new(nameof(StarJelly), true);
-            public static CreatureTemplate.Type StarSpider = new(nameof(StarSpider), true);
-            public static CreatureTemplate.Type StarElder = new(nameof(StarElder), true);
-
-            public static CreatureTemplate.Type PoisonSpider = new(nameof(PoisonSpider), true);
-            public static CreatureTemplate.Type ClimbGrub = new(nameof(ClimbGrub), true);
-
-            public void UnregisterValues()
-            {
-                WeaverLizard?.Unregister();
-                WeaverLizard = null;
-                FlameLizard?.Unregister();
-                FlameLizard = null;
-                AirplaneLizard?.Unregister();
-                AirplaneLizard = null;
-                RaspberryLizard?.Unregister();
-                RaspberryLizard = null;
-                MonitorLizard?.Unregister();
-                MonitorLizard = null;
-                StarNosedLizard?.Unregister();
-                StarNosedLizard = null;
-                PoisonLizard?.Unregister();
-                PoisonLizard = null;
-                ScavSeer?.Unregister();
-                ScavSeer = null;
-                ScavFlank?.Unregister();
-                ScavFlank = null;
-                ScavMessenger?.Unregister();
-                ScavMessenger = null;
-                StarSpawn?.Unregister();
-                StarSpawn = null;
-                StarNoodles?.Unregister();
-                StarNoodles = null;
-                StarJelly?.Unregister();
-                StarJelly = null;
-                StarSpider?.Unregister();
-                StarSpider = null;
-                StarElder?.Unregister();
-                StarElder = null;
-                PoisonSpider?.Unregister();
-                PoisonSpider = null;
-            }
-        }
-
-        public class SandboxUnlockID
-        {
-            public static MultiplayerUnlocks.SandboxUnlockID RippleFlower = new(nameof(RippleFlower), true);
-            public static MultiplayerUnlocks.SandboxUnlockID PoisonDart = new(nameof(PoisonDart), true);
-            public static MultiplayerUnlocks.SandboxUnlockID KarmaMask = new(nameof(KarmaMask), true);
-            public static MultiplayerUnlocks.SandboxUnlockID ExplosiveBoomerang = new(nameof(ExplosiveBoomerang), true);
-            public static MultiplayerUnlocks.SandboxUnlockID SingularityBoomerang = new(nameof(SingularityBoomerang), true);
-
-            public static MultiplayerUnlocks.SandboxUnlockID WeaverLizard = new(nameof(WeaverLizard), true);
-            public static MultiplayerUnlocks.SandboxUnlockID FlameLizard = new(nameof(FlameLizard), true);
-            public static MultiplayerUnlocks.SandboxUnlockID AirplaneLizard = new(nameof(AirplaneLizard), true);
-            public static MultiplayerUnlocks.SandboxUnlockID RaspberryLizard = new(nameof(RaspberryLizard), true);
-            public static MultiplayerUnlocks.SandboxUnlockID MonitorLizard = new(nameof(MonitorLizard), true);
-            public static MultiplayerUnlocks.SandboxUnlockID StarNosedLizard = new(nameof(StarNosedLizard), true);
-            public static MultiplayerUnlocks.SandboxUnlockID PoisonLizard = new(nameof(PoisonLizard), true);
-
-            public static MultiplayerUnlocks.SandboxUnlockID ScavSeer = new(nameof(ScavSeer), true);
-            public static MultiplayerUnlocks.SandboxUnlockID ScavFlank = new(nameof(ScavFlank), true);
-            public static MultiplayerUnlocks.SandboxUnlockID ScavMessenger = new(nameof(ScavMessenger), true);
-
-            public static MultiplayerUnlocks.SandboxUnlockID StarSpawn = new(nameof(StarSpawn), true);
-            public static MultiplayerUnlocks.SandboxUnlockID StarNoodles = new(nameof(StarNoodles), true);
-            public static MultiplayerUnlocks.SandboxUnlockID StarJelly = new(nameof(StarJelly), true);
-            public static MultiplayerUnlocks.SandboxUnlockID StarSpider = new(nameof(StarSpider), true);
-            public static MultiplayerUnlocks.SandboxUnlockID StarElder = new(nameof(StarElder), true);
-
-            public static MultiplayerUnlocks.SandboxUnlockID PoisonSpider = new(nameof(PoisonSpider), true);
-            public static MultiplayerUnlocks.SandboxUnlockID ClimbGrub = new(nameof(ClimbGrub), true);
-
-            public static MultiplayerUnlocks.SandboxUnlockID BrownFruit = new(nameof(BrownFruit), true);
-            public static MultiplayerUnlocks.SandboxUnlockID TorchSpear = new(nameof(TorchSpear), true);
-
-
-            public void UnregisterValues()
-            {
-                RippleFlower?.Unregister();
-                RippleFlower = null;
-                PoisonDart?.Unregister();
-                PoisonDart = null;
-                KarmaMask?.Unregister();
-                KarmaMask = null;
-                ExplosiveBoomerang?.Unregister();
-                ExplosiveBoomerang = null;
-                SingularityBoomerang?.Unregister();
-                SingularityBoomerang = null;
-                ClimbGrub?.Unregister();
-                ClimbGrub = null;
-
-                WeaverLizard?.Unregister();
-                WeaverLizard = null;
-                FlameLizard?.Unregister();
-                FlameLizard = null;
-                AirplaneLizard?.Unregister();
-                AirplaneLizard = null;
-                RaspberryLizard?.Unregister();
-                RaspberryLizard = null;
-                MonitorLizard?.Unregister();
-                MonitorLizard = null;
-                StarNosedLizard?.Unregister();
-                StarNosedLizard = null;
-                PoisonLizard?.Unregister();
-                PoisonLizard = null;
-                ScavSeer?.Unregister();
-                ScavSeer = null;
-                ScavFlank?.Unregister();
-                ScavFlank = null;
-                ScavMessenger?.Unregister();
-                ScavMessenger = null;
-                StarSpawn?.Unregister();
-                StarSpawn = null;
-                StarNoodles?.Unregister();
-                StarNoodles = null;
-                StarJelly?.Unregister();
-                StarJelly = null;
-                StarSpider?.Unregister();
-                StarSpider = null;
-                StarElder?.Unregister();
-                StarElder = null;
-                PoisonSpider?.Unregister();
-                PoisonSpider = null;
-                BrownFruit?.Unregister();
-                BrownFruit = null;
-                TorchSpear?.Unregister();
-                TorchSpear = null;
-            }
-        }
-
-        public class AbstractObjectType
-        {
-            public static AbstractPhysicalObject.AbstractObjectType RippleFlower = new(nameof(RippleFlower), true);
-            public static AbstractPhysicalObject.AbstractObjectType Dart = new(nameof(Dart), true);
-            public static AbstractPhysicalObject.AbstractObjectType PoisonDart = new(nameof(PoisonDart), true);
-            public static AbstractPhysicalObject.AbstractObjectType KarmaMask = new(nameof(KarmaMask), true);
-            public static AbstractPhysicalObject.AbstractObjectType ExplosiveBoomerang = new(nameof(ExplosiveBoomerang), true);
-            public static AbstractPhysicalObject.AbstractObjectType SingularityBoomerang = new(nameof(SingularityBoomerang), true);
-            public static AbstractPhysicalObject.AbstractObjectType BrownFruit = new(nameof(BrownFruit), true);
-            public static AbstractPhysicalObject.AbstractObjectType TorchSpear = new(nameof(TorchSpear), true);
-
-            public void UnregisterValues()
-            {
-                RippleFlower?.Unregister();
-                RippleFlower = null;
-                PoisonDart?.Unregister();
-                PoisonDart = null;
-                KarmaMask?.Unregister();
-                KarmaMask = null;
-                SingularityBoomerang?.Unregister();
-                SingularityBoomerang = null;
-                BrownFruit?.Unregister();
-                BrownFruit = null;
-                TorchSpear?.Unregister();
-                TorchSpear = null;
-            }
-        }
-
-        public class CreatureCommunityID
-        {
-            public static CreatureCommunities.CommunityID StarSpawn = new(nameof(StarSpawn), true);
-
-            public void UnregisterValues()
-            {
-                StarSpawn?.Unregister();
-                StarSpawn = null;
-            }
+            StarSpawn?.Unregister();
+            StarSpawn = null;
         }
     }
 }

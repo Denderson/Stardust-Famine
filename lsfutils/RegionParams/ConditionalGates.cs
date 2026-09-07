@@ -20,21 +20,20 @@ public static class ConditionalGates
 
     private static readonly HashSet<string> loadedImages = [];
 
-    public static readonly string ConfigPath = AssetManager.ResolveFilePath("lsf/customRequirements.txt");
+    public static readonly string ConfigPath = "lsf/customRequirements.txt";
 
     public static void ApplyHooks()
     {
-        LoadConfig(ConfigPath);
         On.RegionGate.customKarmaGateRequirements += RegionGate_customKarmaGateRequirements;
         new Hook(typeof(RegionGate).GetProperty(nameof(RegionGate.MeetRequirement)).GetGetMethod(), typeof(ConditionalGates).GetMethod(nameof(RegionGate_get_MeetRequirement)));
     }
 
-    public static void LoadConfig(string path)
+    public static void Load()
     {
         rawConfig.Clear();
         // TODO: Images
         string imageFolder = null;
-        return;
+        string path = AssetManager.ResolveFilePath(ConfigPath);
         if (!File.Exists(path))
         {
             Log.LogMessage("Custom gate lock config not found!, " + path);

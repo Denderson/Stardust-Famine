@@ -31,6 +31,7 @@ namespace lsfUtils.Creatures
             RegisterStarJelly();
             RegisterPoisonSpider();
             RegisterClimbGrub();
+            //RegisterKnotSpawn();
         }
 
         public static CreatureTemplate LizardTemplate(CreatureTemplate.Type type)
@@ -1017,6 +1018,111 @@ namespace lsfUtils.Creatures
                         relationships.Ignores(new CreatureTemplate.Type(entries[i], false));
                     }
                     relationships.Ignores(type);
+                }
+            };
+            CreatureRegistryTemplate.Register(entry);
+        }
+
+        public static void RegisterKnotSpawn()
+        {
+            CreatureTemplate.Type type = StarSpawn;
+            var entry = new CreatureRegistryEntry(type, [type.ToString()])
+            {
+                mapName = "Star",
+                mapColor = RainWorld.RippleColor,
+                symbolName = "Kill_Scavenger",
+                isHostileForShelter = false,
+                isBigForShelter = false,
+                performanceCost = 100f,
+                unlockID = SandboxUnlockID.StarSpawn,
+                RealisedCtor = (abstractCreature, world) => new Spawn.StarSpawn(abstractCreature, world),
+                AbstractAICtor = (world, parent) => new AbstractCreatureAI(world, parent),
+                AICtor = (creature, world) => new Spawn.StarSpawnAI(creature, world),
+                //Grabability = (player, physicalObject) => Player.ObjectGrabability.CantGrab,
+                //StateCtor = (creature) => new CreatureState(creature),
+                setTemplate = () =>
+                {
+                    List<TileTypeResistance> tRs =
+                    [
+                        new(AItile.Accessibility.Floor, 1f, PathCost.Legality.Allowed),
+                        new(AItile.Accessibility.Climb, 2f, PathCost.Legality.Allowed),
+                        new(AItile.Accessibility.Corridor, 1.5f, PathCost.Legality.Allowed),
+                        new(AItile.Accessibility.Solid, 100f, PathCost.Legality.Unallowed)
+                    ];
+
+                    List<TileConnectionResistance> cRs =
+                    [
+                        new(MovementConnection.MovementType.Standard, 1f, PathCost.Legality.Allowed),
+                        new(MovementConnection.MovementType.OpenDiagonal, 1f, PathCost.Legality.Allowed),
+                        new(MovementConnection.MovementType.ShortCut, 1.5f, PathCost.Legality.Allowed),
+                        new(MovementConnection.MovementType.BetweenRooms, 2f, PathCost.Legality.Allowed)
+                    ];
+
+                    CreatureTemplate ancestor = StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.BigNeedleWorm);
+                    CreatureTemplate template = new(type, ancestor, tRs, cRs, new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.Ignores, 0f))
+                    {
+                        name = type.ToString(),
+                        AI = true,
+                        dangerousToPlayer = 0.2f,
+                        lungCapacity = float.MaxValue,
+                        scaryness = 0.5f,
+                        smallCreature = false,
+                        socialMemory = true,
+                        wormGrassImmune = true,
+                        communityID = Enums.CreatureCommunityID.StarSpawn,
+                        communityInfluence = 1f,
+                        shortcutColor = RainWorld.RippleColor,
+                        shortcutSegments = 3,
+                        offScreenSpeed = 0.1f,
+                        abstractedLaziness = 200,
+                        roamBetweenRoomsChance = 0.07f,
+                        bodySize = 1f,
+                        stowFoodInDen = true,
+                        grasps = 1,
+                        visualRadius = 1200f,
+                        movementBasedVision = 0.2f,
+                        waterRelationship = CreatureTemplate.WaterRelationship.Amphibious,
+                        waterPathingResistance = 2f,
+                        canFly = true,
+                        meatPoints = 1,
+                        baseDamageResistance = 2.5f,
+                        baseStunResistance = 2f,
+                        ghostSedationImmune = true,
+                        //damageRestistances = []
+                    };
+                    return template;
+                },
+                setRelationships = () =>
+                {
+                    Relationships self = new(type);
+
+                    foreach (var template in StaticWorld.creatureTemplates)
+                    {
+                        if (template.quantified)
+                        {
+                            self.Ignores(template.type);
+                            self.IgnoredBy(template.type);
+                        }
+                    }
+
+                    self.Ignores(type);
+
+                    self.Eats(CreatureTemplate.Type.Slugcat, 1f);
+                    self.Eats(CreatureTemplate.Type.Scavenger, 0.6f);
+                    self.Eats(CreatureTemplate.Type.LizardTemplate, 0.3f);
+                    self.Eats(CreatureTemplate.Type.CicadaA, 0.4f);
+
+                    self.Intimidates(CreatureTemplate.Type.LizardTemplate, 0.35f);
+                    self.Intimidates(CreatureTemplate.Type.CicadaA, 0.3f);
+
+                    self.AttackedBy(CreatureTemplate.Type.Slugcat, 0.2f);
+                    self.AttackedBy(CreatureTemplate.Type.Scavenger, 0.2f);
+
+                    self.EatenBy(CreatureTemplate.Type.BigSpider, 0.35f);
+
+                    self.Fears(CreatureTemplate.Type.Spider, 0.2f);
+                    self.Fears(CreatureTemplate.Type.BigSpider, 0.2f);
+                    self.Fears(CreatureTemplate.Type.SpitterSpider, 0.6f);
                 }
             };
             CreatureRegistryTemplate.Register(entry);

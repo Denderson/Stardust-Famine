@@ -16,18 +16,18 @@ public static class ShelterLinks
     
     public static readonly Dictionary<string, ShelterLinkEntry> byShelter = [];
 
-    public static readonly string ConfigPath = AssetManager.ResolveFilePath("lsf/shelterLinkstxt");
+    public static readonly string ConfigPath = "lsf/shelterLinks.txt";
 
     public static void ApplyHooks()
     {
-        LoadConfig(ConfigPath);
         On.SaveState.BringUpToDate += SaveState_BringUpToDate;
     }
     
-    public static void LoadConfig(string path)
+    public static void Load()
     {
         rawConfig.Clear();
         byShelter.Clear();
+        string path = AssetManager.ResolveFilePath(ConfigPath);
         if (!File.Exists(path))
         {
             Log.LogMessage("Shelter link config not found!, " + path);
