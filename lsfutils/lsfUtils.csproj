@@ -9,7 +9,6 @@
     <PathMap>$(MSBuildThisFileDirectory.Replace(',', ',,').Replace('=', '=='))=/</PathMap>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Creatures\Misc\" />
     <Folder Include="lib\" />
   </ItemGroup>
   <ItemGroup>
