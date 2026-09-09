@@ -1,7 +1,8 @@
-﻿using Fisobs.Core;
-using lsfUtils.Items.Darts.Dart;
+﻿using lsfUtils.Items.Darts.Dart;
 using static lsfUtils.Enums;
 using static lsfUtils.Plugin;
+
+namespace lsfUtils.Items.Darts.Dart;
 
 public class AbstractDart : AbstractPhysicalObject
 {
@@ -39,10 +40,5 @@ public class AbstractDart : AbstractPhysicalObject
             Log.LogMessage("Dart type unknown, creating default Dart");
             realizedObject = new Dart(this);
         }
-    }
-
-    public override string ToString()
-    {
-        return this.SaveToString($"{poison},{dartType}");
     }
 }

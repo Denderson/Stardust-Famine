@@ -5,7 +5,7 @@
 	"hide_version": false,
 	"authors": "",
 	"description": "Dependency mod that adds a few mechanics and creatures for modders to use",
-	"requirements": [ "fisobs" ],
-	"requirements_names": [ "Fisobs" ],
+	"requirements": ["pom"],
+	"requirements_names": ["Pom"],
 	"checksum_override_version": false
 }

@@ -1,8 +1,4 @@
-﻿using Fisobs.Core;
-using UnityEngine;
-using static lsfUtils.Plugin;
-using lsfUtils.Items.KnotSpawnV2;
-
+﻿using static lsfUtils.Plugin;
 
 namespace lsfUtils.Items.KnotSpawnV2;
 
@@ -22,10 +18,5 @@ public class KnotSpawnV2Abstract : AbstractConsumable
         base.Realize();
         realizedObject ??= new KnotSpawnV2(this);
         Log.LogMessage("Spawning knot spawn!");
-    }
-
-    public override string ToString()
-    {
-        return this.SaveToString("");
     }
 }

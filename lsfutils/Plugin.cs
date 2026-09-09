@@ -1,7 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using DevInterface;
-using Fisobs.Core;
 using LizardCosmetics;
 using lsfUtils.Creatures;
 using lsfUtils.Creatures.Lizards;
@@ -70,7 +69,6 @@ using static Pom.Pom;
 
 namespace lsfUtils
 {
-    [BepInDependency("io.github.dual.fisobs")]
     [BepInPlugin("lsfUtils", "LSF Utils", "0.1")]
 
     public class Plugin : BaseUnityPlugin

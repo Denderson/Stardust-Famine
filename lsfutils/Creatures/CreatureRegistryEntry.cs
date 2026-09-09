@@ -3,6 +3,8 @@ using lsfUtils.Items;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static CreatureTemplate.Relationship;
+using Type = CreatureTemplate.Relationship.Type;
 
 namespace lsfUtils.Creatures;
 
@@ -115,4 +117,46 @@ public static class CreatureRegistryTemplate
         }
         return null;
     }
+
+    public static void EstRel(CreatureTemplate.Type cr1, CreatureTemplate.Type cr2, float str, Type type1, Type type2)
+    {
+        StaticWorld.EstablishRelationship(cr1, cr2, new CreatureTemplate.Relationship(type1, str));
+        StaticWorld.EstablishRelationship(cr2, cr1, new CreatureTemplate.Relationship(type2, str));
+    }
+    
+    public static void Eats(this CreatureTemplate.Type cr1, CreatureTemplate.Type cr2, float str) => EstRel(cr1, cr2, str, Type.Eats, Type.Afraid);
+    public static void EatsDangerously(this CreatureTemplate.Type cr1, CreatureTemplate.Type cr2, float str) => EstRel(cr1, cr2, str, Type.Eats, Type.Attacks);
+    public static void EatenBy(this CreatureTemplate.Type cr1, CreatureTemplate.Type cr2, float str) => EstRel(cr1, cr2, str, Type.Afraid, Type.Eats);
+    public static void Ignores(this CreatureTemplate.Type cr1, CreatureTemplate.Type cr2, float str) => EstRel(cr1, cr2, str, Type.Afraid, Type.Eats);
+    public static void Attacks(this CreatureTemplate.Type cr1, CreatureTemplate.Type cr2, float str) => EstRel(cr1, cr2, str, Type.Attacks, Type.Afraid);
+    public static void RelationshipBased(this CreatureTemplate.Type cr1, CreatureTemplate.Type cr2, float str) => EstRel(cr1, cr2, str, Type.SocialDependent, Type.SocialDependent);
+    public static void PackWith(this CreatureTemplate.Type cr1, CreatureTemplate.Type cr2, float str) => EstRel(cr1, cr2, str, Type.Pack, Type.Pack);
+    public static void MutualAttacks(this CreatureTemplate.Type cr1, CreatureTemplate.Type cr2, float str) => EstRel(cr1, cr2, str, Type.Attacks, Type.Attacks);
+
+    public static void PlaysWith(this CreatureTemplate.Type cr1, CreatureTemplate.Type cr2, float str) => EstRel(cr1, cr2, str, Type.PlaysWith, Type.PlaysWith);
+
+
+
+    public static bool IsType(this CreatureTemplate.Type type, CreatureTemplate.Type wanted)
+    {
+        string str1 = type?.ToString()?.ToLowerInvariant();
+        string str2 = wanted?.ToString()?.ToLowerInvariant();
+        if (str2 == "lizardtemplate") str2 = "lizard";
+        if (str1 == null || str2 == null) return false;
+        if (str1 == str2) return true;
+        if (str1.Contains(str2)) return true;
+        return false;
+    }
+
+    public static bool IsType(this CreatureTemplate.Type type, string wanted)
+    {
+        string str1 = type?.ToString()?.ToLowerInvariant();
+        string str2 = wanted?.ToLowerInvariant();
+        if (str2 == "lizardtemplate") str2 = "lizard";
+        if (str1 == null || str2 == null) return false;
+        if (str1 == str2) return true;
+        if (str1.Contains(str2)) return true;
+        return false;
+    }
+
 }

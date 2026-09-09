@@ -18,9 +18,6 @@
     <Reference Include="BepInEx">
       <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\BepInEx.dll</HintPath>
     </Reference>
-    <Reference Include="Fisobs">
-      <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\Fisobs.dll</HintPath>
-    </Reference>
     <Reference Include="HOOKS-Assembly-CSharp">
       <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\HOOKS-Assembly-CSharp.dll</HintPath>
     </Reference>
