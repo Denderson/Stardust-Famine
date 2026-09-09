@@ -22,6 +22,7 @@ using lsfUtils.CreatureTags;
 using lsfUtils.CWTs;
 using lsfUtils.DevtoolsEffects.CreepingDarkness;
 using lsfUtils.DevtoolsEffects.EvilWater;
+using lsfUtils.DevtoolsEffects.StardustRain;
 using lsfUtils.DevtoolsObjects.BackgroundMud;
 using lsfUtils.DevtoolsObjects.Bumper;
 using lsfUtils.DevtoolsObjects.ConditionalFilter;
@@ -157,6 +158,9 @@ namespace lsfUtils
 
                     EvilWater.RegisterEvilWater();
                     EvilWaterHooks.ApplyHooks();
+
+                    StardustEnums.RegisterValues();
+                    StardustRainHooks.Apply();
                 }
 
                 // creature flags
