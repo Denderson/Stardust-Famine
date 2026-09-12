@@ -157,7 +157,7 @@ namespace Stardust
                     if (self.saveStateNumber == Enums.SlugcatStatsName.sfscholar)
                     {
                         SaveState saveCopy = self;
-                        self.SetBackupSave(ref saveCopy, Math.Max(i - 1, 0));
+                        self.SetBackupSave(saveCopy, Math.Max(i - 1, 0));
                     }
                     rainWorld.progression.SaveProgressionAndDeathPersistentDataOfCurrentState(saveAsDeath: false, saveAsQuit: false);
                 }

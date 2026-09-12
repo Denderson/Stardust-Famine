@@ -1,41 +1,7 @@
-﻿using BepInEx;
-using BepInEx.Logging;
-using Fisobs.Core;
-using Menu;
-using Menu.Remix.MixedUI;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using MonoMod.RuntimeDetour;
-using MoreSlugcats;
-using Music;
-using Newtonsoft.Json.Linq;
-using RWCustom;
-using SlugBase;
-using SlugBase.Features;
-using SlugBase.SaveData;
-using Stardust.Anchors;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime;
-using System.Runtime.CompilerServices;
-using System.Runtime.Remoting.Contexts;
-using System.Security.Cryptography;
-using System.Security.Permissions;
-using System.Threading;
-using Unity.Mathematics;
-using UnityEngine;
-using UnityEngine.Playables;
-using Watcher;
-using static SlugBase.Features.FeatureTypes;
-using static SlugBase.SaveData.SlugBaseSaveData;
+﻿using SlugBase.SaveData;
 using static Stardust.Plugin;
 using static Stardust.Enums;
+using static Stardust.Enums.SlugcatStatsName;
 
 namespace Stardust.SaveFile
 {
@@ -62,22 +28,15 @@ namespace Stardust.SaveFile
         public static void CustomSavedataInit(On.SaveState.orig_LoadGame orig, SaveState self, string str, RainWorldGame game)
         {
             orig(self, str, game);
-            if (self.saveStateNumber == SlugcatStatsName.sfscholar && self.deathPersistentSaveData.GetSlugBaseData().TryGet(backupToUse, out int backup) && backup > -1)
+            if (self?.saveStateNumber == sfscholar && self.deathPersistentSaveData.GetSlugBaseData().TryGet(backupToUse, out int backup) && backup > -1)
             {
                 Log.LogMessage($"Loading backup in loadgame: {backup}");
-                string saveToLoad = self.deathPersistentSaveData.GetBackup(backup);
-                orig(self, saveToLoad, game);
+                self.LoadBackupAsMain(backup);
             }
             if (self.cycleNumber <= 1)
             {
-                if (self.saveStateNumber == Enums.SlugcatStatsName.bitter)
-                {
-                    self.InitialSaveSetupBitter();
-                }    
-                else if (self.saveStateNumber == Enums.SlugcatStatsName.sfscholar)
-                {
-                    self.InitialSaveSetupScholar();
-                }
+                if (self.saveStateNumber == bitter) self.InitialSaveSetupBitter();
+                else if (self.saveStateNumber == sfscholar) self.InitialSaveSetupScholar();
             }
         }
 
@@ -186,6 +145,11 @@ namespace Stardust.SaveFile
             Log.LogMessage($"Setting backup: {result}");
             save.GetSlugBaseData().Set(name, result);
         }
-
+        
+        public static void SetBackup(this DeathPersistentSaveData save, string name, string value)
+        {
+            Log.LogMessage($"Setting backup: {value}");
+            save.GetSlugBaseData().Set(name, value);
+        }
     }
 }

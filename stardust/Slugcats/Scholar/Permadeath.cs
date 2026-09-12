@@ -15,7 +15,7 @@ using UnityEngine.Rendering;
 using Stardust.Slugcats.Scholar.ThreadsSequence;
 using Stardust.SaveFile;
 
-namespace Stardust.Slugcats.Scholar.Permadeath
+namespace Stardust.Slugcats.Scholar
 {
     public static class Permadeath
     {
@@ -28,7 +28,9 @@ namespace Stardust.Slugcats.Scholar.Permadeath
         {
             orig(self);
             if (self?.hud?.owner != null && self.hud.owner is Player && (self.hud.owner as Player).room?.game?.StoryCharacter == Enums.SlugcatStatsName.sfscholar && !self.gameOverMode && self.cycleTick > -1)
+            {
                 self.label.text = self.hud.rainWorld.inGameTranslator.Translate("Cycle") + " " + CyclesRemaining((self.hud.owner as Player).room.game.GetStorySession.saveState.cycleNumber);
+            }
         }
 
         public static void CycleLabelCycleFix(On.HUD.Map.CycleLabel.orig_UpdateCycleText orig, HUD.Map.CycleLabel self)
@@ -39,6 +41,7 @@ namespace Stardust.Slugcats.Scholar.Permadeath
             {
                 int cyclesRemaining = CyclesRemaining(player.abstractCreature.world.game.GetStorySession.saveState.cycleNumber);
                 self.red = (cyclesRemaining <= 0) ? 1 : -1;
+                self.red = cyclesRemaining <= 0 ? 1 : -1;
                 self.label.text = self.owner.hud.rainWorld.inGameTranslator.Translate("Cycle") + $" {cyclesRemaining}";
             }
         }
@@ -171,9 +174,8 @@ namespace Stardust.Slugcats.Scholar.Permadeath
             }
             if (self.manager.upcomingProcess == null)
             {
-                if (self.manager.musicPlayer != null)
-                    self.manager.musicPlayer.FadeOutAllSongs(20f);
-                self.GetStorySession.saveState.deathPersistentSaveData.Set<bool>(SaveFileMain.scholarPermadeath, true);
+                self.manager.musicPlayer?.FadeOutAllSongs(20f);
+                self.GetStorySession.saveState.deathPersistentSaveData.Set(SaveFileMain.scholarPermadeath, true);
                 self.manager.RequestMainProcessSwitch(Enums.ProcessIDs.threadsProcess, 5f);
             }
         }

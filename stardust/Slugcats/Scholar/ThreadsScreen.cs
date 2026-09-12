@@ -136,27 +136,23 @@ public class ThreadsScreen : global::Menu.Menu
             Log.LogMessage("Loading backups");
             if (manager.rainWorld.progression.IsThereASavedGame(Enums.SlugcatStatsName.sfscholar))
             {
-
                 SaveState save = manager.rainWorld.progression.GetOrInitiateSaveState(Enums.SlugcatStatsName.sfscholar, null, manager.menuSetup, saveAsDeathOrQuit: false);
-                string saveToLoad = " ";
-                if (save?.deathPersistentSaveData?.GetBackup(backupNumber) != null)
+                manager.rainWorld.progression.currentSaveState = save;
+                if (save.deathPersistentSaveData.GetBackup(backupNumber) != null)
                 {
                     Log.LogMessage($"Backup {backupNumber} exists");
-                    save.deathPersistentSaveData.Set<int>(SaveFileMain.backupToUse, backupNumber);
-                    saveToLoad = save.deathPersistentSaveData.GetBackup(backupNumber);
-                    Log.LogMessage($"Save to load: {saveToLoad}");
-                    manager.rainWorld.progression.currentSaveState = save;
-                    Log.LogMessage("Loading backup");
-                    manager.rainWorld.progression.currentSaveState.LoadGame(saveToLoad, null);
-                    Log.LogMessage(manager.rainWorld.progression.currentSaveState.SaveToString());
-                    for (int i = 0; i < 6; i++)
-                    {
-                        //manager.rainWorld.progression.currentSaveState.deathPersistentSaveData.GetSlugBaseData().Set<string>(SaveFileCode.backup + i, saveToLoad);
-                    }
+                    save.LoadBackupAsMain(backupNumber);
+                    manager.rainWorld.progression.SaveWorldStateAndProgression(malnourished: false);
                 }
-                else Log.LogMessage($"Backup {backupNumber} does not exist");
+                else
+                {
+                    Log.LogMessage($"Backup {backupNumber} does not exist");
+                }
             }
-            else manager.rainWorld.progression.currentSaveState = manager.rainWorld.progression.GetOrInitiateSaveState(Enums.SlugcatStatsName.sfscholar, null, manager.menuSetup, saveAsDeathOrQuit: false);
+            else
+            {
+                manager.rainWorld.progression.currentSaveState = manager.rainWorld.progression.GetOrInitiateSaveState(Enums.SlugcatStatsName.sfscholar, null, manager.menuSetup, saveAsDeathOrQuit: false);
+            }
             if (manager.musicPlayer?.song != null) manager.musicPlayer.song.FadeOut(20f);
             manager.RequestMainProcessSwitch(ProcessManager.ProcessID.Game);
             PlaySound(SoundID.MENU_Dream_Button);

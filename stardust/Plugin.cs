@@ -21,7 +21,7 @@ using Stardust.RippleLayers;
 using Stardust.SaveFile;
 using Stardust.Slugcats;
 using Stardust.Slugcats.Bitter;
-using Stardust.Slugcats.Scholar.Permadeath;
+using Stardust.Slugcats.Scholar;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
