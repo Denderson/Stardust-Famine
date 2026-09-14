@@ -308,7 +308,8 @@ namespace Stardust
             AssetBundle bundle = AssetBundle.LoadFromFile(bundlePath);
             if (bundle != null)
             {
-                RegisterShader(self, bundle, "Assets/Shaders/deeperspaceBackground.shader", "deeperspaceBackground");
+                RegisterShader(self, bundle, "Assets/Shaders/DeeperspaceBackground.shader", "DeeperspaceBackground");
+                RegisterShader(self, bundle, "Assets/Shaders/ThreadSpiral.shader", "ThreadSpiral");
                 bundle.Unload(false);
             }
             else

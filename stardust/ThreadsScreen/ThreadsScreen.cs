@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using Menu;
 using RWCustom;
 using SlugBase.SaveData;
-using Stardust;
 using Stardust.SaveFile;
 using UnityEngine;
 using static Stardust.Plugin;
 
-public class ThreadsScreen : global::Menu.Menu
+namespace Stardust.ThreadsScreen;
+
+public class ThreadsScreen : Menu.Menu
 {
     public SimpleButton exitButton;
 
@@ -17,6 +18,8 @@ public class ThreadsScreen : global::Menu.Menu
     public MenuLabel messageLabel;
 
     public MenuLabel noticeLabel;
+
+    public ThreadSpiral spiralGraphic;
 
     public int counter;
 
@@ -49,23 +52,10 @@ public class ThreadsScreen : global::Menu.Menu
     public ThreadsScreen(ProcessManager manager) : base(manager, Enums.ProcessIDs.threadsProcess)
     {
         pages.Add(new Page(this, null, "main", 0));
-        if (manager.musicPlayer != null)
-        {
-            manager.musicPlayer.FadeOutAllSongs(30f);
-        }
+        manager.musicPlayer?.FadeOutAllSongs(30f);
         mySoundLoopID = SoundID.MENU_Dream_LOOP;
         active = false;
-        backupButtons = new List<SimpleButton>();
-        
-
-            /*messageLabel = new MenuLabel(this, pages[0], "Threads sequence test", new Vector2(base.manager.rainWorld.options.ScreenSize.x * 0.5f - 50f + (1366f - base.manager.rainWorld.options.ScreenSize.x) / 2f, base.manager.rainWorld.options.ScreenSize.y * 0.5f - 25f), new Vector2(100f, 30f), bigText: true);
-            messageLabel.label.color = new Color(1f, 1f, 1f);
-            messageLabel.label.alignment = FLabelAlignment.Center;
-            noticeLabel = new MenuLabel(this, pages[0], Translate("[ Notice ]"), new Vector2(base.manager.rainWorld.options.ScreenSize.x * 0.5f - 50f + (1366f - base.manager.rainWorld.options.ScreenSize.x) / 2f, base.manager.rainWorld.options.ScreenSize.y * 0.5f + 50f), new Vector2(100f, 30f), bigText: true);
-            noticeLabel.label.color = new Color(1f, 1f, 1f);
-            noticeLabel.label.alignment = FLabelAlignment.Center;
-            pages[0].subObjects.Add(messageLabel);
-            pages[0].subObjects.Add(noticeLabel);*/
+        backupButtons = [];
     }
 
     public override void Update()
@@ -79,10 +69,13 @@ public class ThreadsScreen : global::Menu.Menu
         if (counter == 80)
         {
             active = true;
-            exitButton = new SimpleButton(this, pages[0], Translate("EXIT"), "EXIT", new Vector2(manager.rainWorld.options.ScreenSize.x * 0.9f - 110f + (1366f - manager.rainWorld.options.ScreenSize.x) / 2f, 15f), new Vector2(110f, 30f));
+            exitButton = new SimpleButton(this, pages[0], Translate("EXIT"), "EXIT", new Vector2(manager.rainWorld.options.ScreenSize.x * 0.9f - 110f + (1366f - manager.rainWorld.options.ScreenSize.x) / 2f, 25f), new Vector2(110f, 30f));
             pages[0].subObjects.Add(exitButton);
             pages[0].lastSelectedObject = exitButton;
             exitButton.black = 1f;
+
+            spiralGraphic = new ThreadSpiral(this, pages[0], new Vector2(manager.rainWorld.options.ScreenSize.x * 0.5f, manager.rainWorld.options.ScreenSize.y * 0.5f), 50f);
+            pages[0].subObjects.Add(spiralGraphic);
 
             SaveState currentSaveState = manager.rainWorld.progression.GetOrInitiateSaveState(Enums.SlugcatStatsName.sfscholar, null, manager.menuSetup, saveAsDeathOrQuit: false);
             if (manager.rainWorld.progression.IsThereASavedGame(Enums.SlugcatStatsName.sfscholar))
@@ -129,7 +122,7 @@ public class ThreadsScreen : global::Menu.Menu
         string Message = message.ToLowerInvariant();
         if (Message.Contains("backup"))
         {
-            int backupNumber = Int32.Parse(message.Split('-')[1]);
+            int backupNumber = int.Parse(message.Split('-')[1]);
 
             manager.rainWorld.progression.miscProgressionData.currentlySelectedSinglePlayerSlugcat = Enums.SlugcatStatsName.sfscholar;
 

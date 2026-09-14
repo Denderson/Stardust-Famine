@@ -4,6 +4,7 @@
 !stardust/
 !stardust/mod/
 !stardust/Anchors/
+!stardust/ThreadsScreen/
 !stardust/Conditionals/
 !stardust/CWTs/
 !stardust/Mechanics/
@@ -26,6 +27,7 @@
 !stardust/Mod/scenes/*/
 !stardust/Mod/shaders/
 !stardust/Mod/shaders/*/
+!stardust/Mod/shaders/stardust
 !stardust/Mod/slugbase/
 !stardust/Mod/slugbase/scenes/
 !stardust/Mod/world/
