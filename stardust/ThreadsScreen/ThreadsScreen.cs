@@ -13,13 +13,15 @@ public class ThreadsScreen : Menu.Menu
 {
     public SimpleButton exitButton;
 
-    public List<SimpleButton> backupButtons;
+    public List<HoldButton> backupButtons;
 
     public MenuLabel messageLabel;
 
     public MenuLabel noticeLabel;
 
-    public ThreadSpiral spiralGraphic;
+    public ThreadSpiral threadSpiral;
+
+    public ThreadFog threadFog;
 
     public int counter;
 
@@ -61,12 +63,12 @@ public class ThreadsScreen : Menu.Menu
     public override void Update()
     {
         base.Update();
-        counter++;
-        if (counter == 40)
+        if (counter < 80) counter++;
+        if (counter == 10)
         {
             PlaySound(SoundID.MENU_Dream_Init);
         }
-        if (counter == 80)
+        if (counter == 20)
         {
             active = true;
             exitButton = new SimpleButton(this, pages[0], Translate("EXIT"), "EXIT", new Vector2(manager.rainWorld.options.ScreenSize.x * 0.9f - 110f + (1366f - manager.rainWorld.options.ScreenSize.x) / 2f, 25f), new Vector2(110f, 30f));
@@ -74,25 +76,38 @@ public class ThreadsScreen : Menu.Menu
             pages[0].lastSelectedObject = exitButton;
             exitButton.black = 1f;
 
-            spiralGraphic = new ThreadSpiral(this, pages[0], new Vector2(manager.rainWorld.options.ScreenSize.x * 0.5f, manager.rainWorld.options.ScreenSize.y * 0.5f), 50f);
-            pages[0].subObjects.Add(spiralGraphic);
+            threadFog = new ThreadFog(this, pages[0], new Vector2(manager.rainWorld.options.ScreenSize.x * 0.5f, manager.rainWorld.options.ScreenSize.y * 0.5f));
+            pages[0].subObjects.Add(threadFog);
+
+            threadSpiral = new ThreadSpiral(this, pages[0], new Vector2(manager.rainWorld.options.ScreenSize.x * 0.5f, manager.rainWorld.options.ScreenSize.y * 0.5f), 50f);
+            pages[0].subObjects.Add(threadSpiral);
+            
 
             SaveState currentSaveState = manager.rainWorld.progression.GetOrInitiateSaveState(Enums.SlugcatStatsName.sfscholar, null, manager.menuSetup, saveAsDeathOrQuit: false);
             if (manager.rainWorld.progression.IsThereASavedGame(Enums.SlugcatStatsName.sfscholar))
             {
                 for (int i = 0; i < 6; i++)
                 {
-                    if (currentSaveState?.deathPersistentSaveData?.GetBackup(i) != null)
-                    {
+                    //if (currentSaveState?.deathPersistentSaveData?.GetBackup(i) != null)
+                    /*{
                         Log.LogMessage($"Backup {i}");
                         Log.LogMessage(currentSaveState?.deathPersistentSaveData?.GetBackup(i) != null);
-                        SimpleButton newButton = new(this, pages[0], $"BACKUP-{i}", $"BACKUP-{i}", new Vector2(manager.rainWorld.options.ScreenSize.x * 0.5f + 120f * (i - 3), manager.rainWorld.options.ScreenSize.y * 0.5f), new Vector2(110f, 30f))
+
+                        Vector2 slotPos;
+                        if (i == 0)
                         {
-                            black = 1f
-                        };
-                        backupButtons.Add(newButton);
-                        pages[0].subObjects.Add(newButton);
-                    }
+                            slotPos = threadSpiral.pos; // manual center placement for slot 1
+                        }
+                        else
+                        {
+                            slotPos = threadSpiral.pos + GetPosOnSpiral(BackupPositions[i - 1]) * threadSpiral.sprite.width;
+                        }
+
+                        HoldButton holdButton = new(this, pages[0], Translate("RETRY<LINE>EXPEDITION").Replace("<LINE>", "\n"), "RETRY", slotPos, 100f);
+                        pages[0].subObjects.Add(holdButton);
+                        backupButtons.Add(holdButton);
+                        Log.LogMessage($"Spawning {i} backup on {slotPos.x},{slotPos.y}");
+                    }*/
                 }
             }
         }
@@ -101,14 +116,6 @@ public class ThreadsScreen : Menu.Menu
         {
             exitButton.buttonBehav.greyedOut = FreezeMenuFunctions;
             exitButton.black = Math.Max(0f, exitButton.black - 0.005f);
-            foreach (SimpleButton button in backupButtons)
-            {
-                if (button != null)
-                {
-                    button.black = Math.Max(0f, button.black - 0.005f);
-                    button.buttonBehav.greyedOut = FreezeMenuFunctions;
-                }
-            }
         }
     }
 
@@ -156,4 +163,24 @@ public class ThreadsScreen : Menu.Menu
             PlaySound(SoundID.MENU_Dream_Button);
         }
     }
+
+    public static Vector2 GetPosOnSpiral(float armPos, float lineSpacing = 0.03f)
+    {
+        float r = lineSpacing * armPos;
+        return new Vector2(r * Mathf.Cos(armPos), r * Mathf.Sin(armPos));
+    }
+
+    private const float QuarterTurn = Mathf.PI * 0.5f;
+
+    private static readonly float[] BackupPositions =
+    [
+        QuarterTurn * 3f,
+        QuarterTurn * 4f,
+        QuarterTurn * 5f,
+        QuarterTurn * 6f,
+        QuarterTurn * 7f,
+        QuarterTurn * 8f,
+        QuarterTurn * 9f,
+        QuarterTurn * 10f,
+    ];
 }

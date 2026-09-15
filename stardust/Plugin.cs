@@ -310,6 +310,7 @@ namespace Stardust
             {
                 RegisterShader(self, bundle, "Assets/Shaders/DeeperspaceBackground.shader", "DeeperspaceBackground");
                 RegisterShader(self, bundle, "Assets/Shaders/ThreadSpiral.shader", "ThreadSpiral");
+                RegisterShader(self, bundle, "Assets/Shaders/ThreadFog.shader", "ThreadFog");
                 bundle.Unload(false);
             }
             else

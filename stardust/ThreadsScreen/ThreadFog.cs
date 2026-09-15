@@ -3,27 +3,25 @@ using UnityEngine;
 
 namespace Stardust.ThreadsScreen;
 
-public class ThreadSpiral : PositionedMenuObject
+public class ThreadFog : PositionedMenuObject
 {
     public FSprite sprite;
-    public float size;
 
-    public ThreadSpiral(Menu.Menu menu, MenuObject owner, Vector2 pos, float size) : base(menu, owner, pos)
+    public ThreadFog(Menu.Menu menu, MenuObject owner, Vector2 pos) : base(menu, owner, pos)
     {
+        Vector2 screenSize = menu.manager.rainWorld.options.ScreenSize;
+
         sprite = new FSprite("Futile_White", true)
         {
-            scaleX = size,
-            scaleY = size,
-            shader = menu.manager.rainWorld.Shaders["ThreadSpiral"]
+            shader = menu.manager.rainWorld.Shaders["ThreadFog"]
         };
-        this.size = size;
+        sprite.scaleX = screenSize.x / sprite.element.sourcePixelSize.x;
+        sprite.scaleY = screenSize.y / sprite.element.sourcePixelSize.y;
+
         Container.AddChild(sprite);
         sprite.SetPosition(pos);
-    }
 
-    public override void Update()
-    {
-        base.Update();
+        Container.MoveToBack();
     }
 
     public override void GrafUpdate(float timeStacker)
