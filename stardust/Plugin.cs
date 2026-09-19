@@ -1,51 +1,18 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
-using DevInterface;
-using Fisobs.Core;
-using Menu;
-using Menu.Remix.MixedUI;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
-using MoreSlugcats;
-using Music;
-using RWCustom;
-using SlugBase;
-using SlugBase.Features;
-using SlugBase.SaveData;
 using Stardust.Anchors;
 using Stardust.Conditionals;
-using Stardust.CWTs;
 using Stardust.Mechanics;
-using Stardust.RippleLayers;
 using Stardust.SaveFile;
 using Stardust.Slugcats;
 using Stardust.Slugcats.Bitter;
 using Stardust.Slugcats.Scholar;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Net.NetworkInformation;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime;
-using System.Runtime.CompilerServices;
-using System.Runtime.Remoting.Contexts;
-using System.Security.Cryptography;
 using System.Security.Permissions;
-using System.Text.RegularExpressions;
-using System.Threading;
-using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Playables;
 using Watcher;
 using static Pom.Pom;
-using static SlugBase.Features.FeatureTypes;
-using static Watcher.RippleHybridVFX;
 
 #pragma warning disable CS0618
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -220,13 +187,6 @@ namespace Stardust
                     On.Music.MusicPlayer.GameRequestsSong += AnchorHooks.MusicPlayer_GameRequestsSong;
                     On.Music.GhostSong.Update += AnchorHooks.GhostSong_Update;
                     On.HUD.DialogBox.DrawPos += AnchorHooks.DialogBox_DrawPos;
-                }
-
-                // ripple layers
-                {
-                    On.RoomCamera.ctor += DeeperspaceHooks.RoomCamera_ctor;
-                    On.RoomCamera.DrawUpdate += DeeperspaceHooks.RoomCamera_DrawUpdate;
-                    On.RoomCamera.ClearAllSprites += DeeperspaceHooks.RoomCamera_ClearAllSprites;
                 }
 
                 // il hooks

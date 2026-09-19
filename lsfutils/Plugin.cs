@@ -1,7 +1,5 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
-using DevInterface;
-using LizardCosmetics;
 using lsfUtils.Creatures;
 using lsfUtils.Creatures.Lizards;
 using lsfUtils.Creatures.Lizards.AirplaneLizard;
@@ -36,32 +34,19 @@ using lsfUtils.DevtoolsObjects.RippleZone;
 using lsfUtils.DevtoolsObjects.WaveLight;
 using lsfUtils.Items;
 using lsfUtils.Items.BrownFruit;
-using lsfUtils.Items.Darts.Dart;
-using lsfUtils.Items.Darts.PoisonDart;
 using lsfUtils.Items.ExplosiveBoomerang;
 using lsfUtils.Items.KarmaMask;
 using lsfUtils.Items.KnotSpawnV2;
 using lsfUtils.Items.RippleFlower;
 using lsfUtils.Items.TorchSpears;
 using lsfUtils.RegionParams;
-using Menu.Remix.MixedUI;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using MonoMod.RuntimeDetour;
-using Newtonsoft.Json.Linq;
-using RWCustom;
+using lsfUtils.ScreenVariants;
+using lsfUtils.ScreenVariants.Deeperspace;
 using Stardust.PlacedObjects;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.Remoting.Contexts;
 using System.Security.Permissions;
 using UnityEngine;
-using Watcher;
-using static lsfUtils.RegionParams.TypeParams;
 using static Pom.Pom;
 
 #pragma warning disable CS0618
@@ -186,6 +171,12 @@ namespace lsfUtils
                     ConditionalGates.ApplyHooks();
                 }
 
+                // screen variants
+                {
+                    ScreenVariantHooks.ApplyHooks();
+                    DeeperspaceHooks.ApplyHooks();
+                }
+
                 On.RainWorld.Start += RainWorld_Start;
 
                 Log.LogMessage("Checking isInit!");
@@ -218,9 +209,6 @@ namespace lsfUtils
                 RegisterManagedObject(new ManagedTorchSpear());
                 RegisterManagedObject(new ManagedKnotSpawnV2());
 
-                //hi
-                //hello
-
                 EventLogic.RegisterBuiltInEvents();
 
                 Logger.LogMessage("LSF Utils success!");
@@ -236,23 +224,6 @@ namespace lsfUtils
         {
             orig(self);
             // load here stuff that requires AssetManager here (like ResolveFilePath)
-
-            string path;
-            try
-            {
-                path = AssetManager.ResolveFilePath("lsfUtils/regionMetaParameters.txt");
-            }
-            catch (Exception ex)
-            {
-                Log.LogWarning($"TypeParams.Load: AssetManager not ready or path resolution failed: {ex.Message}");
-                return;
-            }
-
-            if (string.IsNullOrEmpty(path) || !File.Exists(path))
-            {
-                Log.LogWarning("regionMetaParameters.txt not found.");
-                return;
-            }
 
             TypeParams.Load();
             ShelterLinks.Load();

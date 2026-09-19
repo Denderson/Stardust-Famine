@@ -1,32 +1,23 @@
-﻿using Stardust.RippleLayers;
-using Stardust.Slugcats.Scholar;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using System.Runtime.CompilerServices;
 
-namespace Stardust.CWTs
+namespace Stardust.CWTs;
+
+public static class RoomCameraCWT
 {
-    public static class RoomCameraCWT
+
+    public static readonly ConditionalWeakTable<RoomCamera, DataClass> roomCameraCWT = new();
+    public static bool TryGetData(RoomCamera key, out DataClass data)
     {
-
-        public static readonly ConditionalWeakTable<RoomCamera, DataClass> roomCameraCWT = new();
-        public static bool TryGetData(RoomCamera key, out DataClass data)
+        if (key != null)
         {
-            if (key != null)
-            {
-                data = roomCameraCWT.GetOrCreateValue(key);
-            }
-            else data = null;
+            data = roomCameraCWT.GetOrCreateValue(key);
+        }
+        else data = null;
 
-            return data != null;
-        }
-        public class DataClass
-        {
-            public DeeperspaceData deeperspaceData;
-        }
+        return data != null;
+    }
+    public class DataClass
+    {
+        //public DeeperspaceData deeperspaceData;
     }
 }

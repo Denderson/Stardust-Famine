@@ -19,6 +19,8 @@ public class ThreadsScreen : Menu.Menu
 
     public MenuLabel noticeLabel;
 
+    public MenuLabel regionNameLabel;
+
     public ThreadSpiral threadSpiral;
 
     public ThreadFog threadFog;
@@ -68,54 +70,56 @@ public class ThreadsScreen : Menu.Menu
         {
             PlaySound(SoundID.MENU_Dream_Init);
         }
-        if (counter == 20)
-        {
-            active = true;
-            exitButton = new SimpleButton(this, pages[0], Translate("EXIT"), "EXIT", new Vector2(manager.rainWorld.options.ScreenSize.x * 0.9f - 110f + (1366f - manager.rainWorld.options.ScreenSize.x) / 2f, 25f), new Vector2(110f, 30f));
-            pages[0].subObjects.Add(exitButton);
-            pages[0].lastSelectedObject = exitButton;
-            exitButton.black = 1f;
-
-            threadFog = new ThreadFog(this, pages[0], new Vector2(manager.rainWorld.options.ScreenSize.x * 0.5f, manager.rainWorld.options.ScreenSize.y * 0.5f));
-            pages[0].subObjects.Add(threadFog);
-
-            threadSpiral = new ThreadSpiral(this, pages[0], new Vector2(manager.rainWorld.options.ScreenSize.x * 0.5f, manager.rainWorld.options.ScreenSize.y * 0.5f), 50f);
-            pages[0].subObjects.Add(threadSpiral);
-            
-
-            SaveState currentSaveState = manager.rainWorld.progression.GetOrInitiateSaveState(Enums.SlugcatStatsName.sfscholar, null, manager.menuSetup, saveAsDeathOrQuit: false);
-            if (manager.rainWorld.progression.IsThereASavedGame(Enums.SlugcatStatsName.sfscholar))
-            {
-                for (int i = 0; i < 6; i++)
-                {
-                    //if (currentSaveState?.deathPersistentSaveData?.GetBackup(i) != null)
-                    /*{
-                        Log.LogMessage($"Backup {i}");
-                        Log.LogMessage(currentSaveState?.deathPersistentSaveData?.GetBackup(i) != null);
-
-                        Vector2 slotPos;
-                        if (i == 0)
-                        {
-                            slotPos = threadSpiral.pos; // manual center placement for slot 1
-                        }
-                        else
-                        {
-                            slotPos = threadSpiral.pos + GetPosOnSpiral(BackupPositions[i - 1]) * threadSpiral.sprite.width;
-                        }
-
-                        HoldButton holdButton = new(this, pages[0], Translate("RETRY<LINE>EXPEDITION").Replace("<LINE>", "\n"), "RETRY", slotPos, 100f);
-                        pages[0].subObjects.Add(holdButton);
-                        backupButtons.Add(holdButton);
-                        Log.LogMessage($"Spawning {i} backup on {slotPos.x},{slotPos.y}");
-                    }*/
-                }
-            }
-        }
+        if (counter == 20) SecondCtor();
         manager.fadeToBlack = Custom.LerpAndTick(manager.fadeToBlack, 0f, 0f, 0.0125f);
         if (active)
         {
             exitButton.buttonBehav.greyedOut = FreezeMenuFunctions;
             exitButton.black = Math.Max(0f, exitButton.black - 0.005f);
+        }
+    }
+
+    public void SecondCtor()
+    {
+        active = true;
+        exitButton = new SimpleButton(this, pages[0], Translate("EXIT"), "EXIT", new Vector2(manager.rainWorld.options.ScreenSize.x * 0.9f - 110f + (1366f - manager.rainWorld.options.ScreenSize.x) / 2f, 25f), new Vector2(110f, 30f));
+        pages[0].subObjects.Add(exitButton);
+        pages[0].lastSelectedObject = exitButton;
+        exitButton.black = 1f;
+
+        threadFog = new ThreadFog(this, pages[0], new Vector2(manager.rainWorld.options.ScreenSize.x * 0.5f, manager.rainWorld.options.ScreenSize.y * 0.5f));
+        pages[0].subObjects.Add(threadFog);
+
+        threadSpiral = new ThreadSpiral(this, pages[0], new Vector2(manager.rainWorld.options.ScreenSize.x * 0.5f, manager.rainWorld.options.ScreenSize.y * 0.5f), 50f);
+        pages[0].subObjects.Add(threadSpiral);
+
+
+        SaveState currentSaveState = manager.rainWorld.progression.GetOrInitiateSaveState(Enums.SlugcatStatsName.sfscholar, null, manager.menuSetup, saveAsDeathOrQuit: false);
+        if (manager.rainWorld.progression.IsThereASavedGame(Enums.SlugcatStatsName.sfscholar))
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                //if (currentSaveState?.deathPersistentSaveData?.GetBackup(i) != null)
+                {
+                    Log.LogMessage($"Backup {i}");
+                    Log.LogMessage(currentSaveState?.deathPersistentSaveData?.GetBackup(i) != null);
+
+                    Vector2 slotPos;
+                    if (i == 0)
+                    {
+                        slotPos = threadSpiral.pos; // manual center placement for slot 1
+                    }
+                    else
+                    {
+                        slotPos = threadSpiral.pos + GetPosOnSpiral(BackupPositions[i - 1]) * threadSpiral.sprite.width;
+                    }
+                    string text = i.ToString();
+                    HoldButton holdButton = new(this, pages[0], text.Replace("<LINE>", "\n"), $"backup-{i}", slotPos, 300f);
+                    pages[0].subObjects.Add(holdButton);
+                    backupButtons.Add(holdButton);
+                    Log.LogMessage($"Spawning {i} backup on {slotPos.x},{slotPos.y}");
+                }
+            }
         }
     }
 
@@ -182,5 +186,6 @@ public class ThreadsScreen : Menu.Menu
         QuarterTurn * 8f,
         QuarterTurn * 9f,
         QuarterTurn * 10f,
+        QuarterTurn * 11f,
     ];
 }

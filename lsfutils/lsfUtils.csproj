@@ -58,6 +58,9 @@
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.InputLegacyModule">
       <HintPath>..\..\..\..\Downloads\MODDING\REFERENCES\UnityEngine.InputLegacyModule.dll</HintPath>
     </Reference>
