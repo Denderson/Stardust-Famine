@@ -13,6 +13,13 @@ public static class ScreenVariantHooks
         On.RoomCamera.ApplyEffectColorsToAllPaletteTextures += RoomCamera_ApplyEffectColorsToAllPaletteTextures;
         On.RoomCamera.ApplyFade += RoomCamera_ApplyFade;
         On.RoomCamera.ApplyFadeTexToPalleteTexture += RoomCamera_ApplyFadeTexToPalleteTexture;
+        On.RoomCamera.ChangeRoom += RoomCamera_ChangeRoom;
+    }
+
+    private static void RoomCamera_ChangeRoom(On.RoomCamera.orig_ChangeRoom orig, RoomCamera self, Room newRoom, int cameraPosition)
+    {
+        orig(self, newRoom, cameraPosition);
+
     }
 
     private static void RoomCamera_ApplyFadeTexToPalleteTexture(On.RoomCamera.orig_ApplyFadeTexToPalleteTexture orig, RoomCamera self, Texture2D fadeTexture, float baseFade, float texFade, bool skipEffect, bool skipRipple)

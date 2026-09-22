@@ -16,6 +16,12 @@ public abstract class ScreenVariant
     public virtual float FadeInRate => 3f;
     public virtual float FadeOutRate => 5f;
 
+    public int layer = 0;
+
+    protected virtual string SpriteElementName => "Futile_White";
+
+    private bool atlasEnsured = false;
+
     private float fadeTimer = 0f;
 
     public bool IsVisible => backgroundSprite != null && backgroundSprite.isVisible;
@@ -66,14 +72,21 @@ public abstract class ScreenVariant
 
         OnDrawUpdate(timeStacker);
     }
+    protected virtual void EnsureAtlasLoaded() { }
 
     public virtual void EnsureSprite()
     {
         if (backgroundSprite != null) return;
 
+        if (!atlasEnsured)
+        {
+            EnsureAtlasLoaded();
+            atlasEnsured = true;
+        }
+
         shader ??= RWCustom.Custom.rainWorld.Shaders[ShaderName];
 
-        backgroundSprite = new FSprite("Futile_White")
+        backgroundSprite = new FSprite(SpriteElementName)
         {
             shader = shader,
             scaleX = Futile.screen.pixelWidth,
@@ -83,6 +96,13 @@ public abstract class ScreenVariant
             alpha = 0f,
             isVisible = false
         };
+        camera.ReturnFContainer("Bloom").AddChild(backgroundSprite);
+    }
+
+    public virtual void MoveToTopOfContainer()
+    {
+        if (backgroundSprite == null) return;
+        backgroundSprite.RemoveFromContainer();
         camera.ReturnFContainer("Bloom").AddChild(backgroundSprite);
     }
 
@@ -117,6 +137,7 @@ public abstract class ScreenVariant
         if (gameplayFadeTexture != null) { UnityEngine.Object.Destroy(gameplayFadeTexture); gameplayFadeTexture = null; }
 
         active = false;
+        atlasEnsured = false;
         OnDispose();
     }
 }

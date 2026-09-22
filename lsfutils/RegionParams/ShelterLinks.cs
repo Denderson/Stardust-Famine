@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using RWCustom;
-using UnityEngine;
 using static lsfUtils.Plugin;
 
 public static class ShelterLinks
@@ -11,18 +9,18 @@ public static class ShelterLinks
         public string sourceShelter;
         public List<string> candidates = [];
     }
-    
-    public static List<ShelterLinkEntry> rawConfig = [];
-    
-    public static readonly Dictionary<string, ShelterLinkEntry> byShelter = [];
 
-    public static readonly string ConfigPath = "lsf/shelterLinks.txt";
+    public static List<ShelterLinkEntry> rawConfig = [];
+
+    public static Dictionary<string, ShelterLinkEntry> byShelter = [];
+
+    public static string ConfigPath = "lsf/shelterLinks.txt";
 
     public static void ApplyHooks()
     {
         On.SaveState.BringUpToDate += SaveState_BringUpToDate;
     }
-    
+
     public static void Load()
     {
         rawConfig.Clear();
@@ -88,34 +86,52 @@ public static class ShelterLinks
         string toShelter = SelectTarget(entry, self, game);
         if (toShelter == null || !ShouldRedirect(self, game, fromShelter, toShelter)) return;
 
-        RedirectDen(self, game, fromShelter, toShelter);
+        MoveDen(self, game, fromShelter, toShelter);
     }
-    
+
     public static string SelectTarget(ShelterLinkEntry entry, SaveState save, RainWorldGame game)
     {
         return entry.candidates.Count > 0 ? entry.candidates[0] : null;
     }
-    
+
     public static bool ShouldRedirect(SaveState save, RainWorldGame game, string fromShelter, string toShelter)
     {
         return true;
     }
 
-    public static void RedirectDen(SaveState save, RainWorldGame game, string fromShelter, string toShelter)
+    public static void MoveDen(SaveState save, RainWorldGame game, string fromShelter, string toShelter)
     {
         save.denPosition = toShelter;
         save.TrySetVanillaDen(toShelter);
-        
+
         AbstractRoom fromRoom = game.world.GetAbstractRoom(fromShelter);
         if (fromRoom == null) return;
 
-        for (int i = fromRoom.entities.Count - 1; i >= 0; i--)
-        {
-            if (fromRoom.entities[i] is not AbstractPhysicalObject obj) continue;
-            if (obj is AbstractCreature crit && crit.creatureTemplate.type == CreatureTemplate.Type.Slugcat)  continue;
-            if (HeldByPlayer(obj, game)) continue;
+        List<AbstractPhysicalObject> objects = GetObjects(fromRoom, game);
 
+        foreach (AbstractPhysicalObject obj in objects)
+        {
+            fromRoom.RemoveEntity(obj);
             save.pendingObjects.Add(obj is AbstractCreature critter ? SaveState.AbstractCreatureToStringStoryWorld(critter) : obj.ToString());
+        }
+    }
+    
+    public static List<AbstractPhysicalObject> GetObjects(AbstractRoom fromRoom, RainWorldGame game)
+    {
+        List<AbstractPhysicalObject> result = [];
+        CollectFromList(fromRoom.entities, game, result);
+        CollectFromList(fromRoom.entitiesInDens, game, result);
+        return result;
+    }
+
+    public static void CollectFromList(List<AbstractWorldEntity> source, RainWorldGame game, List<AbstractPhysicalObject> result)
+    {
+        for (int i = 0; i < source.Count; i++)
+        {
+            if (source[i] is not AbstractPhysicalObject obj) continue;
+            if (obj is AbstractCreature crit && crit.creatureTemplate.type == CreatureTemplate.Type.Slugcat) continue;
+            if (HeldByPlayer(obj, game)) continue;
+            result.Add(obj);
         }
     }
 

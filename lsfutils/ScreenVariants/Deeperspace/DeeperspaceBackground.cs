@@ -10,12 +10,6 @@ public class DeeperspaceBackground : ScreenVariant
 
     public DeeperspaceBackground(RoomCamera camera) : base(camera) { }
 
-    public override Texture GetOverrideTexture()
-    {
-        overrideTex ??= new RenderTexture(Futile.screen.pixelWidth, Futile.screen.pixelHeight, 0);
-        return overrideTex;
-    }
-
     public override void OnDispose()
     {
         if (overrideTex != null)
