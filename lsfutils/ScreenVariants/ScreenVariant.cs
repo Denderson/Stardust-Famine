@@ -16,9 +16,9 @@ public abstract class ScreenVariant
     public virtual float FadeInRate => 3f;
     public virtual float FadeOutRate => 5f;
 
-    public int layer = 0;
+    public virtual int Layer => 0;
 
-    protected virtual string SpriteElementName => "Futile_White";
+    public virtual string SpriteElementName => "Futile_White";
 
     private bool atlasEnsured = false;
 
@@ -72,7 +72,7 @@ public abstract class ScreenVariant
 
         OnDrawUpdate(timeStacker);
     }
-    protected virtual void EnsureAtlasLoaded() { }
+    public virtual void EnsureAtlasLoaded() { }
 
     public virtual void EnsureSprite()
     {

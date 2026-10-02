@@ -11,6 +11,7 @@ using lsfUtils.Items.ExplosiveBoomerang;
 using lsfUtils.Items.TorchSpears;
 using static lsfUtils.Enums;
 using lsfUtils.Items.KnotSpawnV2;
+using lsfUtils.Items.WarpSpears;
 
 namespace lsfUtils.Items;
 

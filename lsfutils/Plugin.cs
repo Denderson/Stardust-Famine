@@ -174,7 +174,6 @@ namespace lsfUtils
                 // screen variants
                 {
                     ScreenVariantHooks.ApplyHooks();
-                    DeeperspaceHooks.ApplyHooks();
                 }
 
                 On.RainWorld.Start += RainWorld_Start;

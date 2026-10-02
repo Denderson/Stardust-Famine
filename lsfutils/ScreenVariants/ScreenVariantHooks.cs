@@ -8,6 +8,8 @@ public static class ScreenVariantHooks
 {
     public static void ApplyHooks()
     {
+        On.RoomCamera.DrawUpdate += RoomCamera_DrawUpdate;
+
         On.RoomCamera.ctor += RoomCamera_ctor;
         On.RoomCamera.ClearAllSprites += RoomCamera_ClearAllSprites;
         On.RoomCamera.ApplyEffectColorsToAllPaletteTextures += RoomCamera_ApplyEffectColorsToAllPaletteTextures;
@@ -19,7 +21,6 @@ public static class ScreenVariantHooks
     private static void RoomCamera_ChangeRoom(On.RoomCamera.orig_ChangeRoom orig, RoomCamera self, Room newRoom, int cameraPosition)
     {
         orig(self, newRoom, cameraPosition);
-
     }
 
     private static void RoomCamera_ApplyFadeTexToPalleteTexture(On.RoomCamera.orig_ApplyFadeTexToPalleteTexture orig, RoomCamera self, Texture2D fadeTexture, float baseFade, float texFade, bool skipEffect, bool skipRipple)
@@ -74,5 +75,26 @@ public static class ScreenVariantHooks
         orig(self);
         if (!RoomCameraCWT.TryGetData(self, out var data)) return;
         data.screenVariantController?.Dispose();
+    }
+
+    public static void RoomCamera_DrawUpdate(On.RoomCamera.orig_DrawUpdate orig, RoomCamera self, float timeStacker, float timeSpeed)
+    {
+        orig(self, timeStacker, timeSpeed);
+
+        if (!RoomCameraCWT.TryGetData(self, out var data)) return;
+        if (data.screenVariantController == null) return;
+
+        if (self.room != null && self.followAbstractCreature != null && self.followAbstractCreature.rippleLayer == 2)
+        {
+            if (data.screenVariantController.current is not DeeperspaceBackground)
+            {
+                data.screenVariantController.SwitchTo<DeeperspaceBackground>();
+            }
+        }
+        else if (data.screenVariantController.current is DeeperspaceBackground)
+        {
+            data.screenVariantController.Clear();
+        }
+        data.screenVariantController.DrawUpdate(timeStacker);
     }
 }
