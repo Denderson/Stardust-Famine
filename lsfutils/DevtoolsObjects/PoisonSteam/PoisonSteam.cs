@@ -3,45 +3,47 @@ using RWCustom;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace lsfUtils.DevtoolsObjects.PoisonSteam
+namespace lsfUtils.DevtoolsObjects.PoisonSteam;
+
+public class PoisonSteam : HarmfulSteam
 {
-    public class PoisonSteam : HarmfulSteam
+    private readonly PlacedObject myPObj;
+
+    public static float poisonApplyRate = 1f / 160f;
+
+    public PoisonSteam(PlacedObject pObj, Room room) : base(pObj, room)
     {
-        private readonly PlacedObject myPObj;
+        myPObj = pObj;
+        this.room = room;
+        if (SteamSmokeCWT.TryGetData(steam, out var data)) data.isPoisonSmoke = true;
+    }
+    public override void Update(bool eu)
+    {
+        base.Update(eu); // do vanilla code of Update first
 
-        public PoisonSteam(PlacedObject pObj, Room room) : base(pObj, room)
+        for (int i = 0; i < steam.particles.Count; i++) // for every steam particle...
         {
-            myPObj = pObj;
-            this.room = room;
-        }
-        public override void Update(bool eu)
-        {
-            base.Update(eu);
-
-            for (int i = 0; i < this.steam.particles.Count; i++)
+            if (steam.particles[i].life > dangerRange) // if its during the time it would be dangerous...
             {
-                if (this.steam.particles[i].life > this.dangerRange)
+                for (int j = 0; j < room.physicalObjects.Length; j++) // check all physical object types...
                 {
-                    for (int j = 0; j < this.room.physicalObjects.Length; j++)
+                    for (int k = 0; k < room.physicalObjects[j].Count; k++) // check all physical objects in those types...
                     {
-                        for (int k = 0; k < this.room.physicalObjects[j].Count; k++)
+                        if (room.physicalObjects[j][k] is not Creature creature) continue; // if they are not a Creature, skip it. Otherwise, the physical object as a Creature is named creature now
+                        if (!CreatureCWT.TryGetData(creature, out var data)) continue; // get the CreatureCWT entry of that creature. If it doesnt exist for some reason, skip it.
+                        bool alreadyPoisoned = false;
+
+                        for (int l = 0; l < creature.bodyChunks.Length; l++) // check every body chunk of that creature...
                         {
-                            for (int l = 0; l < this.room.physicalObjects[j][k].bodyChunks.Length; l++)
+                            if (alreadyPoisoned) continue; // if it already got poison this tick, skip the rest of checks.
+                            Vector2 a = creature.bodyChunks[l].ContactPoint.ToVector2(); // get the contact point of that chunk
+                            Vector2 b = creature.bodyChunks[l].pos + a * (creature.bodyChunks[l].rad + 30f); // uhhh idk really, get some position that is meant to be the "collision box" for the steam???
+                            if (Vector2.Distance(steam.particles[i].pos, b) < 10f && creature.abstractCreature.rippleLayer == 0) // check if the steam particle is 10 or less pixels from the collision box, and on same rippleLayer
                             {
-                                Vector2 a = this.room.physicalObjects[j][k].bodyChunks[l].ContactPoint.ToVector2();
-                                Vector2 b = this.room.physicalObjects[j][k].bodyChunks[l].pos + a * (this.room.physicalObjects[j][k].bodyChunks[l].rad + 30f);
-                                if (CreatureCWT.TryGetData(this.room.physicalObjects[j][k] as Creature, out var data))
-                                {
-                                    if (Vector2.Distance(this.steam.particles[i].pos, b) < 10f && this.room.physicalObjects[j][k] is Creature && (this.room.physicalObjects[j][k] as Creature).abstractCreature.rippleLayer == 0)
-                                    {
-                                        data.isInPoisonSteam = true;
-                                        this.room.AddObject(new CreatureSpasmer(this.room.physicalObjects[j][k] as Creature, false, (this.room.physicalObjects[j][k] as Creature).stun));
-                                        this.room.PlaySound(SoundID.Gate_Water_Steam_Puff, (this.room.physicalObjects[j][k] as Creature).mainBodyChunk, false, 1.1f, 1f);
-                                        this.room.PlaySound(SoundID.Big_Spider_Spit_Warning_Rustle, (this.room.physicalObjects[j][k] as Creature).mainBodyChunk, false, 1f, 1f);
-                                        return;
-                                    }
-                                    else data.isInPoisonSteam = false;
-                                }
+                                alreadyPoisoned = true; // mark the creature as touching the poison steam this tick
+                                data.cannotRecoverPoison = 120;
+                                data.temporaryPoison += poisonApplyRate;
+                                continue;
                             }
                         }
                     }

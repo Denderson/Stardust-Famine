@@ -67,6 +67,8 @@
 !lsfutils/Mod/shaders/lsfutils
 !lsfutils/ScreenVariants/
 !lsfutils/ScreenVariants/*/
+!lsfutils/Mechanics/
+!lsfutils/Mechanics/*/
 
 !*.png
 !*.txt

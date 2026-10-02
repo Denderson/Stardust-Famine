@@ -20,8 +20,7 @@ namespace lsfUtils.CWTs
         {
             public int timeInEvilWater = 0;
             public float temporaryPoison = 0f;
-            public bool isInEvilWater = false;
-            public bool isInPoisonSteam = false;
+            public int cannotRecoverPoison = 0;
 
             public int rippleTunnelTimer = 0;
             public int rippleTunnelCooldown = 0;

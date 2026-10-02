@@ -135,6 +135,7 @@ namespace lsfUtils
                     FloatMudHooks.ApplyHooks();
                     BackgroundMudHooks.ApplyHooks();
                     WaveLightHooks.ApplyHooks();
+                    PoisonSteamHooks.ApplyHooks();
                 }
 
                 // devtools effects
