@@ -19,8 +19,14 @@ public static class TemporaryPoison
         }
         float oldPoison = self.injectedPoison;
         self.injectedPoison = Mathf.Min(1f, self.injectedPoison + data.temporaryPoison);
-        orig(self, eu);
-        self.injectedPoison = oldPoison;
+        try
+        {
+            orig(self, eu);
+        }
+        finally
+        {
+            self.injectedPoison = oldPoison;
+        }
         if (data.cannotRecoverPoison > 0) data.cannotRecoverPoison--;
         else if (data.temporaryPoison > 0) data.temporaryPoison = Mathf.Max(data.temporaryPoison - recoverySpeed, 0);
     }

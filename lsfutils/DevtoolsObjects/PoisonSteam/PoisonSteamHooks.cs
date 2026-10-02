@@ -19,12 +19,11 @@ public static class PoisonSteamHooks
 
     private static Smoke.SmokeSystem.SmokeSystemParticle SteamSmoke_CreateParticle(On.Smoke.SteamSmoke.orig_CreateParticle orig, Smoke.SteamSmoke self)
     {
+        Smoke.SmokeSystem.SmokeSystemParticle newParticle = orig(self);
         if (SteamSmokeCWT.TryGetData(self, out var data) && data.isPoisonSmoke)
         {
-            var newParticle = new Smoke.SmokeSystem.SmokeSystemParticle();
             if (SteamParticleCWT.TryGetData(newParticle, out var particleData)) particleData.overrideColor = poisonSteamOverrideColor;
-            return newParticle;
         }
-        return orig(self);
+        return newParticle;
     }
 }
