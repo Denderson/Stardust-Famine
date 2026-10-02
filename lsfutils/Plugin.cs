@@ -29,6 +29,7 @@ using lsfUtils.DevtoolsObjects.EventRectangle;
 using lsfUtils.DevtoolsObjects.FloatMud;
 using lsfUtils.DevtoolsObjects.LocalGravity;
 using lsfUtils.DevtoolsObjects.MudBonePile;
+using lsfUtils.DevtoolsObjects.PoisonSteam;
 using lsfUtils.DevtoolsObjects.RippleTunnel;
 using lsfUtils.DevtoolsObjects.RippleZone;
 using lsfUtils.DevtoolsObjects.WaveLight;
@@ -201,6 +202,7 @@ namespace lsfUtils
                 RegisterManagedObject<RippleTunnel, RippleTunnelData, RippleTunnelRepresentation>("RippleTunnel", "lsfUtils");
 
                 RegisterManagedObject(new ManagedFloatMud());
+                RegisterManagedObject(new ManagedPoisonSteam());
                 RegisterManagedObject(new ManagedBackgroundMud());
                 RegisterManagedObject(new ManagedRippleFlower());
                 RegisterManagedObject(new ManagedKarmaMask());
