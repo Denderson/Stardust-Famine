@@ -40,6 +40,7 @@ using lsfUtils.Items.KarmaMask;
 using lsfUtils.Items.KnotSpawnV2;
 using lsfUtils.Items.RippleFlower;
 using lsfUtils.Items.TorchSpears;
+using lsfUtils.Mechanics;
 using lsfUtils.RegionParams;
 using lsfUtils.ScreenVariants;
 using lsfUtils.ScreenVariants.Deeperspace;
