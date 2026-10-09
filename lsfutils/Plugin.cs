@@ -174,6 +174,11 @@ namespace lsfUtils
                     ConditionalGates.ApplyHooks();
                 }
 
+                // mechanics
+                {
+                    TemporaryPoison.ApplyHooks();
+                }
+
                 // screen variants
                 {
                     ScreenVariantHooks.ApplyHooks();

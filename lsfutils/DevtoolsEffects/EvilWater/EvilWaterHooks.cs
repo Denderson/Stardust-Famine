@@ -1,6 +1,7 @@
 ﻿using lsfUtils.CWTs;
 using UnityEngine;
 using static lsfUtils.DevtoolsEffects.EvilWater.EvilWater;
+using static lsfUtils.Plugin;
 
 namespace lsfUtils.DevtoolsEffects.EvilWater;
 
@@ -21,17 +22,22 @@ public static class EvilWaterHooks
             if (RegionCWT.TryGetCustomRegionParams(self.room.world.region, out var paramsdata))
             {
                 waterdata.evilWaterTimer = paramsdata.EvilWaterTimer;
+                Log.LogMessage($"Evil Water Timer: {waterdata.evilWaterTimer}");
                 waterdata.evilWaterPoisonDelayTimer = paramsdata.EvilWaterPoisonDelayTimer;
+                Log.LogMessage($"Evil Water Poison Delay Timer: {waterdata.evilWaterPoisonDelayTimer}");
                 waterdata.evilWaterHealDelayTimer = paramsdata.EvilWaterHealDelayTimer;
+                Log.LogMessage($"Evil Water Heal Delay Timer: {waterdata.evilWaterHealDelayTimer}");
             }
         }
     }
 
     public static void Creature_Update(On.Creature.orig_Update orig, Creature self, bool eu)
     {
-        if (!CreatureCWT.TryGetData(self, out var data)) return;
-        if (!WaterCWT.TryGetData(self.room?.waterObject, out var waterdata)) return;
-        if (!waterdata.isPoisonous) return;
+        if (!CreatureCWT.TryGetData(self, out var data) || !WaterCWT.TryGetData(self.room?.waterObject, out var waterdata) || !waterdata.isPoisonous)
+        {
+            orig(self, eu);
+            return;
+        }
 
         orig(self, eu);
 
@@ -41,7 +47,7 @@ public static class EvilWaterHooks
             if (data.timeInEvilWater >= waterdata.evilWaterPoisonDelayTimer)
             {
                 data.temporaryPoison = Mathf.Min(1f, data.temporaryPoison + 1f / waterdata.evilWaterTimer);
-                data.cannotRecoverPoison = 120;
+                data.cannotRecoverPoison = waterdata.evilWaterHealDelayTimer;
             }
         }
         else if (data.timeInEvilWater > 0) data.timeInEvilWater--;

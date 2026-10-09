@@ -1,5 +1,6 @@
 ﻿using lsfUtils.CWTs;
 using UnityEngine;
+using static lsfUtils.Plugin;
 
 namespace lsfUtils.Mechanics;
 
@@ -16,17 +17,12 @@ public static class TemporaryPoison
         {
             orig(self, eu);
             return;
+            
         }
         float oldPoison = self.injectedPoison;
-        self.injectedPoison = Mathf.Min(1f, self.injectedPoison + data.temporaryPoison);
-        try
-        {
-            orig(self, eu);
-        }
-        finally
-        {
-            self.injectedPoison = oldPoison;
-        }
+        self.injectedPoison = Mathf.Min(1f, self.injectedPoison + data.temporaryPoison);        
+        orig(self, eu);               
+        self.injectedPoison = oldPoison;
         if (data.cannotRecoverPoison > 0) data.cannotRecoverPoison--;
         else if (data.temporaryPoison > 0) data.temporaryPoison = Mathf.Max(data.temporaryPoison - recoverySpeed, 0);
     }

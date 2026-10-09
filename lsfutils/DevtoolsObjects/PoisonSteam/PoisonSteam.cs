@@ -9,7 +9,7 @@ public class PoisonSteam : HarmfulSteam
 {
     private readonly PlacedObject myPObj;
 
-    public static float poisonApplyRate = 1f / 160f;
+    public static float poisonApplyRate = 1f / 100f;
 
     public PoisonSteam(PlacedObject pObj, Room room) : base(pObj, room)
     {

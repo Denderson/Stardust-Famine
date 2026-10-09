@@ -1,6 +1,7 @@
 ﻿using lsfUtils.CWTs;
 using System;
 using static lsfUtils.Enums;
+using static lsfUtils.Plugin;
 
 namespace lsfUtils.RegionParams
 {
@@ -17,25 +18,25 @@ namespace lsfUtils.RegionParams
             if (!RegionCWT.TryGetCustomRegionParams(self?.world?.region, out var customRegionParams)) return;
             if (self?.parent is not AbstractCreature scav) return;
 
-            if ((int)UnityEngine.Random.value * 100 < customRegionParams.ScavLanternChance)
+            if ((int)(UnityEngine.Random.value * 100) < customRegionParams.ScavLanternChance)
             {
                 AddItemToScav(scav, AbstractPhysicalObject.AbstractObjectType.Lantern);
             }
-            if ((int)UnityEngine.Random.value * 100 < customRegionParams.ScavExplosiveBoomerangChance)
+            if ((int)(UnityEngine.Random.value * 100) < customRegionParams.ScavExplosiveBoomerangChance)
             {
-                AddItemToScav(scav, AbstractObjectType.ExplosiveBoomerang);
+                AddItemToScav(scav, Enums.AbstractObjectType.ExplosiveBoomerang);
             }
-            if ((int)UnityEngine.Random.value * 100 < customRegionParams.ScavSingularityBoomerangChance)
+            if ((int)(UnityEngine.Random.value * 100) < customRegionParams.ScavSingularityBoomerangChance)
             {
-                AddItemToScav(scav, AbstractObjectType.SingularityBoomerang);
+                AddItemToScav(scav, Enums.AbstractObjectType.SingularityBoomerang);
             }
-            if ((int)UnityEngine.Random.value * 100 < customRegionParams.ScavPoisonDartChance)
+            if ((int)(UnityEngine.Random.value * 100) < customRegionParams.ScavPoisonDartChance)
             {
-                AddItemToScav(scav, AbstractObjectType.PoisonDart);
+                AddItemToScav(scav, Enums.AbstractObjectType.PoisonDart);
             }
-            if ((int)UnityEngine.Random.value * 100 < customRegionParams.ScavTorchSpearChance)
+            if ((int)(UnityEngine.Random.value * 100) < customRegionParams.ScavTorchSpearChance)
             {
-                AddItemToScav(scav, AbstractObjectType.TorchSpear);
+                AddItemToScav(scav, Enums.AbstractObjectType.TorchSpear);
             }
         }
 
