@@ -218,7 +218,7 @@ public static class ItemRegistry
     {
         var entry = new ItemRegistryEntry(AbstractObjectType.TorchSpear)
         {
-            iconSprite = "Symbol_Spear",
+            iconSprite = "Symbol_FireSpear",
             iconColor = new Color(0.5f, 0.5f, 0.5f),
             unlockID = SandboxUnlockID.TorchSpear,
 

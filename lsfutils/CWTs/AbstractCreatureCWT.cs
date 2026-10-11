@@ -24,5 +24,8 @@ public static class AbstractCreatureCWT
         public bool isPoisonImmune;
         public string faction = "default";
         public bool starveTag = false;
+        public bool customFlammability = false;
+        public char? flammabilitySign;
+        public int flammabilityValue;
     }
 }

@@ -178,7 +178,7 @@ namespace lsfUtils.Items.TorchSpears
 
                 if (lightSource == null && (isLit || emberGlow > 0f))
                 {
-                    lightSource = new LightSource(knotPos, false, new Color(1f, 0.4f, 0.1f), this);
+                    lightSource = new LightSource(knotPos, false, GetTorchFireColor(), this);
                     lightSource.affectedByPaletteDarkness = 0.5f;
                     room.AddObject(lightSource);
                 }
@@ -189,7 +189,7 @@ namespace lsfUtils.Items.TorchSpears
                     if (isLit)
                     {
                         lightSource.setRad = 220f * flicker[0, 0];
-                        lightSource.color = new Color(1f, 0.4f, 0.1f);
+                        lightSource.color = GetTorchFireColor();
                         lightSource.setAlpha = 1f;
                     }
                     else
@@ -280,7 +280,7 @@ namespace lsfUtils.Items.TorchSpears
                 for (int i = 0; i < 8; i++)
                 {
                     Vector2 sparkVel = Custom.RNV() * UnityEngine.Random.value * 6f;
-                    room.AddObject(new Spark(firstChunk.pos, sparkVel, new Color(1f, 0.4f, 0.1f), null, 15, 30));
+                    room.AddObject(new Spark(firstChunk.pos, sparkVel, GetTorchFireColor(), null, 15, 30));
                 }
 
                 Smoke.BombSmoke smoke = new Smoke.BombSmoke(room, firstChunk.pos, null, new Color(0.8f, 0.8f, 0.8f)); // le smoke that doesnt work half the time, fuck you
@@ -391,6 +391,14 @@ namespace lsfUtils.Items.TorchSpears
                     wrapKnot.MoveInFrontOfOtherNode(sLeaser.sprites[0]);
                 }
             }
+        }
+        Color GetTorchFireColor()
+        {
+            if (CWTs.RegionCWT.TryGetCustomRegionParams(this.room?.world?.region, out var customRegionParams))
+            {
+                return customRegionParams.TorchFireColor;
+            }
+            return new Color(1f, 0.4f, 0.1f);
         }
     }
 }

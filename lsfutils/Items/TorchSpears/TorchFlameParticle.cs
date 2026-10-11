@@ -1,4 +1,5 @@
-﻿using RWCustom;
+﻿using lsfUtils.CWTs;
+using RWCustom;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -124,11 +125,11 @@ namespace lsfUtils.Items.TorchSpears
 
                 Color pColor;
                 if (flames[i].life > 0.65f)
-                    pColor = Color.Lerp(new Color(1f, 0.65f, 0.15f), new Color(1f, 1f, 0.9f), (flames[i].life - 0.65f) / 0.35f);
+                    pColor = Color.Lerp(Color.Lerp(GetTorchFireColor(), Color.white, 0.25f), Color.Lerp(GetTorchFireColor(), Color.white, 0.75f), (flames[i].life - 0.65f) / 0.35f);
                 else if (flames[i].life > 0.3f)
-                    pColor = Color.Lerp(new Color(0.9f, 0.15f, 0.0f), new Color(1f, 0.65f, 0.15f), (flames[i].life - 0.3f) / 0.4f);
+                    pColor = Color.Lerp(Color.Lerp(GetTorchFireColor(), Color.black, 0.25f), Color.Lerp(GetTorchFireColor(), Color.white, 0.25f), (flames[i].life - 0.3f) / 0.4f);
                 else
-                    pColor = Color.Lerp(new Color(0.3f, 0.0f, 0.0f), new Color(0.9f, 0.15f, 0.0f), flames[i].life / 0.3f);
+                    pColor = Color.Lerp(Color.Lerp(GetTorchFireColor(), Color.black, 0.75f), Color.Lerp(GetTorchFireColor(), Color.black, 0.25f), flames[i].life / 0.3f);
 
                 pColor.a = flames[i].life;
                 sLeaser.sprites[i].color = pColor;
@@ -141,5 +142,11 @@ namespace lsfUtils.Items.TorchSpears
         {
             base.AddToContainer(sLeaser, rCam, newContainer ?? rCam.ReturnFContainer("Foreground"));
         }
+        Color GetTorchFireColor()
+        {
+            if (RegionCWT.TryGetCustomRegionParams(this.room?.world?.region, out var customRegionParams)) return customRegionParams.TorchFireColor;
+            return new Color(1f, 0.4f, 0.1f);
+        }
+
     }
 }

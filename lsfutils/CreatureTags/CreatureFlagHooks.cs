@@ -73,6 +73,45 @@ namespace lsfUtils.CreatureTags
                         else Log.LogMessage("Invalid faction!");
                     }
                 }
+                if (value.Contains("flammability"))
+                {
+                    Log.LogMessage("Flammability check!");
+                    int flammability = 2;
+                    char? sign = null;
+                    if (value.Contains('=') && value.Split('=').Length > 1)
+                    {
+                        sign = '=';
+                        Log.LogMessage("Override flammability!");
+                        int.TryParse(value.Split('=')[1], out flammability);
+                        if (flammability < 0 || flammability > 4)
+                        {
+                            flammability = RWCustom.Custom.IntClamp(flammability, 0, 4);
+                        }
+                    }
+                    else if (value.Contains('+') && value.Split('+').Length > 1)
+                    {
+                        sign = '+';
+                        Log.LogMessage("Add flammability!");
+                        int.TryParse(value.Split('+')[1], out flammability);
+                        if (flammability < 0 || flammability > 4)
+                        {
+                            flammability = RWCustom.Custom.IntClamp(flammability, 0, 4);
+                        }
+                    }
+                    else if (value.Contains('-') && value.Split('-').Length > 1)
+                    {
+                        sign = '-';
+                        Log.LogMessage("Subtract flammbility!");
+                        int.TryParse(value.Split('-')[1], out flammability);
+                        if (flammability < 0 || flammability > 4)
+                        {
+                            flammability = RWCustom.Custom.IntClamp(flammability, 0, 4);
+                        }
+                    }
+                    else Log.LogMessage("invalid sign for flammability! (must be =, +, or -)");
+
+                    Flammability.SetupCustomFlammability(self, flammability, sign);
+                }
             }
         }
     }

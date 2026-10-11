@@ -63,6 +63,9 @@ namespace lsfUtils.RegionParams
         // Float Mud color override
         public Color FloatMudColor { get; private set; } = new Color(0.22f, 0.067f, 0.17f);
 
+        // Torch spear fire color override
+        public Color TorchFireColor { get; private set; } = new Color(1f, 0.4f, 0.1f);
+
         public static RegionParamsSetup ParseFromUnrecognized(Dictionary<string, string> unrecognized, string regionName)
         {
             RegionParamsSetup customRegionParams = new();
@@ -143,6 +146,19 @@ namespace lsfUtils.RegionParams
                             else if (array7.Length == 1 && new Regex("[0-9a-fA-F]{6}").IsMatch(array7[0]))
                             {
                                 customRegionParams.FloatMudColor = Custom.hexToColor(array7[0]);
+                            }
+                            break;
+                        }
+                    case "torchFireColor":
+                        {
+                            string[] array7 = val.Split(',');
+                            if (array7.Length == 3)
+                            {
+                                customRegionParams.TorchFireColor = new Color(float.Parse(array7[0], NumberStyles.Any, CultureInfo.InvariantCulture), float.Parse(array7[1], NumberStyles.Any, CultureInfo.InvariantCulture), float.Parse(array7[2], NumberStyles.Any, CultureInfo.InvariantCulture));
+                            }
+                            else if (array7.Length == 1 && new Regex("[0-9a-fA-F]{6}").IsMatch(array7[0]))
+                            {
+                                customRegionParams.TorchFireColor = Custom.hexToColor(array7[0]);
                             }
                             break;
                         }
