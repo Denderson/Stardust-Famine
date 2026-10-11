@@ -1,8 +1,10 @@
-﻿using Mono.Cecil.Cil;
+﻿using lsfUtils.Items.TorchSpears;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MoreSlugcats;
 using RWCustom;
 using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using static lsfUtils.Enums;
 using static lsfUtils.Plugin;
@@ -15,6 +17,64 @@ public static class ItemCrafting
     {
         orig();
         InitGourmandCombos();
+    }
+
+    public static void On_Player_SpitUpCraftedObject(On.Player.orig_SpitUpCraftedObject orig, Player self)
+    {
+        if (self.SlugCatClass == MoreSlugcats.MoreSlugcatsEnums.SlugcatStatsName.Artificer)
+        {
+            for (int i = 0; i < self.abstractCreature.realizedCreature.grasps.Length; i++)
+            {
+                if (self.abstractCreature.realizedCreature.grasps[i] != null)
+                {
+                    AbstractPhysicalObject abstractPhysicalObject = self.abstractCreature.realizedCreature.grasps[i].grabbed.abstractPhysicalObject;
+                    if (abstractPhysicalObject is TorchSpearAbstract)
+                    {
+                        if ((abstractPhysicalObject as TorchSpearAbstract).isLit)
+                        {
+                            var room = self.room;
+                            var pos = self.mainBodyChunk.pos;
+                            if (self?.room == null || pos == null) return;
+                            room.AddObject(new Explosion(room, self, pos, 7, 350f, 6.2f, 2f, 280f, 0.4f, self, 0.7f, 160f, 1f));
+                            room.AddObject(new Explosion.ExplosionLight(pos, 330f, 1f, 3, Color.white));
+                            room.AddObject(new ExplosionSpikes(room, pos, 14, 40f, 9f, 7f, 170f, Color.white));
+                            room.PlaySound(SoundID.Bomb_Explode, pos, 0.8f, 0.4f);
+                            self.Stun(200);
+                            self.ReleaseGrasp(i);
+                            abstractPhysicalObject.realizedObject.RemoveFromRoom();
+                            self.SubtractFood(1);
+                            self.room.abstractRoom.RemoveEntity(abstractPhysicalObject);
+                            TorchSpearAbstract abstractTorchSpear = new TorchSpearAbstract(self.room.world, null, self.abstractCreature.pos, self.room.game.GetNewID(), false, default);
+                            self.room.abstractRoom.AddEntity(abstractTorchSpear);
+                            abstractTorchSpear.RealizeInRoom();
+                            if (self.FreeHand() != -1)
+                            {
+                                self.SlugcatGrab(abstractTorchSpear.realizedObject, self.FreeHand());
+                            }
+                            (abstractTorchSpear.realizedObject as TorchSpear).Extinguish(false);
+                            self.pyroJumpCounter = MoreSlugcats.MoreSlugcats.cfgArtificerExplosionCapacity.Value - 1;
+                            return;
+                        }
+                        else
+                        {
+                            self.ReleaseGrasp(i);
+                            abstractPhysicalObject.realizedObject.RemoveFromRoom();
+                            self.SubtractFood(1);
+                            self.room.abstractRoom.RemoveEntity(abstractPhysicalObject);
+                            TorchSpearAbstract abstractTorchSpear = new TorchSpearAbstract(self.room.world, null, self.abstractCreature.pos, self.room.game.GetNewID(), false, default);
+                            self.room.abstractRoom.AddEntity(abstractTorchSpear);
+                            abstractTorchSpear.RealizeInRoom();
+                            if (self.FreeHand() != -1)
+                            {
+                                self.SlugcatGrab(abstractTorchSpear.realizedObject, self.FreeHand());
+                            }
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        orig(self);
     }
 
     public static void InitGourmandCombos()

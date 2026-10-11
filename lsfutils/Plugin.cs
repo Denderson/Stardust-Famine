@@ -274,6 +274,7 @@ namespace lsfUtils
             if (ModManager.MSC)
             {
                 On.MoreSlugcats.GourmandCombos.InitCraftingLibrary += ItemCrafting.On_GourmandCombos_InitCraftingLibrary;
+                On.Player.SpitUpCraftedObject += ItemCrafting.On_Player_SpitUpCraftedObject;
             }
 
             if (initialized)
