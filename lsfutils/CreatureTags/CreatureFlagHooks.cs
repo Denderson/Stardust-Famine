@@ -78,37 +78,26 @@ namespace lsfUtils.CreatureTags
                     Log.LogMessage("Flammability check!");
                     int flammability = 2;
                     char? sign = null;
-                    if (value.Contains('=') && value.Split('=').Length > 1)
+                    if (value.Contains('='))
                     {
                         sign = '=';
                         Log.LogMessage("Override flammability!");
-                        int.TryParse(value.Split('=')[1], out flammability);
-                        if (flammability < 0 || flammability > 4)
-                        {
-                            flammability = RWCustom.Custom.IntClamp(flammability, 0, 4);
-                        }
                     }
-                    else if (value.Contains('+') && value.Split('+').Length > 1)
+                    else if (value.Contains('+'))
                     {
                         sign = '+';
                         Log.LogMessage("Add flammability!");
-                        int.TryParse(value.Split('+')[1], out flammability);
-                        if (flammability < 0 || flammability > 4)
-                        {
-                            flammability = RWCustom.Custom.IntClamp(flammability, 0, 4);
-                        }
                     }
-                    else if (value.Contains('-') && value.Split('-').Length > 1)
+                    else if (value.Contains('-'))
                     {
                         sign = '-';
                         Log.LogMessage("Subtract flammbility!");
-                        int.TryParse(value.Split('-')[1], out flammability);
-                        if (flammability < 0 || flammability > 4)
-                        {
-                            flammability = RWCustom.Custom.IntClamp(flammability, 0, 4);
-                        }
                     }
-                    else Log.LogMessage("invalid sign for flammability! (must be =, +, or -)");
+
+                    if (sign == null) return;
+                    if (value.Split(sign.Value).Length > 1)
+                    int.TryParse(value.Split(sign.Value)[1], out flammability);
+                    flammability = RWCustom.Custom.IntClamp(flammability, 0, 4);
 
                     Flammability.SetupCustomFlammability(self, flammability, sign);
                 }
