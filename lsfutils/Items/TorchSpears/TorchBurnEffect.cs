@@ -50,7 +50,7 @@ public class TorchBurnEffect : UpdatableAndDeletable // patoma fire logic, pissi
             (ModManager.MSC && ((target is EggBug eggbug && eggbug.FireBug) || (target is Player player && player.slugcatStats.name == MoreSlugcatsEnums.SlugcatStatsName.Artificer))) ||
             (ModManager.DLCShared && target is Inspector) ||
             (ModManager.Watcher && (target is FireSprite || target.Template.type == WatcherEnums.CreatureTemplateType.BlizzardLizard)) ||
-            target is FlameLizard) flammability = 0;
+            target is FlameLizard || target.Template.type.ToString().ToLower().Contains("fire")) flammability = 0;
         else if (target is Lizard lizard && (lizard.Template.type == CreatureTemplate.Type.Salamander || (ModManager.DLCShared && lizard.Template.type == DLCSharedEnums.CreatureTemplateType.EelLizard) || (ModManager.Watcher && (lizard.Template.type == WatcherEnums.CreatureTemplateType.PeachLizard || lizard.Template.type == WatcherEnums.CreatureTemplateType.IndigoLizard))) || (target is Centipede centipede && (centipede.Red || (ModManager.DLCShared && centipede.AquaCenti))) ||
             target is Leech || target is Snail || target is JetFish || target is Hazer ||
             (ModManager.MSC && (target is Player playe && playe.slugcatStats.name == MoreSlugcatsEnums.SlugcatStatsName.Rivulet)) ||
@@ -66,6 +66,8 @@ public class TorchBurnEffect : UpdatableAndDeletable // patoma fire logic, pissi
 
         //rotten modifier, +1 flammability if true
         if (target is Lizard lizor && lizor.rotModule != null) flammability += 1;
+        //Lavasafe modifier, -1 flammability if true
+        if (target.abstractCreature.lavaImmune) flammability -= 1;
 
         if (AbstractCreatureCWT.TryGetData(target.abstractCreature, out var data) && target.IsCustomFlammable())
         {
@@ -88,7 +90,7 @@ public class TorchBurnEffect : UpdatableAndDeletable // patoma fire logic, pissi
     {
         base.Update(eu);
 
-        if (target == null || target.slatedForDeletetion || burnDuration <= 0 || attachedChunk == null || attachedChunk.submersion > 0.2f || attachedChunk.sandSubmersion > 0.7f || target.muddy >= 800f)
+        if (target == null || target.slatedForDeletetion || burnDuration <= 0 || attachedChunk == null || attachedChunk.submersion > 0.2f || attachedChunk.sandSubmersion > 0.7f || target.muddy >= 800f || (CreatureCWT.TryGetData(target, out var data) && data.inHazerInk))
         {
             if (lightSource != null)
             {
@@ -101,6 +103,7 @@ public class TorchBurnEffect : UpdatableAndDeletable // patoma fire logic, pissi
         }
 
         int decayRate = attachedChunk.vel.magnitude > 2.5f ? 2 : 1;
+        if (this.room.roomSettings.DangerType == DLCSharedEnums.RoomRainDangerType.Blizzard && this.room.world.rainCycle.CycleProgression > 0.7f) decayRate += 1;
         burnDuration -= decayRate;
         tickCounter++;
 
@@ -164,10 +167,14 @@ public class TorchBurnEffect : UpdatableAndDeletable // patoma fire logic, pissi
             lightSource = null;
         }
 
-        int currentFlammability = flammability;
+        float currentFlammability = flammability;
         if (target.muddy > 200f && flammability > 0)
         {
-            currentFlammability = Math.Max(flammability - 1, 1);
+            currentFlammability = Math.Max(flammability - 1, 0.5f);
+        }
+        if (target.Hypothermia >= 0.8f)
+        {
+            currentFlammability = flammability + 1;
         }
         
         if (tickCounter % 20 == 0 && !target.dead)
@@ -187,6 +194,7 @@ public class TorchBurnEffect : UpdatableAndDeletable // patoma fire logic, pissi
                     room.PlaySound(SoundID.Bomb_Explode, pos, 1.2f, 0.3f);
                     target.Die();
                     target.Destroy();
+                    room.ScreenMovement(pos, default, 0.3f * target.TotalMass);
                     Log.LogMessage(":leditor::overload:");
                 }
                 Log.LogMessage("Burning " + target + " with currentFlammability " + currentFlammability + " for " + (0.025f * currentFlammability) + " damage");

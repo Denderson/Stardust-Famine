@@ -1,5 +1,8 @@
-﻿using RWCustom;
+﻿using lsfUtils.CWTs;
+using RWCustom;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using Watcher;
 using static lsfUtils.Enums;
 
 namespace lsfUtils.Items.TorchSpears
@@ -11,6 +14,8 @@ namespace lsfUtils.Items.TorchSpears
             On.AbstractPhysicalObject.Realize += AbstractPhysicalObject_Realize;
             On.Spear.HitSomething += Spear_HitSomething;
             On.SaveState.AbstractPhysicalObjectFromString += SaveState_AbstractPhysicalObjectFromString;
+            On.Watcher.FlameJet.UpdateDamage += Watcher_FlameJet_UpdateDamage;
+            On.Smoke.BlackHaze.BigBlackHaze.BlackHazeVisionObscurer.Update += Smoke_BlackHaze_Update_BigBlackHaze_BlackHazeVisionObscurer;
         }
 
         private static AbstractPhysicalObject SaveState_AbstractPhysicalObjectFromString(On.SaveState.orig_AbstractPhysicalObjectFromString orig, World world, string objString)
@@ -109,6 +114,68 @@ namespace lsfUtils.Items.TorchSpears
             }
 
             return hitResult;
+        }
+
+        private static void Watcher_FlameJet_UpdateDamage(On.Watcher.FlameJet.orig_UpdateDamage orig, FlameJet self)
+        {
+            orig(self);
+            for (int i = 0; i < self.room.physicalObjects.Length; i++)
+            {
+                foreach (PhysicalObject physicalObject in self.room.physicalObjects[i])
+                {
+                    if (physicalObject is TorchSpear torchSpear && !torchSpear.isLit)
+                    {
+                        Vector2 vector = torchSpear.clothPos[torchSpear.clothSegments - 1] - self.pos;
+                        if (self.bounds.Vector2Inside(vector))
+                        {
+                            for (int j = 0; j < self.jetPos.Length - 1; j++)
+                            {
+                                float t = (float)(Time.frameCount % 10) * 0.1f;
+                                Vector2 b = Vector2.Lerp(self.jetPos[j], self.jetPos[j + 1], t);
+                                float num = Mathf.Lerp(self.jetScale[j], self.jetScale[j + 1], t);
+                                float num2 = Mathf.Clamp((float)j / 3f, 0.5f, 1f);
+                                num2 *= Mathf.Clamp((float)(self.jetPos.Length - 1 - j) / 5f, 0.5f, 1f);
+                                float num3 = Vector2.Distance(vector, b);
+                                float num4 = num * 0.5f * num2;
+                                if (num3 <= num4)
+                                {
+                                    torchSpear.Relight();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private static void Smoke_BlackHaze_Update_BigBlackHaze_BlackHazeVisionObscurer(On.Smoke.BlackHaze.BigBlackHaze.BlackHazeVisionObscurer.orig_Update orig, Smoke.BlackHaze.BigBlackHaze.BlackHazeVisionObscurer self, bool eu)
+        {
+            orig(self, eu);
+            self.obscureFac = Mathf.InverseLerp(0.1f, 0.8f, self.bigBlackHaze.alpha);
+            self.rad = self.bigBlackHaze.Rad(1f) * 0.55f;
+            self.pos = self.bigBlackHaze.pos;
+            if (UnityEngine.Random.value < self.bigBlackHaze.alpha)
+            {
+                for (int i = 0; i < self.room.physicalObjects.Length; i++)
+                {
+                    foreach (PhysicalObject physicalObject in self.room.physicalObjects[i])
+                    {
+                        if (physicalObject is TorchSpear torchSpear && torchSpear.isLit && (physicalObject.abstractPhysicalObject.rippleLayer == self.bigBlackHaze.smoke.rippleLayer || physicalObject.abstractPhysicalObject.rippleBothSides) && Custom.DistLess(torchSpear.clothPos[torchSpear.clothSegments - 1], self.pos, self.rad * Mathf.Pow(self.bigBlackHaze.alpha, 0.6f) / 2f)) torchSpear.Extinguish(true);
+                    }
+                }
+                if (self.room.abstractRoom.creatures.Count > 0)
+                {
+                    AbstractCreature abstractCreature = self.room.abstractRoom.creatures[UnityEngine.Random.Range(0, self.room.abstractRoom.creatures.Count)];
+                    if (CreatureCWT.TryGetData(abstractCreature.realizedCreature, out var data))
+                    { 
+                        if (abstractCreature.realizedCreature != null && (abstractCreature.rippleLayer == self.bigBlackHaze.smoke.rippleLayer || abstractCreature.rippleBothSides) && Custom.DistLess(abstractCreature.realizedCreature.mainBodyChunk.pos, self.pos, self.rad * Mathf.Pow(self.bigBlackHaze.alpha, 0.6f) / 2f))
+                        {
+                            data.inHazerInk = true;
+                        }
+                        else data.inHazerInk = false;
+                    }
+                }
+            }
         }
     }
 }

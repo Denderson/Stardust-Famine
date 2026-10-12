@@ -22,6 +22,8 @@ namespace lsfUtils.CWTs
             public float temporaryPoison = 0f;
             public int cannotRecoverPoison = 0;
 
+            public bool inHazerInk = false;
+
             public int rippleTunnelTimer = 0;
             public int rippleTunnelCooldown = 0;
 

@@ -1,7 +1,10 @@
 ﻿using BepInEx;
+using lsfUtils.Creatures.Lizards.FlameLizard;
 using RWCustom;
 using System;
 using UnityEngine;
+using MoreSlugcats;
+using Watcher;
 
 namespace lsfUtils.Items.TorchSpears
 {
@@ -256,8 +259,21 @@ namespace lsfUtils.Items.TorchSpears
             {
                 Extinguish(false);
             }
+            if (!isLit && result.obj != null && result.obj is Creature creature && (creature is FlameLizard || creature is Player player && player.slugcatStats.name == MoreSlugcatsEnums.SlugcatStatsName.Artificer || creature.Template.type.ToString().ToLower().Contains("fire")))
+            {
+                Relight();
+            }
 
             return hit;
+        }
+
+        public override void HitByExplosion(float hitFac, Explosion explosion, int hitChunk)
+        {
+            base.HitByExplosion(hitFac, explosion, hitChunk);
+            if (!isLit && (UnityEngine.Random.value * 0.8f) < hitFac)
+            {
+                Relight();
+            }
         }
 
         public void Extinguish(bool byWater)
@@ -301,6 +317,18 @@ namespace lsfUtils.Items.TorchSpears
                 smoke.stationary = true;
                 smoke.DisconnectSmoke();
             }
+        }
+
+        public void Relight()
+        {
+            if (isLit) return;
+            isLit = true;
+            emberGlow = 1f;
+            if (abstractPhysicalObject is TorchSpearAbstract absTorch)
+            {
+                absTorch.isLit = true;
+            }
+
         }
 
         public override void DrawSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
