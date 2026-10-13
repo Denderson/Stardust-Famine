@@ -40,34 +40,18 @@ public static class ItemCrafting
                             room.AddObject(new ExplosionSpikes(room, pos, 14, 40f, 9f, 7f, 170f, Color.white));
                             room.PlaySound(SoundID.Bomb_Explode, pos, 0.8f, 0.4f);
                             self.Stun(200);
-                            self.ReleaseGrasp(i);
-                            abstractPhysicalObject.realizedObject.RemoveFromRoom();
                             self.SubtractFood(1);
-                            self.room.abstractRoom.RemoveEntity(abstractPhysicalObject);
-                            TorchSpearAbstract abstractTorchSpear = new TorchSpearAbstract(self.room.world, null, self.abstractCreature.pos, self.room.game.GetNewID(), false, default);
-                            self.room.abstractRoom.AddEntity(abstractTorchSpear);
-                            abstractTorchSpear.RealizeInRoom();
                             if (self.FreeHand() != -1)
                             {
-                                self.SlugcatGrab(abstractTorchSpear.realizedObject, self.FreeHand());
+                                self.SlugcatGrab(abstractPhysicalObject.realizedObject, self.FreeHand());
                             }
-                            (abstractTorchSpear.realizedObject as TorchSpear).Extinguish(false);
                             self.pyroJumpCounter = MoreSlugcats.MoreSlugcats.cfgArtificerExplosionCapacity.Value - 1;
                             return;
                         }
                         else
                         {
-                            self.ReleaseGrasp(i);
-                            abstractPhysicalObject.realizedObject.RemoveFromRoom();
                             self.SubtractFood(1);
-                            self.room.abstractRoom.RemoveEntity(abstractPhysicalObject);
-                            TorchSpearAbstract abstractTorchSpear = new TorchSpearAbstract(self.room.world, null, self.abstractCreature.pos, self.room.game.GetNewID(), false, default);
-                            self.room.abstractRoom.AddEntity(abstractTorchSpear);
-                            abstractTorchSpear.RealizeInRoom();
-                            if (self.FreeHand() != -1)
-                            {
-                                self.SlugcatGrab(abstractTorchSpear.realizedObject, self.FreeHand());
-                            }
+                            (abstractPhysicalObject.realizedObject as TorchSpear).Relight(0);
                             return;
                         }
                     }
