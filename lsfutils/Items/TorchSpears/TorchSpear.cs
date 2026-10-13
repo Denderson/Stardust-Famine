@@ -8,7 +8,7 @@ using Watcher;
 
 namespace lsfUtils.Items.TorchSpears
 {
-    public class TorchSpear : Spear
+    public class TorchSpear : Spear, IProvideWarmth
     {
         public int clothSegments = 6;
         public Vector2[] clothPos;
@@ -23,6 +23,8 @@ namespace lsfUtils.Items.TorchSpears
         public TorchFlameParticle flamePool;
 
         public bool isLit = true;
+        public int clothLife = 5;
+        public int failedRelights = 0;
         public float emberGlow = 1f;
         public float extinguishFadeSpeed = 0.002f;
 
@@ -261,7 +263,7 @@ namespace lsfUtils.Items.TorchSpears
             }
             if (!isLit && result.obj != null && result.obj is Creature creature && (creature is FlameLizard || creature is Player player && player.slugcatStats.name == MoreSlugcatsEnums.SlugcatStatsName.Artificer || creature.Template.type.ToString().ToLower().Contains("fire")))
             {
-                Relight();
+                Relight(1);
             }
 
             return hit;
@@ -272,7 +274,7 @@ namespace lsfUtils.Items.TorchSpears
             base.HitByExplosion(hitFac, explosion, hitChunk);
             if (!isLit && (UnityEngine.Random.value * 0.8f) < hitFac)
             {
-                Relight();
+                Relight(2);
             }
         }
 
@@ -319,14 +321,34 @@ namespace lsfUtils.Items.TorchSpears
             }
         }
 
-        public void Relight()
+        public void Relight(int clothDamage)
         {
             if (isLit) return;
-            isLit = true;
-            emberGlow = 1f;
-            if (abstractPhysicalObject is TorchSpearAbstract absTorch)
+            Plugin.Log.LogMessage($"Relight called with clothDamage: {clothDamage}, current clothLife: {clothLife}");
+            if (clothLife > 0 || UnityEngine.Random.value < (Mathf.Pow(2, -5f / (clothLife - 6)) - 1f))
             {
-                absTorch.isLit = true;
+                isLit = true;
+                emberGlow = 1f;
+                if (abstractPhysicalObject is TorchSpearAbstract absTorch)
+                {
+                    absTorch.isLit = true;
+                }
+                clothLife -= clothDamage;
+            }
+            else if (UnityEngine.Random.value < (failedRelights - 1)/3f)
+            {
+
+                AbstractSpear abstractSpear = new AbstractSpear(this.room.world, null, this.abstractSpear.pos, this.room.game.GetNewID(), false);
+                this.room.abstractRoom.AddEntity(abstractSpear);
+                abstractSpear.RealizeInRoom();
+                room.PlaySound(SoundID.Firecracker_Bang, firstChunk.pos);
+                this.RemoveFromRoom();
+                this.room.abstractRoom.RemoveEntity(this.abstractSpear);
+            }
+            else
+            {
+                failedRelights++;
+                room.PlaySound(SoundID.Fire_Spear_Ignite, firstChunk.pos);
             }
 
         }
@@ -334,6 +356,7 @@ namespace lsfUtils.Items.TorchSpears
         public override void DrawSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
             base.DrawSprites(sLeaser, rCam, timeStacker, camPos);
+            
 
             if (clothSpriteIndex == -1 || sLeaser.sprites.Length <= knotSpriteIndex) return;
 
@@ -346,7 +369,7 @@ namespace lsfUtils.Items.TorchSpears
 
             float activeGlow = isLit ? 1f : emberGlow;
             Color scorchColor = new Color(0.1f, 0.1f, 0.1f, activeGlow);
-            Color endColor = isLit ? new Color(0.76f, 0.70f, 0.60f, activeGlow) : new Color(0.15f, 0.15f, 0.15f, activeGlow);
+            Color endColor = new Color(0.76f * Mathf.Max((clothLife + 1)/6f, 1/6f), 0.70f * Mathf.Max((4 * clothLife + 5)/25f, 1/5f), 0.60f * Mathf.Max((3 * clothLife + 5)/20f, 1/4f), activeGlow);
             float currentKnotDepth = 5f;
 
             if (sLeaser.sprites[clothSpriteIndex] is TriangleMesh tailMesh)
@@ -428,5 +451,32 @@ namespace lsfUtils.Items.TorchSpears
             }
             return new Color(1f, 0.4f, 0.1f);
         }
+        float IProvideWarmth.warmth
+        {
+            get
+            {
+                if (isLit) return RainWorldGame.DefaultHeatSourceWarmth * 1.5f;
+                else return 0f;
+            }
+        }
+        Room IProvideWarmth.loadedRoom
+        {
+            get
+            {
+                return this.room;
+            }
+        }
+        Vector2 IProvideWarmth.Position()
+        {
+            return this.clothPos[clothSegments - 1];
+        }
+        float IProvideWarmth.range
+        {
+            get
+            {
+                return 220f * flicker[0, 0];
+            }
+        }
+
     }
 }

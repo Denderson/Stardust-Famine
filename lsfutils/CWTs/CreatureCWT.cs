@@ -23,6 +23,7 @@ namespace lsfUtils.CWTs
             public int cannotRecoverPoison = 0;
 
             public bool inHazerInk = false;
+            public bool onFire = false;
 
             public int rippleTunnelTimer = 0;
             public int rippleTunnelCooldown = 0;

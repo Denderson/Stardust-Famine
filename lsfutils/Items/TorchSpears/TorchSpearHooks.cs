@@ -16,6 +16,7 @@ namespace lsfUtils.Items.TorchSpears
             On.SaveState.AbstractPhysicalObjectFromString += SaveState_AbstractPhysicalObjectFromString;
             On.Watcher.FlameJet.UpdateDamage += Watcher_FlameJet_UpdateDamage;
             On.Smoke.BlackHaze.BigBlackHaze.BlackHazeVisionObscurer.Update += Smoke_BlackHaze_Update_BigBlackHaze_BlackHazeVisionObscurer;
+            On.PhysicalObject.Collide += PhysicalObject_Collide;
         }
 
         private static AbstractPhysicalObject SaveState_AbstractPhysicalObjectFromString(On.SaveState.orig_AbstractPhysicalObjectFromString orig, World world, string objString)
@@ -115,7 +116,30 @@ namespace lsfUtils.Items.TorchSpears
 
             return hitResult;
         }
-
+        
+        private static void PhysicalObject_Collide(On.PhysicalObject.orig_Collide orig, PhysicalObject self, PhysicalObject other, int myChunk, int otherChunk)
+        {
+            orig(self, other, myChunk, otherChunk);
+            if (self is TorchSpear torchSpear && !torchSpear.isLit && other is TorchSpear otherTorch && otherTorch.isLit)
+            {
+                if (self.bodyChunks[myChunk].pos.x <= (other.bodyChunks[myChunk].pos.x + 20) && self.bodyChunks[myChunk].pos.x >= (other.bodyChunks[myChunk].pos.x - 20) && self.bodyChunks[myChunk].pos.y <= (other.bodyChunks[myChunk].pos.y + 20) && self.bodyChunks[myChunk].pos.x >= (other.bodyChunks[myChunk].pos.y - 20))
+                {
+                    torchSpear.Relight(1);
+                }
+            }
+            /*else if (self is Creature && other is Creature)
+            {
+                if (self.bodyChunks[myChunk].pos.x <= (other.bodyChunks[myChunk].pos.x + 20) && self.bodyChunks[myChunk].pos.x >= (other.bodyChunks[myChunk].pos.x - 20) && self.bodyChunks[myChunk].pos.y <= (other.bodyChunks[myChunk].pos.y + 20) && self.bodyChunks[myChunk].pos.x >= (other.bodyChunks[myChunk].pos.y - 20))
+                {
+                    Plugin.Log.LogMessage($"{self} and {other} are touching!");
+                    if (CreatureCWT.TryGetData(self as Creature, out var target) && !target.onFire && CreatureCWT.TryGetData(other as Creature, out var burner) && burner.onFire)
+                    { 
+                        new TorchBurnEffect(self as Creature, self.bodyChunks[myChunk], null);
+                        Plugin.Log.LogMessage($"{self} is {target.onFire} {other} is {burner.onFire}");
+                    }
+                }
+            }*/
+        }
         private static void Watcher_FlameJet_UpdateDamage(On.Watcher.FlameJet.orig_UpdateDamage orig, FlameJet self)
         {
             orig(self);
@@ -139,7 +163,7 @@ namespace lsfUtils.Items.TorchSpears
                                 float num4 = num * 0.5f * num2;
                                 if (num3 <= num4)
                                 {
-                                    torchSpear.Relight();
+                                    torchSpear.Relight(1);
                                 }
                             }
                         }

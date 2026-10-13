@@ -3,10 +3,11 @@ using Watcher;
 using RWCustom;
 using System;
 using Unity.Mathematics;
+using MoreSlugcats;
 
 namespace lsfUtils.Creatures.Lizards.FlameLizard;
 
-public class FlameLizard : Lizard
+public class FlameLizard : Lizard, IProvideWarmth
 {
     public FlameJet flameJet;
     public int flameTimer;
@@ -115,4 +116,32 @@ public class FlameLizard : Lizard
     }
 
     public override void LoseAllGrasps() => ReleaseGrasp(0);
+
+    float IProvideWarmth.warmth
+    {
+        get
+        {
+            if (flameJet == null) return RainWorldGame.DefaultHeatSourceWarmth * 3f;
+            else return RainWorldGame.DefaultHeatSourceWarmth * 5f;
+        }
+    }
+    Room IProvideWarmth.loadedRoom
+    {
+        get
+        {
+            return this.room;
+        }
+    }
+    Vector2 IProvideWarmth.Position()
+    {
+        return this.firstChunk.pos;
+    }
+    float IProvideWarmth.range
+    {
+        get
+        {
+            return 350f;
+        }
+    }
+
 }

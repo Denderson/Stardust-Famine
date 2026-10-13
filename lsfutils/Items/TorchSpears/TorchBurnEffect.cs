@@ -13,7 +13,7 @@ using Smoke;
 
 namespace lsfUtils.Items.TorchSpears;
 
-public class TorchBurnEffect : UpdatableAndDeletable // patoma fire logic, pissing me off early in the morning, removed unnecesarry 2 am hook
+public class TorchBurnEffect : UpdatableAndDeletable, IProvideWarmth // patoma fire logic, pissing me off early in the morning, removed unnecesarry 2 am hook
 {
     public Creature target;
     public BodyChunk attachedChunk;
@@ -28,7 +28,7 @@ public class TorchBurnEffect : UpdatableAndDeletable // patoma fire logic, pissi
     public TorchFlameParticle flamePool;
 
     public int flammability = 2;
-    
+
 
     public TorchBurnEffect(Creature target, BodyChunk chunk, PhysicalObject.Appendage.Pos appendage)
     {
@@ -60,7 +60,7 @@ public class TorchBurnEffect : UpdatableAndDeletable // patoma fire logic, pissi
         else if (target is BigSpider || (target is Centipede centi && centi.Centiwing) || target is DaddyLongLegs || target is LanternMouse || target is EggBug || target is NeedleWorm ||
             (ModManager.DLCShared && target.Template.type == DLCSharedEnums.CreatureTemplateType.SpitLizard) ||
             (ModManager.Watcher && (target is Frog || target is Rat || target is Rattler || target is MothGrub || target.Template.type == WatcherEnums.CreatureTemplateType.BasiliskLizard))) flammability = 3;
-        else if (target is PoleMimic || target is TentaclePlant || target is Spider || target is Vulture||
+        else if (target is PoleMimic || target is TentaclePlant || target is Spider || target is Vulture ||
             (ModManager.MSC && (target is Player play && play.slugcatStats.name == MoreSlugcatsEnums.SlugcatStatsName.Saint)) ||
             (ModManager.Watcher && (target is BigMoth || target is SkyWhale))) flammability = 4;
 
@@ -97,6 +97,7 @@ public class TorchBurnEffect : UpdatableAndDeletable // patoma fire logic, pissi
                 lightSource.Destroy();
                 lightSource = null;
             }
+            if (CreatureCWT.TryGetData(target, out var data2)) data2.onFire = false;
             Destroy();
             while (burnAmount > 0f) burnAmount -= 1 / 200f;
             return;
@@ -176,9 +177,10 @@ public class TorchBurnEffect : UpdatableAndDeletable // patoma fire logic, pissi
         {
             currentFlammability = flammability + 1;
         }
-        
+
         if (tickCounter % 20 == 0 && !target.dead)
         {
+            data.onFire = true;
             if (target is not Player pla)
             {
                 if (burnAmount >= 1.5f) room.AddObject(new Smolder(room, attachedChunk.pos, attachedChunk, attachedAppendage));
@@ -241,9 +243,9 @@ public class TorchBurnEffect : UpdatableAndDeletable // patoma fire logic, pissi
                     {
                         room.PlaySound(SoundID.Firecracker_Burn);
                         target.Die();
-                    }                 
+                    }
                     Log.LogMessage(pla.slugcatStats.name + " with currentFlammability " + currentFlammability + " is burning! Progress: " + burnAmount);
-                    
+
                 }
                 else
                 {
@@ -261,5 +263,30 @@ public class TorchBurnEffect : UpdatableAndDeletable // patoma fire logic, pissi
     {
         if (RegionCWT.TryGetCustomRegionParams(this.room?.world?.region, out var customRegionParams)) return customRegionParams.TorchFireColor;
         return new Color(1f, 0.4f, 0.1f);
+    }
+
+    float IProvideWarmth.warmth {
+        get
+        {
+            return RainWorldGame.DefaultHeatSourceWarmth * 2 * burnDuration / 1600f;
+        }
+    }
+    Room IProvideWarmth.loadedRoom
+    {
+        get
+        {
+            return target.room;
+        }
+    }
+    Vector2 IProvideWarmth.Position()
+    {
+        return attachedChunk.pos;
+    }
+    float IProvideWarmth.range
+    {
+        get
+        {
+            return 150f + 60f * burnDuration / 1600f;
+        }
     }
 }
