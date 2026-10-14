@@ -1,5 +1,6 @@
 ﻿using lsfUtils.CWTs;
 using RWCustom;
+using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -98,8 +99,8 @@ namespace lsfUtils.Items.TorchSpears
             {
                 if (self.room != null)
                 {
-                    self.room.AddObject(new TorchBurnEffect(targetCreature, result.chunk, result.onAppendagePos));
-
+                    if (!torch.weakFlame) self.room.AddObject(new TorchBurnEffect(targetCreature, result.chunk, result.onAppendagePos, 1600));
+                    else self.room.AddObject(new TorchBurnEffect(targetCreature, result.chunk, result.onAppendagePos, Math.Min(1500 + torch.clothLife * 100, 800)));
                     Vector2 hitPos = result.collisionPoint;
                     self.room.AddObject(new Spark(hitPos, Custom.RNV() * 5f, new Color(1f, 0.4f, 0.1f), null, 10, 20));
                 }
@@ -131,11 +132,27 @@ namespace lsfUtils.Items.TorchSpears
             }
             else if (self is Creature creature1 && other is Creature creature2)
             {
-                if (CreatureCWT.TryGetData(creature1, out var target) && !target.onFire && CreatureCWT.TryGetData(creature2, out var burner) && burner.onFire)
+                if (CreatureCWT.TryGetData(creature1, out var target) && CreatureCWT.TryGetData(creature2, out var burner))
                 {
-                    Plugin.Log.LogMessage($"{self} and {other} are touching!");
-                    new TorchBurnEffect(creature1, self.bodyChunks[myChunk], null);
-                    Plugin.Log.LogMessage($"{self} is {target.onFire} {other} is {burner.onFire}");
+                    if (target.canSpreadFire || burner.canSpreadFire)
+                    {
+                        if (UnityEngine.Random.value < (target.flammability + burner.flammability + 1) / 9)
+                        {
+                            Plugin.Log.LogMessage($"{target.flammability}, {burner.flammability}. succeded with {(target.flammability + burner.flammability + 1) / 9 * 100}% chance");
+                            if (!target.onFire && burner.onFire)
+                            {
+                                self.room.AddObject(new TorchBurnEffect(creature1, self.bodyChunks[myChunk], null, burner.fireDuration));
+                                Plugin.Log.LogMessage($"burned {self} for {burner.fireDuration / 1600f * 40} seconds");
+                            }
+                            else if (target.onFire && !burner.onFire)
+                            {
+                                self.room.AddObject(new TorchBurnEffect(creature2, other.bodyChunks[otherChunk], null, target.fireDuration));
+                                Plugin.Log.LogMessage($"burned {other} for {target.fireDuration / 1600f * 40} seconds");
+
+                            }
+                        }
+                        else Plugin.Log.LogMessage($"{target.flammability}, {burner.flammability}.failed ({(target.flammability + burner.flammability + 1) / 9 * 100}% chance)");
+                    }
                 }
             }
         }

@@ -25,6 +25,7 @@ namespace lsfUtils.Items.TorchSpears
         public bool isLit = true;
         public int clothLife = 5;
         public int failedRelights = 0;
+        public bool weakFlame = false;
         public float emberGlow = 1f;
         public float extinguishFadeSpeed = 0.002f;
 
@@ -193,7 +194,8 @@ namespace lsfUtils.Items.TorchSpears
 
                     if (isLit)
                     {
-                        lightSource.setRad = 220f * flicker[0, 0];
+                        if (!weakFlame) lightSource.setRad = 220f * flicker[0, 0];
+                        else lightSource.setRad = (220f + Math.Max(clothLife * 10, -80)) * flicker[0, 0] ;
                         lightSource.color = GetTorchFireColor();
                         lightSource.setAlpha = 1f;
                     }
@@ -325,7 +327,7 @@ namespace lsfUtils.Items.TorchSpears
         {
             if (isLit) return;
             Plugin.Log.LogMessage($"Relight called with clothDamage: {clothDamage}, current clothLife: {clothLife}");
-            if (clothLife > 0 || UnityEngine.Random.value < (Mathf.Pow(2, -5f / (clothLife - 6)) - 1f))
+            if (UnityEngine.Random.value < (Mathf.Pow(2, -5f / (clothLife - 6)) - 1f))
             {
                 isLit = true;
                 emberGlow = 1f;
@@ -334,6 +336,7 @@ namespace lsfUtils.Items.TorchSpears
                     absTorch.isLit = true;
                 }
                 clothLife -= clothDamage;
+                if (clothLife < 0) weakFlame = true;
             }
             else if (UnityEngine.Random.value < (failedRelights - 1)/3f)
             {

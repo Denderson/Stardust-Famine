@@ -19,7 +19,7 @@ public class TorchBurnEffect : UpdatableAndDeletable, IProvideWarmth // patoma f
     public BodyChunk attachedChunk;
     public PhysicalObject.Appendage.Pos attachedAppendage;
 
-    public int burnDuration = 1600;
+    public int burnDuration;
     public float burnAmount = 0f;
     public int tickCounter = 0;
 
@@ -30,11 +30,12 @@ public class TorchBurnEffect : UpdatableAndDeletable, IProvideWarmth // patoma f
     public int flammability = 2;
 
 
-    public TorchBurnEffect(Creature target, BodyChunk chunk, PhysicalObject.Appendage.Pos appendage)
+    public TorchBurnEffect(Creature target, BodyChunk chunk, PhysicalObject.Appendage.Pos appendage, int duration)
     {
         this.target = target;
         attachedChunk = chunk ?? target.mainBodyChunk;
         attachedAppendage = appendage;
+        burnDuration = duration;
 
         flicker = new float[2, 3];
         for (int i = 0; i < 2; i++)
@@ -177,10 +178,13 @@ public class TorchBurnEffect : UpdatableAndDeletable, IProvideWarmth // patoma f
         {
             currentFlammability = flammability + 1;
         }
+        data.flammability = currentFlammability;
+        data.onFire = true;
+        data.fireDuration = burnDuration;
 
         if (tickCounter % 20 == 0 && !target.dead)
         {
-            data.onFire = true;
+            data.canSpreadFire = true;
             if (target is not Player pla)
             {
                 if (burnAmount >= 1.5f) room.AddObject(new Smolder(room, attachedChunk.pos, attachedChunk, attachedAppendage));
@@ -258,6 +262,7 @@ public class TorchBurnEffect : UpdatableAndDeletable, IProvideWarmth // patoma f
                 }
             }
         }
+        else data.canSpreadFire = false;
     }
     public Color GetTorchFireColor()
     {

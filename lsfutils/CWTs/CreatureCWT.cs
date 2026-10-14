@@ -24,6 +24,9 @@ namespace lsfUtils.CWTs
 
             public bool inHazerInk = false;
             public bool onFire = false;
+            public int fireDuration = 0;
+            public float flammability = 2f;
+            public bool canSpreadFire = false;
 
             public int rippleTunnelTimer = 0;
             public int rippleTunnelCooldown = 0;
