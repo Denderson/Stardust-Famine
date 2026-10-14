@@ -1,5 +1,6 @@
 ﻿using lsfUtils.CWTs;
 using RWCustom;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using Watcher;
@@ -120,25 +121,23 @@ namespace lsfUtils.Items.TorchSpears
         private static void PhysicalObject_Collide(On.PhysicalObject.orig_Collide orig, PhysicalObject self, PhysicalObject other, int myChunk, int otherChunk)
         {
             orig(self, other, myChunk, otherChunk);
+            if (self?.bodyChunks == null || other?.bodyChunks == null || self.bodyChunks.Count() <= 0 || other.bodyChunks.Count() <= 0) return;
+            if (self.room != other.room || self.abstractPhysicalObject?.rippleLayer != other.abstractPhysicalObject.rippleLayer) return;
+            if (!Custom.DistLess(self.bodyChunks[myChunk].pos, other.bodyChunks[otherChunk].pos, 20 + self.bodyChunks[myChunk].rad + other.bodyChunks[otherChunk].rad)) return;
+
             if (self is TorchSpear torchSpear && !torchSpear.isLit && other is TorchSpear otherTorch && otherTorch.isLit)
             {
-                if (self.bodyChunks[myChunk].pos.x <= (other.bodyChunks[myChunk].pos.x + 20) && self.bodyChunks[myChunk].pos.x >= (other.bodyChunks[myChunk].pos.x - 20) && self.bodyChunks[myChunk].pos.y <= (other.bodyChunks[myChunk].pos.y + 20) && self.bodyChunks[myChunk].pos.x >= (other.bodyChunks[myChunk].pos.y - 20))
-                {
-                    torchSpear.Relight(1);
-                }
+                torchSpear.Relight(1);
             }
-            /*else if (self is Creature && other is Creature)
+            else if (self is Creature creature1 && other is Creature creature2)
             {
-                if (self.bodyChunks[myChunk].pos.x <= (other.bodyChunks[myChunk].pos.x + 20) && self.bodyChunks[myChunk].pos.x >= (other.bodyChunks[myChunk].pos.x - 20) && self.bodyChunks[myChunk].pos.y <= (other.bodyChunks[myChunk].pos.y + 20) && self.bodyChunks[myChunk].pos.x >= (other.bodyChunks[myChunk].pos.y - 20))
+                if (CreatureCWT.TryGetData(creature1, out var target) && !target.onFire && CreatureCWT.TryGetData(creature2, out var burner) && burner.onFire)
                 {
                     Plugin.Log.LogMessage($"{self} and {other} are touching!");
-                    if (CreatureCWT.TryGetData(self as Creature, out var target) && !target.onFire && CreatureCWT.TryGetData(other as Creature, out var burner) && burner.onFire)
-                    { 
-                        new TorchBurnEffect(self as Creature, self.bodyChunks[myChunk], null);
-                        Plugin.Log.LogMessage($"{self} is {target.onFire} {other} is {burner.onFire}");
-                    }
+                    new TorchBurnEffect(creature1, self.bodyChunks[myChunk], null);
+                    Plugin.Log.LogMessage($"{self} is {target.onFire} {other} is {burner.onFire}");
                 }
-            }*/
+            }
         }
         private static void Watcher_FlameJet_UpdateDamage(On.Watcher.FlameJet.orig_UpdateDamage orig, FlameJet self)
         {
