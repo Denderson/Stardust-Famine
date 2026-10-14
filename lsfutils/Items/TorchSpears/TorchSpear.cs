@@ -5,6 +5,7 @@ using System;
 using UnityEngine;
 using MoreSlugcats;
 using Watcher;
+using lsfUtils.Mechanics.Fire;
 
 namespace lsfUtils.Items.TorchSpears
 {
@@ -20,7 +21,7 @@ namespace lsfUtils.Items.TorchSpears
 
         public LightSource lightSource;
         public float[,] flicker;
-        public TorchFlameParticle flamePool;
+        public FlameParticle flamePool;
 
         public bool isLit = true;
         public int clothLife = 5;
@@ -218,7 +219,7 @@ namespace lsfUtils.Items.TorchSpears
                 {
                     if (flamePool == null || flamePool.slatedForDeletetion || flamePool.room != room)
                     {
-                        flamePool = new TorchFlameParticle();
+                        flamePool = new FlameParticle();
                         room.AddObject(flamePool);
                     }
                     flamePool.Emit(fireSpawnPos, firstChunk.vel);
@@ -450,7 +451,7 @@ namespace lsfUtils.Items.TorchSpears
         {
             if (CWTs.RegionCWT.TryGetCustomRegionParams(this.room?.world?.region, out var customRegionParams))
             {
-                return customRegionParams.TorchFireColor;
+                return customRegionParams.FireCoreColor;
             }
             return new Color(1f, 0.4f, 0.1f);
         }

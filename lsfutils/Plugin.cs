@@ -322,6 +322,7 @@ namespace lsfUtils
                 RegisterShader(self, bundle, "Assets/Shaders/ClothBurnShader.shader", "ClothBurnShader");
                 RegisterShader(self, bundle, "Assets/Shaders/ProceduralFireShader.shader", "ProceduralFireShader");
                 RegisterShader(self, bundle, "Assets/Shaders/ScorchBurnShader.shader", "ScorchBurnShader");
+                RegisterShader(self, bundle, "Assets/Shaders/CustomStardust.shader", "CustomStardust");
 
                 bundle.Unload(false);
             }

@@ -8,13 +8,11 @@ namespace lsfUtils.Items.WarpSpears;
 public class WarpSpear : Spear
 {
     public WarpSpear connectedSpear;
-
-    public bool hasPortal;
     public WarpPortal portal;
 
     public WarpSpear(AbstractSpear abstractObject, World world) : base(abstractObject, world)
     {
-        this.connectedSpear = null;
+
     }
 
     public WarpSpear(AbstractSpear abstractObject, World world, WarpSpear connectedSpear) : base(abstractObject, world)
@@ -68,7 +66,7 @@ public class WarpSpear : Spear
 
     public void SpawnPortal()
     {
-
+        this.portal = new WarpPortal();
     }
 
     public override void DrawSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)

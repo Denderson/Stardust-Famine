@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace lsfUtils.Items.TorchSpears
+namespace lsfUtils.Mechanics.Fire
 {
-    public class TorchFlameParticle : CosmeticSprite // added object pooling for optimizing, though tbh i have no clue if theres any reason for adding this lmao, just wasted 2 hours
+    public class FlameParticle : CosmeticSprite // added object pooling for optimizing, though tbh i have no clue if theres any reason for adding this lmao, just wasted 2 hours
     {
         private class FlameData
         {
@@ -22,7 +22,7 @@ namespace lsfUtils.Items.TorchSpears
         private int maxFlames = 30;
         private int idleTimer = 0;
 
-        public TorchFlameParticle()
+        public FlameParticle()
         {
             flames = new FlameData[maxFlames];
             for (int i = 0; i < maxFlames; i++)
@@ -144,9 +144,8 @@ namespace lsfUtils.Items.TorchSpears
         }
         Color GetTorchFireColor()
         {
-            if (RegionCWT.TryGetCustomRegionParams(this.room?.world?.region, out var customRegionParams)) return customRegionParams.TorchFireColor;
+            if (RegionCWT.TryGetCustomRegionParams(room?.world?.region, out var customRegionParams)) return customRegionParams.FireCoreColor;
             return new Color(1f, 0.4f, 0.1f);
         }
-
     }
 }

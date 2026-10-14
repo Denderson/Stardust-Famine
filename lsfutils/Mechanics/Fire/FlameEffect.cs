@@ -1,19 +1,20 @@
-﻿using MoreSlugcats;
-using lsfUtils.Creatures.Lizards.FlameLizard;
+﻿using lsfUtils.Creatures.Lizards.FlameLizard;
+using lsfUtils.Creatures.Lizards.MonitorLizard;
+using lsfUtils.Creatures.Lizards.WeaverLizard;
+using lsfUtils.Creatures.Scavs.ScavSeer;
+using lsfUtils.CreatureTags;
 using lsfUtils.CWTs;
+using MoreSlugcats;
 using RWCustom;
+using Smoke;
 using System;
 using UnityEngine;
 using Watcher;
 using static lsfUtils.Plugin;
-using lsfUtils.Creatures.Lizards.WeaverLizard;
-using lsfUtils.Creatures.Lizards.MonitorLizard;
-using lsfUtils.CreatureTags;
-using Smoke;
 
-namespace lsfUtils.Items.TorchSpears;
+namespace lsfUtils.Mechanics.Fire;
 
-public class TorchBurnEffect : UpdatableAndDeletable, IProvideWarmth // patoma fire logic, pissing me off early in the morning, removed unnecesarry 2 am hook
+public class FlameEffect : UpdatableAndDeletable, IProvideWarmth // patoma fire logic, pissing me off early in the morning, removed unnecesarry 2 am hook
 {
     public Creature target;
     public BodyChunk attachedChunk;
@@ -25,12 +26,11 @@ public class TorchBurnEffect : UpdatableAndDeletable, IProvideWarmth // patoma f
 
     public LightSource lightSource;
     public float[,] flicker;
-    public TorchFlameParticle flamePool;
+    public FlameParticle flamePool;
 
     public int flammability = 2;
 
-
-    public TorchBurnEffect(Creature target, BodyChunk chunk, PhysicalObject.Appendage.Pos appendage, int duration)
+    public FlameEffect(Creature target, BodyChunk chunk, PhysicalObject.Appendage.Pos appendage, int duration)
     {
         this.target = target;
         attachedChunk = chunk ?? target.mainBodyChunk;
@@ -48,22 +48,22 @@ public class TorchBurnEffect : UpdatableAndDeletable, IProvideWarmth // patoma f
         // base flammability logic, 0 = immune, 1 = low, 2 = normal, 3 = high, 4 = extreme
         flammability = 2;
         if (target is BigEel || target is GarbageWorm || target is Overseer || target is TempleGuard ||
-            (ModManager.MSC && ((target is EggBug eggbug && eggbug.FireBug) || (target is Player player && player.slugcatStats.name == MoreSlugcatsEnums.SlugcatStatsName.Artificer))) ||
-            (ModManager.DLCShared && target is Inspector) ||
-            (ModManager.Watcher && (target is FireSprite || target.Template.type == WatcherEnums.CreatureTemplateType.BlizzardLizard)) ||
+            ModManager.MSC && (target is EggBug eggbug && eggbug.FireBug || target is Player player && player.slugcatStats.name == MoreSlugcatsEnums.SlugcatStatsName.Artificer) ||
+            ModManager.DLCShared && target is Inspector ||
+            ModManager.Watcher && (target is FireSprite || target.Template.type == WatcherEnums.CreatureTemplateType.BlizzardLizard) ||
             target is FlameLizard || target.Template.type.ToString().ToLower().Contains("fire")) flammability = 0;
-        else if (target is Lizard lizard && (lizard.Template.type == CreatureTemplate.Type.Salamander || (ModManager.DLCShared && lizard.Template.type == DLCSharedEnums.CreatureTemplateType.EelLizard) || (ModManager.Watcher && (lizard.Template.type == WatcherEnums.CreatureTemplateType.PeachLizard || lizard.Template.type == WatcherEnums.CreatureTemplateType.IndigoLizard))) || (target is Centipede centipede && (centipede.Red || (ModManager.DLCShared && centipede.AquaCenti))) ||
+        else if (target is Lizard lizard && (lizard.Template.type == CreatureTemplate.Type.Salamander || ModManager.DLCShared && lizard.Template.type == DLCSharedEnums.CreatureTemplateType.EelLizard || ModManager.Watcher && (lizard.Template.type == WatcherEnums.CreatureTemplateType.PeachLizard || lizard.Template.type == WatcherEnums.CreatureTemplateType.IndigoLizard)) || target is Centipede centipede && (centipede.Red || ModManager.DLCShared && centipede.AquaCenti) ||
             target is Leech || target is Snail || target is JetFish || target is Hazer ||
-            (ModManager.MSC && (target is Player playe && playe.slugcatStats.name == MoreSlugcatsEnums.SlugcatStatsName.Rivulet)) ||
-            (ModManager.DLCShared && target is BigJellyFish) ||
-            (ModManager.Watcher && (target is DrillCrab || target is Angler || target is Barnacle || target is Tardigrade)) ||
+            ModManager.MSC && target is Player playe && playe.slugcatStats.name == MoreSlugcatsEnums.SlugcatStatsName.Rivulet ||
+            ModManager.DLCShared && target is BigJellyFish ||
+            ModManager.Watcher && (target is DrillCrab || target is Angler || target is Barnacle || target is Tardigrade) ||
             target is WeaverLizard || target is MonitorLizard) flammability = 1;
-        else if (target is BigSpider || (target is Centipede centi && centi.Centiwing) || target is DaddyLongLegs || target is LanternMouse || target is EggBug || target is NeedleWorm ||
-            (ModManager.DLCShared && target.Template.type == DLCSharedEnums.CreatureTemplateType.SpitLizard) ||
-            (ModManager.Watcher && (target is Frog || target is Rat || target is Rattler || target is MothGrub || target.Template.type == WatcherEnums.CreatureTemplateType.BasiliskLizard))) flammability = 3;
+        else if (target is BigSpider || target is Centipede centi && centi.Centiwing || target is DaddyLongLegs || target is LanternMouse || target is EggBug || target is NeedleWorm ||
+            ModManager.DLCShared && target.Template.type == DLCSharedEnums.CreatureTemplateType.SpitLizard ||
+            ModManager.Watcher && (target is Frog || target is Rat || target is Rattler || target is MothGrub || target.Template.type == WatcherEnums.CreatureTemplateType.BasiliskLizard)) flammability = 3;
         else if (target is PoleMimic || target is TentaclePlant || target is Spider || target is Vulture ||
-            (ModManager.MSC && (target is Player play && play.slugcatStats.name == MoreSlugcatsEnums.SlugcatStatsName.Saint)) ||
-            (ModManager.Watcher && (target is BigMoth || target is SkyWhale))) flammability = 4;
+            ModManager.MSC && target is Player play && play.slugcatStats.name == MoreSlugcatsEnums.SlugcatStatsName.Saint ||
+            ModManager.Watcher && (target is BigMoth || target is SkyWhale)) flammability = 4;
 
         //rotten modifier, +1 flammability if true
         if (target is Lizard lizor && lizor.rotModule != null) flammability += 1;
@@ -91,7 +91,7 @@ public class TorchBurnEffect : UpdatableAndDeletable, IProvideWarmth // patoma f
     {
         base.Update(eu);
 
-        if (target == null || target.slatedForDeletetion || burnDuration <= 0 || attachedChunk == null || attachedChunk.submersion > 0.2f || attachedChunk.sandSubmersion > 0.7f || target.muddy >= 800f || (CreatureCWT.TryGetData(target, out var data) && data.inHazerInk))
+        if (target == null || target.slatedForDeletetion || burnDuration <= 0 || attachedChunk == null || attachedChunk.submersion > 0.2f || attachedChunk.sandSubmersion > 0.7f || target.muddy >= 800f || CreatureCWT.TryGetData(target, out var data) && data.inHazerInk)
         {
             if (lightSource != null)
             {
@@ -105,7 +105,7 @@ public class TorchBurnEffect : UpdatableAndDeletable, IProvideWarmth // patoma f
         }
 
         int decayRate = attachedChunk.vel.magnitude > 2.5f ? 2 : 1;
-        if (this.room.roomSettings.DangerType == DLCSharedEnums.RoomRainDangerType.Blizzard && this.room.world.rainCycle.CycleProgression > 0.7f) decayRate += 1;
+        if (room.roomSettings.DangerType == DLCSharedEnums.RoomRainDangerType.Blizzard && room.world.rainCycle.CycleProgression > 0.7f) decayRate += 1;
         burnDuration -= decayRate;
         tickCounter++;
 
@@ -131,7 +131,7 @@ public class TorchBurnEffect : UpdatableAndDeletable, IProvideWarmth // patoma f
             {
                 if (flamePool == null || flamePool.slatedForDeletetion || flamePool.room != room)
                 {
-                    flamePool = new TorchFlameParticle();
+                    flamePool = new FlameParticle();
                     room.AddObject(flamePool);
                 }
 
@@ -203,7 +203,7 @@ public class TorchBurnEffect : UpdatableAndDeletable, IProvideWarmth // patoma f
                     room.ScreenMovement(pos, default, 0.3f * target.TotalMass);
                     Log.LogMessage(":leditor::overload:");
                 }
-                Log.LogMessage("Burning " + target + " with currentFlammability " + currentFlammability + " for " + (0.025f * currentFlammability) + " damage");
+                Log.LogMessage("Burning " + target + " with currentFlammability " + currentFlammability + " for " + 0.025f * currentFlammability + " damage");
                 if (target is Lizard lizard)
                 {
                     if (lizard.Template.type == CreatureTemplate.Type.CyanLizard)
@@ -266,8 +266,9 @@ public class TorchBurnEffect : UpdatableAndDeletable, IProvideWarmth // patoma f
     }
     public Color GetTorchFireColor()
     {
-        if (RegionCWT.TryGetCustomRegionParams(this.room?.world?.region, out var customRegionParams)) return customRegionParams.TorchFireColor;
-        return new Color(1f, 0.4f, 0.1f);
+        if (!RegionCWT.TryGetCustomRegionParams(room?.world?.region, out var customRegionParams)) return new Color(1f, 0.4f, 0.1f);
+        
+        return customRegionParams.FireCoreColor;
     }
 
     float IProvideWarmth.warmth {
