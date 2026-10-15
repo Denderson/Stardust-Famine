@@ -1,4 +1,5 @@
 ﻿using DevInterface;
+using lsfUtils.Creatures.Misc.ClimbGrub;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -888,7 +889,7 @@ namespace lsfUtils.Creatures
 
         public static void RegisterClimbGrub()
         {
-            CreatureTemplate.Type type = ClimbGrub;
+            CreatureTemplate.Type type = Enums.CreatureTemplateType.ClimbGrub;
             var entry = new CreatureRegistryEntry(type, [type.ToString()])
             {
                 mapName = "clgb",
@@ -898,19 +899,57 @@ namespace lsfUtils.Creatures
                 isBigForShelter = false,
                 performanceCost = 20f,
                 unlockID = SandboxUnlockID.ClimbGrub,
-                RealisedCtor = (abstractCreature, world) => new Worm.ClimbGrub(abstractCreature, world),
+                RealisedCtor = (abstractCreature, world) => new ClimbGrub(abstractCreature, world),
                 AbstractAICtor = (world, parent) => new AbstractCreatureAI(world, parent),
-                AICtor = (creature, world) => new TubeWormAI(creature, world),
+                AICtor = (creature, world) => new ClimbGrubAI(creature, world),
                 Grabability = (player, physicalObject) => Player.ObjectGrabability.OneHand,
                 //StateCtor = (creature) => new CreatureState(creature),
                 setTemplate = () =>
                 {
+                    List<TileTypeResistance> tRs =
+                    [
+                    new(AItile.Accessibility.Floor, 1f, PathCost.Legality.Allowed),
+                        new(AItile.Accessibility.Climb, 2f, PathCost.Legality.Allowed),
+                        new(AItile.Accessibility.Corridor, 1.5f, PathCost.Legality.Allowed),
+                        new(AItile.Accessibility.Solid, 100f, PathCost.Legality.Unallowed)
+                    ];
+
+                    List<TileConnectionResistance> cRs =
+                    [
+                    new(MovementConnection.MovementType.Standard, 1f, PathCost.Legality.Allowed),
+                        new(MovementConnection.MovementType.OpenDiagonal, 1f, PathCost.Legality.Allowed),
+                        new(MovementConnection.MovementType.ShortCut, 1.5f, PathCost.Legality.IllegalConnection),
+                        new(MovementConnection.MovementType.BetweenRooms, 2f, PathCost.Legality.IllegalConnection)
+                    ];
+
                     CreatureTemplate ancestor = StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.TubeWorm);
-                    CreatureTemplate template = new(type, ancestor, [], [], new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.Ignores, 0f))
+                    CreatureTemplate template = new(type, ancestor, tRs, cRs, new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.Ignores, 0f))
                     {
                         name = type.ToString(),
                         AI = true,
-                        dangerousToPlayer = 0f
+                        dangerousToPlayer = 0.2f,
+                        lungCapacity = float.MaxValue,
+                        scaryness = 0.1f,
+                        smallCreature = false,
+                        socialMemory = false,
+                        wormGrassImmune = false,
+                        shortcutSegments = 1,
+                        offScreenSpeed = 0.1f,
+                        abstractedLaziness = 200,
+                        roamBetweenRoomsChance = 0.00f,
+                        bodySize = 1f,
+                        stowFoodInDen = true,
+                        grasps = 1,
+                        visualRadius = 300f,
+                        movementBasedVision = 0.2f,
+                        waterRelationship = CreatureTemplate.WaterRelationship.Amphibious,
+                        waterPathingResistance = 2f,
+                        canFly = false,
+                        meatPoints = 1,
+                        baseDamageResistance = 0.5f,
+                        baseStunResistance = 0.3f,
+                        ghostSedationImmune = false,
+                        //damageRestistances = []
                     };
                     return template;
                 },

@@ -5,15 +5,15 @@ using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace lsfUtils.Creatures.Worm
+namespace lsfUtils.Creatures.Misc.ClimbGrub
 {
     public static class ClimbGrubHooks
     {
         public static void ApplyHooks()
         {
-            On.TubeWorm.Tongue.Shoot += ClimbGrubHooks.Tongue_Shoot; // Climb grub doesnt have a tongue
-            On.Player.Update += ClimbGrubHooks.Player_Update; // While under climb grub effect, player can jump on poles without being slowed down
-            On.Player.WallJump += ClimbGrubHooks.Player_WallJump; // While under climb grub effect, player can climb walls without bouncing off of them
+            On.TubeWorm.Tongue.Shoot += Tongue_Shoot; // Climb grub doesnt have a tongue
+            On.Player.Update += Player_Update; // While under climb grub effect, player can jump on poles without being slowed down
+            On.Player.WallJump += Player_WallJump; // While under climb grub effect, player can climb walls without bouncing off of them
         }
 
         public static Color yellowTintColor = new(0.75f, 0.95f, 0.25f);
@@ -39,11 +39,11 @@ namespace lsfUtils.Creatures.Worm
             Vector2 delta0 = self.bodyChunks[0].vel - velBefore0;
             Vector2 delta1 = self.bodyChunks[1].vel - velBefore1;
 
-            self.bodyChunks[0].vel.x = velBefore0.x + (delta0.x * wallBounceFactorX);
-            self.bodyChunks[1].vel.x = velBefore1.x + (delta1.x * wallBounceFactorX);
+            self.bodyChunks[0].vel.x = velBefore0.x + delta0.x * wallBounceFactorX;
+            self.bodyChunks[1].vel.x = velBefore1.x + delta1.x * wallBounceFactorX;
 
-            self.bodyChunks[0].vel.y = velBefore0.y + (delta0.y * wallBounceFactorY);
-            self.bodyChunks[1].vel.y = velBefore1.y + (delta1.y * wallBounceFactorY);
+            self.bodyChunks[0].vel.y = velBefore0.y + delta0.y * wallBounceFactorY;
+            self.bodyChunks[1].vel.y = velBefore1.y + delta1.y * wallBounceFactorY;
 
             self.jumpStun = 0;
         }
