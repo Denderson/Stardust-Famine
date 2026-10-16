@@ -11,9 +11,9 @@ public class ClimbGrub : Creature
     public const int tailIndex = 2;
     public const int chunkCount = 3;
     
-    public const float headSize = 3.5f;
-    public const float bodySize = 5f;
-    public const float tailSize = 2f;
+    public const float headSize = 4.5f;
+    public const float bodySize = 7f;
+    public const float tailSize = 3f;
 
     public const float headMass = 0.1f;
     public const float bodyMass = 0.15f;
@@ -27,13 +27,13 @@ public class ClimbGrub : Creature
     public const float lookSpeed = 0.15f;
 
     private int grabHoldCounter;
-    private const int smashHoldDuration = 40;
+    private const int smashHoldDuration = 20;
 
     public static Color yellowTintColor = new(0.75f, 0.95f, 0.25f);
     public static Color pinkStripeColor = new(1f, 0.55f, 0.75f);
 
-    public const int freeClimbDuration = 40 * 10;
-    public const int freeClimbDurationMax = 80 * 10;
+    public const int freeClimbDuration = 40 * 20;
+    public const int freeClimbDurationMax = 80 * 20;
 
     public ClimbGrubAI AI => abstractCreature.abstractAI?.RealAI as ClimbGrubAI;
 
@@ -133,14 +133,20 @@ public class ClimbGrub : Creature
         lastSqueezeScale = squeezeScale;
 
         float targetScale = 1f + squeezeProgress * sqeezeSizeIncrease;
-        squeezeScale = Mathf.Lerp(squeezeScale, targetScale, 0.2f);
+        squeezeScale = Mathf.Lerp(squeezeScale, targetScale, 0.5f);
 
         bodyChunks[headIndex].rad = headSize * squeezeScale;
-        bodyChunks[bodyIndex].rad = bodySize * squeezeScale;
+        bodyChunks[bodyIndex].rad = bodySize / squeezeScale;
         bodyChunks[tailIndex].rad = tailSize * squeezeScale;
 
-        bodyChunkConnections[0].distance = headBodyDistance * squeezeScale;
-        bodyChunkConnections[1].distance = bodyTailDistance * squeezeScale;
+        if (squeezeProgress >= 0.7f &&  squeezeProgress <= 0.8f)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                Vector2 vel = Custom.RNV() * Mathf.Lerp(4f, 8f, Random.value);
+                room.AddObject(new Spark(mainBodyChunk.pos, vel, Color.Lerp(yellowTintColor, Color.white, Random.value), null, 14, 24));
+            }
+        }
     }
 
     private void Smash(Player player)
