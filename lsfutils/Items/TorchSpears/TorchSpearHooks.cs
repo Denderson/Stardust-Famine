@@ -175,6 +175,7 @@ public static class TorchSpearHooks
                 else if (selfTorch.isLit && PhysicalObjectCWT.TryGetData(otherObject, out var target) && !target.onFire && otherObject.collisionLayer != 1)
                 {
                     self.room.AddObject(new FlameEffect(otherObject, other.bodyChunks[otherChunk], null, Math.Min(Math.Max(1500 + selfTorch.clothLife * 100, 800), 1600) + (200 * selfTorch.fireLife - 600)));
+                    selfTorch.Damage(1);
                 }
             }
         }

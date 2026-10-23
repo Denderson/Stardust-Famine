@@ -70,7 +70,6 @@ namespace lsfUtils
 
         public const string templarMaskIcon = "atlases/templarMaskIcon";
 
-
         public static readonly EntityID SpecialId = new(1, -20);
 
         private void LoadResources(RainWorld rainWorld)
@@ -227,7 +226,6 @@ namespace lsfUtils
                 Logger.LogMessage("LSF Utils failure!!!");
                 Logger.LogError(e);
             }
-
         }
 
         public static void RainWorld_Start(On.RainWorld.orig_Start orig, RainWorld self)
