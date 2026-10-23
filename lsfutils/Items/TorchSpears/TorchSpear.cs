@@ -24,9 +24,9 @@ namespace lsfUtils.Items.TorchSpears
         public FlameParticle flamePool;
 
         public bool isLit = true;
+        public int fireLife = 3;
         public int clothLife = 5;
         public int failedRelights = 0;
-        public bool weakFlame = false;
         public float emberGlow = 1f;
         public float extinguishFadeSpeed = 0.002f;
 
@@ -195,8 +195,7 @@ namespace lsfUtils.Items.TorchSpears
 
                     if (isLit)
                     {
-                        if (!weakFlame) lightSource.setRad = 220f * flicker[0, 0];
-                        else lightSource.setRad = (220f + Math.Max(clothLife * 10, -80)) * flicker[0, 0] ;
+                        lightSource.setRad = (Math.Min(220f + Math.Max(clothLife * 10, -80), 220f) + (30 * fireLife - 90)) * flicker[0, 0] ;
                         lightSource.color = GetTorchFireColor();
                         lightSource.setAlpha = 1f;
                     }
@@ -255,7 +254,14 @@ namespace lsfUtils.Items.TorchSpears
                 clothVel[i] = Vector2.zero;
             }
         }
-
+        public override void ChangeMode(Mode newMode)
+        {
+            base.ChangeMode(newMode);
+            if (newMode == Weapon.Mode.StuckInWall)
+            {
+                Extinguish(false);
+            }
+        }
         public override bool HitSomething(SharedPhysics.CollisionResult result, bool eu)
         {
             bool hit = base.HitSomething(result, eu);
@@ -264,18 +270,21 @@ namespace lsfUtils.Items.TorchSpears
             {
                 Extinguish(false);
             }
-            if (!isLit && result.obj != null && result.obj is Creature creature && (creature is FlameLizard || creature is Player player && player.slugcatStats.name == MoreSlugcatsEnums.SlugcatStatsName.Artificer || creature.Template.type.ToString().ToLower().Contains("fire")))
+            else if (isLit && result.obj != null && result.obj is PhysicalObject)
+            {
+                Damage(1);
+            }
+            if ((!isLit || fireLife < 3) && result.obj != null && result.obj is Creature creature && (creature is FlameLizard || creature is Player player && player.slugcatStats.name == MoreSlugcatsEnums.SlugcatStatsName.Artificer || creature.Template.type.ToString().ToLower().Contains("fire")))
             {
                 Relight(1);
             }
-
             return hit;
         }
 
         public override void HitByExplosion(float hitFac, Explosion explosion, int hitChunk)
         {
             base.HitByExplosion(hitFac, explosion, hitChunk);
-            if (!isLit && (UnityEngine.Random.value * 0.8f) < hitFac)
+            if ((!isLit || fireLife < 3) && (UnityEngine.Random.value * 0.8f) < hitFac)
             {
                 Relight(2);
             }
@@ -284,7 +293,7 @@ namespace lsfUtils.Items.TorchSpears
         public void Extinguish(bool byWater)
         {
             if (!isLit) return;
-
+            fireLife = 3;
             extinguishFadeSpeed = byWater ? 0.02f : 0.002f;
             isLit = false;
             emberGlow = 1f;
@@ -324,22 +333,42 @@ namespace lsfUtils.Items.TorchSpears
             }
         }
 
+        public void Damage(int fireDamage)
+        {
+            if (!isLit) return;
+            fireLife -= fireDamage;
+            if (fireLife == 0) Extinguish(false);
+        }
+
         public void Relight(int clothDamage)
         {
-            if (isLit) return;
-            Plugin.Log.LogMessage($"Relight called with clothDamage: {clothDamage}, current clothLife: {clothLife}");
+            if (isLit && fireLife == 3) return;
             if (UnityEngine.Random.value < (Mathf.Pow(2, -5f / (clothLife - 6)) - 1f))
             {
-                isLit = true;
-                emberGlow = 1f;
-                if (abstractPhysicalObject is TorchSpearAbstract absTorch)
+                if (!isLit)
                 {
-                    absTorch.isLit = true;
+                    isLit = true;
+                    emberGlow = 1f;
+                    if (abstractPhysicalObject is TorchSpearAbstract absTorch)
+                    {
+                        absTorch.isLit = true;
+                    }
+                    clothLife -= clothDamage;
+                    fireLife = 3;
+                    Plugin.Log.LogMessage($"Relit torch for {clothDamage} damage. new clothLife: {clothLife}");
                 }
-                clothLife -= clothDamage;
-                if (clothLife < 0) weakFlame = true;
+                else
+                {
+                    if (UnityEngine.Random.value > fireLife / 3f)
+                    {
+                        clothLife -= clothDamage;
+                        Plugin.Log.LogMessage($"Cloth took {clothDamage} damage with {100 * (1f - fireLife / 3f)}% chance");
+                    }
+                    fireLife = 3;
+                    Plugin.Log.LogMessage($"Rekindled damaged torch. new clothLife: {clothLife}");
+                }
             }
-            else if (UnityEngine.Random.value < (failedRelights - 1)/3f)
+            else if (UnityEngine.Random.value < (failedRelights - 1) / 3f)
             {
 
                 AbstractSpear abstractSpear = new AbstractSpear(this.room.world, null, this.abstractSpear.pos, this.room.game.GetNewID(), false);
@@ -348,13 +377,14 @@ namespace lsfUtils.Items.TorchSpears
                 room.PlaySound(SoundID.Firecracker_Bang, firstChunk.pos);
                 this.RemoveFromRoom();
                 this.room.abstractRoom.RemoveEntity(this.abstractSpear);
+                Plugin.Log.LogMessage($"Cloth burned out!!! ({100 * ((failedRelights - 1) / 3f)}% chance)");
             }
             else
             {
                 failedRelights++;
                 room.PlaySound(SoundID.Fire_Spear_Ignite, firstChunk.pos);
+                Plugin.Log.LogMessage($"Failed relighting ({100 * (Mathf.Pow(2, -5f / (clothLife - 6)) - 1f)}% chance). Failed relights: {failedRelights}");
             }
-
         }
 
         public override void DrawSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)

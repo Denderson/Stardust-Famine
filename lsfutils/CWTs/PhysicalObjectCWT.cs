@@ -20,6 +20,14 @@ namespace lsfUtils.CWTs
         {
             public bool shouldOverrideGravity;
             public float overrideGravity;
+
+            public bool inHazerInk = false;
+            public bool onFire = false;
+            public int fireDuration = 0;
+            public float permanentFireAmount = 0f;
+            public float flammability = 2f;
+            public bool canSpreadFire = false;
+            public int fireLoss = 0;
         }
     }
 }

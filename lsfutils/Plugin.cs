@@ -70,6 +70,7 @@ namespace lsfUtils
 
         public const string templarMaskIcon = "atlases/templarMaskIcon";
 
+
         public static readonly EntityID SpecialId = new(1, -20);
 
         private void LoadResources(RainWorld rainWorld)
@@ -226,6 +227,7 @@ namespace lsfUtils
                 Logger.LogMessage("LSF Utils failure!!!");
                 Logger.LogError(e);
             }
+
         }
 
         public static void RainWorld_Start(On.RainWorld.orig_Start orig, RainWorld self)
@@ -299,6 +301,10 @@ namespace lsfUtils
             Futile.atlasManager.LoadImage(templarMaskIcon);
 
             Futile.atlasManager.LoadAtlas("atlases/SeerMaskSprites");
+
+            Futile.atlasManager.LoadImage("atlases/stardustSymbol");
+            Critter.CritterAPI.RegisterModIcon("lsfUtils", "atlases/stardustSymbol", Color.green);
+
 
             string bundlePath = AssetManager.ResolveFilePath("shaders/lsfutils");
             Log.LogMessage($"Resolved bundle path: {bundlePath}");

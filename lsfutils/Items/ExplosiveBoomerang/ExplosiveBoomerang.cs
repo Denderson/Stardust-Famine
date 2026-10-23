@@ -49,6 +49,7 @@ namespace lsfUtils.Items.ExplosiveBoomerang
                     }
                 }
 
+                if (ignited && isSingularity) forbiddenToPlayer = 10;
                 if (ignited && burn == 0f && mode != Mode.Thrown) burn = 0.5f + Random.value * 0.5f;
 
                 for (int i = 0; i < 2; i++)
@@ -270,13 +271,13 @@ namespace lsfUtils.Items.ExplosiveBoomerang
         public override void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
         {
             base.ApplyPalette(sLeaser, rCam, palette);
-            if (slatedForDeletetion || room != rCam.room || sLeaser?.sprites == null || sLeaser.sprites.Length <= SpriteGlow) return;
 
             gradColor = ExplosionColor;
+            sLeaser.sprites[0].color = gradColor;
+            sLeaser.sprites[2].color = gradColor;
 
-            sLeaser.sprites[0].color = ExplosionColor;
-            sLeaser.sprites[2].color = Color.Lerp(ExplosionColor, Color.black, 0.4f);
-            sLeaser.sprites[SpriteGlow].color = ExplosionColor;
+            if (sLeaser.sprites.Length <= SpriteGlow) return;
+            sLeaser.sprites[SpriteGlow].color = gradColor;
         }
     }
 }

@@ -99,8 +99,8 @@ public static class ItemRegistry
     {
         var entry = new ItemRegistryEntry(AbstractObjectType.BrownFruit)
         {
-            iconSprite = templarMaskIcon,
-            iconColor = RainWorld.GoldRGB,
+            iconSprite = "Symbol_DangleFruit",
+            iconColor = new(0.6f, 0.17f, 0.13f),
             unlockID = SandboxUnlockID.BrownFruit,
 
             SandboxFactory = (world, pos, id) =>

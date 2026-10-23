@@ -27,6 +27,7 @@ namespace lsfUtils.CWTs
             public int fireDuration = 0;
             public float flammability = 2f;
             public bool canSpreadFire = false;
+            public float permanentFireAmount = 0f;
 
             public int rippleTunnelTimer = 0;
             public int rippleTunnelCooldown = 0;
