@@ -183,7 +183,6 @@ public class RegionParamsSetup
                     }
                 default:
                     {
-                        Log.LogMessage("ERROR: Unknown region param!");
                         break;
                     }
             }

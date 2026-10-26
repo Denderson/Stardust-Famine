@@ -42,6 +42,7 @@ using lsfUtils.Items.RippleFlower;
 using lsfUtils.Items.TorchSpears;
 using lsfUtils.Mechanics;
 using lsfUtils.RegionParams;
+using lsfUtils.SaveFile;
 using lsfUtils.ScreenVariants;
 using lsfUtils.ScreenVariants.Deeperspace;
 using Stardust.PlacedObjects;
@@ -55,31 +56,181 @@ using static Pom.Pom;
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 #pragma warning restore CS0618
 
-namespace lsfUtils
+namespace lsfUtils;
+
+[BepInPlugin("lsfUtils", "LSF Utils", "0.1")]
+
+public class Plugin : BaseUnityPlugin
 {
-    [BepInPlugin("lsfUtils", "LSF Utils", "0.1")]
+    public static ManualLogSource Log { get; private set; }
 
-    public class Plugin : BaseUnityPlugin
+    public static readonly int StaticRandom = RXRandom.Int(100);
+
+    public bool initialized;
+    public bool isInit;
+
+    public const string templarMaskIcon = "atlases/templarMaskIcon";
+
+    public static readonly EntityID SpecialId = new(1, -20);
+
+    private void LoadResources(RainWorld rainWorld)
     {
-        public static ManualLogSource Log { get; private set; }
 
-        public static readonly int StaticRandom = RXRandom.Int(100);
+    }
 
-        public bool initialized;
-        public bool isInit;
 
-        public const string templarMaskIcon = "atlases/templarMaskIcon";
-
-        public static readonly EntityID SpecialId = new(1, -20);
-
-        private void LoadResources(RainWorld rainWorld)
+    public void OnEnable()
+    {
+        Debug.Log("Starting LSF Utils");
+        try
         {
+            Log = Logger;
 
+            On.RainWorld.OnModsInit += RainWorld_OnModsInit;
+
+            // save file code
+            {
+                On.SaveState.LoadGame += SaveFileMain.CustomSavedataInit;
+                On.RainWorldGame.Win += SaveFileMain.RainWorldGame_Win;
+            }
+
+            // fisobs
+            {
+                ItemRegistryCore.ApplyHooks();
+                ItemRegistry.RegisterAll();
+
+                CreatureRegistryCore.ApplyHooks();
+                CreatureRegistry.RegisterAll();
+
+                Log.LogMessage("Done with non-Fisobs!!!");
+            }
+
+            // creatures
+            {
+                LizardHooks.ApplyHooks();
+
+                AirplaneLizardHooks.ApplyHooks();
+                RaspberryLizardHooks.ApplyHooks();
+                WeaverLizardHooks.ApplyHooks();
+                PoisonLizardHooks.ApplyHooks();
+                MonitorLizardHooks.ApplyHooks();
+                StarNosedLizardHooks.ApplyHooks();
+
+                ScavHooks.ApplyHooks();
+
+                ScavFlankHooks.ApplyHooks();
+                ScavSeerHooks.ApplyHooks();
+                ScavMessengerHooks.ApplyHooks();
+
+                PoisonSpiderHooks.ApplyHooks();
+
+                ClimbGrubHooks.ApplyHooks();
+            }
+
+            // items
+            {
+                RippleFlowerHooks.ApplyHooks();
+                DartHooks.ApplyHooks();
+                KarmaMaskHooks.ApplyHooks();
+                ExplosiveBoomerangHooks.ApplyHooks();
+                TorchSpearHooks.ApplyHooks();
+            }
+
+            // devtools objects
+            {
+                LocalGravityHooks.ApplyHooks();
+                ConditionalFilterHooks.ApplyHooks();
+                FloatMudHooks.ApplyHooks();
+                BackgroundMudHooks.ApplyHooks();
+                WaveLightHooks.ApplyHooks();
+                PoisonSteamHooks.ApplyHooks();
+            }
+
+            // devtools effects
+            {
+                CreepingDarkness.RegisterCreepingDarkness();
+                CreepingDarknessHooks.ApplyHooks();
+
+                EvilWater.RegisterEvilWater();
+                EvilWaterHooks.ApplyHooks();
+
+                StardustEnums.RegisterValues();
+                StardustRainHooks.Apply();
+            }
+
+            // creature flags
+            {
+                CreatureFlagHooks.ApplyHooks();
+
+                EchoImmuneHooks.ApplyHooks();
+                RippleHybridHooks.ApplyHooks();
+                PoisonImmuneHooks.ApplyHooks();
+
+                FactionHooks.ApplyHooks();
+                StarveFlagHooks.ApplyHooks();
+            }
+
+            // region parameters
+            {
+                On.Region.ctor_string_int_int_RainWorldGame_Timeline += RegionParams.RegionParamsSetup.SetupParams;
+
+                ScavParamsHooks.ApplyHooks();
+                TypeParams.ApplyHooks();
+                ShortcutLinks.ApplyHooks();
+                ShelterLinks.ApplyHooks();
+                ConditionalGates.ApplyHooks();
+            }
+
+            // mechanics
+            {
+                TemporaryPoison.ApplyHooks();
+            }
+
+            // screen variants
+            {
+                ScreenVariantHooks.ApplyHooks();
+            }
+
+            On.RainWorld.Start += RainWorld_Start;
+
+            Log.LogMessage("Checking isInit!");
+
+            if (isInit) return;
+            isInit = true;
+
+            WorldLoader.Preprocessing.preprocessorConditions.Add(ConditionalLogic.LSFConditions);
+
+            Log.LogMessage("Registering lsfUtils stuff...");
+
+            RegisterManagedObject<ConditionFilter, ConditionFilterData, ManagedRepresentation>("ConditionalFilter", "lsfUtils");
+            RegisterManagedObject<RoomConditionFilterUAD, RoomConditionFilterData, ManagedRepresentation>("RoomConditionalFilter", "lsfUtils");
+            RegisterManagedObject<LocalGravity, LocalGravityData, ManagedRepresentation>("LocalGravity", "lsfUtils");
+            RegisterManagedObject<RippleZone, RippleZoneData, ManagedRepresentation>("RippleZone", "lsfUtils");
+            RegisterManagedObject<EventRect, EventRectData, ManagedRepresentation>("EventRect", "lsfUtils");
+            RegisterManagedObject<CustomPushback, CustomPushbackData, ManagedRepresentation>("CustomPushback", "lsfUtils");
+            RegisterManagedObject<WaveLight, WaveLightData, WaveLightRepresentation>("WaveLight", "lsfUtils");
+            RegisterManagedObject<Bumper, BumperData, ManagedRepresentation>("Bumper", "lsfUtils");
+
+            RegisterManagedObject(new ManagedObjectType("MudBonePile", "lsfUtils", typeof(MudBonePile), typeof(MudBonePileData), typeof(MudBonePileRepresentation)));
+
+            RegisterManagedObject<RippleTunnel, RippleTunnelData, RippleTunnelRepresentation>("RippleTunnel", "lsfUtils");
+
+            RegisterManagedObject(new ManagedFloatMud());
+            RegisterManagedObject(new ManagedPoisonSteam());
+            RegisterManagedObject(new ManagedBackgroundMud());
+            RegisterManagedObject(new ManagedRippleFlower());
+            RegisterManagedObject(new ManagedKarmaMask());
+            RegisterManagedObject(new ManagedBrownFruit());
+            RegisterManagedObject(new ManagedTorchSpear());
+            RegisterManagedObject(new ManagedKnotSpawnV2());
+
+            EventLogic.RegisterBuiltInEvents();
+
+            Logger.LogMessage("LSF Utils success!");
         }
-
-
-        public void OnEnable()
+        catch (Exception e)
         {
+<<<<<<< Updated upstream
             Debug.Log("Starting LSF Utils");
             try
             {
@@ -357,6 +508,137 @@ namespace lsfUtils
             isInit = false;
 
             WorldLoader.Preprocessing.preprocessorConditions.Remove(ConditionalLogic.LSFConditions);
+=======
+            Logger.LogMessage("LSF Utils failure!!!");
+            Logger.LogError(e);
+>>>>>>> Stashed changes
         }
+    }
+
+    public static void RainWorld_Start(On.RainWorld.orig_Start orig, RainWorld self)
+    {
+        orig(self);
+        // load here stuff that requires AssetManager here (like ResolveFilePath)
+
+        TypeParams.Load();
+        ShelterLinks.Load();
+        ShortcutLinks.Load();
+        ConditionalGates.Load();
+    }
+
+    public static bool GetNameFromAnywhere(out SlugcatStats.Name name)
+    {
+        name = null;
+        if (RWCustom.Custom.rainWorld.processManager?.currentMainLoop is RainWorldGame game)
+        {
+            if (game.IsStorySession)
+            {
+                name = game.StoryCharacter;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static bool GetTimelineFromAnywhere(out SlugcatStats.Timeline timeline)
+    {
+        timeline = null;
+        if (RWCustom.Custom.rainWorld.processManager?.currentMainLoop is RainWorldGame game && game.IsStorySession)
+        {
+            if (game.IsStorySession)
+            {
+                timeline = game.TimelinePoint;
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
+    {
+        orig(self);
+        if (ModManager.MSC)
+        {
+            On.MoreSlugcats.GourmandCombos.InitCraftingLibrary += ItemCrafting.On_GourmandCombos_InitCraftingLibrary;
+            On.Player.SpitUpCraftedObject += ItemCrafting.On_Player_SpitUpCraftedObject;
+        }
+
+        if (initialized)
+        {
+            return;
+        }
+        initialized = true;
+        Futile.atlasManager.LoadImage("atlases/Kill_MonitorLizard");
+        Futile.atlasManager.LoadImage("atlases/Kill_StarNosedLizard");
+
+        Futile.atlasManager.LoadImage("atlases/Symbol_Dart");
+
+        Futile.atlasManager.LoadImage("atlases/Dart");
+        Futile.atlasManager.LoadImage("atlases/PoisonDart");
+
+        Futile.atlasManager.LoadImage("atlases/Bumper1");
+        Futile.atlasManager.LoadImage("atlases/Bumper2");
+
+        Futile.atlasManager.LoadAtlas("atlases/lsfLizardStuff");
+        Futile.atlasManager.LoadAtlas("atlases/corrodedskylines");
+
+        Futile.atlasManager.LoadImage(templarMaskIcon);
+
+        Futile.atlasManager.LoadAtlas("atlases/SeerMaskSprites");
+
+        string bundlePath = AssetManager.ResolveFilePath("shaders/lsfutils");
+        Log.LogMessage($"Resolved bundle path: {bundlePath}");
+        if (System.IO.File.Exists(bundlePath))
+        {
+            Log.LogMessage($"Bundle last write: {System.IO.File.GetLastWriteTime(bundlePath)}");
+        }
+        else
+        {
+            Log.LogMessage("File does not exist at resolved path!");
+        }
+
+        AssetBundle bundle = AssetBundle.LoadFromFile(bundlePath);
+        if (bundle != null)
+        {
+            Log.LogMessage("Bundle loaded. Assets inside: " + string.Join(", ", bundle.GetAllAssetNames()));
+            RegisterShader(self, bundle, "Assets/Shaders/RippleSpawnBodyGreen.shader", "RippleSpawnBodyGreen");
+            RegisterShader(self, bundle, "Assets/Shaders/RippleGlowGreen.shader", "RippleGlowGreen");
+            RegisterShader(self, bundle, "Assets/Shaders/SeerHalo.shader", "SeerHalo");
+            RegisterShader(self, bundle, "Assets/Shaders/WaveLightOverlay.shader", "WaveLightOverlay");
+            RegisterShader(self, bundle, "Assets/Shaders/ClothBurnShader.shader", "ClothBurnShader");
+            RegisterShader(self, bundle, "Assets/Shaders/ProceduralFireShader.shader", "ProceduralFireShader");
+            RegisterShader(self, bundle, "Assets/Shaders/ScorchBurnShader.shader", "ScorchBurnShader");
+            RegisterShader(self, bundle, "Assets/Shaders/CustomStardust.shader", "CustomStardust");
+
+            bundle.Unload(false);
+        }
+        else
+        {
+            Log.LogMessage("Failed to load lsfUtils shader bundle!");
+        }
+
+        Factions.LoadAndRegisterAllFactions();
+
+        Log.LogMessage("Sprites and shaders loaded!");
+    }
+
+    private static void RegisterShader(RainWorld rainWorld, AssetBundle bundle, string assetPath, string shaderKey)
+    {
+        Shader unityShader = bundle.LoadAsset<Shader>(assetPath);
+        if (unityShader == null)
+        {
+            Log.LogMessage($"Shader at {assetPath} not found in bundle!");
+            return;
+        }
+        rainWorld.Shaders[shaderKey] = FShader.CreateShader(shaderKey, unityShader);
+    }
+
+    public void OnDisable()
+    {
+        if (!isInit) return;
+        isInit = false;
+
+        WorldLoader.Preprocessing.preprocessorConditions.Remove(ConditionalLogic.LSFConditions);
     }
 }

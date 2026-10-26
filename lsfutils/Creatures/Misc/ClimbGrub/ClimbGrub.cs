@@ -26,8 +26,8 @@ public class ClimbGrub : Creature
     
     public const float lookSpeed = 0.15f;
 
-    private int grabHoldCounter;
-    private const int smashHoldDuration = 20;
+    public int grabHoldCounter;
+    public const int smashHoldDuration = 20;
 
     public static Color yellowTintColor = new(0.75f, 0.95f, 0.25f);
     public static Color pinkStripeColor = new(1f, 0.55f, 0.75f);
@@ -35,7 +35,7 @@ public class ClimbGrub : Creature
     public const int freeClimbDuration = 40 * 20;
     public const int freeClimbDurationMax = 80 * 20;
 
-    public ClimbGrubAI AI => abstractCreature.abstractAI?.RealAI as ClimbGrubAI;
+    public ClimbGrubAI AI;
 
     public float squeezeProgress;
     public float squeezeScale = 1f;
@@ -117,7 +117,7 @@ public class ClimbGrub : Creature
         UpdateSqueezeSize();
     }
 
-    private void UpdateLook()
+    public void UpdateLook()
     {
         lastLookDirection = lookDirection;
         Vector2 targetDirection = Vector2.zero;
@@ -128,7 +128,7 @@ public class ClimbGrub : Creature
         lookDirection = Vector2.Lerp(lookDirection, targetDirection, lookSpeed);
     }
 
-    private void UpdateSqueezeSize()
+    public void UpdateSqueezeSize()
     {
         lastSqueezeScale = squeezeScale;
 
@@ -149,7 +149,7 @@ public class ClimbGrub : Creature
         }
     }
 
-    private void Smash(Player player)
+    public void Smash(Player player)
     {
         if (!PlayerCWT.TryGetData(player, out var data)) return;
 

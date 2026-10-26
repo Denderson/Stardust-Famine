@@ -135,7 +135,7 @@ public static class CreatureRegistryTemplate
 
     public static void PlaysWith(this CreatureTemplate.Type cr1, CreatureTemplate.Type cr2, float str) => EstRel(cr1, cr2, str, Type.PlaysWith, Type.PlaysWith);
 
-
+    public static void MutualUncomfortable(this CreatureTemplate.Type cr1, CreatureTemplate.Type cr2, float str) => EstRel(cr1, cr2, str, Type.Uncomfortable, Type.Uncomfortable);
 
     public static bool IsType(this CreatureTemplate.Type type, CreatureTemplate.Type wanted)
     {

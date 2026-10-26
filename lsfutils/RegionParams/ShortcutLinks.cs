@@ -163,9 +163,7 @@ public static class ShortcutLinks
             activeOverrides.Add(new ConnectionOverride(destRoom, destNodeIndex, destRoom.connections[destNodeIndex]));
             destRoom.connections[destNodeIndex] = vessel.room.index;
         }
-        Log.LogMessage("Before orig in shortcut override!");
         orig(self);
-        Log.LogMessage("Past orig in shortcut override!");
         foreach (ConnectionOverride ov in activeOverrides)
         {
             ov.room.connections[ov.overrideNode] = ov.previousNode;

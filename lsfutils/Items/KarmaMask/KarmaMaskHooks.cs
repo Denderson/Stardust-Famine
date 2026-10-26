@@ -6,123 +6,122 @@ using System;
 using UnityEngine;
 using static lsfUtils.Plugin;
 
-namespace lsfUtils.Items.KarmaMask
+namespace lsfUtils.Items.KarmaMask;
+
+public static class KarmaMaskHooks
 {
-    public static class KarmaMaskHooks
+    public static void ApplyHooks()
     {
-        public static void ApplyHooks()
+        new Hook(typeof(RegionGate).GetProperty(nameof(RegionGate.MeetRequirement))!.GetGetMethod(), typeof(KarmaMaskHooks).GetMethod(nameof(KarmaMaskHooks.Meet_Requirement)));
+        On.HUD.KarmaMeter.Update += KarmaMaskHooks.KarmaMeter_Update;
+        On.Player.Update += KarmaMaskHooks.Player_Update;
+        On.MoreSlugcats.VultureMaskGraphics.ctor_PhysicalObject_MaskType_int_string += KarmaMaskHooks.VultureMaskGraphics_ctor_PhysicalObject_MaskType_int_string;
+        On.MoreSlugcats.VultureMaskGraphics.DrawSprites += KarmaMaskHooks.VultureMaskGraphics_DrawSprites;
+        On.Player.Grabability += KarmaMaskHooks.Player_Grabability;
+    }
+    public static bool Meet_Requirement(Func<RegionGate, bool> orig, RegionGate self)
+    {
+        bool value = orig(self);
+
+        if (self.room.PlayersInRoom.Count <= 0) return value;
+
+        AbstractCreature firstAlivePlayer = self.room.game.FirstAlivePlayer;
+        if (self.room.game.Players.Count == 0 || firstAlivePlayer == null || firstAlivePlayer.realizedCreature == null && ModManager.CoopAvailable)
         {
-            new Hook(typeof(RegionGate).GetProperty(nameof(RegionGate.MeetRequirement))!.GetGetMethod(), typeof(KarmaMaskHooks).GetMethod(nameof(KarmaMaskHooks.Meet_Requirement)));
-            On.HUD.KarmaMeter.Update += KarmaMaskHooks.KarmaMeter_Update;
-            On.Player.Update += KarmaMaskHooks.Player_Update;
-            On.MoreSlugcats.VultureMaskGraphics.ctor_PhysicalObject_MaskType_int_string += KarmaMaskHooks.VultureMaskGraphics_ctor_PhysicalObject_MaskType_int_string;
-            On.MoreSlugcats.VultureMaskGraphics.DrawSprites += KarmaMaskHooks.VultureMaskGraphics_DrawSprites;
-            On.Player.Grabability += KarmaMaskHooks.Player_Grabability;
+            return value;
         }
-        public static bool Meet_Requirement(Func<RegionGate, bool> orig, RegionGate self)
+        foreach (Player player in self.room.PlayersInRoom)
         {
-            bool value = orig(self);
-
-            if (self.room.PlayersInRoom.Count <= 0) return value;
-
-            AbstractCreature firstAlivePlayer = self.room.game.FirstAlivePlayer;
-            if (self.room.game.Players.Count == 0 || firstAlivePlayer == null || firstAlivePlayer.realizedCreature == null && ModManager.CoopAvailable)
+            if (player?.grasps != null && player.grasps.Length != 0)
             {
-                return value;
-            }
-            foreach (Player player in self.room.PlayersInRoom)
-            {
-                if (player?.grasps != null && player.grasps.Length != 0)
+                foreach (Creature.Grasp t in player.grasps)
                 {
-                    foreach (Creature.Grasp t in player.grasps)
+                    if (t != null && t.grabbed != null && t.grabbed is KarmaMask)
                     {
-                        if (t != null && t.grabbed != null && t.grabbed is KarmaMask)
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
-            return value;
         }
+        return value;
+    }
 
-        public static void KarmaMeter_Update(On.HUD.KarmaMeter.orig_Update orig, HUD.KarmaMeter self)
+    public static void KarmaMeter_Update(On.HUD.KarmaMeter.orig_Update orig, HUD.KarmaMeter self)
+    {
+        orig(self);
+        if (self.hud?.owner is Player player && PlayerCWT.TryGetData(player, out var data))
         {
-            orig(self);
-            if (self.hud?.owner is Player player && PlayerCWT.TryGetData(player, out var data))
+            if (!data.karmaMode && data.previousKarmaMode) // disabled
             {
-                if (!data.karmaMode && data.previousKarmaMode) // disabled
+                self.UpdateGraphic();
+                // should just reset to default state I think
+            }
+            if (data.karmaMode && !data.previousKarmaMode) // enabled
+            {
+                self.displayKarma.x = 9;
+                self.displayKarma.y = 9;
+                self.karmaSprite.element = Futile.atlasManager.GetElementWithName(HUD.KarmaMeter.KarmaSymbolSprite(small: true, self.displayKarma));
+                self.forceVisibleCounter = Math.Max(self.forceVisibleCounter, 120);
+                self.baseColor = Futile.white;
+                self.karmaSprite.color = self.baseColor;
+            }
+        }
+    }
+
+    public static void VultureMaskGraphics_ctor_PhysicalObject_MaskType_int_string(On.MoreSlugcats.VultureMaskGraphics.orig_ctor_PhysicalObject_MaskType_int_string orig, VultureMaskGraphics self, PhysicalObject attached, VultureMask.MaskType type, int firstSprite, string overrideSprite)
+    {
+        orig(self, attached, type, firstSprite, overrideSprite);
+        if (self.attachedTo is KarmaMask)
+        {
+            self.maskType = VultureMask.MaskType.SCAVTEMPLAR;
+            self.glimmer = true;
+            self.ignoreDarkness = true;
+        }
+    }
+
+    public static void VultureMaskGraphics_DrawSprites(On.MoreSlugcats.VultureMaskGraphics.orig_DrawSprites orig, VultureMaskGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
+    {
+        orig(self, sLeaser, rCam, timeStacker, camPos);
+        if (self.attachedTo is KarmaMask)
+        {
+            sLeaser.sprites[self.firstSprite].color = RainWorld.GoldRGB;
+            sLeaser.sprites[self.firstSprite].shader = Custom.rainWorld.Shaders["RippleBasicBothSides"];
+        }
+    }
+
+    public static void Player_Update(On.Player.orig_Update orig, Player self, bool eu)
+    {
+        orig(self, eu);
+        if (self?.grasps == null) return;
+        if (!PlayerCWT.TryGetData(self, out var data)) return;
+
+        data.previousKarmaMode = data.karmaMode;
+
+        bool flag = false;
+        for (int i = 0; i < self.grasps.Length; i++)
+        {
+            if (self.grasps[i]?.grabbed is KarmaMask)
+            {
+                flag = true;
+                break;
+            }
+        }
+        data.karmaMode = flag;
+    }
+
+    public static Player.ObjectGrabability Player_Grabability(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
+    {
+        Player.ObjectGrabability value = orig(self, obj);
+        if (self?.grasps != null && self.grasps.Length > 0 && value == Player.ObjectGrabability.TwoHands && obj is JetFish)
+        {
+            foreach (Creature.Grasp grasp in self.grasps)
+            {
+                if (grasp?.grabbed != null && grasp.grabbed is KarmaMask)
                 {
-                    self.UpdateGraphic();
-                    // should just reset to default state I think
-                }
-                if (data.karmaMode && !data.previousKarmaMode) // enabled
-                {
-                    self.displayKarma.x = 9;
-                    self.displayKarma.y = 9;
-                    self.karmaSprite.element = Futile.atlasManager.GetElementWithName(HUD.KarmaMeter.KarmaSymbolSprite(small: true, self.displayKarma));
-                    self.forceVisibleCounter = Math.Max(self.forceVisibleCounter, 120);
-                    self.baseColor = Futile.white;
-                    self.karmaSprite.color = self.baseColor;
+                    value = Player.ObjectGrabability.OneHand;
                 }
             }
         }
-
-        public static void VultureMaskGraphics_ctor_PhysicalObject_MaskType_int_string(On.MoreSlugcats.VultureMaskGraphics.orig_ctor_PhysicalObject_MaskType_int_string orig, VultureMaskGraphics self, PhysicalObject attached, VultureMask.MaskType type, int firstSprite, string overrideSprite)
-        {
-            orig(self, attached, type, firstSprite, overrideSprite);
-            if (self.attachedTo is KarmaMask)
-            {
-                self.maskType = VultureMask.MaskType.SCAVTEMPLAR;
-                self.glimmer = true;
-                self.ignoreDarkness = true;
-            }
-        }
-
-        public static void VultureMaskGraphics_DrawSprites(On.MoreSlugcats.VultureMaskGraphics.orig_DrawSprites orig, VultureMaskGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
-        {
-            orig(self, sLeaser, rCam, timeStacker, camPos);
-            if (self.attachedTo is KarmaMask)
-            {
-                sLeaser.sprites[self.firstSprite].color = RainWorld.GoldRGB;
-                sLeaser.sprites[self.firstSprite].shader = Custom.rainWorld.Shaders["RippleBasicBothSides"];
-            }
-        }
-
-        public static void Player_Update(On.Player.orig_Update orig, Player self, bool eu)
-        {
-            orig(self, eu);
-            if (self?.grasps == null) return;
-            if (!PlayerCWT.TryGetData(self, out var data)) return;
-
-            data.previousKarmaMode = data.karmaMode;
-
-            bool flag = false;
-            for (int i = 0; i < self.grasps.Length; i++)
-            {
-                if (self.grasps[i]?.grabbed is KarmaMask)
-                {
-                    flag = true;
-                    break;
-                }
-            }
-            data.karmaMode = flag;
-        }
-
-        public static Player.ObjectGrabability Player_Grabability(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
-        {
-            Player.ObjectGrabability value = orig(self, obj);
-            if (self?.grasps != null && self.grasps.Length > 0 && value == Player.ObjectGrabability.TwoHands && obj is JetFish)
-            {
-                foreach (Creature.Grasp grasp in self.grasps)
-                {
-                    if (grasp?.grabbed != null && grasp.grabbed is KarmaMask)
-                    {
-                        value = Player.ObjectGrabability.OneHand;
-                    }
-                }
-            }
-            return value;
-        }
+        return value;
     }
 }

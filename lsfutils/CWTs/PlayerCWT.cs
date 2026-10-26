@@ -32,6 +32,9 @@ namespace lsfUtils.CWTs
             public bool previousKarmaMode = false;
 
             public int freeClimbTimer = 0;
+
+            public Enums.CloakColor gownColor = Enums.CloakColor.Default;
+            public Enums.CloakType gownType = Enums.CloakType.Default;
         }
     }
 }

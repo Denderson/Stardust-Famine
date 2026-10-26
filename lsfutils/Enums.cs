@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace lsfUtils;
 
@@ -13,10 +8,31 @@ public class Enums
     {
         extEnum?.Unregister();
     }
-
-    public enum DartType {Default, Poison, Quill, Sharpnel}
+    
+    public static void RegisterAll()
+    {
+        EffectTypes.RegisterValues();
+        CreatureTemplateType.RegisterValues();
+        SandboxUnlockID.RegisterValues();
+        AbstractObjectType.RegisterValues();
+        CreatureCommunityID.RegisterValues();
+    }
+    
+    public static void UnregisterAll()
+    {
+        EffectTypes.UnregisterValues();
+        CreatureTemplateType.UnregisterValues();
+        SandboxUnlockID.UnregisterValues();
+        AbstractObjectType.UnregisterValues();
+        CreatureCommunityID.UnregisterValues();
+    }
+    
+    public enum DartType { Default, Poison, Quill, Sharpnel }
 
     public enum DarknessPhase { None, Increasing, Decreasing }
+
+    public enum CloakType { Default, Broken }
+    public enum CloakColor { Default, Pebbles, CollapsePebbles, Sliver, Rot, PastMoon }
 
     public class Colors
     {
@@ -30,12 +46,29 @@ public class Enums
         public static Color ClimbGrubColor = new(1f, 0.6f, 0.8f);
         public static Color KnotSpawnColor = RainWorld.SaturatedGold;
     }
-
+    
     public class EffectTypes
     {
         public static RoomSettings.RoomEffect.Type EvilWater = new(nameof(EvilWater), true);
         public static RoomSettings.RoomEffect.Type CreepingDarkness = new(nameof(CreepingDarkness), true);
         public static RoomSettings.RoomEffect.Type LookerMechanicOverride = new(nameof(LookerMechanicOverride), true);
+
+        public static void RegisterValues()
+        {
+            EvilWater ??= new(nameof(EvilWater), true);
+            CreepingDarkness ??= new(nameof(CreepingDarkness), true);
+            LookerMechanicOverride ??= new(nameof(LookerMechanicOverride), true);
+        }
+
+        public static void UnregisterValues()
+        {
+            EvilWater?.Unregister();
+            EvilWater = null;
+            CreepingDarkness?.Unregister();
+            CreepingDarkness = null;
+            LookerMechanicOverride?.Unregister();
+            LookerMechanicOverride = null;
+        }
     }
 
     public class CreatureTemplateType
@@ -62,7 +95,31 @@ public class Enums
         public static CreatureTemplate.Type PoisonSpider = new(nameof(PoisonSpider), true);
         public static CreatureTemplate.Type ClimbGrub = new(nameof(ClimbGrub), true);
 
-        public void UnregisterValues()
+        public static CreatureTemplate.Type Porcupine = new(nameof(Porcupine), true);
+
+        public static void RegisterValues()
+        {
+            WeaverLizard ??= new(nameof(WeaverLizard), true);
+            FlameLizard ??= new(nameof(FlameLizard), true);
+            AirplaneLizard ??= new(nameof(AirplaneLizard), true);
+            RaspberryLizard ??= new(nameof(RaspberryLizard), true);
+            MonitorLizard ??= new(nameof(MonitorLizard), true);
+            StarNosedLizard ??= new(nameof(StarNosedLizard), true);
+            PoisonLizard ??= new(nameof(PoisonLizard), true);
+            ScavSeer ??= new(nameof(ScavSeer), true);
+            ScavFlank ??= new(nameof(ScavFlank), true);
+            ScavMessenger ??= new(nameof(ScavMessenger), true);
+            StarSpawn ??= new(nameof(StarSpawn), true);
+            StarNoodles ??= new(nameof(StarNoodles), true);
+            StarJelly ??= new(nameof(StarJelly), true);
+            StarSpider ??= new(nameof(StarSpider), true);
+            StarElder ??= new(nameof(StarElder), true);
+            PoisonSpider ??= new(nameof(PoisonSpider), true);
+            ClimbGrub ??= new(nameof(ClimbGrub), true);
+            Porcupine ??= new(nameof(Porcupine), true);
+        }
+
+        public static void UnregisterValues()
         {
             WeaverLizard?.Unregister();
             WeaverLizard = null;
@@ -96,6 +153,10 @@ public class Enums
             StarElder = null;
             PoisonSpider?.Unregister();
             PoisonSpider = null;
+            ClimbGrub?.Unregister();
+            ClimbGrub = null;
+            Porcupine?.Unregister();
+            Porcupine = null;
         }
     }
 
@@ -127,13 +188,52 @@ public class Enums
 
         public static MultiplayerUnlocks.SandboxUnlockID PoisonSpider = new(nameof(PoisonSpider), true);
         public static MultiplayerUnlocks.SandboxUnlockID ClimbGrub = new(nameof(ClimbGrub), true);
+        public static MultiplayerUnlocks.SandboxUnlockID Porcupine = new(nameof(Porcupine), true);
 
         public static MultiplayerUnlocks.SandboxUnlockID BrownFruit = new(nameof(BrownFruit), true);
         public static MultiplayerUnlocks.SandboxUnlockID TorchSpear = new(nameof(TorchSpear), true);
 
         public static MultiplayerUnlocks.SandboxUnlockID KnotSpawnV2 = new(nameof(KnotSpawnV2), true);
+        public static MultiplayerUnlocks.SandboxUnlockID CustomCloak = new(nameof(CustomCloak), true);
 
-        public void UnregisterValues()
+        public static void RegisterValues()
+        {
+            RippleFlower ??= new(nameof(RippleFlower), true);
+            PoisonDart ??= new(nameof(PoisonDart), true);
+            KarmaMask ??= new(nameof(KarmaMask), true);
+            ExplosiveBoomerang ??= new(nameof(ExplosiveBoomerang), true);
+            SingularityBoomerang ??= new(nameof(SingularityBoomerang), true);
+
+            WeaverLizard ??= new(nameof(WeaverLizard), true);
+            FlameLizard ??= new(nameof(FlameLizard), true);
+            AirplaneLizard ??= new(nameof(AirplaneLizard), true);
+            RaspberryLizard ??= new(nameof(RaspberryLizard), true);
+            MonitorLizard ??= new(nameof(MonitorLizard), true);
+            StarNosedLizard ??= new(nameof(StarNosedLizard), true);
+            PoisonLizard ??= new(nameof(PoisonLizard), true);
+
+            ScavSeer ??= new(nameof(ScavSeer), true);
+            ScavFlank ??= new(nameof(ScavFlank), true);
+            ScavMessenger ??= new(nameof(ScavMessenger), true);
+
+            StarSpawn ??= new(nameof(StarSpawn), true);
+            StarNoodles ??= new(nameof(StarNoodles), true);
+            StarJelly ??= new(nameof(StarJelly), true);
+            StarSpider ??= new(nameof(StarSpider), true);
+            StarElder ??= new(nameof(StarElder), true);
+
+            PoisonSpider ??= new(nameof(PoisonSpider), true);
+            ClimbGrub ??= new(nameof(ClimbGrub), true);
+            Porcupine ??= new(nameof(Porcupine), true);
+
+            BrownFruit ??= new(nameof(BrownFruit), true);
+            TorchSpear ??= new(nameof(TorchSpear), true);
+
+            KnotSpawnV2 ??= new(nameof(KnotSpawnV2), true);
+            CustomCloak ??= new(nameof(CustomCloak), true);
+        }
+
+        public static void UnregisterValues()
         {
             RippleFlower?.Unregister();
             RippleFlower = null;
@@ -145,8 +245,6 @@ public class Enums
             ExplosiveBoomerang = null;
             SingularityBoomerang?.Unregister();
             SingularityBoomerang = null;
-            ClimbGrub?.Unregister();
-            ClimbGrub = null;
 
             WeaverLizard?.Unregister();
             WeaverLizard = null;
@@ -162,12 +260,14 @@ public class Enums
             StarNosedLizard = null;
             PoisonLizard?.Unregister();
             PoisonLizard = null;
+
             ScavSeer?.Unregister();
             ScavSeer = null;
             ScavFlank?.Unregister();
             ScavFlank = null;
             ScavMessenger?.Unregister();
             ScavMessenger = null;
+
             StarSpawn?.Unregister();
             StarSpawn = null;
             StarNoodles?.Unregister();
@@ -178,14 +278,23 @@ public class Enums
             StarSpider = null;
             StarElder?.Unregister();
             StarElder = null;
+
             PoisonSpider?.Unregister();
             PoisonSpider = null;
+            ClimbGrub?.Unregister();
+            ClimbGrub = null;
+            Porcupine?.Unregister();
+            Porcupine = null;
+
             BrownFruit?.Unregister();
             BrownFruit = null;
             TorchSpear?.Unregister();
             TorchSpear = null;
+
             KnotSpawnV2?.Unregister();
             KnotSpawnV2 = null;
+            CustomCloak?.Unregister();
+            CustomCloak = null;
         }
     }
 
@@ -200,15 +309,34 @@ public class Enums
         public static AbstractPhysicalObject.AbstractObjectType BrownFruit = new(nameof(BrownFruit), true);
         public static AbstractPhysicalObject.AbstractObjectType TorchSpear = new(nameof(TorchSpear), true);
         public static AbstractPhysicalObject.AbstractObjectType KnotSpawnV2 = new(nameof(KnotSpawnV2), true);
+        public static AbstractPhysicalObject.AbstractObjectType CustomCloak = new(nameof(CustomCloak), true);
 
-        public void UnregisterValues()
+        public static void RegisterValues()
+        {
+            RippleFlower ??= new(nameof(RippleFlower), true);
+            Dart ??= new(nameof(Dart), true);
+            PoisonDart ??= new(nameof(PoisonDart), true);
+            KarmaMask ??= new(nameof(KarmaMask), true);
+            ExplosiveBoomerang ??= new(nameof(ExplosiveBoomerang), true);
+            SingularityBoomerang ??= new(nameof(SingularityBoomerang), true);
+            BrownFruit ??= new(nameof(BrownFruit), true);
+            TorchSpear ??= new(nameof(TorchSpear), true);
+            KnotSpawnV2 ??= new(nameof(KnotSpawnV2), true);
+            CustomCloak ??= new(nameof(CustomCloak), true);
+        }
+
+        public static void UnregisterValues()
         {
             RippleFlower?.Unregister();
             RippleFlower = null;
+            Dart?.Unregister();
+            Dart = null;
             PoisonDart?.Unregister();
             PoisonDart = null;
             KarmaMask?.Unregister();
             KarmaMask = null;
+            ExplosiveBoomerang?.Unregister();
+            ExplosiveBoomerang = null;
             SingularityBoomerang?.Unregister();
             SingularityBoomerang = null;
             BrownFruit?.Unregister();
@@ -217,6 +345,8 @@ public class Enums
             TorchSpear = null;
             KnotSpawnV2?.Unregister();
             KnotSpawnV2 = null;
+            CustomCloak?.Unregister();
+            CustomCloak = null;
         }
     }
 
@@ -224,7 +354,12 @@ public class Enums
     {
         public static CreatureCommunities.CommunityID StarSpawn = new(nameof(StarSpawn), true);
 
-        public void UnregisterValues()
+        public static void RegisterValues()
+        {
+            StarSpawn ??= new(nameof(StarSpawn), true);
+        }
+
+        public static void UnregisterValues()
         {
             StarSpawn?.Unregister();
             StarSpawn = null;

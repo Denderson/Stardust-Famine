@@ -1,4 +1,5 @@
 ﻿using lsfUtils.CWTs;
+using lsfUtils.SaveFile;
 using MoreSlugcats;
 using RWCustom;
 using System;
@@ -55,7 +56,14 @@ public static class ConditionalLogic
         bool? result = null;
         Log.LogMessage("modified text: " + modifiedText);
         Log.LogMessage("sign: " + sign);
-        if (sign == null)
+
+        if (array[0] != null && array[0].StartsWith("getevent"))
+        {
+            string eventName = array[0].Replace("getevent", "");
+            result = game.GetStorySession.saveState.GetBool(eventName);
+        }
+
+        else if (sign == null)
         {
             switch (array[0])
             {

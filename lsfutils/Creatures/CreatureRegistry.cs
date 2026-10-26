@@ -1,5 +1,6 @@
 ﻿using DevInterface;
 using lsfUtils.Creatures.Misc.ClimbGrub;
+using lsfUtils.Creatures.Misc.Porcupine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,7 @@ namespace lsfUtils.Creatures
             RegisterStarJelly();
             RegisterPoisonSpider();
             RegisterClimbGrub();
+            RegisterPorcupine();
         }
 
         public static CreatureTemplate LizardTemplate(CreatureTemplate.Type type)
@@ -69,7 +71,7 @@ namespace lsfUtils.Creatures
                         else if (type1.IsType("kingvulture")) type.Eats(type1, 1f);
                         else if (type1.IsType("tubeworm")) type.Ignores(type1, 0.5f);
                         else if (type1.IsType("scavenger")) { type.Eats(type1, .8f);}
-                        else if (type1.IsType("cicadaa")) { type.Eats(type1, .05f); }
+                        else if (type1.IsType("cicada")) { type.Eats(type1, .05f); }
                         else if (type1.IsType("lanternmouse")) { type.Eats(type1, .3f); }
                         else if (type1.IsType("bigspider")) type.Eats(type1, .35f);
                         else if (type1.IsType("eggbug")) type.Eats(type1, .45f);
@@ -121,7 +123,7 @@ namespace lsfUtils.Creatures
                         else if (type1.IsType("kingvulture")) type.Eats(type1, 1f);
                         else if (type1.IsType("tubeworm")) type.Ignores(type1, 0.5f);
                         else if (type1.IsType("scavenger")) { type.Eats(type1, .8f); }
-                        else if (type1.IsType("cicadaa")) { type.Eats(type1, .05f); }
+                        else if (type1.IsType("cicada")) { type.Eats(type1, .05f); }
                         else if (type1.IsType("lanternmouse")) { type.Eats(type1, .3f); }
                         else if (type1.IsType("bigspider")) type.Eats(type1, .35f);
                         else if (type1.IsType("eggbug")) type.Eats(type1, .45f);
@@ -179,7 +181,7 @@ namespace lsfUtils.Creatures
                         else if (type1.IsType("tubeworm")) type.EatenBy(type1, .5f);
                         else if (type1.IsType("hazer")) type.EatenBy(type1, .5f);
                         else if (type1.IsType("scavenger")) type.Eats(type1, .8f);
-                        else if (type1.IsType("cicadaa")) type.Eats(type1, .05f);
+                        else if (type1.IsType("cicada")) type.Eats(type1, .05f);
                         else if (type1.IsType("lanternmouse")) type.Eats(type1, .3f);
                         else if (type1.IsType("bigspider")) type.Eats(type1, .35f);
                         else if (type1.IsType("eggbug")) type.Eats(type1, .45f);
@@ -230,7 +232,7 @@ namespace lsfUtils.Creatures
                         else if (type1.IsType("tubeworm")) type.EatenBy(type1, .5f);
                         else if (type1.IsType("hazer")) type.EatenBy(type1, .5f);
                         else if (type1.IsType("scavenger")) type.Eats(type1, .8f);
-                        else if (type1.IsType("cicadaa")) type.Eats(type1, .1f);
+                        else if (type1.IsType("cicada")) type.Eats(type1, .1f);
                         else if (type1.IsType("lanternmouse")) type.Eats(type1, .3f);
                         else if (type1.IsType("bigspider")) type.Eats(type1, .35f);
                         else if (type1.IsType("eggbug")) type.Eats(type1, .45f);
@@ -275,7 +277,7 @@ namespace lsfUtils.Creatures
                         else if (type1.IsType("kingvulture")) type.Eats(type1, 1f);
                         else if (type1.IsType("tubeworm")) type.Ignores(type1, 0.5f);
                         else if (type1.IsType("scavenger")) type.Eats(type1, .8f);
-                        else if (type1.IsType("cicadaa")) type.Eats(type1, .05f);
+                        else if (type1.IsType("cicada")) type.Eats(type1, .05f);
                         else if (type1.IsType("lanternmouse")) type.Eats(type1, .3f);
                         else if (type1.IsType("bigspider")) type.Eats(type1, .35f);
                         else if (type1.IsType("eggbug")) type.Eats(type1, .45f);
@@ -334,7 +336,7 @@ namespace lsfUtils.Creatures
                         else if (type1.IsType("tubeworm")) type.EatenBy(type1, .5f);
                         else if (type1.IsType("hazer")) type.EatenBy(type1, .5f);
                         else if (type1.IsType("scavenger")) type.Eats(type1, .8f);
-                        else if (type1.IsType("cicadaa")) type.Eats(type1, .05f);
+                        else if (type1.IsType("cicada")) type.Eats(type1, .05f);
                         else if (type1.IsType("lanternmouse")) type.Eats(type1, .3f);
                         else if (type1.IsType("bigspider")) type.Eats(type1, .35f);
                         else if (type1.IsType("eggbug")) type.Eats(type1, .45f);
@@ -379,7 +381,7 @@ namespace lsfUtils.Creatures
                         else if (type1.IsType("kingvulture")) type.Eats(type1, 1f);
                         else if (type1.IsType("tubeworm")) type.Ignores(type1, 0.5f);
                         else if (type1.IsType("scavenger")) type.Eats(type1, .8f);
-                        else if (type1.IsType("cicadaa")) type.Eats(type1, .05f);
+                        else if (type1.IsType("cicada")) type.Eats(type1, .05f);
                         else if (type1.IsType("lanternmouse")) type.Eats(type1, .3f);
                         else if (type1.IsType("bigspider")) type.Eats(type1, .35f);
                         else if (type1.IsType("eggbug")) type.Eats(type1, .45f);
@@ -637,7 +639,7 @@ namespace lsfUtils.Creatures
                         else if (type1.IsType("slugcat")) { type.RelationshipBased(type1, 1f); }
                         else if (type1.IsType("scavenger")) { type.PlaysWith(type1, 0.5f); }
                         else if (type1.IsType("lizard")) { type.Eats(type1, 0.3f); }
-                        else if (type1.IsType("cicadaa")) { type.Eats(type1, 0.4f); }
+                        else if (type1.IsType("cicada")) { type.Eats(type1, 0.4f); }
                         else if (type1.IsType("bigspider")) { type.EatenBy(type1, 0.35f); }
                         else if (type1.IsType("spitterspider")) type.EatenBy(type1, 0.6f);
                         else if (type1.IsType("spider")) type.EatenBy(type1, 0.2f);
@@ -729,7 +731,7 @@ namespace lsfUtils.Creatures
                         else if (type1.IsType("slugcat")) { type.RelationshipBased(type1, 1f); }
                         else if (type1.IsType("scavenger")) { type.PlaysWith(type1, 0.5f); }
                         else if (type1.IsType("lizard")) { type.Eats(type1, 0.3f); }
-                        else if (type1.IsType("cicadaa")) { type.Eats(type1, 0.4f); }
+                        else if (type1.IsType("cicada")) { type.Eats(type1, 0.4f); }
                         else if (type1.IsType("bigspider")) { type.EatenBy(type1, 0.35f); }
                         else if (type1.IsType("spitterspider")) type.EatenBy(type1, 0.6f);
                         else if (type1.IsType("spider")) type.EatenBy(type1, 0.2f);
@@ -821,7 +823,7 @@ namespace lsfUtils.Creatures
                         else if (type1.IsType("slugcat")) { type.RelationshipBased(type1, 1f); }
                         else if (type1.IsType("scavenger")) { type.PlaysWith(type1, 0.5f); }
                         else if (type1.IsType("lizard")) { type.Eats(type1, 0.3f); }
-                        else if (type1.IsType("cicadaa")) { type.Eats(type1, 0.4f); }
+                        else if (type1.IsType("cicada")) { type.Eats(type1, 0.4f); }
                         else if (type1.IsType("bigspider")) { type.EatenBy(type1, 0.35f); }
                         else if (type1.IsType("spitterspider")) type.EatenBy(type1, 0.6f);
                         else if (type1.IsType("spider")) type.EatenBy(type1, 0.2f);
@@ -962,6 +964,96 @@ namespace lsfUtils.Creatures
                         CreatureTemplate.Type type1 = t.type;
 
                         type.Ignores(type1, 0.5f);
+                    }
+                }
+            };
+            CreatureRegistryTemplate.Register(entry);
+        }
+
+        public static void RegisterPorcupine()
+        {
+            CreatureTemplate.Type type = Enums.CreatureTemplateType.Porcupine;
+            var entry = new CreatureRegistryEntry(type, [type.ToString()])
+            {
+                mapName = "pr",
+                mapColor = Colors.WeaverLizardColor,
+                symbolName = "Kill_Tubeworm",
+                isHostileForShelter = false,
+                isBigForShelter = false,
+                performanceCost = 20f,
+                unlockID = SandboxUnlockID.Porcupine,
+                RealisedCtor = (abstractCreature, world) => new Porcupine(abstractCreature, world),
+                AbstractAICtor = (world, parent) => new AbstractCreatureAI(world, parent),
+                AICtor = (creature, world) => new PorcupineAI(creature, world),
+                Grabability = (player, physicalObject) => Player.ObjectGrabability.CantGrab,
+                //StateCtor = (creature) => new CreatureState(creature),
+                setTemplate = () =>
+                {
+                    List<TileTypeResistance> tRs =
+                    [
+                        new(AItile.Accessibility.Floor, 1f, PathCost.Legality.Allowed),
+                        new(AItile.Accessibility.Climb, 1f, PathCost.Legality.Allowed),
+                        new(AItile.Accessibility.Corridor, 1.5f, PathCost.Legality.Allowed),
+                        new(AItile.Accessibility.Solid, 100f, PathCost.Legality.Unallowed)
+                    ];
+
+                    List<TileConnectionResistance> cRs =
+                    [
+                        new(MovementConnection.MovementType.Standard, 1f, PathCost.Legality.Allowed),
+                        new(MovementConnection.MovementType.OpenDiagonal, 1f, PathCost.Legality.Allowed),
+                        new(MovementConnection.MovementType.ShortCut, 1.5f, PathCost.Legality.Allowed),
+                        new(MovementConnection.MovementType.BetweenRooms, 1.5f, PathCost.Legality.Allowed)
+                    ];
+
+                    CreatureTemplate ancestor = StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.EggBug);
+                    CreatureTemplate template = new(type, ancestor, tRs, cRs, new CreatureTemplate.Relationship(CreatureTemplate.Relationship.Type.Ignores, 0f))
+                    {
+                        name = type.ToString(),
+                        AI = true,
+                        dangerousToPlayer = 0.3f,
+                        lungCapacity = 5f,
+                        scaryness = 0.1f,
+                        smallCreature = false,
+                        socialMemory = false,
+                        wormGrassImmune = false,
+                        shortcutSegments = 3,
+                        offScreenSpeed = 0.1f,
+                        abstractedLaziness = 200,
+                        roamBetweenRoomsChance = 0.00f,
+                        bodySize = 1f,
+                        stowFoodInDen = true,
+                        grasps = 1,
+                        visualRadius = 600f,
+                        movementBasedVision = 0.8f,
+                        waterRelationship = CreatureTemplate.WaterRelationship.AirOnly,
+                        waterPathingResistance = 4f,
+                        canFly = false,
+                        meatPoints = 3,
+                        baseDamageResistance = 2f,
+                        baseStunResistance = 1.2f,
+                        ghostSedationImmune = false,
+                        //damageRestistances = []
+                    };
+                    return template;
+                },
+                setRelationships = () =>
+                {
+                    foreach (var t in StaticWorld.creatureTemplates)
+                    {
+                        if (t == null) continue;
+
+                        CreatureTemplate.Type type1 = t.type;
+
+                        if (type1.IsType(type)) { type.PackWith(type1, 1f); }
+                        else if (type1.IsType("slugcat")) { type.RelationshipBased(type1, 1f); }
+                        else if (type1.IsType("scavenger")) { type.MutualUncomfortable(type1, 0.5f); }
+                        else if (type1.IsType("lizard")) { type.EatsDangerously(type1, 0.3f); }
+                        else if (type1.IsType("cicada")) { type.MutualUncomfortable(type1, 0.4f); }
+                        else if (type1.IsType("bigspider")) { type.EatsDangerously(type1, 0.35f); }
+                        else if (type1.IsType("spitterspider")) type.EatenBy(type1, 0.6f);
+                        else if (type1.IsType("vulture")) type.EatenBy(type1, 0.9f);
+                        else if (type1.IsType("longlegs")) type.EatenBy(type1, 0.5f);
+                        else type.Ignores(type1, 0.5f);
                     }
                 }
             };
