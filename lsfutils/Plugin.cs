@@ -309,9 +309,9 @@ public class Plugin : BaseUnityPlugin
 
         string bundlePath = AssetManager.ResolveFilePath("shaders/lsfutils");
         Log.LogMessage($"Resolved bundle path: {bundlePath}");
-        if (System.IO.File.Exists(bundlePath))
+        if (File.Exists(bundlePath))
         {
-            Log.LogMessage($"Bundle last write: {System.IO.File.GetLastWriteTime(bundlePath)}");
+            Log.LogMessage($"Bundle last write: {File.GetLastWriteTime(bundlePath)}");
         }
         else
         {
