@@ -173,7 +173,7 @@ public class FlameEffect : UpdatableAndDeletable, IProvideWarmth // patoma fire 
         }
 
         float effectiveness = Mathf.Max(0f, burnDuration / 1600f);
-        targetCreature?.repelLocusts = Math.Max(targetCreature.repelLocusts, (int)(effectiveness * 100));
+        if (targetCreature != null) targetCreature.repelLocusts = Math.Max(targetCreature.repelLocusts, (int)(effectiveness * 100));
         if (room != null && ((targetCreature != null && !targetCreature.inShortcut) || targetObject != null))
         {
             if (UnityEngine.Random.value < effectiveness)
