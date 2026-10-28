@@ -39,7 +39,8 @@ using lsfUtils.Items.ExplosiveBoomerang;
 using lsfUtils.Items.KarmaMask;
 using lsfUtils.Items.KnotSpawnV2;
 using lsfUtils.Items.RippleFlower;
-using lsfUtils.Items.TorchSpears;
+using lsfUtils.Items.Spears.CopperSpears;
+using lsfUtils.Items.Spears.TorchSpears;
 using lsfUtils.Mechanics;
 using lsfUtils.RegionParams;
 using lsfUtils.SaveFile;
@@ -135,6 +136,7 @@ public class Plugin : BaseUnityPlugin
                 KarmaMaskHooks.ApplyHooks();
                 ExplosiveBoomerangHooks.ApplyHooks();
                 TorchSpearHooks.ApplyHooks();
+                CopperSpearHooks.ApplyHooks();
             }
 
             // devtools objects
@@ -223,6 +225,7 @@ public class Plugin : BaseUnityPlugin
             RegisterManagedObject(new ManagedKarmaMask());
             RegisterManagedObject(new ManagedBrownFruit());
             RegisterManagedObject(new ManagedTorchSpear());
+            RegisterManagedObject(new ManagedCopperSpear());
             RegisterManagedObject(new ManagedKnotSpawnV2());
 
             EventLogic.RegisterBuiltInEvents();

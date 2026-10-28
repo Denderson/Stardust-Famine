@@ -61,6 +61,9 @@ public class RegionParamsSetup
     // Chance for a scav to spawn with a torch spear (from 0 to 100)
     public int ScavTorchSpearChance { get; private set; } = 0;
 
+    // Chance for a scav to spawn with a torch spear (from 0 to 100)
+    public int ScavCopperSpearChance { get; private set; } = 0;
+
     //Chance for a Dart to replace a spear
     public int DartFrequency { get; private set; } = 10;
 
@@ -68,9 +71,9 @@ public class RegionParamsSetup
     public Color FloatMudColor { get; private set; } = new Color(0.22f, 0.067f, 0.17f);
 
     // Torch spear fire color override
-    public Color FireCoreColor { get; private set; } = new(1.0f, 0.9f, 0.5f, 1f);
+    public Color FireCoreColor { get; private set; } = new(1f, 0.4f, 0.1f);
 
-    public Color FireEdgeColor { get; private set; } = new(1.0f, 0.15f, 0.0f, 1f);
+    public Color FireEdgeColor { get; private set; } = new(1f, 0.15f, 0f);
 
     public static RegionParamsSetup ParseFromUnrecognized(Dictionary<string, string> unrecognized, string regionName)
     {
@@ -138,6 +141,9 @@ public class RegionParamsSetup
                     break;
                 case "scavTorchSpearChance":
                     customRegionParams.ScavTorchSpearChance = ParseInt(val);
+                    break;
+                case "scavCopperSpearChance":
+                    customRegionParams.ScavCopperSpearChance = ParseInt(val);
                     break;
                 case "dartFrequency":
                     customRegionParams.DartFrequency = ParseInt(val);

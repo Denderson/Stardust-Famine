@@ -3,7 +3,7 @@ using RWCustom;
 using System;
 using UnityEngine;
 
-namespace lsfUtils.Items.WarpSpears;
+namespace lsfUtils.Items.Spears.WarpSpears;
 
 public class WarpSpear : Spear
 {

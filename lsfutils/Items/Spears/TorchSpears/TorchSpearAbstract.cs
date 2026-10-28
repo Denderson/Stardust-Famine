@@ -1,6 +1,4 @@
-﻿
-
-namespace lsfUtils.Items.TorchSpears
+﻿namespace lsfUtils.Items.Spears.TorchSpears
 {
     public class TorchSpearAbstract : AbstractSpear
     {

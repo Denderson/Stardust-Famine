@@ -7,7 +7,7 @@ using MoreSlugcats;
 using Watcher;
 using lsfUtils.Mechanics.Fire;
 
-namespace lsfUtils.Items.TorchSpears
+namespace lsfUtils.Items.Spears.TorchSpears
 {
     public class TorchSpear : Spear, IProvideWarmth
     {

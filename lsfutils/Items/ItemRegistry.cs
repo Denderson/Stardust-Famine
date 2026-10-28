@@ -8,10 +8,11 @@ using lsfUtils.Items.Darts.Dart;
 using lsfUtils.Items.Darts.PoisonDart;
 using static lsfUtils.Plugin;
 using lsfUtils.Items.ExplosiveBoomerang;
-using lsfUtils.Items.TorchSpears;
+using lsfUtils.Items.Spears.TorchSpears;
+using lsfUtils.Items.Spears.CopperSpears;
 using static lsfUtils.Enums;
 using lsfUtils.Items.KnotSpawnV2;
-using lsfUtils.Items.WarpSpears;
+using lsfUtils.Items.Spears.WarpSpears;
 
 namespace lsfUtils.Items;
 
@@ -27,6 +28,7 @@ public static class ItemRegistry
         RegisterKarmaMask();
         RegisterRippleFlower();
         RegisterTorchSpear();
+        RegisterCopperSpear();
         RegisterKnotSpawnV2();
     }
 
@@ -157,7 +159,7 @@ public static class ItemRegistry
 
         ItemRegistryTemplate.Register(entry);
     }
-
+     
     public static void RegisterKarmaMask()
     {
         var entry = new ItemRegistryEntry(AbstractObjectType.KarmaMask)
@@ -231,6 +233,22 @@ public static class ItemRegistry
         ItemRegistryTemplate.Register(entry);
     }
 
+    public static void RegisterCopperSpear()
+    {
+        var entry = new ItemRegistryEntry(AbstractObjectType.CopperSpear)
+        {
+            iconSprite = "Symbol_Spear",
+            iconColor = new(0.72f, 0.45f, 0.2f),
+            unlockID = SandboxUnlockID.CopperSpear,
+
+            SandboxFactory = (world, pos, id) => new CopperSpearAbstract(world, pos, id),
+
+            ScavCollectScore = (scav, obj) => 4,
+            ScavWeaponPickupScore = (scav, obj) => 4,
+        };
+
+        ItemRegistryTemplate.Register(entry);
+    }
     public static void RegisterKnotSpawnV2()
     {
         var entry = new ItemRegistryEntry(AbstractObjectType.KnotSpawnV2)

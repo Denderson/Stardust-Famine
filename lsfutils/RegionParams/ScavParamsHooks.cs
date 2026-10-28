@@ -38,6 +38,10 @@ namespace lsfUtils.RegionParams
             {
                 AddItemToScav(scav, Enums.AbstractObjectType.TorchSpear);
             }
+            if ((int)(UnityEngine.Random.value * 100) < customRegionParams.ScavCopperSpearChance)
+            {
+                AddItemToScav(scav, Enums.AbstractObjectType.CopperSpear);
+            }
         }
 
         public static void AddItemToScav(AbstractCreature scav, AbstractPhysicalObject.AbstractObjectType itemType)
