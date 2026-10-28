@@ -45,6 +45,7 @@ using lsfUtils.RegionParams;
 using lsfUtils.SaveFile;
 using lsfUtils.ScreenVariants;
 using lsfUtils.ScreenVariants.Deeperspace;
+using RWCustom;
 using Stardust.PlacedObjects;
 using System;
 using System.IO;
@@ -209,7 +210,7 @@ public class Plugin : BaseUnityPlugin
             RegisterManagedObject<EventRect, EventRectData, ManagedRepresentation>("EventRect", "lsfUtils");
             RegisterManagedObject<CustomPushback, CustomPushbackData, ManagedRepresentation>("CustomPushback", "lsfUtils");
             RegisterManagedObject<WaveLight, WaveLightData, WaveLightRepresentation>("WaveLight", "lsfUtils");
-            RegisterManagedObject<Bumper, BumperData, ManagedRepresentation>("Bumper", "lsfUtils");
+            //RegisterManagedObject<Bumper, BumperData, ManagedRepresentation>("Bumper", "lsfUtils");
 
             RegisterManagedObject(new ManagedObjectType("MudBonePile", "lsfUtils", typeof(MudBonePile), typeof(MudBonePileData), typeof(MudBonePileRepresentation)));
 
@@ -249,7 +250,7 @@ public class Plugin : BaseUnityPlugin
     public static bool GetNameFromAnywhere(out SlugcatStats.Name name)
     {
         name = null;
-        if (RWCustom.Custom.rainWorld.processManager?.currentMainLoop is RainWorldGame game)
+        if (Custom.rainWorld.processManager?.currentMainLoop is RainWorldGame game)
         {
             if (game.IsStorySession)
             {
@@ -263,7 +264,7 @@ public class Plugin : BaseUnityPlugin
     public static bool GetTimelineFromAnywhere(out SlugcatStats.Timeline timeline)
     {
         timeline = null;
-        if (RWCustom.Custom.rainWorld.processManager?.currentMainLoop is RainWorldGame game && game.IsStorySession)
+        if (Custom.rainWorld.processManager?.currentMainLoop is RainWorldGame game && game.IsStorySession)
         {
             if (game.IsStorySession)
             {

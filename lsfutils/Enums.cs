@@ -96,6 +96,7 @@ public class Enums
         public static CreatureTemplate.Type ClimbGrub = new(nameof(ClimbGrub), true);
 
         public static CreatureTemplate.Type Porcupine = new(nameof(Porcupine), true);
+        public static CreatureTemplate.Type ToxicSponge = new(nameof(ToxicSponge), true);
 
         public static void RegisterValues()
         {
@@ -117,6 +118,7 @@ public class Enums
             PoisonSpider ??= new(nameof(PoisonSpider), true);
             ClimbGrub ??= new(nameof(ClimbGrub), true);
             Porcupine ??= new(nameof(Porcupine), true);
+            ToxicSponge ??= new(nameof(ToxicSponge), true);
         }
 
         public static void UnregisterValues()
@@ -157,6 +159,8 @@ public class Enums
             ClimbGrub = null;
             Porcupine?.Unregister();
             Porcupine = null;
+            ToxicSponge?.Unregister();
+            ToxicSponge = null;
         }
     }
 
@@ -189,6 +193,7 @@ public class Enums
         public static MultiplayerUnlocks.SandboxUnlockID PoisonSpider = new(nameof(PoisonSpider), true);
         public static MultiplayerUnlocks.SandboxUnlockID ClimbGrub = new(nameof(ClimbGrub), true);
         public static MultiplayerUnlocks.SandboxUnlockID Porcupine = new(nameof(Porcupine), true);
+        public static MultiplayerUnlocks.SandboxUnlockID ToxicSponge = new(nameof(ToxicSponge), true);
 
         public static MultiplayerUnlocks.SandboxUnlockID BrownFruit = new(nameof(BrownFruit), true);
         public static MultiplayerUnlocks.SandboxUnlockID TorchSpear = new(nameof(TorchSpear), true);
@@ -225,6 +230,7 @@ public class Enums
             PoisonSpider ??= new(nameof(PoisonSpider), true);
             ClimbGrub ??= new(nameof(ClimbGrub), true);
             Porcupine ??= new(nameof(Porcupine), true);
+            ToxicSponge ??= new(nameof(ToxicSponge), true);
 
             BrownFruit ??= new(nameof(BrownFruit), true);
             TorchSpear ??= new(nameof(TorchSpear), true);
@@ -285,6 +291,8 @@ public class Enums
             ClimbGrub = null;
             Porcupine?.Unregister();
             Porcupine = null;
+            ToxicSponge?.Unregister();
+            ToxicSponge = null;
 
             BrownFruit?.Unregister();
             BrownFruit = null;

@@ -150,7 +150,7 @@ namespace lsfUtils.DevtoolsEffects.CreepingDarkness
         public static void RainWorldGame_Update(On.RainWorldGame.orig_Update orig, RainWorldGame self)
         {
             orig(self);
-            if (self?.world != null && !self.GamePaused && self.processActive && WorldCWT.TryGetData(self.world, out var data) && data.creepingDarkness != null)
+            if (self?.world != null && self.world == self.overWorld?.activeWorld && !self.GamePaused && self.processActive && WorldCWT.TryGetData(self.world, out var data) && data.creepingDarkness != null)
             {
                 data.creepingDarkness.Tick();
             }

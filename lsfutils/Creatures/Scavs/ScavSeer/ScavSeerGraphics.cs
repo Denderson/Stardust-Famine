@@ -3,6 +3,8 @@ using MoreSlugcats;
 using System;
 using UnityEngine;
 
+namespace lsfUtils.Creatures.Scavs.ScavSeer;
+
 public class ScavSeerGraphics : ScavengerGraphics
 {
     public SeerHalo halo;
@@ -11,7 +13,7 @@ public class ScavSeerGraphics : ScavengerGraphics
     private readonly int haloFirstSprite;
     private readonly int maskFirstSprite;
 
-    public ScavSeerGraphics(ScavSeer Seer) : base(Seer)
+    public ScavSeerGraphics(ScavSeer seer) : base(seer)
     {
         maskGfx = null;
 
