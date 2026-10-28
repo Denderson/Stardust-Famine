@@ -2,7 +2,7 @@
 using static lsfUtils.Plugin;
 using static Pom.Pom;
 
-namespace lsfUtils.Items.TorchSpears;
+namespace lsfUtils.Items.Spears.TorchSpears;
 
 public class ManagedTorchSpear : ManagedObjectType
 {

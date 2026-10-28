@@ -28,6 +28,7 @@ public class FlameEffect : UpdatableAndDeletable, IProvideWarmth // patoma fire 
     public float burnAmount = 0f;
     public float permanentBurnAmount = 0f;
     public int tickCounter = 0;
+    public FirecrackerPlant.ScareObject scareObj;
 
     public LightSource lightSource;
     public float[,] flicker;
@@ -143,6 +144,7 @@ public class FlameEffect : UpdatableAndDeletable, IProvideWarmth // patoma fire 
             if (PhysicalObjectCWT.TryGetData(targetObject, out var objectData2)) objectData2.onFire = false;
             Destroy();
             while (burnAmount > 0f) burnAmount -= 1 / 200f;
+            scareObj = null;
             return;
         }
 
@@ -216,6 +218,15 @@ public class FlameEffect : UpdatableAndDeletable, IProvideWarmth // patoma fire 
         {
             lightSource.Destroy();
             lightSource = null;
+        }
+
+        if (this.scareObj == null)
+        {
+            scareObj = new FirecrackerPlant.ScareObject(attachedChunk.pos, attachedChunk.owner.abstractPhysicalObject.rippleLayer);
+            scareObj.fearRange = 400f;
+            scareObj.fearScavs = true;
+            room.AddObject(this.scareObj);
+            Log.LogMessage("spooky scary oooooooooooh");
         }
 
         float currentFlammability = flammability;

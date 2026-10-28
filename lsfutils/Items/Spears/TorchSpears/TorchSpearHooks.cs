@@ -1,4 +1,5 @@
 ﻿using lsfUtils.CWTs;
+using lsfUtils.Items.Spears.CopperSpears;
 using lsfUtils.Mechanics.Fire;
 using RWCustom;
 using System;
@@ -9,7 +10,7 @@ using UnityEngine;
 using Watcher;
 using static lsfUtils.Enums;
 
-namespace lsfUtils.Items.TorchSpears;
+namespace lsfUtils.Items.Spears.TorchSpears;
 
 public static class TorchSpearHooks
 {
@@ -18,6 +19,7 @@ public static class TorchSpearHooks
         On.AbstractPhysicalObject.Realize += AbstractPhysicalObject_Realize;
         On.Spear.HitSomething += Spear_HitSomething;
         On.SaveState.AbstractPhysicalObjectFromString += SaveState_AbstractPhysicalObjectFromString;
+        On.ShelterDoor.DoorClosed += ShelterDoor_DoorClosed;
         On.Watcher.FlameJet.UpdateDamage += Watcher_FlameJet_UpdateDamage;
         On.Smoke.BlackHaze.BigBlackHaze.BlackHazeVisionObscurer.Update += Smoke_BlackHaze_Update_BigBlackHaze_BlackHazeVisionObscurer;
         On.PhysicalObject.Collide += PhysicalObject_Collide;
@@ -175,7 +177,7 @@ public static class TorchSpearHooks
                 else if (selfTorch.isLit && PhysicalObjectCWT.TryGetData(otherObject, out var target) && !target.onFire && otherObject.collisionLayer != 1)
                 {
                     self.room.AddObject(new FlameEffect(otherObject, other.bodyChunks[otherChunk], null, Math.Min(Math.Max(1500 + selfTorch.clothLife * 100, 800), 1600) + (200 * selfTorch.fireLife - 600)));
-                    selfTorch.Damage(1);
+                    if (otherObject is not Spear) selfTorch.Damage(1);
                 }
             }
         }
@@ -222,6 +224,19 @@ public static class TorchSpearHooks
 
             }
         }
+    }
+
+    private static void ShelterDoor_DoorClosed(On.ShelterDoor.orig_DoorClosed orig, ShelterDoor self)
+    {
+        for (int i = 0; i < self.room.abstractRoom.entities.Count; i++)
+        {
+            if (self.room.abstractRoom.entities[i] is CopperSpearAbstract tSpearAbs)
+            {
+                (tSpearAbs.realizedObject as TorchSpear).Extinguish(false);
+                Plugin.Log.LogMessage("Extinguishing in shelter!");
+            }
+        }
+        orig(self);
     }
     private static void Watcher_FlameJet_UpdateDamage(On.Watcher.FlameJet.orig_UpdateDamage orig, FlameJet self)
     {

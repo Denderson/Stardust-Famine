@@ -192,6 +192,7 @@ public class Enums
 
         public static MultiplayerUnlocks.SandboxUnlockID BrownFruit = new(nameof(BrownFruit), true);
         public static MultiplayerUnlocks.SandboxUnlockID TorchSpear = new(nameof(TorchSpear), true);
+        public static MultiplayerUnlocks.SandboxUnlockID CopperSpear = new(nameof(CopperSpear), true);
 
         public static MultiplayerUnlocks.SandboxUnlockID KnotSpawnV2 = new(nameof(KnotSpawnV2), true);
         public static MultiplayerUnlocks.SandboxUnlockID CustomCloak = new(nameof(CustomCloak), true);
@@ -228,6 +229,7 @@ public class Enums
 
             BrownFruit ??= new(nameof(BrownFruit), true);
             TorchSpear ??= new(nameof(TorchSpear), true);
+            CopperSpear ??= new(nameof(CopperSpear), true);
 
             KnotSpawnV2 ??= new(nameof(KnotSpawnV2), true);
             CustomCloak ??= new(nameof(CustomCloak), true);
@@ -290,6 +292,8 @@ public class Enums
             BrownFruit = null;
             TorchSpear?.Unregister();
             TorchSpear = null;
+            CopperSpear?.Unregister();
+            CopperSpear = null;
 
             KnotSpawnV2?.Unregister();
             KnotSpawnV2 = null;
@@ -308,6 +312,7 @@ public class Enums
         public static AbstractPhysicalObject.AbstractObjectType SingularityBoomerang = new(nameof(SingularityBoomerang), true);
         public static AbstractPhysicalObject.AbstractObjectType BrownFruit = new(nameof(BrownFruit), true);
         public static AbstractPhysicalObject.AbstractObjectType TorchSpear = new(nameof(TorchSpear), true);
+        public static AbstractPhysicalObject.AbstractObjectType CopperSpear = new(nameof(CopperSpear), true);
         public static AbstractPhysicalObject.AbstractObjectType KnotSpawnV2 = new(nameof(KnotSpawnV2), true);
         public static AbstractPhysicalObject.AbstractObjectType CustomCloak = new(nameof(CustomCloak), true);
 
@@ -321,6 +326,7 @@ public class Enums
             SingularityBoomerang ??= new(nameof(SingularityBoomerang), true);
             BrownFruit ??= new(nameof(BrownFruit), true);
             TorchSpear ??= new(nameof(TorchSpear), true);
+            CopperSpear ??= new(nameof(CopperSpear), true);
             KnotSpawnV2 ??= new(nameof(KnotSpawnV2), true);
             CustomCloak ??= new(nameof(CustomCloak), true);
         }
@@ -343,6 +349,8 @@ public class Enums
             BrownFruit = null;
             TorchSpear?.Unregister();
             TorchSpear = null;
+            CopperSpear?.Unregister();
+            CopperSpear = null;
             KnotSpawnV2?.Unregister();
             KnotSpawnV2 = null;
             CustomCloak?.Unregister();

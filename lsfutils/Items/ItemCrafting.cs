@@ -1,4 +1,4 @@
-﻿using lsfUtils.Items.TorchSpears;
+﻿using lsfUtils.Items.Spears.TorchSpears;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MoreSlugcats;

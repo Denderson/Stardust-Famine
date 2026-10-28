@@ -4,6 +4,7 @@ using MonoMod.RuntimeDetour;
 using MoreSlugcats;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Watcher;
 using static lsfUtils.Plugin;
@@ -349,12 +350,13 @@ public static class LizardHooks
             breedParams.biteDamage = 2.2f;
             breedParams.biteDamageChance = 0.75f;
             breedParams.toughness = 2f;
-            if (true)
+            /*if ()
             {
                 breedParams.stunToughness = 2.5f; 
                 breedParams.swimSpeed = 1.2f; 
                 temp.waterVision = .2f; 
-                temp.throughSurfaceVision = .2f; 
+                temp.throughSurfaceVision = .2f;
+                breedParams.headGraphics = new int[5];
             }
             else
             {
@@ -364,7 +366,15 @@ public static class LizardHooks
                 temp.throughSurfaceVision = 2.5f; 
                 temp.waterRelationship = CreatureTemplate.WaterRelationship.Amphibious;
                 temp.canSwim = true;
-            }
+                breedParams.headGraphics = new int[]
+                { 
+                    8,
+                    8,
+                    8,
+                    8,
+                    8
+                };
+            }*/
             breedParams.regainFootingCounter = 1;
             breedParams.bodyMass = 8f;
             breedParams.bodySizeFac = 1.4f;
@@ -399,7 +409,6 @@ public static class LizardHooks
             breedParams.tailColorationExponent = 1f;
             breedParams.headSize = 1.2f;
             breedParams.neckStiffness = .37f;
-            breedParams.headGraphics = new int[5];
             breedParams.framesBetweenLookFocusChange = 20;
             breedParams.tamingDifficulty = 7f;
             breedParams.canExitLounge = false;

@@ -1,7 +1,7 @@
 ﻿using System.Net.NetworkInformation;
 using UnityEngine;
 
-namespace lsfUtils.Items.WarpSpears;
+namespace lsfUtils.Items.Spears.WarpSpears;
 
 public class WarpPortal : UpdatableAndDeletable, IDrawable
 {
