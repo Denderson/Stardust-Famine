@@ -103,8 +103,6 @@ public class Plugin : BaseUnityPlugin
 
                 CreatureRegistryCore.ApplyHooks();
                 CreatureRegistry.RegisterAll();
-
-                Log.LogMessage("Done with non-Fisobs!!!");
             }
 
             // creatures
@@ -200,6 +198,7 @@ public class Plugin : BaseUnityPlugin
             if (isInit) return;
             isInit = true;
 
+            ConditionalLogic.LoadConditions();
             WorldLoader.Preprocessing.preprocessorConditions.Add(ConditionalLogic.LSFConditions);
 
             Log.LogMessage("Registering lsfUtils stuff...");

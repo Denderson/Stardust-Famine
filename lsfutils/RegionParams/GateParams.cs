@@ -1,8 +1,10 @@
-﻿using MonoMod.RuntimeDetour;
+﻿using lsfUtils.Mechanics;
+using MonoMod.RuntimeDetour;
 using RWCustom;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using static lsfUtils.Mechanics.ConditionalLogic;
 using static lsfUtils.Plugin;
 using static lsfUtils.RegionParams.RegionTypeParams;
 
@@ -112,12 +114,14 @@ public static class GateParams
 
     public static bool RegionGate_get_MeetRequirement(Func<RegionGate, bool> orig, RegionGate self)
     {
+        RainWorldGame game = self?.room?.game;
         int side = self.letThroughDir ? 0 : 1;
         string requirement = self.karmaRequirements[side]?.value;
-        if (requirement != null && CustomChecks.TryGetValue(requirement, out CustomRequirementCheck check)) // for now only uses manually code added checks. Will rework conditional system later on so this includes that too.
-        {
-            return check(self, side);
-        }
+        if (requirement == null) return orig(self);
+
+        if (CustomChecks.TryGetValue(requirement, out CustomRequirementCheck gateCheck)) return gateCheck(self, side);
+        if (game != null && TryParseCondition(requirement, out BoolCondition boolCondition) && CustomBoolChecks.TryGetValue(boolCondition, out var boolCheck)) return boolCheck(game);
+        if (game != null && TryParseCondition(requirement, out RoomBoolCondition roomBoolCondition) && CustomRoomBoolChecks.TryGetValue(roomBoolCondition, out var roomBoolCheck)) return roomBoolCheck(game, self.room);
         return orig(self);
     }
 }
