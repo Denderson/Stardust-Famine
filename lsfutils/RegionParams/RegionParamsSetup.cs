@@ -46,24 +46,6 @@ public class RegionParamsSetup
     // Is CreepingDarkness using the "complex" (retract/expand based on a timer) or "simple" (expand until player reaches a lightsource, then dissapear) version
     public bool CreepingDarknessSimpleVersion { get; private set; } = false;
 
-    // Chance for a scav to spawn with a lantern (from 0 to 100)
-    public int ScavLanternChance { get; private set; } = 0;
-
-    // Chance for a scav to spawn with an explosive boomerang (from 0 to 100)
-    public int ScavExplosiveBoomerangChance { get; private set; } = 0;
-
-    // Chance for a scav to spawn with a singularity boomerang (from 0 to 100)
-    public int ScavSingularityBoomerangChance { get; private set; } = 0;
-
-    // Chance for a scav to spawn with a poison dart (from 0 to 100)
-    public int ScavPoisonDartChance { get; private set; } = 0;
-
-    // Chance for a scav to spawn with a torch spear (from 0 to 100)
-    public int ScavTorchSpearChance { get; private set; } = 0;
-
-    // Chance for a scav to spawn with a torch spear (from 0 to 100)
-    public int ScavCopperSpearChance { get; private set; } = 0;
-
     //Chance for a Dart to replace a spear
     public int DartFrequency { get; private set; } = 10;
 
@@ -75,129 +57,77 @@ public class RegionParamsSetup
 
     public Color FireEdgeColor { get; private set; } = new(1f, 0.15f, 0f);
 
-    public static RegionParamsSetup ParseFromUnrecognized(Dictionary<string, string> unrecognized, string regionName)
+    public static RegionParamsSetup ParseFromUnrecognized(Dictionary<string, string> unrecognized, string regionName, SlugcatStats.Timeline timeline)
     {
         RegionParamsSetup customRegionParams = new();
         if (unrecognized == null || unrecognized.Count == 0) return customRegionParams;
 
-        foreach (var keyvalue in unrecognized)
+        ParamTable<string> table = new();
+        foreach (KeyValuePair<string, string> keyvalue in unrecognized)
         {
-            string key = keyvalue.Key.Trim();
-            string val = keyvalue.Value.Trim();
-
-            switch (key)
-            {
-                case "lookerMechanicOverride":
-                    customRegionParams.LookerMechanicOverride = val;
-                    break;
-
-                case "rotImmune":
-                    customRegionParams.RotImmune = ParseBool(val);
-                    break;
-
-                case "evilWaterTimer":
-                    customRegionParams.EvilWaterTimer = ParseInt(val);
-                    break;
-
-                case "evilWaterPoisonDelayTimer":
-                    customRegionParams.EvilWaterPoisonDelayTimer = ParseInt(val);
-                    break;
-
-                case "evilWaterHealDelayTimer":
-                    customRegionParams.EvilWaterHealDelayTimer = ParseInt(val);
-                    break;
-
-                case "creepingDarknessExpandTimer":
-                    customRegionParams.CreepingDarknessExpandTimer = ParseInt(val);
-                    break;
-
-                case "creepingDarknessRetractTimer":
-                    customRegionParams.CreepingDarknessRetractTimer = ParseInt(val);
-                    break;
-
-                case "creepingDarknessExpandIdleTimer":
-                    customRegionParams.CreepingDarknessExpandIdleTimer = ParseInt(val);
-                    break;
-
-                case "creepingDarknessRetractIdleTimer":
-                    customRegionParams.CreepingDarknessRetractIdleTimer = ParseInt(val);
-                    break;
-
-                case "creepingDarknessSimpleVersion":
-                    customRegionParams.CreepingDarknessSimpleVersion = ParseBool(val);
-                    break;
-
-                case "scavLanternChance":
-                    customRegionParams.ScavLanternChance = ParseInt(val);
-                    break;
-                case "scavExplosiveBoomerangsChance":
-                    customRegionParams.ScavExplosiveBoomerangChance = ParseInt(val);
-                    break;
-                case "scavSingularityBoomerangsChance":
-                    customRegionParams.ScavSingularityBoomerangChance = ParseInt(val);
-                    break;
-                case "scavPoisonDartChance":
-                    customRegionParams.ScavPoisonDartChance = ParseInt(val);
-                    break;
-                case "scavTorchSpearChance":
-                    customRegionParams.ScavTorchSpearChance = ParseInt(val);
-                    break;
-                case "scavCopperSpearChance":
-                    customRegionParams.ScavCopperSpearChance = ParseInt(val);
-                    break;
-                case "dartFrequency":
-                    customRegionParams.DartFrequency = ParseInt(val);
-                    break;
-                case "floatMudColor":
-                    {
-                        string[] array7 = val.Split(',');
-                        if (array7.Length == 3)
-                        {
-                            customRegionParams.FloatMudColor = new Color(float.Parse(array7[0], NumberStyles.Any, CultureInfo.InvariantCulture), float.Parse(array7[1], NumberStyles.Any, CultureInfo.InvariantCulture), float.Parse(array7[2], NumberStyles.Any, CultureInfo.InvariantCulture));
-                        }
-                        else if (array7.Length == 1 && new Regex("[0-9a-fA-F]{6}").IsMatch(array7[0]))
-                        {
-                            customRegionParams.FloatMudColor = Custom.hexToColor(array7[0]);
-                        }
-                        break;
-                    }
-                case "fireCoreColor":
-                    {
-                        string[] array7 = val.Split(',');
-                        if (array7.Length == 3)
-                        {
-                            customRegionParams.FireCoreColor = new Color(float.Parse(array7[0], NumberStyles.Any, CultureInfo.InvariantCulture), float.Parse(array7[1], NumberStyles.Any, CultureInfo.InvariantCulture), float.Parse(array7[2], NumberStyles.Any, CultureInfo.InvariantCulture));
-                        }
-                        else if (array7.Length == 1 && new Regex("[0-9a-fA-F]{6}").IsMatch(array7[0]))
-                        {
-                            customRegionParams.FireCoreColor = Custom.hexToColor(array7[0]);
-                        }
-                        break;
-                    }
-                case "fireEdgeColor":
-                    {
-                        string[] array7 = val.Split(',');
-                        if (array7.Length == 3)
-                        {
-                            customRegionParams.FireEdgeColor = new Color(float.Parse(array7[0], NumberStyles.Any, CultureInfo.InvariantCulture), float.Parse(array7[1], NumberStyles.Any, CultureInfo.InvariantCulture), float.Parse(array7[2], NumberStyles.Any, CultureInfo.InvariantCulture));
-                        }
-                        else if (array7.Length == 1 && new Regex("[0-9a-fA-F]{6}").IsMatch(array7[0]))
-                        {
-                            customRegionParams.FireEdgeColor = Custom.hexToColor(array7[0]);
-                        }
-                        break;
-                    }
-                default:
-                    {
-                        break;
-                    }
-            }
+            if (ParamKey.TryParse(keyvalue.Key, out ParamKey? key)) table.Add(key.Value, keyvalue.Value.Trim());
         }
+
+        if (TryGet(table, "lookerMechanicOverride", timeline, out string val)) customRegionParams.LookerMechanicOverride = val;
+        if (TryGet(table, "rotImmune", timeline, out val)) customRegionParams.RotImmune = ParseBool(val);
+
+        if (TryGet(table, "evilWaterTimer", timeline, out val) && TryParseInt(val, out int number)) customRegionParams.EvilWaterTimer = number;
+        if (TryGet(table, "evilWaterPoisonDelayTimer", timeline, out val) && TryParseInt(val, out number)) customRegionParams.EvilWaterPoisonDelayTimer = number;
+        if (TryGet(table, "evilWaterHealDelayTimer", timeline, out val) && TryParseInt(val, out number)) customRegionParams.EvilWaterHealDelayTimer = number;
+
+        if (TryGet(table, "creepingDarknessExpandTimer", timeline, out val) && TryParseInt(val, out number)) customRegionParams.CreepingDarknessExpandTimer = number;
+        if (TryGet(table, "creepingDarknessRetractTimer", timeline, out val) && TryParseInt(val, out number)) customRegionParams.CreepingDarknessRetractTimer = number;
+        if (TryGet(table, "creepingDarknessExpandIdleTimer", timeline, out val) && TryParseInt(val, out number)) customRegionParams.CreepingDarknessExpandIdleTimer = number;
+        if (TryGet(table, "creepingDarknessRetractIdleTimer", timeline, out val) && TryParseInt(val, out number)) customRegionParams.CreepingDarknessRetractIdleTimer = number;
+        if (TryGet(table, "creepingDarknessSimpleVersion", timeline, out val)) customRegionParams.CreepingDarknessSimpleVersion = ParseBool(val);
+
+        if (TryGet(table, "dartFrequency", timeline, out val) && TryParseInt(val, out number)) customRegionParams.DartFrequency = number;
+
+        if (TryGet(table, "floatMudColor", timeline, out val) && TryParseColor(val, out Color color)) customRegionParams.FloatMudColor = color;
+        if (TryGet(table, "fireCoreColor", timeline, out val) && TryParseColor(val, out color)) customRegionParams.FireCoreColor = color;
+        if (TryGet(table, "fireEdgeColor", timeline, out val) && TryParseColor(val, out color)) customRegionParams.FireEdgeColor = color;
 
         return customRegionParams;
     }
 
-    private static int ParseInt(string s) => int.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture);
+    public static bool TryGet(ParamTable<string> table, string name, SlugcatStats.Timeline timeline, out string value)
+    {
+        List<string> found = table.Get(name, timeline);
+        value = found.Count > 0 ? found[found.Count - 1] : null;
+        return found.Count > 0;
+    }
+
+    private static bool TryParseColor(string val, out Color color)
+    {
+        color = default;
+        string[] parts = val.Split(',');
+        if (parts.Length == 3)
+        {
+            if (float.TryParse(parts[0], NumberStyles.Any, CultureInfo.InvariantCulture, out float r)
+                && float.TryParse(parts[1], NumberStyles.Any, CultureInfo.InvariantCulture, out float g)
+                && float.TryParse(parts[2], NumberStyles.Any, CultureInfo.InvariantCulture, out float b))
+            {
+                color = new Color(r, g, b);
+                return true;
+            }
+            Log.LogWarning($"Invalid color value! {val}");
+            return false;
+        }
+        if (parts.Length == 1 && new Regex("[0-9a-fA-F]{6}").IsMatch(parts[0]))
+        {
+            color = Custom.hexToColor(parts[0]);
+            return true;
+        }
+        Log.LogWarning($"Invalid color value! {val}");
+        return false;
+    }
+
+    private static bool TryParseInt(string s, out int result)
+    {
+        if (int.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out result)) return true;
+        Log.LogWarning($"Invalid integer value! {s}");
+        return false;
+    }
 
     private static bool ParseBool(string s) => s.Trim().ToLowerInvariant() == "true";
 
@@ -205,7 +135,7 @@ public class RegionParamsSetup
     {
         orig(self, name, firstRoomIndex, regionNumber, game, timelineIndex);
         if (self?.regionParams == null) return;
-        RegionParamsSetup customParams = ParseFromUnrecognized(self.regionParams.unrecognizedParams, name);
+        RegionParamsSetup customParams = ParseFromUnrecognized(self.regionParams.unrecognizedParams, name, timelineIndex);
         if (RegionCWT.TryGetData(self, out var data))
         {
             data.customRegionParams = customParams;

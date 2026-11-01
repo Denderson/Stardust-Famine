@@ -14,7 +14,7 @@ namespace lsfUtils.DevtoolsObjects.ConditionalFilter
         {
 
         }
-        [StringField("ConditionalFilter", "Condition-Value", "Processing Condition: ")]
+        [StringField("ConditionalFilter", "Conditions-Value", "Processing Conditions: ")]
         public string condition;
 
         [Vector2Field("Radius", defX: 80f, defY: 0f, Vector2Field.VectorReprType.circle)]

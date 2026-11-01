@@ -15,7 +15,7 @@ namespace lsfUtils.DevtoolsObjects.ConditionalFilter
         {
 
         }
-        [StringField("RoomConditionalFilter", "Condition-Value", "Room Processing Condition: ")]
+        [StringField("RoomConditionalFilter", "Conditions-Value", "Room Processing Conditions: ")]
         public string condition;
 
         [Vector2Field("Radius", defX: 80f, defY: 0f, Vector2Field.VectorReprType.circle)]

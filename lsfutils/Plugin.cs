@@ -175,13 +175,12 @@ public class Plugin : BaseUnityPlugin
 
             // region parameters
             {
-                On.Region.ctor_string_int_int_RainWorldGame_Timeline += RegionParams.RegionParamsSetup.SetupParams;
-
-                ScavParamsHooks.ApplyHooks();
-                TypeParams.ApplyHooks();
-                ShortcutLinks.ApplyHooks();
-                ShelterLinks.ApplyHooks();
-                ConditionalGates.ApplyHooks();
+                RegionTypeParams.ApplyHooks();
+                ShelterParams.ApplyHooks();
+                ShortcutParams.ApplyHooks();
+                GateParams.ApplyHooks();
+                ScavengerGearParams.ApplyHooks();
+                On.Region.ctor_string_int_int_RainWorldGame_Timeline += RegionParamsSetup.SetupParams;
             }
 
             // mechanics
@@ -244,10 +243,11 @@ public class Plugin : BaseUnityPlugin
         orig(self);
         // load here stuff that requires AssetManager here (like ResolveFilePath)
 
-        TypeParams.Load();
-        ShelterLinks.Load();
-        ShortcutLinks.Load();
-        ConditionalGates.Load();
+        RegionTypeParams.LoadParams();
+        ShelterParams.LoadParams();
+        ShortcutParams.LoadParams();
+        GateParams.LoadParams();
+        ScavengerGearParams.LoadParams();
     }
 
     public static bool GetNameFromAnywhere(out SlugcatStats.Name name)

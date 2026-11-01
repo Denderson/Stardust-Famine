@@ -1,79 +1,49 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using static lsfUtils.Plugin;
 
-public static class ShelterLinks
+namespace lsfUtils.RegionParams;
+
+public static class ShelterParams
 {
-    public class ShelterLinkEntry
-    {
-        public string sourceShelter;
-        public List<string> candidates = [];
-    }
+    public static readonly ParamTable<List<string>> Table = new();
 
-    public static List<ShelterLinkEntry> rawConfig = [];
-
-    public static Dictionary<string, ShelterLinkEntry> byShelter = [];
-
-    public static string ConfigPath = "lsf/shelterLinks.txt";
+    public static readonly string ConfigPath = "lsf/shelterLinks.txt";
 
     public static void ApplyHooks()
     {
         On.SaveState.BringUpToDate += SaveState_BringUpToDate;
     }
 
-    public static void Load()
+    public static void LoadParams()
     {
-        rawConfig.Clear();
-        byShelter.Clear();
-        string path = AssetManager.ResolveFilePath(ConfigPath);
-        if (!File.Exists(path))
+        Table.Clear();
+        foreach ((ParamKey key, string value) in ParamFile.Read(ConfigPath))
         {
-            Log.LogMessage("Shelter link config not found!, " + path);
-            return;
+            List<string> candidates = ParseCandidates(value);
+            if (candidates.Count > 0) Table.Add(key, candidates);
         }
-        foreach (string rawLine in File.ReadAllLines(path))
+    }
+
+    private static List<string> ParseCandidates(string value)
+    {
+        List<string> candidates = [];
+        foreach (string raw in value.Split(','))
         {
-            string line = rawLine.Split('/')[0].Trim();
-            if (line.Length == 0)
-            {
-                continue;
-            }
-            string[] sides = line.Split('=');
-            if (sides.Length != 2)
-            {
-                Log.LogMessage("No = found!, " + rawLine);
-                continue;
-            }
-            string sourceShelter = sides[0].Trim().ToUpperInvariant();
-            if (sourceShelter.Length == 0)
-            {
-                Log.LogMessage("Malformed source shelter!, " + rawLine);
-                continue;
-            }
-            ShelterLinkEntry entry = new() { sourceShelter = sourceShelter };
-            foreach (string candRaw in sides[1].Split(','))
-            {
-                string candidate = candRaw.Trim().ToUpperInvariant();
-                if (candidate.Length == 0)
-                {
-                    continue;
-                }
-                entry.candidates.Add(candidate);
-            }
-            if (entry.candidates.Count > 0)
-            {
-                rawConfig.Add(entry);
-            }
-            else
-            {
-                Log.LogMessage("No valid candidates!, " + rawLine);
-            }
+            string candidate = raw.Trim().ToUpperInvariant();
+            if (candidate.Length > 0) candidates.Add(candidate);
         }
-        foreach (ShelterLinkEntry entry in rawConfig)
+        return candidates;
+    }
+
+    private static List<string> GetCandidates(string shelter)
+    {
+        List<string> candidates = [];
+        foreach (List<string> next in Table.Get(shelter))
         {
-            byShelter[entry.sourceShelter] = entry;
+            foreach (string candidate in next) candidates.Remove(candidate);
+            candidates.InsertRange(0, next);
         }
-        Log.LogMessage("Loaded " + rawConfig.Count + " shelter link(s) from " + path);
+        return candidates;
     }
 
     public static void SaveState_BringUpToDate(On.SaveState.orig_BringUpToDate orig, SaveState self, RainWorldGame game)
@@ -81,21 +51,25 @@ public static class ShelterLinks
         orig(self, game);
 
         string fromShelter = self.denPosition;
-        if (fromShelter == null || !byShelter.TryGetValue(fromShelter, out ShelterLinkEntry entry)) return;
+        if (fromShelter == null) return;
 
-        string toShelter = SelectTarget(entry, self, game);
+        List<string> candidates = GetCandidates(fromShelter);
+        if (candidates.Count == 0) return;
+
+        string toShelter = SelectTarget(candidates, self, game);
         if (toShelter == null || !ShouldRedirect(self, game, fromShelter, toShelter)) return;
 
         MoveDen(self, game, fromShelter, toShelter);
     }
 
-    public static string SelectTarget(ShelterLinkEntry entry, SaveState save, RainWorldGame game)
+    public static string SelectTarget(List<string> candidates, SaveState save, RainWorldGame game)
     {
-        return entry.candidates.Count > 0 ? entry.candidates[0] : null;
+        return candidates.Count > 0 ? candidates[0] : null;
     }
 
     public static bool ShouldRedirect(SaveState save, RainWorldGame game, string fromShelter, string toShelter)
     {
+        // TODO
         return true;
     }
 
@@ -115,7 +89,7 @@ public static class ShelterLinks
             save.pendingObjects.Add(obj is AbstractCreature critter ? SaveState.AbstractCreatureToStringStoryWorld(critter) : obj.ToString());
         }
     }
-    
+
     public static List<AbstractPhysicalObject> GetObjects(AbstractRoom fromRoom, RainWorldGame game)
     {
         List<AbstractPhysicalObject> result = [];
