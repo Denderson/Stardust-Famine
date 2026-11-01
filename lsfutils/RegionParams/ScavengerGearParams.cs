@@ -1,11 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using lsfUtils.CWTs;
+using System.Collections.Generic;
+using Watcher;
 using static lsfUtils.Plugin;
-using ScavItem = (string item, int chance);
 
 namespace lsfUtils.RegionParams;
 
 public static class ScavengerGearParams
 {
+    public struct ScavItem
+    {
+        public string type;
+        public string faction;
+
+        public string item;
+        public int chance;
+
+        public ScavItem(string item, int chance, string faction = null, string type = null)
+        {
+            this.item = item;
+            this.chance = chance;
+            this.faction = faction;
+            this.type = type;
+        }
+    }
+
     public static readonly ParamTable<List<ScavItem>> Table = new();
 
     public static readonly string ConfigPath = "lsf/scavGear.txt";
@@ -34,13 +52,25 @@ public static class ScavengerGearParams
         foreach (string raw in value.Split(','))
         {
             string[] parts = raw.Split(':');
-            if (parts.Length != 2 || !int.TryParse(parts[1], out int chance))
+            if (parts.Length < 2)
             {
-                Log.LogWarning($"Expected Item:Chance! {raw}");
+                Log.LogWarning($"Expected Item:Chance ! {raw}");
                 continue;
             }
 
-            items.Add((parts[0].Trim(), chance));
+            string item = parts[0].Trim().ToLowerInvariant();
+            if (string.IsNullOrWhiteSpace(item)) continue;
+
+            if (!int.TryParse(parts[1], out int chance)) continue;
+
+            string faction = null;
+            if (parts.Length >= 3) faction = parts[2].Trim().ToLowerInvariant();
+
+            string type = null;
+            if (parts.Length >= 4) type = parts[3].Trim().ToLowerInvariant();
+
+            ScavItem scavItem = new ScavItem(item, chance, faction, type);
+            items.Add(scavItem);
         }
         return items;
     }
@@ -64,6 +94,9 @@ public static class ScavengerGearParams
 
         foreach (ScavItem scavItem in GetItems(self.world.region.name).Values)
         {
+            if (scavItem.item == null) continue;
+            if (scavItem.faction != null && AbstractCreatureCWT.TryGetData(scav, out var data) && data.faction != scavItem.faction) continue;
+            if (!IsCorrectType(scavItem.type, scav.creatureTemplate.type)) continue;
             if ((int)(UnityEngine.Random.value * 100) >= scavItem.chance) continue;
 
             AbstractPhysicalObject.AbstractObjectType item = new(scavItem.item, false);
@@ -74,6 +107,16 @@ public static class ScavengerGearParams
             }
             AddItemToScav(scav, item);
         }
+    }
+
+    public static bool IsCorrectType(string typeString, CreatureTemplate.Type type)
+    {
+        if (typeString == null) return false;
+        typeString = typeString.Trim().ToLowerInvariant();
+        if (ModManager.DLCShared && typeString.Contains("elite") && type != DLCSharedEnums.CreatureTemplateType.ScavengerElite) return false;
+        if (ModManager.Watcher && typeString.Contains("templar") && type != WatcherEnums.CreatureTemplateType.ScavengerTemplar) return false;
+        if (ModManager.Watcher && typeString.Contains("disciple") && type != WatcherEnums.CreatureTemplateType.ScavengerDisciple) return false;
+        return true;
     }
 
     public static void AddItemToScav(AbstractCreature scav, AbstractPhysicalObject.AbstractObjectType itemType)
