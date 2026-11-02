@@ -28,11 +28,13 @@ public static class ScavengerGearParams
 
     public static readonly string ConfigPath = "lsf/scavGear.txt";
 
-    private static readonly HashSet<string> unknownItems = [];
+    public static readonly HashSet<string> unknownItems = [];
 
     public static void ApplyHooks()
     {
-        On.ScavengerAbstractAI.InitGearUp += ScavengerAbstractAI_InitGearUp;
+        // currently broken, needing to figure out a way to make it get the correct constructor instead of general one (like AbstractSpear)
+
+        //On.ScavengerAbstractAI.InitGearUp += ScavengerAbstractAI_InitGearUp;
     }
 
     public static void LoadParams()
@@ -46,7 +48,7 @@ public static class ScavengerGearParams
         }
     }
 
-    private static List<ScavItem> ParseItems(string value)
+    public static List<ScavItem> ParseItems(string value)
     {
         List<ScavItem> items = [];
         foreach (string raw in value.Split(','))
@@ -58,16 +60,16 @@ public static class ScavengerGearParams
                 continue;
             }
 
-            string item = parts[0].Trim().ToLowerInvariant();
+            string item = parts[0].Trim();
             if (string.IsNullOrWhiteSpace(item)) continue;
 
             if (!int.TryParse(parts[1], out int chance)) continue;
 
             string faction = null;
-            if (parts.Length >= 3) faction = parts[2].Trim().ToLowerInvariant();
+            if (parts.Length >= 3) faction = parts[2].Trim();
 
             string type = null;
-            if (parts.Length >= 4) type = parts[3].Trim().ToLowerInvariant();
+            if (parts.Length >= 4) type = parts[3].Trim();
 
             ScavItem scavItem = new ScavItem(item, chance, faction, type);
             items.Add(scavItem);
@@ -75,10 +77,10 @@ public static class ScavengerGearParams
         return items;
     }
 
-    private static Dictionary<string, ScavItem> GetItems(string region)
+    public static Dictionary<string, ScavItem> GetItems(string region, RainWorldGame game)
     {
         Dictionary<string, ScavItem> items = [];
-        foreach (List<ScavItem> next in Table.Get(region))
+        foreach (List<ScavItem> next in Table.Get(region, game))
         {
             foreach (ScavItem scavItem in next) items[scavItem.item] = scavItem;
         }
@@ -92,7 +94,7 @@ public static class ScavengerGearParams
         if (self?.world?.region == null) return;
         if (self?.parent is not AbstractCreature scav) return;
 
-        foreach (ScavItem scavItem in GetItems(self.world.region.name).Values)
+        foreach (ScavItem scavItem in GetItems(self.world.region.name, self.world.game).Values)
         {
             if (scavItem.item == null) continue;
             if (scavItem.faction != null && AbstractCreatureCWT.TryGetData(scav, out var data) && data.faction != scavItem.faction) continue;
@@ -111,8 +113,8 @@ public static class ScavengerGearParams
 
     public static bool IsCorrectType(string typeString, CreatureTemplate.Type type)
     {
-        if (typeString == null) return false;
-        typeString = typeString.Trim().ToLowerInvariant();
+        if (typeString == null) return true;
+        typeString = typeString.Trim();
         if (ModManager.DLCShared && typeString.Contains("elite") && type != DLCSharedEnums.CreatureTemplateType.ScavengerElite) return false;
         if (ModManager.Watcher && typeString.Contains("templar") && type != WatcherEnums.CreatureTemplateType.ScavengerTemplar) return false;
         if (ModManager.Watcher && typeString.Contains("disciple") && type != WatcherEnums.CreatureTemplateType.ScavengerDisciple) return false;

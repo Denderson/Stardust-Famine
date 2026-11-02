@@ -24,21 +24,21 @@ public static class ShelterParams
         }
     }
 
-    private static List<string> ParseCandidates(string value)
+    public static List<string> ParseCandidates(string value)
     {
         List<string> candidates = [];
         foreach (string raw in value.Split(','))
         {
-            string candidate = raw.Trim().ToUpperInvariant();
+            string candidate = raw.Trim().ToLowerInvariant();
             if (candidate.Length > 0) candidates.Add(candidate);
         }
         return candidates;
     }
 
-    private static List<string> GetCandidates(string shelter)
+    public static List<string> GetCandidates(string shelter, RainWorldGame game)
     {
         List<string> candidates = [];
-        foreach (List<string> next in Table.Get(shelter))
+        foreach (List<string> next in Table.Get(shelter, game))
         {
             foreach (string candidate in next) candidates.Remove(candidate);
             candidates.InsertRange(0, next);
@@ -53,7 +53,7 @@ public static class ShelterParams
         string fromShelter = self.denPosition;
         if (fromShelter == null) return;
 
-        List<string> candidates = GetCandidates(fromShelter);
+        List<string> candidates = GetCandidates(fromShelter, game);
         if (candidates.Count == 0) return;
 
         string toShelter = SelectTarget(candidates, self, game);
@@ -70,6 +70,7 @@ public static class ShelterParams
     public static bool ShouldRedirect(SaveState save, RainWorldGame game, string fromShelter, string toShelter)
     {
         // TODO
+        if (toShelter == fromShelter) return false;
         return true;
     }
 
@@ -78,7 +79,7 @@ public static class ShelterParams
         save.denPosition = toShelter;
         save.TrySetVanillaDen(toShelter);
 
-        AbstractRoom fromRoom = game.world.GetAbstractRoom(fromShelter);
+        AbstractRoom fromRoom = game?.world?.GetAbstractRoom(fromShelter);
         if (fromRoom == null) return;
 
         List<AbstractPhysicalObject> objects = GetObjects(fromRoom, game);

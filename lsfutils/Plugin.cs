@@ -242,11 +242,15 @@ public class Plugin : BaseUnityPlugin
         orig(self);
         // load here stuff that requires AssetManager here (like ResolveFilePath)
 
+        Log.LogMessage("Loading params...");
+
         RegionTypeParams.LoadParams();
         ShelterParams.LoadParams();
         ShortcutParams.LoadParams();
         GateParams.LoadParams();
         ScavengerGearParams.LoadParams();
+
+        Log.LogMessage("Finished loading params!");
     }
 
     public static bool GetNameFromAnywhere(out SlugcatStats.Name name)

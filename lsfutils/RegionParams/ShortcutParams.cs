@@ -1,131 +1,160 @@
-﻿using RWCustom;
+﻿using lsfUtils.CWTs;
 using System.Collections.Generic;
-using UnityEngine;
+using static lsfUtils.Mechanics.ConditionalLogic;
 using static lsfUtils.Plugin;
 
 namespace lsfUtils.RegionParams;
 
 public static class ShortcutParams
 {
-    public static readonly ParamTable<List<(string room, int node)>> Table = new();
+    public struct ShortcutLink(string room, int node)
+    {
+        public string room = room;
+        public int node = node;
+    }
 
-    public static readonly string ConfigPath = "lsf/shortcutLinks.txt";
+    public static ParamTable<ShortcutLink> Table = new();
 
-    private static readonly HashSet<string> invalidDestinations = [];
+    public static string ConfigPath = "lsf/shortcutLinks.txt";
+
+    public static List<ShortcutLink> overrides = [];
+    public static List<AbstractRoom> redirected = [];
 
     public static void ApplyHooks()
     {
-        On.ShortcutHandler.Update += ShortcutHandler_Update;
+        On.Room.Update += Room_Update;
     }
 
     public static void LoadParams()
     {
         Table.Clear();
-        invalidDestinations.Clear();
+
         foreach ((ParamKey key, string value) in ParamFile.Read(ConfigPath))
         {
-            List<(string room, int node)> candidates = ParseCandidates(value);
-            if (candidates.Count > 0) Table.Add(key, candidates);
-        }
-    }
-
-    private static List<(string room, int node)> ParseCandidates(string value)
-    {
-        List<(string room, int node)> candidates = [];
-        foreach (string raw in value.Split(','))
-        {
-            string[] parts = raw.Split(':');
-            if (parts.Length != 2 || !int.TryParse(parts[1], out int node))
+            foreach (string raw in value.Split(','))
             {
-                Log.LogWarning($"Expected RoomName:nodeIndex! {raw}");
-                continue;
-            }
-            candidates.Add((parts[0].Trim().ToUpperInvariant(), node));
-        }
-        return candidates;
-    }
-
-    private static List<(string room, int node)> GetCandidates(string exit)
-    {
-        List<(string room, int node)> candidates = [];
-        foreach (List<(string room, int node)> next in Table.Get(exit))
-        {
-            foreach ((string room, int node) candidate in next)
-            {
-                if (!candidates.Contains(candidate)) candidates.Add(candidate);
+                if (TryParseLink(raw, out ShortcutLink link)) Table.Add(key, link);
+                else Log.LogWarning($"Parsing shortcut connection failed! {raw}");
             }
         }
-        return candidates;
     }
 
-    public struct ConnectionOverride(AbstractRoom room, int overrideNode, int previousNode)
+    public static bool TryParseLink(string raw, out ShortcutLink link)
     {
-        public AbstractRoom room = room;
-        public int overrideNode = overrideNode;
-        public int previousNode = previousNode;
+        link = default;
+
+        string[] parts = raw.Split(':');
+        if (parts.Length < 2 || parts.Length > 3) return false;
+
+        string room = parts[0].Trim().ToUpperInvariant();
+        if (room.Length == 0) return false;
+
+        if (!int.TryParse(parts[1], out int node) || node < 0) return false;
+
+        link = new ShortcutLink(room, node);
+        return true;
     }
 
-    public static void ShortcutHandler_Update(On.ShortcutHandler.orig_Update orig, ShortcutHandler self)
+    public static void Room_Update(On.Room.orig_Update orig, Room self)
     {
-        List<ConnectionOverride> activeOverrides = [];
-        Dictionary<(int room, int node), (int destRoomIndex, int destNodeIndex)> chosenThisTick = [];
+        orig(self);
 
-        try
+        RainWorldGame game = self?.game;
+        if (game == null) return;
+
+        if (redirected.Count > 0 && !AnyPlayerInPipe(game)) RestoreConnections();
+
+        if (game.IsStorySession && game.AllPlayersRealized && self.shortCutsReady)
         {
-            for (int i = 0; i < self.transportVessels.Count; i++)
+            bool anyPlayerEnteredPipe = false;
+            foreach (AbstractCreature player in game.Players)
             {
-                ShortcutHandler.ShortCutVessel vessel = self.transportVessels[i];
+                if (player?.realizedCreature is not Player realisedPlayer || realisedPlayer.enteringShortCut == null) continue;
+                if (realisedPlayer.room != self) continue;
+                anyPlayerEnteredPipe = true;
+                break;
+            }
 
-                if (vessel.wait > 0) continue;
+            if (!anyPlayerEnteredPipe) return;
 
-                Room realizedRoom = vessel.room.realizedRoom;
-                if (realizedRoom == null) continue;
+            AbstractRoom abstractRoom = self.abstractRoom;
 
-                IntVector2 nextPos = ShortcutHandler.NextShortcutPosition(vessel.pos, vessel.lastPos, realizedRoom);
-                if (nextPos == vessel.pos) continue;
-                if (realizedRoom.GetTile(nextPos).Terrain == Room.Tile.TerrainType.ShortcutEntrance) continue;
-                if (realizedRoom.GetTile(nextPos).shortCut != 2) continue; // 2 == RoomExit
+            if (redirected.Contains(abstractRoom)) return;
 
-                int node = realizedRoom.exitAndDenIndex.IndexfOf(nextPos);
-                List<(string room, int node)> candidates = GetCandidates(vessel.room.name + ":" + node);
-                if (candidates.Count == 0) continue;
-
-                (int room, int node) key = (vessel.room.index, node);
-                if (chosenThisTick.ContainsKey(key)) continue;
-
-                (string destRoomName, int destNodeIndex) = candidates[Random.Range(0, candidates.Count)];
-                AbstractRoom destRoom = vessel.room.world.GetAbstractRoom(destRoomName);
-                if (destRoom == null)
+            for (int i = 0; i < abstractRoom.connections.Length; i++)
+            {
+                overrides.Clear();
+                foreach (ShortcutLink link in Table.Get(abstractRoom.name + ":" + i, game))
                 {
-                    Log.LogWarning($"Unknown destination room! { destRoomName}");
-                    continue;
+                    overrides.Add(link);
                 }
+                if (overrides.Count == 0) continue;
 
-                if (destNodeIndex < 0 || destNodeIndex >= destRoom.connections.Length)
-                {
-                    if (invalidDestinations.Add(destRoomName + ":" + destNodeIndex))
-                    {
-                        Log.LogWarning($"Invalid destination node {destNodeIndex} for room {destRoomName}! (it has {destRoom.connections.Length} connections)");
-                    }
-                    continue;
-                }
-
-                chosenThisTick[key] = (destRoom.index, destNodeIndex);
-
-                activeOverrides.Add(new ConnectionOverride(vessel.room, node, vessel.room.connections[node]));
-                vessel.room.connections[node] = destRoom.index;
-                activeOverrides.Add(new ConnectionOverride(destRoom, destNodeIndex, destRoom.connections[destNodeIndex]));
-                destRoom.connections[destNodeIndex] = vessel.room.index;
+                ShortcutLink activeOverride = overrides[UnityEngine.Random.Range(0, overrides.Count)];
+                Redirect(abstractRoom, i, activeOverride);
             }
-            orig(self);
         }
-        finally
+    }
+
+    public static bool AnyPlayerInPipe(RainWorldGame game)
+    {
+        if (game?.shortcuts == null) return false;
+        foreach (AbstractCreature player in game.Players)
         {
-            for (int o = activeOverrides.Count - 1; o >= 0; o--)
+            if (player?.realizedCreature is Player realisedPlayer && realisedPlayer.enteringShortCut != null) return true;
+        }
+
+        for (int i = 0; i < game.shortcuts.transportVessels.Count; i++)
+        {
+            if (game.shortcuts.transportVessels[i].creature is Player) return true;
+        }
+        return false;
+    }
+
+    public static void Redirect(AbstractRoom from, int fromNode, ShortcutLink link)
+    {
+        AbstractRoom dest = from.world.GetAbstractRoom(link.room);
+        if (dest == null)
+        {
+            Log.LogWarning($"Unknown destination room! {link.room} (from {from.name}:{fromNode})");
+            return;
+        }
+
+        if (link.node >= dest.connections.Length)
+        {
+            Log.LogWarning($"Invalid destination node {link.node} for room {link.room}!");
+            return;
+        }
+
+        if (!SaveConnections(from) || !SaveConnections(dest)) return;
+
+        Log.LogMessage($"Redirect: {from.name}:{fromNode} -> {link.room}:{link.node}");
+
+        from.connections[fromNode] = dest.index;
+        dest.connections[link.node] = from.index;
+    }
+
+    public static bool SaveConnections(AbstractRoom room)
+    {
+        if (!AbstractRoomCWT.TryGetData(room, out var data)) return false;
+
+        data.originalConnections ??= (int[])room.connections.Clone();
+        if (!redirected.Contains(room)) redirected.Add(room);
+        return true;
+    }
+
+    public static void RestoreConnections()
+    {
+        for (int i = 0; i < redirected.Count; i++)
+        {
+            AbstractRoom room = redirected[i];
+            if (!AbstractRoomCWT.TryGetData(room, out var data) || data.originalConnections == null) continue;
+
+            for (int node = 0; node < data.originalConnections.Length; node++)
             {
-                ConnectionOverride ov = activeOverrides[o];
-                ov.room.connections[ov.overrideNode] = ov.previousNode;
+                room.connections[node] = data.originalConnections[node];
             }
         }
+        redirected.Clear();
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RWCustom;
+using System;
 using System.Collections.Generic;
 using static lsfUtils.Plugin;
 
@@ -34,7 +35,7 @@ public static class RegionTypeParams
         }
     }
 
-    private static List<RegionTypeParameter> ParseParams(string value)
+    public static List<RegionTypeParameter> ParseParams(string value)
     {
         List<RegionTypeParameter> parameters = [];
         foreach (string raw in value.Split(','))
@@ -52,7 +53,9 @@ public static class RegionTypeParams
     public static bool CheckForMetaParam(RegionTypeParameter parameter, string name)
     {
         List<RegionTypeParameter> mergedParams = [];
-        foreach (List<RegionTypeParameter> next in Table.Get(name)) mergedParams.AddRange(next);
+        RainWorldGame game = null;
+        if (Custom.rainWorld.processManager.currentMainLoop is RainWorldGame game1) game = game1;
+        foreach (List<RegionTypeParameter> next in Table.Get(name, game)) mergedParams.AddRange(next);
         return mergedParams.Contains(parameter);
     }
 

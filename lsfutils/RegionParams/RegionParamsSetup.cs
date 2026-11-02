@@ -17,45 +17,45 @@ public class RegionParamsSetup
 
 
     // Which looker mechanic is active in this region. Null = no override
-    public string LookerMechanicOverride { get; private set; } = null;
+    public string LookerMechanicOverride { get; set; } = null;
 
     // Whenever the region can be infected by sentient rot (not counted for Prince quest if uninfectable)
-    public bool RotImmune { get; private set; } = false;
+    public bool RotImmune { get; set; } = false;
 
     // How long until EvilWater accumulates 100% poison
-    public int EvilWaterTimer { get; private set; } = 400;
+    public int EvilWaterTimer { get; set; } = 400;
 
     // How long until EvilWater starts being poisonous
-    public int EvilWaterPoisonDelayTimer { get; private set; } = 60;
+    public int EvilWaterPoisonDelayTimer { get; set; } = 60;
 
     // How long outside of EvilWater until you start cleaning poison
-    public int EvilWaterHealDelayTimer { get; private set; } = 120;
+    public int EvilWaterHealDelayTimer { get; set; } = 120;
 
     // How long until CreepingDarkness fully expands
-    public int CreepingDarknessExpandTimer { get; private set; } = 600;
+    public int CreepingDarknessExpandTimer { get; set; } = 600;
 
     // How long until CreepingDarkness fully retracts
-    public int CreepingDarknessRetractTimer { get; private set; } = 200;
+    public int CreepingDarknessRetractTimer { get; set; } = 200;
 
     // How long CreepingDarkness stays idle after fully expanding
-    public int CreepingDarknessExpandIdleTimer { get; private set; } = 80;
+    public int CreepingDarknessExpandIdleTimer { get; set; } = 80;
 
     // How long CreepingDarkness stays idle after fully retracting
-    public int CreepingDarknessRetractIdleTimer { get; private set; } = 120;
+    public int CreepingDarknessRetractIdleTimer { get; set; } = 120;
 
     // Is CreepingDarkness using the "complex" (retract/expand based on a timer) or "simple" (expand until player reaches a lightsource, then dissapear) version
-    public bool CreepingDarknessSimpleVersion { get; private set; } = false;
+    public bool CreepingDarknessSimpleVersion { get; set; } = false;
 
     //Chance for a Dart to replace a spear
-    public int DartFrequency { get; private set; } = 10;
+    public int DartFrequency { get; set; } = 10;
 
     // Float Mud color override
-    public Color FloatMudColor { get; private set; } = new Color(0.22f, 0.067f, 0.17f);
+    public Color FloatMudColor { get; set; } = new Color(0.22f, 0.067f, 0.17f);
 
     // Torch spear fire color override
-    public Color FireCoreColor { get; private set; } = new(1f, 0.4f, 0.1f);
+    public Color FireCoreColor { get; set; } = new(1f, 0.4f, 0.1f);
 
-    public Color FireEdgeColor { get; private set; } = new(1f, 0.15f, 0f);
+    public Color FireEdgeColor { get; set; } = new(1f, 0.15f, 0f);
 
     public static RegionParamsSetup ParseFromUnrecognized(Dictionary<string, string> unrecognized, string regionName, SlugcatStats.Timeline timeline)
     {
@@ -92,12 +92,14 @@ public class RegionParamsSetup
 
     public static bool TryGet(ParamTable<string> table, string name, SlugcatStats.Timeline timeline, out string value)
     {
-        List<string> found = table.Get(name, timeline);
+        RainWorldGame game = null;
+        if (Custom.rainWorld.processManager.currentMainLoop is RainWorldGame game1) game = game1;
+        List<string> found = table.Get(name, game, timeline);
         value = found.Count > 0 ? found[found.Count - 1] : null;
         return found.Count > 0;
     }
 
-    private static bool TryParseColor(string val, out Color color)
+    public static bool TryParseColor(string val, out Color color)
     {
         color = default;
         string[] parts = val.Split(',');
@@ -122,14 +124,14 @@ public class RegionParamsSetup
         return false;
     }
 
-    private static bool TryParseInt(string s, out int result)
+    public static bool TryParseInt(string s, out int result)
     {
         if (int.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out result)) return true;
         Log.LogWarning($"Invalid integer value! {s}");
         return false;
     }
 
-    private static bool ParseBool(string s) => s.Trim().ToLowerInvariant() == "true";
+    public static bool ParseBool(string s) => s.Trim().ToLowerInvariant() == "true";
 
     public static void SetupParams(On.Region.orig_ctor_string_int_int_RainWorldGame_Timeline orig, Region self, string name, int firstRoomIndex, int regionNumber, RainWorldGame game, SlugcatStats.Timeline timelineIndex)
     {

@@ -19,10 +19,10 @@ public static class GateParams
 
     public static readonly string ConfigPath = "lsf/customRequirements.txt";
 
-    private static readonly HashSet<string> loadedImages = [];
+    public static readonly HashSet<string> loadedImages = [];
 
     // TODO: Images
-    private static readonly string imageFolder = null;
+    public static readonly string imageFolder = null;
 
     public static void ApplyHooks()
     {
@@ -40,7 +40,7 @@ public static class GateParams
         }
     }
 
-    private static string[] ParseSides(string value)
+    public static string[] ParseSides(string value)
     {
         string[] parts = value.Split(',');
         if (parts.Length != 2)
@@ -54,26 +54,20 @@ public static class GateParams
         return sides;
     }
 
-    private static string ParseSide(string raw)
+    public static string ParseSide(string raw)
     {
-        string code = raw.Trim().ToUpperInvariant();
-        if (code.Length == 0)
-        {
-            return null;
-        }
-        LoadImage(code);
-        return code;
+        string side = raw.Trim().ToLowerInvariant();
+        if (side.Length == 0) return null;
+        LoadImage(side);
+        return side;
     }
 
-    private static void LoadImage(string code)
+    public static void LoadImage(string name)
     {
         if (imageFolder == null) return;
 
-        string imageName = "gateSymbol" + code;
-        if (loadedImages.Contains(imageName))
-        {
-            return;
-        }
+        string imageName = "gateSymbol" + name;
+        if (loadedImages.Contains(imageName)) return;
         string path = AssetManager.ResolveFilePath(Path.Combine(imageFolder, imageName));
         if (!File.Exists(path + ".png"))
         {
@@ -92,12 +86,12 @@ public static class GateParams
         }
     }
 
-    private static void RegionGate_customKarmaGateRequirements(On.RegionGate.orig_customKarmaGateRequirements orig, RegionGate self)
+    public static void RegionGate_customKarmaGateRequirements(On.RegionGate.orig_customKarmaGateRequirements orig, RegionGate self)
     {
         orig(self);
 
         string[] sides = new string[2];
-        foreach (string[] next in Table.Get(self.room.abstractRoom.name))
+        foreach (string[] next in Table.Get(self.room.abstractRoom.name, self.room.game))
         {
             for (int side = 0; side < 2; side++)
             {
@@ -119,9 +113,8 @@ public static class GateParams
         string requirement = self.karmaRequirements[side]?.value;
         if (requirement == null) return orig(self);
 
-        if (CustomChecks.TryGetValue(requirement, out CustomRequirementCheck gateCheck)) return gateCheck(self, side);
-        if (game != null && TryParseCondition(requirement, out BoolCondition boolCondition) && CustomBoolChecks.TryGetValue(boolCondition, out var boolCheck)) return boolCheck(game);
-        if (game != null && TryParseCondition(requirement, out RoomBoolCondition roomBoolCondition) && CustomRoomBoolChecks.TryGetValue(roomBoolCondition, out var roomBoolCheck)) return roomBoolCheck(game, self.room);
+        if (game != null && LSFConditions(requirement, game) == true) return true;
+        if (game != null && LSFRoomConditions(requirement, game, self.room) == true) return true;
         return orig(self);
     }
 }

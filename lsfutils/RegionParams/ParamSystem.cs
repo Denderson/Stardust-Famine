@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using static lsfUtils.Plugin;
+using static lsfUtils.Mechanics.ConditionalLogic;
 
 namespace lsfUtils.RegionParams;
 
@@ -27,7 +28,7 @@ public readonly struct ParamKey
         }
     }
 
-    private static string Normalise(string s)
+    public static string Normalise(string s)
     {
         if (string.IsNullOrWhiteSpace(s)) return null;
         return s.Trim().ToLowerInvariant();
@@ -52,10 +53,24 @@ public readonly struct ParamKey
         return true;
     }
 
-    public bool IsValid(string timelineName)
+    public bool IsValid(RainWorldGame game, SlugcatStats.Timeline timeline = null)
     {
-        if (WorldTimeline != null && WorldTimeline != timelineName) return false;
-        // TODO: check if all conditions are met (requires getting the game from somewhere)
+        string timelineString = null; 
+        if (timeline != null) timelineString = timeline.ToString().ToLowerInvariant().Trim();
+        if (game != null && timeline == null) timelineString = game?.GetStorySession?.saveState?.currentTimelinePosition?.value?.Trim().ToLowerInvariant();
+
+        if (WorldTimeline != null && WorldTimeline != timelineString) return false;
+
+        if (Conditions != null && Conditions.Count > 0)
+        {
+            foreach (string condition in Conditions)
+            {
+                if (string.IsNullOrEmpty(condition)) continue;
+                if (game == null) Log.LogMessage($"Game is null when condition {condition} is checked, skipping it!");
+                if (LSFConditions(condition, game) == false) return false;
+            }
+        }
+
         return true;
     }
 }
@@ -92,7 +107,7 @@ public static class ParamFile
 
 public class ParamTable<T>
 {
-    private readonly List<KeyValuePair<ParamKey, T>> entries = [];
+    public readonly List<KeyValuePair<ParamKey, T>> entries = [];
 
     public void Clear()
     {
@@ -106,29 +121,23 @@ public class ParamTable<T>
         entries.Insert(index, new KeyValuePair<ParamKey, T>(key, value));
     }
 
-    private static bool Overrides(ParamKey a, ParamKey b)
+    public static bool Overrides(ParamKey a, ParamKey b)
     {
         if (a.HasTimeline && !b.HasTimeline) return true;
         if (!a.HasTimeline && b.HasTimeline) return false;
         return a.ConditionCount > b.ConditionCount;
     }
 
-    public List<T> Get(string name)
-    {
-        GetTimelineFromAnywhere(out SlugcatStats.Timeline timeline);
-        return Get(name, timeline);
-    }
-
-    public List<T> Get(string name, SlugcatStats.Timeline timeline)
+    public List<T> Get(string name, RainWorldGame game, SlugcatStats.Timeline timeline = null)
     {
         List<T> valid = [];
+
         if (name == null) return valid;
         name = name.Trim().ToLowerInvariant();
-        string timelineName = timeline?.value?.ToLowerInvariant();
 
         foreach (KeyValuePair<ParamKey, T> entry in entries)
         {
-            if (entry.Key.RegionName == name && entry.Key.IsValid(timelineName)) valid.Add(entry.Value);
+            if (entry.Key.RegionName == name && entry.Key.IsValid(game, timeline)) valid.Add(entry.Value);
         }
         return valid;
     }
