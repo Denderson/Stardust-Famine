@@ -1,6 +1,7 @@
 ﻿using RWCustom;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using static lsfUtils.Plugin;
 
 namespace lsfUtils.RegionParams;
@@ -11,7 +12,16 @@ public static class RegionTypeParams
 
     public static readonly ParamTable<List<RegionTypeParameter>> Table = new();
 
-    public static readonly string ConfigPath = "lsf/regionMetaParameters.txt";
+    public static readonly string ConfigPath = "world/regionMetaParameters.txt";
+    public static void CheckFile()
+    {
+        if (!File.Exists(RWCustom.Custom.RootFolderDirectory() + Path.DirectorySeparatorChar.ToString() + "world/regionMetaParameters.txt"))
+        {
+            ParamKey.CreateFile("world/regionMetaParameters.txt");
+        }
+        else Log.LogMessage("File \"world/regionMetaParameters.txt\" already exists");
+    }
+
 
     public static void ApplyHooks()
     {

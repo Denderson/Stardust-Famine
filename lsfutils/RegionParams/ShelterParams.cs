@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using static lsfUtils.Plugin;
 
 namespace lsfUtils.RegionParams;
@@ -7,7 +8,16 @@ public static class ShelterParams
 {
     public static readonly ParamTable<List<string>> Table = new();
 
-    public static readonly string ConfigPath = "lsf/shelterLinks.txt";
+    public static readonly string ConfigPath = "world/shelterLinks.txt";
+    public static void CheckFile()
+    {
+        if (!File.Exists(RWCustom.Custom.RootFolderDirectory() + Path.DirectorySeparatorChar.ToString() + "world/shelterLinks.txt"))
+        {
+            ParamKey.CreateFile("world/shelterLinks.txt");
+        }
+        else Log.LogMessage("File \"world/shelterLinks.txt\" already exists");
+    }
+
 
     public static void ApplyHooks()
     {

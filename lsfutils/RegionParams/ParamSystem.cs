@@ -13,6 +13,15 @@ public readonly struct ParamKey
     public readonly string WorldTimeline;
     public readonly List<string> Conditions;
 
+    public static void CreateFile(string path)
+    {
+        using (StreamWriter streamWriter = File.CreateText(RWCustom.Custom.RootFolderDirectory() + Path.DirectorySeparatorChar.ToString() + path))
+        {
+            streamWriter.WriteLine("");
+            Log.LogMessage("Created file " + path);
+        }
+    }
+
     public bool HasTimeline => WorldTimeline != null;
     public int ConditionCount => Conditions.Count;
 

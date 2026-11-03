@@ -17,7 +17,15 @@ public static class GateParams
 
     public static readonly ParamTable<string[]> Table = new();
 
-    public static readonly string ConfigPath = "lsf/customRequirements.txt";
+    public static readonly string ConfigPath = "world/customRequirements.txt";
+    public static void CheckFile()
+    {
+        if (!File.Exists(Custom.RootFolderDirectory() + Path.DirectorySeparatorChar.ToString() + "world/customRequirements.txt"))
+        {
+            ParamKey.CreateFile("world/customRequirements.txt");
+        }
+        else Log.LogMessage("File \"world/customRequirements.txt\" already exists");
+    }
 
     public static readonly HashSet<string> loadedImages = [];
 

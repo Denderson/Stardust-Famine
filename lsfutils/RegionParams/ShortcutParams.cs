@@ -1,5 +1,6 @@
 ﻿using lsfUtils.CWTs;
 using System.Collections.Generic;
+using System.IO;
 using static lsfUtils.Mechanics.ConditionalLogic;
 using static lsfUtils.Plugin;
 
@@ -15,7 +16,15 @@ public static class ShortcutParams
 
     public static ParamTable<ShortcutLink> Table = new();
 
-    public static string ConfigPath = "lsf/shortcutLinks.txt";
+    public static string ConfigPath = "world/shortcutLinks.txt";
+    public static void CheckFile()
+    {
+        if (!File.Exists(RWCustom.Custom.RootFolderDirectory() + Path.DirectorySeparatorChar.ToString() + "world/shortcutLinks.txt"))
+        {
+            ParamKey.CreateFile("world/shortcutLinks.txt");
+        }
+        else Log.LogMessage("File \"world/shortcutLinks.txt\" already exists");
+    }
 
     public static List<ShortcutLink> overrides = [];
     public static List<AbstractRoom> redirected = [];

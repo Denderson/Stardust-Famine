@@ -29,11 +29,16 @@ public class CopperSpear : Spear
         intensity = 0f;
         timer = -1;
         randomVariation = Random.value;
+        if (this.abstractPhysicalObject.world.game.IsArenaSession)
+        {
+            (abstractSpear as CopperSpearAbstract).oxidization = Random.Range(0, 7);
+        }
+
     }
 
     public override void Update(bool eu)
     {
-        Update(eu);
+        base.Update(eu);
         if (timer > -1)
         {
             if (mode != Mode.Thrown || overcharged) timer--;
@@ -114,7 +119,7 @@ public class CopperSpear : Spear
     {
         intensity += amount;
         if (timer == -1) timer = 1320 - (int)(120 * amount);
-        else timer = (timer + 1320 - (int)(120 * amount)) / (charges + 3);
+        else timer = Mathf.Min(timer, (timer + 1320 - (int)(120 * amount)) / (charges + 3));
         charges++;
 
         if (intensity >= 10f)
@@ -131,7 +136,7 @@ public class CopperSpear : Spear
 
     public override bool HitSomething(SharedPhysics.CollisionResult result, bool eu)
     {
-        bool hit = HitSomething(result, eu);
+        bool hit = base.HitSomething(result, eu);
         Electrocute(result.obj);
         return hit;
     }
@@ -185,7 +190,8 @@ public class CopperSpear : Spear
 
     public bool CheckElectricCreature(Creature otherObject)
     {
-        return (null as ElectricSpear).CheckElectricCreature(otherObject);
+        //return (null as ElectricSpear).CheckElectricCreature(otherObject); //returns an error when this one is used btw
+        return otherObject is Centipede || otherObject is BigJellyFish || otherObject is Inspector;
     }
 
     public override void ChangeMode(Mode newMode)
@@ -204,16 +210,16 @@ public class CopperSpear : Spear
                 }
             }
         }
-        ChangeMode(newMode);
+        base.ChangeMode(newMode);
     }
     public override void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
     {
-        ApplyPalette(sLeaser, rCam, palette);
+        base.ApplyPalette(sLeaser, rCam, palette);
         color = Color.Lerp(Color.Lerp(copperColor, oxidisedColor, Oxidization / 5f + (-0.1f + 0.2f * randomVariation)), palette.blackColor, 0.2f);
     }
 
-   
-    public void Oxidize() 
+
+    public void Oxidize()
     {
         if (Oxidization < 6)
         {

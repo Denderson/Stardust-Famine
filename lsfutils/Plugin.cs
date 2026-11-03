@@ -244,10 +244,15 @@ public class Plugin : BaseUnityPlugin
 
         Log.LogMessage("Loading params...");
 
+        RegionTypeParams.CheckFile();
         RegionTypeParams.LoadParams();
+        ShelterParams.CheckFile();
         ShelterParams.LoadParams();
+        ShortcutParams.CheckFile();
         ShortcutParams.LoadParams();
+        GateParams.CheckFile();
         GateParams.LoadParams();
+        ScavengerGearParams.CheckFile();
         ScavengerGearParams.LoadParams();
 
         Log.LogMessage("Finished loading params!");

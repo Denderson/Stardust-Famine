@@ -1,5 +1,6 @@
 ﻿using lsfUtils.CWTs;
 using System.Collections.Generic;
+using System.IO;
 using Watcher;
 using static lsfUtils.Plugin;
 
@@ -26,7 +27,15 @@ public static class ScavengerGearParams
 
     public static readonly ParamTable<List<ScavItem>> Table = new();
 
-    public static readonly string ConfigPath = "lsf/scavGear.txt";
+    public static readonly string ConfigPath = "world/scavGear.txt";
+    public static void CheckFile()
+    {
+        if (!File.Exists(RWCustom.Custom.RootFolderDirectory() + Path.DirectorySeparatorChar.ToString() + "world/scavGear.txt"))
+        {
+            ParamKey.CreateFile("world/scavGear.txt");
+        }
+        else Log.LogMessage("File \"world/scavGear.txt\" already exists");
+    }
 
     public static readonly HashSet<string> unknownItems = [];
 
@@ -34,7 +43,7 @@ public static class ScavengerGearParams
     {
         // currently broken, needing to figure out a way to make it get the correct constructor instead of general one (like AbstractSpear)
 
-        //On.ScavengerAbstractAI.InitGearUp += ScavengerAbstractAI_InitGearUp;
+        On.ScavengerAbstractAI.InitGearUp += ScavengerAbstractAI_InitGearUp;
     }
 
     public static void LoadParams()
@@ -108,8 +117,9 @@ public static class ScavengerGearParams
                 continue;
             }
             AddItemToScav(scav, item);
+            Log.LogMessage($"Attempting to add {scavItem.item} to {scav.creatureTemplate.type} with {scavItem.chance}% chance. type: {scavItem.type}, faction: {scavItem.faction}");
         }
-    }
+    } 
 
     public static bool IsCorrectType(string typeString, CreatureTemplate.Type type)
     {
