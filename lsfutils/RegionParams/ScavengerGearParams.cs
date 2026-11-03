@@ -125,10 +125,13 @@ public static class ScavengerGearParams
     {
         if (typeString == null) return true;
         typeString = typeString.Trim();
-        if (ModManager.DLCShared && typeString.Contains("elite") && type != DLCSharedEnums.CreatureTemplateType.ScavengerElite) return false;
-        if (ModManager.Watcher && typeString.Contains("templar") && type != WatcherEnums.CreatureTemplateType.ScavengerTemplar) return false;
-        if (ModManager.Watcher && typeString.Contains("disciple") && type != WatcherEnums.CreatureTemplateType.ScavengerDisciple) return false;
-        return true;
+        if (typeString.ToLower().Contains("any")) return true;
+        if ((typeString.ToLower().Contains("base") || typeString.ToLower().Contains("basic") || typeString.ToLower().Contains("normal")) && type != DLCSharedEnums.CreatureTemplateType.ScavengerElite && type != WatcherEnums.CreatureTemplateType.ScavengerTemplar && type != WatcherEnums.CreatureTemplateType.ScavengerDisciple) return true;
+        if (ModManager.DLCShared && typeString.ToLower().Contains("elite") && type == DLCSharedEnums.CreatureTemplateType.ScavengerElite) return true;
+        if (ModManager.Watcher && typeString.ToLower().Contains("templar") && type == WatcherEnums.CreatureTemplateType.ScavengerTemplar) return true;
+        if (ModManager.Watcher && typeString.ToLower().Contains("disciple") && type == WatcherEnums.CreatureTemplateType.ScavengerDisciple) return true;
+        if (!(typeString.ToLower().Contains("base") || typeString.ToLower().Contains("basic") || typeString.ToLower().Contains("normal") || typeString.ToLower().Contains("elite") || typeString.ToLower().Contains("templar") || typeString.ToLower().Contains("disciple"))) return true;
+        return false;
     }
 
     public static void AddItemToScav(AbstractCreature scav, AbstractPhysicalObject.AbstractObjectType itemType)

@@ -146,7 +146,7 @@ public class ParamTable<T>
 
         foreach (KeyValuePair<ParamKey, T> entry in entries)
         {
-            if (entry.Key.RegionName == name && entry.Key.IsValid(game, timeline)) valid.Add(entry.Value);
+            if ((entry.Key.RegionName == name || entry.Key.RegionName.ToLower() == "everywhere") && entry.Key.IsValid(game, timeline)) valid.Add(entry.Value);
         }
         return valid;
     }
