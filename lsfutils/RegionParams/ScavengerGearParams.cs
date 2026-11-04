@@ -1,8 +1,13 @@
 ﻿using lsfUtils.CWTs;
+using lsfUtils.Items;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Watcher;
 using static lsfUtils.Plugin;
+using static MonoMod.Cil.RuntimeILReferenceBag.FastDelegateInvokers;
 
 namespace lsfUtils.RegionParams;
 
@@ -41,9 +46,70 @@ public static class ScavengerGearParams
 
     public static void ApplyHooks()
     {
-        // currently broken, needing to figure out a way to make it get the correct constructor instead of general one (like AbstractSpear)
+        IL.ScavengerAbstractAI.InitGearUp += ScavengerAbstractAI_InitGearUp;
+    }
 
-        On.ScavengerAbstractAI.InitGearUp += ScavengerAbstractAI_InitGearUp;
+    public static int AddItems(ScavengerAbstractAI self, int num)
+    {
+        if (self?.world?.region == null) return num;
+        if (self.parent is not AbstractCreature scav) return num;
+
+        foreach (ScavItem scavItem in GetItems(self.world.region.name, self.world.game).Values)
+        {
+            if (num < 0) return num;
+            if (scavItem.item == null) continue;
+            if (scavItem.faction != null && AbstractCreatureCWT.TryGetData(scav, out var data) && data.faction != scavItem.faction) continue;
+            if (!IsCorrectType(scavItem.type, scav.creatureTemplate.type)) continue;
+            if ((int)(UnityEngine.Random.value * 100) >= scavItem.chance) continue;
+
+            string strType = scavItem.type.Trim().ToLowerInvariant();
+            if (strType.Contains("spear"))
+            {
+                bool explosive = strType.Contains("explo");
+                bool electric = strType.Contains("elec");
+                if (TryAddSpearToScav(scav, num, explosive, electric)) num--;
+
+                Log.LogMessage($"Attempting to add {scavItem.item} spear to {scav.creatureTemplate.type} with {scavItem.chance}% chance.");
+                continue;
+            }
+
+            AbstractPhysicalObject.AbstractObjectType item = new(scavItem.item, false);
+            if (item.Index == -1)
+            {
+                if (unknownItems.Add(scavItem.item)) Log.LogWarning($"Unknown item! {scavItem.item}");
+                continue;
+            }
+            if (TryAddItemToScav(scav, item, num)) num--;
+            Log.LogMessage($"Attempting to add {scavItem.item} item to {scav.creatureTemplate.type} with {scavItem.chance}% chance.");
+        }
+        return num;
+    }
+
+    private static void ScavengerAbstractAI_InitGearUp(ILContext il)
+    {
+        var c = new ILCursor(il);
+
+        // directly after flag2 = false; line
+        if (!c.TryGotoNext(MoveType.After,
+            x => x.MatchLdcI4(0),
+            x => x.MatchStloc(5)))
+        {
+            Log.LogMessage("flag2 = false; not found!");
+            return;
+        }
+
+        // get num on the stack
+        var numVar = il.Body.Variables[0];
+
+        // push arguments in order you want them in the method
+        c.Emit(OpCodes.Ldarg_0); // self
+        c.Emit(OpCodes.Ldloc, numVar); // num
+
+        // call the method and pop both arguments
+        c.Emit(OpCodes.Call, typeof(ScavengerGearParams).GetMethod(nameof(AddItems)));
+
+        // turn num into the method result
+        c.Emit(OpCodes.Stloc, numVar);
     }
 
     public static void LoadParams()
@@ -96,31 +162,6 @@ public static class ScavengerGearParams
         return items;
     }
 
-    public static void ScavengerAbstractAI_InitGearUp(On.ScavengerAbstractAI.orig_InitGearUp orig, ScavengerAbstractAI self)
-    {
-        orig(self);
-
-        if (self?.world?.region == null) return;
-        if (self?.parent is not AbstractCreature scav) return;
-
-        foreach (ScavItem scavItem in GetItems(self.world.region.name, self.world.game).Values)
-        {
-            if (scavItem.item == null) continue;
-            if (scavItem.faction != null && AbstractCreatureCWT.TryGetData(scav, out var data) && data.faction != scavItem.faction) continue;
-            if (!IsCorrectType(scavItem.type, scav.creatureTemplate.type)) continue;
-            if ((int)(UnityEngine.Random.value * 100) >= scavItem.chance) continue;
-
-            AbstractPhysicalObject.AbstractObjectType item = new(scavItem.item, false);
-            if (item.Index == -1)
-            {
-                if (unknownItems.Add(scavItem.item)) Log.LogWarning($"Unknown item! {scavItem.item}");
-                continue;
-            }
-            AddItemToScav(scav, item);
-            Log.LogMessage($"Attempting to add {scavItem.item} to {scav.creatureTemplate.type} with {scavItem.chance}% chance. type: {scavItem.type}, faction: {scavItem.faction}");
-        }
-    } 
-
     public static bool IsCorrectType(string typeString, CreatureTemplate.Type type)
     {
         if (typeString == null) return true;
@@ -134,30 +175,41 @@ public static class ScavengerGearParams
         return false;
     }
 
-    public static void AddItemToScav(AbstractCreature scav, AbstractPhysicalObject.AbstractObjectType itemType)
+    public static bool TryAddItemToScav(AbstractCreature scav, AbstractPhysicalObject.AbstractObjectType itemType, int num)
     {
-        int highestUsedSlot = -1;
-        foreach (AbstractPhysicalObject.AbstractObjectStick abstractObjectStick in scav.stuckObjects)
+        AbstractPhysicalObject abstractPhysicalObject = null;
+
+        if (ItemRegistryTemplate.TryGet(itemType, out var item))
         {
-            if (abstractObjectStick is AbstractPhysicalObject.CreatureGripStick grip && grip.A == scav)
-            {
-                highestUsedSlot = System.Math.Max(highestUsedSlot, grip.grasp);
-            }
+            abstractPhysicalObject = item.Ctor(scav.world, scav.pos, scav.world.game.GetNewID());
+        }
+        else if (itemType == AbstractPhysicalObject.AbstractObjectType.GraffitiBomb)
+        {
+            abstractPhysicalObject = new GraffitiBomb.AbstractGraffitiBomb(scav.world, null, scav.pos, scav.world.game.GetNewID(), -1, -1, null);
+        }
+        else if (itemType == AbstractPhysicalObject.AbstractObjectType.DataPearl)
+        {
+            abstractPhysicalObject = new DataPearl.AbstractDataPearl(scav.world, itemType, null, scav.pos, scav.world.game.GetNewID(), -1, -1, null, default);
+        }
+        else if (AbstractConsumable.IsTypeConsumable(itemType))
+        {
+            abstractPhysicalObject = new AbstractConsumable(scav.world, itemType, null, scav.pos, scav.world.game.GetNewID(), -1, -1, null);
+        }
+        else
+        {
+            abstractPhysicalObject = new AbstractPhysicalObject(scav.world, itemType, null, scav.pos, scav.world.game.GetNewID());
         }
 
-        int nextSlot = highestUsedSlot + 1;
+        scav.world.GetAbstractRoom(scav.pos).AddEntity(abstractPhysicalObject);
+        new AbstractPhysicalObject.CreatureGripStick(scav, abstractPhysicalObject, num, carry: true);
+        return true;
+    }
 
-        if (nextSlot > 3) return;
-
-        AbstractRoom room = scav.world.GetAbstractRoom(scav.pos);
-        if (room == null)
-        {
-            Log.LogError($"ScavengerGearParams: no abstract room for scav at {scav.pos}!'");
-            return;
-        }
-
-        AbstractPhysicalObject item = new(scav.world, itemType, null, scav.pos, scav.world.game.GetNewID());
-        room.AddEntity(item);
-        new AbstractPhysicalObject.CreatureGripStick(scav, item, nextSlot, carry: true);
+    public static bool TryAddSpearToScav(AbstractCreature scav, int num, bool explosive, bool electric)
+    {
+        AbstractSpear spear = new AbstractSpear(scav.world, null, scav.pos, scav.world.game.GetNewID(), explosive, electric);
+        scav.world.GetAbstractRoom(scav.pos).AddEntity(spear);
+        new AbstractPhysicalObject.CreatureGripStick(scav, spear, num, carry: true);
+        return true;
     }
 }

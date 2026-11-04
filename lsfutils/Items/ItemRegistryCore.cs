@@ -42,9 +42,9 @@ namespace lsfUtils.Items
 
         public static void SandboxGameSession_SpawnItems(On.SandboxGameSession.orig_SpawnItems orig, SandboxGameSession self, IconSymbol.IconSymbolData data, WorldCoordinate pos, EntityID entityID)
         {
-            if (ItemRegistryTemplate.TryGet(data.itemType, out ItemRegistryEntry entry) && entry.SandboxFactory != null)
+            if (ItemRegistryTemplate.TryGet(data.itemType, out ItemRegistryEntry entry) && entry.Ctor != null)
             {
-                AbstractPhysicalObject obj = entry.SandboxFactory(self.game.world, pos, entityID);
+                AbstractPhysicalObject obj = entry.Ctor(self.game.world, pos, entityID);
                 self.game.world.GetAbstractRoom(0).AddEntity(obj);
                 return;
             }

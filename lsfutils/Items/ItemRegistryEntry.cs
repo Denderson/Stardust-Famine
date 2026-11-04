@@ -15,7 +15,7 @@ namespace lsfUtils.Items
         public MultiplayerUnlocks.SandboxUnlockID unlockID = MultiplayerUnlocks.SandboxUnlockID.Slugcat;
         public MultiplayerUnlocks.SandboxUnlockID unlockParent = MultiplayerUnlocks.SandboxUnlockID.Slugcat;
 
-        public Func<World, WorldCoordinate, EntityID, AbstractPhysicalObject> SandboxFactory;
+        public Func<World, WorldCoordinate, EntityID, AbstractPhysicalObject> Ctor;
         public Func<World, string, AbstractPhysicalObject, AbstractPhysicalObject> SaveParser;
 
         public Func<Scavenger, PhysicalObject, int> ScavCollectScore;
@@ -37,7 +37,7 @@ namespace lsfUtils.Items
         public static void Register(ItemRegistryEntry entry)
         {
             Entries[entry.Type] = entry;
-            EnsureUnlockHook();
+            CheckUnlocks();
             TryAddUnlock(entry);
         }
 
@@ -69,7 +69,7 @@ namespace lsfUtils.Items
             return null;
         }
 
-        public static void EnsureUnlockHook()
+        public static void CheckUnlocks()
         {
             if (unlockHookApplied) return;
             unlockHookApplied = true;

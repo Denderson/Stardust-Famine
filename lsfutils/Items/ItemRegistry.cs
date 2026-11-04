@@ -65,7 +65,7 @@ public static class ItemRegistry
             iconColor = Colors.PoisonLizardColor,
             unlockID = SandboxUnlockID.PoisonDart,
 
-            SandboxFactory = (world, pos, id) => new PoisonDartAbstract(world, null, pos, id, 1f),
+            Ctor = (world, pos, id) => new PoisonDartAbstract(world, null, pos, id, 1f),
 
             SaveParser = (world, objString, obj) =>
             {
@@ -105,7 +105,7 @@ public static class ItemRegistry
             iconColor = new(0.6f, 0.17f, 0.13f),
             unlockID = SandboxUnlockID.BrownFruit,
 
-            SandboxFactory = (world, pos, id) =>
+            Ctor = (world, pos, id) =>
                 new BrownFruitAbstract(world, pos, id, -1, -1, null) { isConsumed = false },
 
             SaveParser = (world, objString, obj) =>
@@ -123,7 +123,7 @@ public static class ItemRegistry
             iconColor = new Color(1f, 0.4f, 0.3f),
             unlockID = SandboxUnlockID.ExplosiveBoomerang,
 
-            SandboxFactory = (world, pos, id) => new AbstractExplosiveBoomerang(world, pos, id),
+            Ctor = (world, pos, id) => new AbstractExplosiveBoomerang(world, pos, id),
             SaveParser = (world, objString, obj) => new AbstractExplosiveBoomerang(world, obj.pos, obj.ID),
 
             ScavCollectScore = (scav, obj) => 6,
@@ -142,7 +142,7 @@ public static class ItemRegistry
             iconColor = new Color(0.2f, 0.2f, 1f),
             unlockID = SandboxUnlockID.SingularityBoomerang,
 
-            SandboxFactory = (world, pos, id) => new AbstractExplosiveBoomerang(world, pos, id, true),
+            Ctor = (world, pos, id) => new AbstractExplosiveBoomerang(world, pos, id, true),
             SaveParser = (world, objString, obj) => new AbstractExplosiveBoomerang(world, obj.pos, obj.ID, true),
 
             ScavCollectScore = (scav, obj) => 10,
@@ -168,7 +168,7 @@ public static class ItemRegistry
             iconColor = RainWorld.GoldRGB,
             unlockID = SandboxUnlockID.KarmaMask,
 
-            SandboxFactory = (world, pos, id) => new KarmaMaskAbstract(world, pos, id, -1, -1, null) { isConsumed = false },
+            Ctor = (world, pos, id) => new KarmaMaskAbstract(world, pos, id, -1, -1, null) { isConsumed = false },
             SaveParser = (world, objString, obj) => new KarmaMaskAbstract(world, obj.pos, obj.ID, -1, -1, null) { rippleBothSides = true }
         };
 
@@ -183,7 +183,7 @@ public static class ItemRegistry
             iconColor = Color.blue,
             unlockID = SandboxUnlockID.RippleFlower,
 
-            SandboxFactory = (world, pos, id) =>
+            Ctor = (world, pos, id) =>
             {
                 var flower = new RippleFlowerAbstract(world, pos, id, -1, -1, null)
                 {
@@ -224,7 +224,7 @@ public static class ItemRegistry
             iconColor = new Color(0.5f, 0.5f, 0.5f),
             unlockID = SandboxUnlockID.TorchSpear,
 
-            SandboxFactory = (world, pos, id) => new TorchSpearAbstract(world, pos, id),
+            Ctor = (world, pos, id) => new TorchSpearAbstract(world, pos, id),
 
             ScavCollectScore = (scav, obj) => obj is TorchSpear spear ? spear.isLit ? 4 : 3 : 3,
             ScavWeaponPickupScore = (scav, obj) => obj is TorchSpear spear ? spear.isLit ? 4 : 3 : 3
@@ -241,7 +241,7 @@ public static class ItemRegistry
             iconColor = new(0.72f, 0.45f, 0.2f),
             unlockID = SandboxUnlockID.CopperSpear,
 
-            SandboxFactory = (world, pos, id) => new CopperSpearAbstract(world, pos, id),
+            Ctor = (world, pos, id) => new CopperSpearAbstract(world, pos, id),
 
             ScavCollectScore = (scav, obj) => 4,
             ScavWeaponPickupScore = (scav, obj) => 4,
@@ -257,7 +257,7 @@ public static class ItemRegistry
             iconColor = Colors.KnotSpawnColor,
             unlockID = SandboxUnlockID.KnotSpawnV2,
 
-            SandboxFactory = (world, pos, id) => new KnotSpawnV2Abstract(world, pos, id, -1, -1, null) { isConsumed = false },
+            Ctor = (world, pos, id) => new KnotSpawnV2Abstract(world, pos, id, -1, -1, null) { isConsumed = false },
             SaveParser = (world, objString, obj) => new KnotSpawnV2Abstract(world, obj.pos, obj.ID, -1, -1, null) { rippleBothSides = true }
         };
 

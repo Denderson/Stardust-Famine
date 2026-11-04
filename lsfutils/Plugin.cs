@@ -34,6 +34,7 @@ using lsfUtils.DevtoolsObjects.RippleTunnel;
 using lsfUtils.DevtoolsObjects.RippleZone;
 using lsfUtils.DevtoolsObjects.WaveLight;
 using lsfUtils.Items;
+using lsfUtils.Items.BasementKey;
 using lsfUtils.Items.BrownFruit;
 using lsfUtils.Items.ExplosiveBoomerang;
 using lsfUtils.Items.KarmaMask;
@@ -135,6 +136,7 @@ public class Plugin : BaseUnityPlugin
                 ExplosiveBoomerangHooks.ApplyHooks();
                 TorchSpearHooks.ApplyHooks();
                 CopperSpearHooks.ApplyHooks();
+                BasementKeyHooks.ApplyHooks();
             }
 
             // devtools objects
