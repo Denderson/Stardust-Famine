@@ -64,7 +64,7 @@ public static class ScavengerGearParams
         foreach (ScavItem scavItem in GetItems(self.world.region.name, self.world.game).Values)
         {
             if (scavItem.item == null) continue;
-            if (scavItem.faction != null && AbstractCreatureCWT.TryGetData(scav, out var data) && data.faction != scavItem.faction) continue;
+            if ((scavItem.faction != null && scavItem.faction != "any") && AbstractCreatureCWT.TryGetData(scav, out var data) && data.faction != scavItem.faction) continue;
             if (!IsCorrectType(scavItem.type, scav.creatureTemplate.type)) continue;
             if ((int)(UnityEngine.Random.value * 100) >= scavItem.chance) continue;
 
