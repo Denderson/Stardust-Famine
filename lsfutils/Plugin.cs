@@ -40,6 +40,7 @@ using lsfUtils.Items.ExplosiveBoomerang;
 using lsfUtils.Items.KarmaMask;
 using lsfUtils.Items.KnotSpawnV2;
 using lsfUtils.Items.RippleFlower;
+using lsfUtils.Items.Spears;
 using lsfUtils.Items.Spears.CopperSpears;
 using lsfUtils.Items.Spears.TorchSpears;
 using lsfUtils.Mechanics;
@@ -134,6 +135,7 @@ public class Plugin : BaseUnityPlugin
                 DartHooks.ApplyHooks();
                 KarmaMaskHooks.ApplyHooks();
                 ExplosiveBoomerangHooks.ApplyHooks();
+                SpearHooks.ApplyHooks();
                 TorchSpearHooks.ApplyHooks();
                 CopperSpearHooks.ApplyHooks();
                 BasementKeyHooks.ApplyHooks();
@@ -267,14 +269,33 @@ public class Plugin : BaseUnityPlugin
 
         string strItem = itemName.Trim().ToLowerInvariant();
 
-        if (strItem == "spear" || strItem == "explosivespear" || strItem == "electricspear")
+        if (strItem == "spear" || strItem == "explosivespear" || strItem == "electricspear" || strItem == "firespear" || strItem == "poisonspear")
         {
             bool explosive = strItem == "explosivespear";
             bool electric = strItem == "electricspear";
-            Log.LogMessage($"explosive: {explosive}, electric: {electric}");
+            bool fire = strItem == "firespear";
+            bool poison = strItem == "poisonspear";
+            Log.LogMessage($"explosive: {explosive}, electric: {electric}, fire: {fire}, poison: {poison}");
+
+            float hue = 0f;
+            if (fire) hue = Mathf.Lerp(UnityEngine.Random.value, 1f, 0.001f);
             AbstractSpear spear = new AbstractSpear(creature.world, null, creature.pos, creature.world.game.GetNewID(), explosive, electric);
-            if (addToRoom) creature.world.GetAbstractRoom(creature.pos).AddEntity(spear);
-            if (graspIndex > -1) new AbstractPhysicalObject.CreatureGripStick(creature, spear, graspIndex, true);
+            AbstractSpear spearf = new AbstractSpear(creature.world, null, creature.pos, creature.world.game.GetNewID(), explosive, hue);
+            if (poison)
+            {
+                spear.poison = 1f;
+                spear.poisonHue = UnityEngine.Random.value;
+            }
+            if (hue != 0f)
+            {
+                if (addToRoom) creature.world.GetAbstractRoom(creature.pos).AddEntity(spearf);
+                if (graspIndex > -1) new AbstractPhysicalObject.CreatureGripStick(creature, spearf, graspIndex, true);
+            }
+            else
+            {
+                if (addToRoom) creature.world.GetAbstractRoom(creature.pos).AddEntity(spear);
+                if (graspIndex > -1) new AbstractPhysicalObject.CreatureGripStick(creature, spear, graspIndex, true);
+            }
             result = spear;
             return true;
         }

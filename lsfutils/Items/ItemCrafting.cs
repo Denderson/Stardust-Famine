@@ -1,4 +1,5 @@
-﻿using lsfUtils.Items.Spears.TorchSpears;
+﻿using lsfUtils.Items.Spears.CopperSpears;
+using lsfUtils.Items.Spears.TorchSpears;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MoreSlugcats;
@@ -54,6 +55,17 @@ public static class ItemCrafting
                             (abstractPhysicalObject.realizedObject as TorchSpear).Relight(0);
                             return;
                         }
+                    }
+                    else if (abstractPhysicalObject is CopperSpearAbstract)
+                    {
+                        CopperSpear spear = (abstractPhysicalObject as CopperSpearAbstract).realizedObject as CopperSpear;
+                        self.Stun((int)(spear.intensity * 80));
+                        self.room.AddObject(new CreatureSpasmer(self, true, (int)(spear.intensity * 80)));
+                        self.room.PlaySound(SoundID.Zapper_Zap, spear.firstChunk.pos, 1f, 1.5f, abstractPhysicalObject);
+                        self.room.AddObject(new Explosion.ExplosionLight(spear.firstChunk.pos, 40f * spear.intensity, 1f, 8, spear.GetElectricityColor()));
+                        if (spear.intensity > 2f) self.Die();
+                        spear.Discharge();
+                        return;
                     }
                 }
             }

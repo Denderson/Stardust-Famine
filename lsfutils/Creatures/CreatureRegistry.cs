@@ -54,7 +54,7 @@ public static class CreatureRegistry
             roomAttractivenessCategories = [RoomAttractivenessPanel.Category.Lizards],
             RealisedCtor = (abstractCreature, world) => new Lizards.AirplaneLizard.AirplaneLizard(abstractCreature, world),
             AICtor = (creature, world) => new LizardAI(creature, world),
-            Grabability = (player, physicalObject) => Player.ObjectGrabability.CantGrab,
+            //Grabability = (player, physicalObject) => Player.ObjectGrabability.CantGrab,
             StateCtor = (creature) => new LizardState(creature),
             setTemplate = () => LizardTemplate(type),
             setRelationships = () =>
@@ -106,7 +106,7 @@ public static class CreatureRegistry
             roomAttractivenessCategories = [RoomAttractivenessPanel.Category.Lizards],
             RealisedCtor = (abstractCreature, world) => new Lizards.FlameLizard.FlameLizard(abstractCreature, world),
             AICtor = (creature, world) => new LizardAI(creature, world),
-            Grabability = (player, physicalObject) => Player.ObjectGrabability.CantGrab,
+            //Grabability = (player, physicalObject) => Player.ObjectGrabability.CantGrab,
             StateCtor = (creature) => new LizardState(creature),
             setTemplate = () => LizardTemplate(type),
             setRelationships = () =>
@@ -158,7 +158,7 @@ public static class CreatureRegistry
             roomAttractivenessCategories = [RoomAttractivenessPanel.Category.Lizards],
             RealisedCtor = (abstractCreature, world) => new Lizards.MonitorLizard.MonitorLizard(abstractCreature, world),
             AICtor = (creature, world) => new LizardAI(creature, world),
-            Grabability = (player, physicalObject) => Player.ObjectGrabability.CantGrab,
+            //Grabability = (player, physicalObject) => Player.ObjectGrabability.CantGrab,
             StateCtor = (creature) => new LizardState(creature),
             setTemplate = () => LizardTemplate(type),
             setRelationships = () =>
@@ -209,7 +209,7 @@ public static class CreatureRegistry
             roomAttractivenessCategories = [RoomAttractivenessPanel.Category.Lizards],
             RealisedCtor = (abstractCreature, world) => new Lizards.PoisonLizard.PoisonLizard(abstractCreature, world),
             AICtor = (creature, world) => new LizardAI(creature, world),
-            Grabability = (player, physicalObject) => Player.ObjectGrabability.CantGrab,
+            //Grabability = (player, physicalObject) => Player.ObjectGrabability.CantGrab,
             StateCtor = (creature) => new LizardState(creature),
             setTemplate = () => LizardTemplate(type),
             setRelationships = () =>
@@ -260,7 +260,7 @@ public static class CreatureRegistry
             roomAttractivenessCategories = [RoomAttractivenessPanel.Category.Lizards],
             RealisedCtor = (abstractCreature, world) => new Lizards.RaspberryLizard.RaspberryLizard(abstractCreature, world),
             AICtor = (creature, world) => new LizardAI(creature, world),
-            Grabability = (player, physicalObject) => Player.ObjectGrabability.CantGrab,
+            //Grabability = (player, physicalObject) => Player.ObjectGrabability.CantGrab,
             StateCtor = (creature) => new LizardState(creature),
             setTemplate = () => LizardTemplate(type),
             setRelationships = () =>

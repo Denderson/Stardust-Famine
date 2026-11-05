@@ -10,84 +10,14 @@ public static class CopperSpearHooks
 {
     public static void ApplyHooks()
     {
-        On.SaveState.AbstractPhysicalObjectFromString += SaveState_AbstractPhysicalObjectFromString;
-        On.AbstractPhysicalObject.Realize += AbstractPhysicalObject_Realize;
         On.Watcher.LightningMaker.StaticBuildup.GetBestTarget += Watcher_LightningMaker_StaticBuildup_GetBestTarget;
         On.Watcher.LightningMaker.StrikeAOE.ctor += Watcher_LightningMaker_StrikeAOE_ctor;
         On.Watcher.LightningMaker.StrikeAOE.Update += Watcher_LightningMaker_StrikeAOE_Update;
-        On.ShelterDoor.DoorClosed += ShelterDoor_DoorClosed;
         On.AbstractSpear.StuckInWallTick += AbstractSpear_StuckInWallTick;
         On.MoreSlugcats.SingularityBomb.Explode += MoreSlugcats_SingularityBomb_Explode;
         On.ElectricDeath.Update += ElectricDeath_Update;
     }
 
-
-    private static AbstractPhysicalObject SaveState_AbstractPhysicalObjectFromString(On.SaveState.orig_AbstractPhysicalObjectFromString orig, World world, string objString)
-    {
-        AbstractPhysicalObject obj = orig(world, objString);
-
-        if (obj != null && obj.type == AbstractObjectType.CopperSpear)
-        {
-            if (objString.Contains("<BaseA>"))
-            {
-                objString = objString.Replace("<BaseA>", "<oA>");
-            }
-
-            string[] array = System.Text.RegularExpressions.Regex.Split(objString, "<oA>");
-
-            bool explosive = false;
-            if (array.Length > 4) explosive = array[4] == "1";
-
-            float hue = 0f;
-            if (array.Length > 5)
-            {
-                float.TryParse(array[5], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out hue);
-            }
-
-            CopperSpearAbstract copperSpear = new CopperSpearAbstract(world, null, obj.pos, obj.ID, explosive, hue);
-
-            if (array.Length > 3)
-            {
-                int.TryParse(array[3], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out copperSpear.stuckInWallCycles);
-            }
-
-            if (array.Length > 6)
-            {
-                int.TryParse(array[array.Length - 1], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out copperSpear.oxidization);
-            }
-            return copperSpear;
-        }
-        return obj;
-    }
-
-    private static void AbstractPhysicalObject_Realize(On.AbstractPhysicalObject.orig_Realize orig, AbstractPhysicalObject self)
-    {
-        if (self?.type == AbstractObjectType.CopperSpear)
-        {
-            if (self.realizedObject != null) return;
-
-
-            if (self is not CopperSpearAbstract abstractSpear)
-            {
-                abstractSpear = new CopperSpearAbstract(self.world, self.pos, self.ID);
-                AbstractRoom absRoom = self.world.GetAbstractRoom(self.pos);
-                if (absRoom != null)
-                {
-                    for (int i = 0; i < absRoom.entities.Count; i++)
-                    {
-                        if (absRoom.entities[i] == self)
-                        {
-                            absRoom.entities[i] = abstractSpear;
-                            break;
-                        }
-                    }
-                }
-            }
-            self.realizedObject = new CopperSpear(abstractSpear, self.world);
-            return;
-        }
-        orig(self);
-    }
 
     private static Vector2 Watcher_LightningMaker_StaticBuildup_GetBestTarget(On.Watcher.LightningMaker.StaticBuildup.orig_GetBestTarget orig, LightningMaker.StaticBuildup self)
     {
@@ -138,19 +68,6 @@ public static class CopperSpearHooks
         }
     }
 
-    private static void ShelterDoor_DoorClosed(On.ShelterDoor.orig_DoorClosed orig, ShelterDoor self)
-    {
-        for (int i = 0; i < self.room.abstractRoom.entities.Count; i++)
-        {
-            if (self.room.abstractRoom.entities[i] is CopperSpearAbstract cSpearAbs)
-            {
-                //oxidizes copper spears within the current shelter, i don't know how to do it across all shelters
-                (cSpearAbs.realizedObject as CopperSpear).Oxidize();
-                Log.LogMessage("Oxidizing in shelter!");
-            }
-        }
-        orig(self);
-    }
     private static void AbstractSpear_StuckInWallTick(On.AbstractSpear.orig_StuckInWallTick orig, AbstractSpear self, int ticks)
     {
         if (self is CopperSpearAbstract cSpearAbs)

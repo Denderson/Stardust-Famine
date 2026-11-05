@@ -91,10 +91,7 @@ public class CopperSpear : Spear
                         Destroy();
                     }
 
-                    timer = -1;
-                    intensity = 0f;
-                    charges = 0;
-                    struck = false;
+                    Discharge();
                 }
 
                 if (timer % (timer <= secondWarningTime ? warningShockSpeed / 2 : warningShockSpeed) == 0)
@@ -109,14 +106,13 @@ public class CopperSpear : Spear
         {
             //if submerged while charged, instantly discharges underwater
             room.AddObject(new UnderwaterShock(room, null, firstChunk.pos, 10, intensity * 250f, intensity * 2, (mode == Mode.Thrown) ? thrownBy : null, GetElectricityColor()));
-            intensity = 0f;
-            timer = -1;
-            charges = 0;
+            Discharge();
         }
     }
 
     public void Charge(float amount)
     {
+        if (timer < 120) return;
         intensity += amount;
         if (timer == -1) timer = 1320 - (int)(120 * amount);
         else timer = Mathf.Min(timer, (timer + 1320 - (int)(120 * amount)) / (charges + 3));
@@ -132,6 +128,14 @@ public class CopperSpear : Spear
 
         room.PlaySound(SoundID.Zapper_Zap, firstChunk.pos, 1f, 1.5f, abstractSpear);
         room.AddObject(new Spark(firstChunk.pos + Custom.RNV() * (Random.value * 10f), Custom.RNV() * Mathf.Lerp(6f, 18f, Random.value), GetElectricityColor(), null, 4, 18));
+    }
+
+    public void Discharge()
+    {
+        intensity = 0f;
+        timer = -1;
+        charges = 0;
+        struck = false;
     }
 
     public override bool HitSomething(SharedPhysics.CollisionResult result, bool eu)
@@ -182,9 +186,7 @@ public class CopperSpear : Spear
                 Vector2 a = Custom.DegToVec(360f * Random.value);
                 room.AddObject(new MouseSpark(firstChunk.pos + a * 9f, firstChunk.vel + a * (36f * Random.value), 20f, GetElectricityColor()));
             }
-            intensity = 0f;
-            timer = -1;
-            charges = 0;
+            Discharge();
         }
     }
 
@@ -235,6 +237,6 @@ public class CopperSpear : Spear
         //color of sparks and lights for the electricity. green by default, but will be of the color of lightning if it's present in the room
         RoomSettings.RoomEffect effect = room.roomSettings.GetEffect(Watcher.WatcherEnums.RoomEffectType.SKLightningHue);
         RoomSettings.RoomEffect effect2 = room.roomSettings.GetEffect(Watcher.WatcherEnums.RoomEffectType.SKLightning);
-        return Custom.HSL2RGB((effect2 != null) ? (effect != null) ? effect.amount : 0.535f : 1/3f, 1f, 0.85f);
+        return Custom.HSL2RGB((effect != null) ? effect.amount : (effect2 != null) ? 0.535f : 1/3f, 1f, 0.85f);
     }
 }

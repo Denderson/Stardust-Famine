@@ -1,11 +1,7 @@
 ﻿using lsfUtils.CWTs;
-using lsfUtils.Items.Spears.CopperSpears;
 using lsfUtils.Mechanics.Fire;
 using RWCustom;
 using System;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using UnityEngine;
 using Watcher;
 using static lsfUtils.Enums;
@@ -16,13 +12,9 @@ public static class TorchSpearHooks
 {
     public static void ApplyHooks()
     {
-        On.AbstractPhysicalObject.Realize += AbstractPhysicalObject_Realize;
         On.Spear.HitSomething += Spear_HitSomething;
-        On.SaveState.AbstractPhysicalObjectFromString += SaveState_AbstractPhysicalObjectFromString;
-        On.ShelterDoor.DoorClosed += ShelterDoor_DoorClosed;
         On.Watcher.FlameJet.UpdateDamage += Watcher_FlameJet_UpdateDamage;
         On.Smoke.BlackHaze.BigBlackHaze.BlackHazeVisionObscurer.Update += Smoke_BlackHaze_Update_BigBlackHaze_BlackHazeVisionObscurer;
-        On.PhysicalObject.Collide += PhysicalObject_Collide;
         On.PlayerGraphics.ApplyPalette += PlayerGraphics_ApplyPalette;
         On.Boomerang.HitSomething += Boomerang_HitSomething;
         On.Boomerang.ApplyPalette += Boomerang_ApplyPallete;
@@ -37,75 +29,6 @@ public static class TorchSpearHooks
         On.PlayerGraphics.Gown.Color += PlayerGraphics_Gown_Color;
     }
 
-    private static AbstractPhysicalObject SaveState_AbstractPhysicalObjectFromString(On.SaveState.orig_AbstractPhysicalObjectFromString orig, World world, string objString)
-    {
-        AbstractPhysicalObject obj = orig(world, objString);
-
-        if (obj != null && obj.type == AbstractObjectType.TorchSpear)
-        {
-            if (objString.Contains("<BaseA>"))
-            {
-                objString = objString.Replace("<BaseA>", "<oA>");
-            }
-
-            string[] array = System.Text.RegularExpressions.Regex.Split(objString, "<oA>");
-
-            bool explosive = false;
-            if (array.Length > 4) explosive = array[4] == "1";
-
-            float hue = 0f;
-            if (array.Length > 5)
-            {
-                float.TryParse(array[5], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out hue);
-            }
-
-            TorchSpearAbstract torchSpear = new TorchSpearAbstract(world, null, obj.pos, obj.ID, explosive, hue);
-
-            if (array.Length > 3)
-            {
-                int.TryParse(array[3], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out torchSpear.stuckInWallCycles);
-            }
-
-            if (array.Length > 6)
-            {
-                torchSpear.isLit = array[array.Length - 1] == "1";
-            }
-
-            return torchSpear;
-        }
-        return obj;
-    }
-
-    private static void AbstractPhysicalObject_Realize(On.AbstractPhysicalObject.orig_Realize orig, AbstractPhysicalObject self)
-    {
-        if (self.type == AbstractObjectType.TorchSpear)
-        {
-            if (self.realizedObject != null) return;
-
-            TorchSpearAbstract abstractSpear = self as TorchSpearAbstract;
-
-            if (abstractSpear == null)
-            {
-                abstractSpear = new TorchSpearAbstract(self.world, self.pos, self.ID);
-                AbstractRoom absRoom = self.world.GetAbstractRoom(self.pos);
-                if (absRoom != null)
-                {
-                    for (int i = 0; i < absRoom.entities.Count; i++)
-                    {
-                        if (absRoom.entities[i] == self)
-                        {
-                            absRoom.entities[i] = abstractSpear;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            self.realizedObject = new TorchSpear(abstractSpear, self.world);
-            return;
-        }
-        orig(self);
-    }
 
     private static bool Spear_HitSomething(On.Spear.orig_HitSomething orig, Spear self, SharedPhysics.CollisionResult result, bool eu)
     {
@@ -122,7 +45,7 @@ public static class TorchSpearHooks
                         Plugin.Log.LogMessage("burning creature");
                         self.room.AddObject(new FlameEffect(targetCreature, result.chunk, result.onAppendagePos, Math.Min(Math.Max(1500 + torch.clothLife * 100, 800), 1600 + (200 * torch.fireLife - 600))));
                         Vector2 hitPos = result.collisionPoint;
-                        self.room.AddObject(new Spark(hitPos, Custom.RNV() * 5f, new Color(1f, 0.4f, 0.1f), null, 10, 20));
+                        self.room.AddObject(new Spark(hitPos, Custom.RNV() * 5f, torch.GetTorchFireColor(), null, 10, 20));
                     }
                 }
                 else
@@ -132,7 +55,7 @@ public static class TorchSpearHooks
                         Plugin.Log.LogMessage("burning creature (no stick edition)");
                         self.room.AddObject(new FlameEffect(targetCreature, result.chunk, result.onAppendagePos, (Math.Min(Math.Max(1500 + torch.clothLife * 100, 800), 1600) + (200 * torch.fireLife - 600)) / 2));
                         Vector2 hitPos = result.collisionPoint;
-                        self.room.AddObject(new Spark(hitPos, Custom.RNV() * 5f, new Color(1f, 0.4f, 0.1f), null, 10, 20));
+                        self.room.AddObject(new Spark(hitPos, Custom.RNV() * 5f, torch.GetTorchFireColor(), null, 10, 20));
                     }
                 }
                 targetCreature.Violence(
@@ -152,7 +75,7 @@ public static class TorchSpearHooks
                     Plugin.Log.LogMessage("burning object");
                     self.room.AddObject(new FlameEffect(targetObject, result.chunk, result.onAppendagePos, Math.Min(Math.Max(1500 + torch.clothLife * 100, 800), 1600) + (200 * torch.fireLife - 600)));
                     Vector2 hitPos = result.collisionPoint;
-                    self.room.AddObject(new Spark(hitPos, Custom.RNV() * 5f, new Color(1f, 0.4f, 0.1f), null, 10, 20));
+                    self.room.AddObject(new Spark(hitPos, Custom.RNV() * 5f, torch.GetTorchFireColor(), null, 10, 20));
                 }
 
             }
@@ -160,84 +83,7 @@ public static class TorchSpearHooks
         return hitResult;
     }
 
-    private static void PhysicalObject_Collide(On.PhysicalObject.orig_Collide orig, PhysicalObject self, PhysicalObject other, int myChunk, int otherChunk)
-    {
-        orig(self, other, myChunk, otherChunk);
-        if (self?.bodyChunks == null || other?.bodyChunks == null || self.bodyChunks.Count() <= 0 || other.bodyChunks.Count() <= 0) return;
-        if (self.room != other.room || self.abstractPhysicalObject?.rippleLayer != other.abstractPhysicalObject.rippleLayer) return;
-        if (!Custom.DistLess(self.bodyChunks[myChunk].pos, other.bodyChunks[otherChunk].pos, 30 + self.bodyChunks[myChunk].rad + other.bodyChunks[otherChunk].rad)) return;
-        if (self is TorchSpear selfTorch)
-        {
-            if (other is not Creature && other is PhysicalObject otherObject)
-            {
-                if ((!selfTorch.isLit || selfTorch.fireLife < 3) && other is TorchSpear otherTorch && otherTorch.isLit)
-                {
-                    selfTorch.Relight(1);
-                }
-                else if (selfTorch.isLit && PhysicalObjectCWT.TryGetData(otherObject, out var target) && !target.onFire && otherObject.collisionLayer != 1)
-                {
-                    self.room.AddObject(new FlameEffect(otherObject, other.bodyChunks[otherChunk], null, Math.Min(Math.Max(1500 + selfTorch.clothLife * 100, 800), 1600) + (200 * selfTorch.fireLife - 600)));
-                    if (otherObject is not Spear) selfTorch.Damage(1);
-                }
-            }
-        }
-        else if (self is Creature creature1 && CreatureCWT.TryGetData(creature1, out var targetCreature) && !targetCreature.onFire)
-        {
-            if (other is Creature creature2 && CreatureCWT.TryGetData(creature2, out var burnerCreature) && burnerCreature.onFire)
-            {
-                if (burnerCreature.canSpreadFire && UnityEngine.Random.value < (targetCreature.flammability + burnerCreature.flammability + 1) / 10)
-                {
-                    self.room.AddObject(new FlameEffect(creature1, self.bodyChunks[myChunk], null, burnerCreature.fireDuration));
-                    Plugin.Log.LogMessage($"burned {self} for {burnerCreature.fireDuration / 1600f * 40} seconds");
 
-                }
-            }
-            else if (other is PhysicalObject physicalObject && other is not TorchSpear && PhysicalObjectCWT.TryGetData(physicalObject, out var burnerObject) && burnerObject.onFire)
-            {
-                if (burnerObject.canSpreadFire && UnityEngine.Random.value < (targetCreature.flammability + burnerObject.flammability + 1) / 10)
-                {
-                    self.room.AddObject(new FlameEffect(creature1, self.bodyChunks[myChunk], null, 2 * burnerObject.fireDuration / 3));
-                    Plugin.Log.LogMessage($"burned {self} for {burnerObject.fireDuration / 2400f * 40} seconds");
-                }
-
-            }
-        }
-        else if (self is PhysicalObject object1 && PhysicalObjectCWT.TryGetData(object1, out var targetObject) && !targetObject.onFire)
-        {
-            if (other is Creature creature && CreatureCWT.TryGetData(creature, out var burnerCreature) && burnerCreature.onFire)
-            {
-                if (burnerCreature.canSpreadFire && UnityEngine.Random.value < (targetObject.flammability + burnerCreature.flammability + 1) / 10)
-                {
-                    self.room.AddObject(new FlameEffect(object1, self.bodyChunks[myChunk], null, 2 * burnerCreature.fireDuration / 3));
-                    Plugin.Log.LogMessage($"burned {self} for {burnerCreature.fireDuration / 2400f * 40} seconds");
-
-                }
-            }
-            else if (other is PhysicalObject object2 && other is not TorchSpear && PhysicalObjectCWT.TryGetData(object2, out var burnerObject) && burnerObject.onFire)
-            {
-                if (burnerObject.canSpreadFire && UnityEngine.Random.value < (targetObject.flammability + burnerObject.flammability + 1) / 10)
-                {
-                    self.room.AddObject(new FlameEffect(object2, self.bodyChunks[myChunk], null, burnerObject.fireDuration));
-                    Plugin.Log.LogMessage($"burned {self} for {burnerObject.fireDuration / 1600f * 40} seconds");
-
-                }
-
-            }
-        }
-    }
-
-    private static void ShelterDoor_DoorClosed(On.ShelterDoor.orig_DoorClosed orig, ShelterDoor self)
-    {
-        for (int i = 0; i < self.room.abstractRoom.entities.Count; i++)
-        {
-            if (self.room.abstractRoom.entities[i] is CopperSpearAbstract tSpearAbs)
-            {
-                (tSpearAbs.realizedObject as TorchSpear).Extinguish(false);
-                Plugin.Log.LogMessage("Extinguishing in shelter!");
-            }
-        }
-        orig(self);
-    }
     private static void Watcher_FlameJet_UpdateDamage(On.Watcher.FlameJet.orig_UpdateDamage orig, FlameJet self)
     {
         orig(self);

@@ -477,7 +477,7 @@ namespace lsfUtils.Items.Spears.TorchSpears
                 }
             }
         }
-        Color GetTorchFireColor()
+        public Color GetTorchFireColor()
         {
             if (CWTs.RegionCWT.TryGetCustomRegionParams(this.room?.world?.region, out var customRegionParams))
             {
