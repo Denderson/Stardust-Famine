@@ -102,10 +102,14 @@ public static class ParamFile
             if (line.Length == 0) continue;
 
             int splitIndex = line.IndexOf('=');
-            if (splitIndex < 0 || !ParamKey.TryParse(line.Substring(0, splitIndex), out ParamKey? key))
+            if (splitIndex < 0)
             {
-                Log.LogWarning($"Malformed line! {rawLine}");
+                Log.LogMessage($"No = found in a line {rawLine}, skipping...");
                 continue;
+            }
+            if (!ParamKey.TryParse(line.Substring(0, splitIndex), out ParamKey? key))
+            {
+                Log.LogMessage($"Cannot parse line {rawLine}, skipping...");
             }
 
             lines.Add((key.Value, line.Substring(splitIndex + 1).Trim()));

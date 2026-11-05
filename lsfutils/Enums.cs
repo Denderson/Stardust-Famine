@@ -16,6 +16,7 @@ public class Enums
         SandboxUnlockID.RegisterValues();
         AbstractObjectType.RegisterValues();
         CreatureCommunityID.RegisterValues();
+        SlugcatStatsNames.RegisterValues();
     }
     
     public static void UnregisterAll()
@@ -25,6 +26,7 @@ public class Enums
         SandboxUnlockID.UnregisterValues();
         AbstractObjectType.UnregisterValues();
         CreatureCommunityID.UnregisterValues();
+        SlugcatStatsNames.UnregisterValues();
     }
     
     public enum DartType { Default, Poison, Quill, Sharpnel }
@@ -46,7 +48,23 @@ public class Enums
         public static Color ClimbGrubColor = new(1f, 0.6f, 0.8f);
         public static Color KnotSpawnColor = RainWorld.SaturatedGold;
     }
-    
+
+    public class SlugcatStatsNames
+    {
+        public static SlugcatStats.Name ____ = new(nameof(____), true);
+
+        public static void RegisterValues()
+        {
+            ____ ??= new(nameof(____), true);
+        }
+
+        public static void UnregisterValues()
+        {
+            ____?.Unregister();
+            ____ = null;
+        }
+    }
+
     public class EffectTypes
     {
         public static RoomSettings.RoomEffect.Type EvilWater = new(nameof(EvilWater), true);

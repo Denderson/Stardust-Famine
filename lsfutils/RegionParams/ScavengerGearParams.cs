@@ -68,9 +68,8 @@ public static class ScavengerGearParams
             if (!IsCorrectType(scavItem.type, scav.creatureTemplate.type)) continue;
             if ((int)(UnityEngine.Random.value * 100) >= scavItem.chance) continue;
 
-            string strItem = scavItem.item.Trim().ToLowerInvariant();
-
-            if (strItem == "novanilla")
+            string strType = scavItem.item.Trim().ToLowerInvariant();
+            if (strType == "novanilla")
             {
                 skipVanilla = true;
                 Log.LogMessage($"Vanilla gear removed from {scav.creatureTemplate.type} with {scavItem.chance}% chance.");
@@ -79,30 +78,14 @@ public static class ScavengerGearParams
 
             if (num < 0) continue;
 
-            if (strItem == "spear" || strItem == "explosivespear" || strItem == "electricspear")
+            if (strType.Contains("boomerang"))
             {
-                bool explosive = strItem == "explosivespear";
-                bool electric = strItem == "electricspear";
-                if (TryAddSpear(scav, num, explosive, electric)) num--;
-
-                Log.LogMessage($"Trying to add {scavItem.item} to {scav.creatureTemplate.type} with {scavItem.chance}% chance.");
-                Log.LogMessage($"explosive: {explosive}, electric: {electric}");
-                continue;
+                overrideBoomrang = true;
+                Log.LogMessage("Adding (custom) boomerang and skipping the usual boomerang");
             }
 
-            AbstractPhysicalObject.AbstractObjectType item = new(scavItem.item, false);
-            if (item.Index == -1)
-            {
-                Log.LogWarning($"Unknown item! {scavItem.item}");
-                continue;
-            }
-
-            if (TryAddItem(scav, item, num))
-            {
-                num--;
-                if (item == WatcherEnums.AbstractObjectType.Boomerang || item == Enums.AbstractObjectType.SingularityBoomerang || item == Enums.AbstractObjectType.ExplosiveBoomerang) overrideBoomrang = true;
-            }
-            Log.LogMessage($"Trying to add {scavItem.item} item to {scav.creatureTemplate.type} with {scavItem.chance}% chance.");
+            Log.LogMessage($"Trying to add {scavItem.item} to {scav.creatureTemplate.type} with {scavItem.chance}% chance.");
+            if (TryAddItem(scav, scavItem.item, num, true, out _)) num--;
         }
 
         return num;
@@ -214,43 +197,5 @@ public static class ScavengerGearParams
         if (ModManager.Watcher && typeString.ToLower().Contains("disciple") && type == WatcherEnums.CreatureTemplateType.ScavengerDisciple) return true;
         if (!(typeString.ToLower().Contains("base") || typeString.ToLower().Contains("basic") || typeString.ToLower().Contains("normal") || typeString.ToLower().Contains("elite") || typeString.ToLower().Contains("templar") || typeString.ToLower().Contains("disciple"))) return true;
         return false;
-    }
-
-    public static bool TryAddItem(AbstractCreature scav, AbstractPhysicalObject.AbstractObjectType itemType, int num)
-    {
-        AbstractPhysicalObject abstractPhysicalObject = null;
-
-        if (ItemRegistryTemplate.TryGet(itemType, out var item))
-        {
-            abstractPhysicalObject = item.Ctor(scav.world, scav.pos, scav.world.game.GetNewID());
-        }
-        else if (itemType == AbstractPhysicalObject.AbstractObjectType.GraffitiBomb)
-        {
-            abstractPhysicalObject = new GraffitiBomb.AbstractGraffitiBomb(scav.world, null, scav.pos, scav.world.game.GetNewID(), -1, -1, null);
-        }
-        else if (itemType == AbstractPhysicalObject.AbstractObjectType.DataPearl)
-        {
-            abstractPhysicalObject = new DataPearl.AbstractDataPearl(scav.world, itemType, null, scav.pos, scav.world.game.GetNewID(), -1, -1, null, default);
-        }
-        else if (AbstractConsumable.IsTypeConsumable(itemType))
-        {
-            abstractPhysicalObject = new AbstractConsumable(scav.world, itemType, null, scav.pos, scav.world.game.GetNewID(), -1, -1, null);
-        }
-        else
-        {
-            abstractPhysicalObject = new AbstractPhysicalObject(scav.world, itemType, null, scav.pos, scav.world.game.GetNewID());
-        }
-
-        scav.world.GetAbstractRoom(scav.pos).AddEntity(abstractPhysicalObject);
-        new AbstractPhysicalObject.CreatureGripStick(scav, abstractPhysicalObject, num, carry: true);
-        return true;
-    }
-
-    public static bool TryAddSpear(AbstractCreature scav, int num, bool explosive, bool electric)
-    {
-        AbstractSpear spear = new AbstractSpear(scav.world, null, scav.pos, scav.world.game.GetNewID(), explosive, electric);
-        scav.world.GetAbstractRoom(scav.pos).AddEntity(spear);
-        new AbstractPhysicalObject.CreatureGripStick(scav, spear, num, carry: true);
-        return true;
     }
 }

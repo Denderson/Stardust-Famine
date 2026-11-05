@@ -8,11 +8,11 @@ public class KnotSpawnV2 : PhysicalObject
 {
     private static readonly int maxKarma = 6;
 
-    private static readonly float tailSegmentSize = 20f;
+    //private static readonly float tailSegmentSize = 20f;
 
     public int Karma;
 
-    private (Vector2 pos, Vector2 lastPos)[] tail;
+    //private (Vector2 pos, Vector2 lastPos)[] tail;
 
     public KnotSpawnV2(AbstractPhysicalObject abstractPhysicalObject) : base(abstractPhysicalObject)
     {

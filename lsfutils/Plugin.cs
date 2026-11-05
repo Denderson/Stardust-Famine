@@ -260,6 +260,61 @@ public class Plugin : BaseUnityPlugin
         Log.LogMessage("Finished loading params!");
     }
 
+    public static bool TryAddItem(AbstractCreature creature, string itemName, int graspIndex, bool addToRoom, out AbstractPhysicalObject result)
+    {
+        result = null;
+        if (string.IsNullOrWhiteSpace(itemName)) return false;
+
+        string strItem = itemName.Trim().ToLowerInvariant();
+
+        if (strItem == "spear" || strItem == "explosivespear" || strItem == "electricspear")
+        {
+            bool explosive = strItem == "explosivespear";
+            bool electric = strItem == "electricspear";
+            Log.LogMessage($"explosive: {explosive}, electric: {electric}");
+            AbstractSpear spear = new AbstractSpear(creature.world, null, creature.pos, creature.world.game.GetNewID(), explosive, electric);
+            if (addToRoom) creature.world.GetAbstractRoom(creature.pos).AddEntity(spear);
+            if (graspIndex > -1) new AbstractPhysicalObject.CreatureGripStick(creature, spear, graspIndex, true);
+            result = spear;
+            return true;
+        }
+
+        AbstractPhysicalObject.AbstractObjectType item = new(itemName.Trim(), false);
+        if (item.Index == -1)
+        {
+            Log.LogWarning($"Unknown item! {itemName}");
+            return false;
+        }
+
+        AbstractPhysicalObject abstractPhysicalObject = null;
+
+        if (ItemRegistryTemplate.TryGet(item, out var lsfItem))
+        {
+            abstractPhysicalObject = lsfItem.Ctor(creature.world, creature.pos, creature.world.game.GetNewID());
+        }
+        else if (item == AbstractPhysicalObject.AbstractObjectType.GraffitiBomb)
+        {
+            abstractPhysicalObject = new GraffitiBomb.AbstractGraffitiBomb(creature.world, null, creature.pos, creature.world.game.GetNewID(), -1, -1, null);
+        }
+        else if (item == AbstractPhysicalObject.AbstractObjectType.DataPearl)
+        {
+            abstractPhysicalObject = new DataPearl.AbstractDataPearl(creature.world, item, null, creature.pos, creature.world.game.GetNewID(), -1, -1, null, DataPearl.AbstractDataPearl.DataPearlType.Misc);
+        }
+        else if (AbstractConsumable.IsTypeConsumable(item))
+        {
+            abstractPhysicalObject = new AbstractConsumable(creature.world, item, null, creature.pos, creature.world.game.GetNewID(), -1, -1, null);
+        }
+        else
+        {
+            abstractPhysicalObject = new AbstractPhysicalObject(creature.world, item, null, creature.pos, creature.world.game.GetNewID());
+        }
+
+        if (addToRoom) creature.world.GetAbstractRoom(creature.pos).AddEntity(abstractPhysicalObject);
+        if (graspIndex > -1) new AbstractPhysicalObject.CreatureGripStick(creature, abstractPhysicalObject, graspIndex, true);
+        result = abstractPhysicalObject;
+        return true;
+    }
+
     public static bool GetNameFromAnywhere(out SlugcatStats.Name name)
     {
         name = null;
