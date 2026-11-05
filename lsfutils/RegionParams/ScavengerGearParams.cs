@@ -61,7 +61,7 @@ public static class ScavengerGearParams
         if (self?.world?.region == null) return num;
         if (self.parent is not AbstractCreature scav) return num;
 
-        foreach (ScavItem scavItem in GetItems(self.world.region.name, self.world.game).Values)
+        foreach (ScavItem scavItem in GetItems(self.world.region.name, self.world.game))
         {
             if (scavItem.item == null) continue;
             if ((scavItem.faction != null && scavItem.faction != "any") && AbstractCreatureCWT.TryGetData(scav, out var data) && data.faction != scavItem.faction) continue;
@@ -176,14 +176,20 @@ public static class ScavengerGearParams
         return items;
     }
 
-    public static Dictionary<string, ScavItem> GetItems(string region, RainWorldGame game)
+    public static List<ScavItem> GetItems(string region, RainWorldGame game)
     {
         Dictionary<string, ScavItem> items = [];
-        foreach (List<ScavItem> next in Table.Get(region, game))
+        foreach (List<ScavItem> paramValue in Table.Get(region, game))
         {
-            foreach (ScavItem scavItem in next) items[scavItem.item] = scavItem;
+            foreach (ScavItem scavItem in paramValue)
+            {
+                string itemID = scavItem.item + '-' + scavItem.faction + '-' + scavItem.type; 
+                // doesnt matter what ID system is, using foreach anyways
+                // in case two IDs are the same, one overwrites another
+                items[itemID] = scavItem;
+            }
         }
-        return items;
+        return new List<ScavItem>(items.Values);
     }
 
     public static bool IsCorrectType(string typeString, CreatureTemplate.Type type)

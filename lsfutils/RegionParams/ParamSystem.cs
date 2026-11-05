@@ -23,7 +23,6 @@ public readonly struct ParamKey
     }
 
     public bool HasTimeline => WorldTimeline != null;
-    public int ConditionCount => Conditions.Count;
 
     public ParamKey(string name, string timeline, List<string> conditions)
     {
@@ -138,7 +137,7 @@ public class ParamTable<T>
     {
         if (a.HasTimeline && !b.HasTimeline) return true;
         if (!a.HasTimeline && b.HasTimeline) return false;
-        return a.ConditionCount > b.ConditionCount;
+        return a.Conditions.Count > b.Conditions.Count;
     }
 
     public List<T> Get(string name, RainWorldGame game, SlugcatStats.Timeline timeline = null)
