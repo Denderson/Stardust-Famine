@@ -314,6 +314,8 @@ public class Plugin : BaseUnityPlugin
         Futile.atlasManager.LoadImage("atlases/Bumper1");
         Futile.atlasManager.LoadImage("atlases/Bumper2");
 
+        Futile.atlasManager.LoadImage("atlases/egg");
+
         Futile.atlasManager.LoadAtlas("atlases/lsfLizardStuff");
         Futile.atlasManager.LoadAtlas("atlases/corrodedskylines");
 

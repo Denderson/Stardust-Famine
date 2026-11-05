@@ -33,6 +33,12 @@ public static class ScavengerGearParams
     public static readonly ParamTable<List<ScavItem>> Table = new();
 
     public static readonly string ConfigPath = "world/scavGear.txt";
+
+    public static bool skipVanilla;
+    public static bool overrideBoomrang;
+    public static bool SkipVanilla() => skipVanilla;
+    public static bool HasCustomBoomerang() => overrideBoomrang;
+
     public static void CheckFile()
     {
         if (!File.Exists(RWCustom.Custom.RootFolderDirectory() + Path.DirectorySeparatorChar.ToString() + "world/scavGear.txt"))
@@ -42,8 +48,6 @@ public static class ScavengerGearParams
         else Log.LogMessage("File \"world/scavGear.txt\" already exists");
     }
 
-    public static readonly HashSet<string> unknownItems = [];
-
     public static void ApplyHooks()
     {
         IL.ScavengerAbstractAI.InitGearUp += ScavengerAbstractAI_InitGearUp;
@@ -51,45 +55,64 @@ public static class ScavengerGearParams
 
     public static int AddItems(ScavengerAbstractAI self, int num)
     {
+        skipVanilla = false;
+        overrideBoomrang = false;
+
         if (self?.world?.region == null) return num;
         if (self.parent is not AbstractCreature scav) return num;
 
         foreach (ScavItem scavItem in GetItems(self.world.region.name, self.world.game).Values)
         {
-            if (num < 0) return num;
             if (scavItem.item == null) continue;
             if (scavItem.faction != null && AbstractCreatureCWT.TryGetData(scav, out var data) && data.faction != scavItem.faction) continue;
             if (!IsCorrectType(scavItem.type, scav.creatureTemplate.type)) continue;
             if ((int)(UnityEngine.Random.value * 100) >= scavItem.chance) continue;
 
-            string strType = scavItem.type.Trim().ToLowerInvariant();
-            if (strType.Contains("spear"))
-            {
-                bool explosive = strType.Contains("explo");
-                bool electric = strType.Contains("elec");
-                if (TryAddSpearToScav(scav, num, explosive, electric)) num--;
+            string strItem = scavItem.item.Trim().ToLowerInvariant();
 
-                Log.LogMessage($"Attempting to add {scavItem.item} spear to {scav.creatureTemplate.type} with {scavItem.chance}% chance.");
+            if (strItem == "novanilla")
+            {
+                skipVanilla = true;
+                Log.LogMessage($"Vanilla gear removed from {scav.creatureTemplate.type} with {scavItem.chance}% chance.");
+                continue;
+            }
+
+            if (num < 0) continue;
+
+            if (strItem == "spear" || strItem == "explosivespear" || strItem == "electricspear")
+            {
+                bool explosive = strItem == "explosivespear";
+                bool electric = strItem == "electricspear";
+                if (TryAddSpear(scav, num, explosive, electric)) num--;
+
+                Log.LogMessage($"Trying to add {scavItem.item} to {scav.creatureTemplate.type} with {scavItem.chance}% chance.");
+                Log.LogMessage($"explosive: {explosive}, electric: {electric}");
                 continue;
             }
 
             AbstractPhysicalObject.AbstractObjectType item = new(scavItem.item, false);
             if (item.Index == -1)
             {
-                if (unknownItems.Add(scavItem.item)) Log.LogWarning($"Unknown item! {scavItem.item}");
+                Log.LogWarning($"Unknown item! {scavItem.item}");
                 continue;
             }
-            if (TryAddItemToScav(scav, item, num)) num--;
-            Log.LogMessage($"Attempting to add {scavItem.item} item to {scav.creatureTemplate.type} with {scavItem.chance}% chance.");
+
+            if (TryAddItem(scav, item, num))
+            {
+                num--;
+                if (item == WatcherEnums.AbstractObjectType.Boomerang || item == Enums.AbstractObjectType.SingularityBoomerang || item == Enums.AbstractObjectType.ExplosiveBoomerang) overrideBoomrang = true;
+            }
+            Log.LogMessage($"Trying to add {scavItem.item} item to {scav.creatureTemplate.type} with {scavItem.chance}% chance.");
         }
+
         return num;
     }
 
     private static void ScavengerAbstractAI_InitGearUp(ILContext il)
     {
         var c = new ILCursor(il);
+        ILLabel skipBoomerang = null;
 
-        // directly after flag2 = false; line
         if (!c.TryGotoNext(MoveType.After,
             x => x.MatchLdcI4(0),
             x => x.MatchStloc(5)))
@@ -98,24 +121,42 @@ public static class ScavengerGearParams
             return;
         }
 
-        // get num on the stack
-        var numVar = il.Body.Variables[0];
+        var endCursor = new ILCursor(il);
+        if (!endCursor.TryGotoNext(MoveType.Before,
+            x => x.MatchLdloc(3),
+            x => x.MatchBrfalse(out _)))
+        {
+            Log.LogMessage("if (flag) not found!");
+            return;
+        }
+        ILLabel skipEverything = endCursor.MarkLabel();
 
-        // push arguments in order you want them in the method
-        c.Emit(OpCodes.Ldarg_0); // self
-        c.Emit(OpCodes.Ldloc, numVar); // num
+        var num = il.Body.Variables[0];
 
-        // call the method and pop both arguments
+        c.Emit(OpCodes.Ldarg_0);
+        c.Emit(OpCodes.Ldloc, num);
         c.Emit(OpCodes.Call, typeof(ScavengerGearParams).GetMethod(nameof(AddItems)));
+        c.Emit(OpCodes.Stloc, num);
 
-        // turn num into the method result
-        c.Emit(OpCodes.Stloc, numVar);
+        c.Emit(OpCodes.Call, typeof(ScavengerGearParams).GetMethod(nameof(SkipVanilla)));
+        c.Emit(OpCodes.Brtrue, skipEverything);
+
+        if (!c.TryGotoNext(MoveType.After,
+            x => x.MatchLdloc(0),
+            x => x.MatchLdcI4(0),
+            x => x.MatchBle(out skipBoomerang)))
+        {
+            Log.LogMessage("boomerangs num > 0 check not found!");
+            return;
+        }
+
+        c.Emit(OpCodes.Call, typeof(ScavengerGearParams).GetMethod(nameof(HasCustomBoomerang)));
+        c.Emit(OpCodes.Brtrue, skipBoomerang);
     }
 
     public static void LoadParams()
     {
         Table.Clear();
-        unknownItems.Clear();
         foreach ((ParamKey key, string value) in ParamFile.Read(ConfigPath))
         {
             List<ScavItem> items = ParseItems(value);
@@ -175,7 +216,7 @@ public static class ScavengerGearParams
         return false;
     }
 
-    public static bool TryAddItemToScav(AbstractCreature scav, AbstractPhysicalObject.AbstractObjectType itemType, int num)
+    public static bool TryAddItem(AbstractCreature scav, AbstractPhysicalObject.AbstractObjectType itemType, int num)
     {
         AbstractPhysicalObject abstractPhysicalObject = null;
 
@@ -205,7 +246,7 @@ public static class ScavengerGearParams
         return true;
     }
 
-    public static bool TryAddSpearToScav(AbstractCreature scav, int num, bool explosive, bool electric)
+    public static bool TryAddSpear(AbstractCreature scav, int num, bool explosive, bool electric)
     {
         AbstractSpear spear = new AbstractSpear(scav.world, null, scav.pos, scav.world.game.GetNewID(), explosive, electric);
         scav.world.GetAbstractRoom(scav.pos).AddEntity(spear);

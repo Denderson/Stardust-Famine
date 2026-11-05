@@ -68,7 +68,7 @@ public class Egg : PlayerCarryableItem, IDrawable
     public void InitiateSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
     {
         sLeaser.sprites = new FSprite[1];
-        sLeaser.sprites[0] = new FSprite("eggSpriteTodo");
+        sLeaser.sprites[0] = new FSprite("egg");
         AddToContainer(sLeaser, rCam, null);
     }
 
