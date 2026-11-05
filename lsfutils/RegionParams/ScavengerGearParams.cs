@@ -64,7 +64,7 @@ public static class ScavengerGearParams
         foreach (ScavItem scavItem in GetItems(self.world.region.name, self.world.game).Values)
         {
             if (scavItem.item == null) continue;
-            if (scavItem.faction != null && AbstractCreatureCWT.TryGetData(scav, out var data) && data.faction != scavItem.faction) continue;
+            if ((scavItem.faction != null && scavItem.faction != "any") && AbstractCreatureCWT.TryGetData(scav, out var data) && data.faction != scavItem.faction) continue;
             if (!IsCorrectType(scavItem.type, scav.creatureTemplate.type)) continue;
             if ((int)(UnityEngine.Random.value * 100) >= scavItem.chance) continue;
 
@@ -79,14 +79,16 @@ public static class ScavengerGearParams
 
             if (num < 0) continue;
 
-            if (strItem == "spear" || strItem == "explosivespear" || strItem == "electricspear")
+            if (strItem == "spear" || strItem == "explosivespear" || strItem == "electricspear" || strItem == "firespear" || strItem == "poisonspear")
             {
                 bool explosive = strItem == "explosivespear";
-                bool electric = strItem == "electricspear";
-                if (TryAddSpear(scav, num, explosive, electric)) num--;
+                bool electric = (ModManager.DLCShared && strItem == "electricspear");
+                bool fire = (ModManager.MSC && strItem == "firespear");
+                bool poison = (ModManager.Watcher && strItem == "poisonspear");
+                if (TryAddSpear(scav, num, explosive, electric, fire, poison)) num--;
 
                 Log.LogMessage($"Trying to add {scavItem.item} to {scav.creatureTemplate.type} with {scavItem.chance}% chance.");
-                Log.LogMessage($"explosive: {explosive}, electric: {electric}");
+                Log.LogMessage($"explosive: {explosive}, electric: {electric}, fire: {fire}, poison: {poison}");
                 continue;
             }
 
@@ -246,11 +248,27 @@ public static class ScavengerGearParams
         return true;
     }
 
-    public static bool TryAddSpear(AbstractCreature scav, int num, bool explosive, bool electric)
+    public static bool TryAddSpear(AbstractCreature scav, int num, bool explosive, bool electric, bool fire, bool poison)
     {
+        float hue = 0f;
+        if (fire) hue = UnityEngine.Mathf.Lerp(UnityEngine.Random.value, 1f, 0.001f);
         AbstractSpear spear = new AbstractSpear(scav.world, null, scav.pos, scav.world.game.GetNewID(), explosive, electric);
-        scav.world.GetAbstractRoom(scav.pos).AddEntity(spear);
-        new AbstractPhysicalObject.CreatureGripStick(scav, spear, num, carry: true);
+        AbstractSpear spearf = new AbstractSpear(scav.world, null, scav.pos, scav.world.game.GetNewID(), explosive, hue);
+        if (poison)
+        {
+            spear.poison = 1f;
+            spear.poisonHue = UnityEngine.Random.value;
+        }
+        if (hue != 0f)
+        {
+            scav.world.GetAbstractRoom(scav.pos).AddEntity(spearf);
+            new AbstractPhysicalObject.CreatureGripStick(scav, spearf, num, carry: true);
+        }
+        else
+        {
+            scav.world.GetAbstractRoom(scav.pos).AddEntity(spear);
+            new AbstractPhysicalObject.CreatureGripStick(scav, spear, num, carry: true);
+        }
         return true;
     }
 }
