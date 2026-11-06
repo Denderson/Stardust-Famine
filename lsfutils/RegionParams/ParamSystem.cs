@@ -10,7 +10,7 @@ namespace lsfUtils.RegionParams;
 public readonly struct ParamKey
 {
     public readonly string RegionName;
-    public readonly string WorldTimeline;
+    public readonly List<string> WorldTimelines;
     public readonly List<string> Conditions;
 
     public static void CreateFile(string path)
@@ -22,12 +22,18 @@ public readonly struct ParamKey
         }
     }
 
-    public bool HasTimeline => WorldTimeline != null;
+    public bool HasTimeline => WorldTimelines != null;
 
-    public ParamKey(string name, string timeline, List<string> conditions)
+    public ParamKey(string name, List<string> timelines, List<string> conditions)
     {
         RegionName = Normalise(name);
-        WorldTimeline = Normalise(timeline);
+        WorldTimelines = new List<string>();
+        foreach (string timeline in timelines)
+        {
+            string normalised = Normalise(timeline);
+            if (normalised != null) WorldTimelines.Add(normalised);
+        }
+
         Conditions = new List<string>();
         foreach (string condition in conditions)
         {
@@ -47,17 +53,25 @@ public readonly struct ParamKey
         key = null;
         if (string.IsNullOrWhiteSpace(str)) return false;
 
-        string[] parts = str.Split(',');
-        string name = Normalise(parts[0]);
-        if (name == null || name.Length <= 0) return false;
-
-        string timeline = null;
-        if (parts.Length >= 2) timeline = parts[1];
-
+        List<string> timelines = [];
         List<string> conditions = [];
-        for (int i = 2; i < parts.Length; i++) conditions.Add(parts[i]);
+        if (str[0] == '(' && str.Contains(')'))
+        {
+            string timelinePart = str.Substring(1, str.IndexOf(")") - 1);
+            string[] timelineParts = timelinePart.Split(',');
+            for (int i = 0; i < timelineParts.Length; i++) timelines.Add(timelineParts[i]);
+            str = str.Substring(str.IndexOf(")") + 1);
+        }
+        if (str[0] == '{' && str.Contains('}'))
+        {
+            string conditionPart = str.Substring(1, str.IndexOf("}") - 1);
+            string[] conditionParts = conditionPart.Split(',');
+            for (int i = 0; i < conditionParts.Length; i++) conditions.Add(conditionParts[i]);
+            str = str.Substring(str.IndexOf("}") + 1);
+        }
 
-        key = new ParamKey(name, timeline, conditions);
+        string name = Normalise(str);
+        key = new ParamKey(name, timelines, conditions);
         return true;
     }
 
@@ -67,7 +81,48 @@ public readonly struct ParamKey
         if (timeline != null) timelineString = timeline.ToString().ToLowerInvariant().Trim();
         if (game != null && timeline == null) timelineString = game?.GetStorySession?.saveState?.currentTimelinePosition?.value?.Trim().ToLowerInvariant();
 
-        if (WorldTimeline != null && WorldTimeline != timelineString) return false;
+        if (WorldTimelines != null && WorldTimelines.Count > 0)
+        {
+            bool flag = false;
+            bool flag2 = false;
+            foreach (string worldTimeline in WorldTimelines)
+            {
+                string minusTimeline = null;
+                if (worldTimeline.StartsWith("x-"))
+                {
+                    flag2 = true;
+                    minusTimeline = worldTimeline.Substring(2);
+                }
+                if (string.IsNullOrEmpty(worldTimeline)) return flag2;
+            //this part requires converting a string to a slugcat id. i've got no clue how so if anyone does go for it it'd be really cool and nice and awesome
+                //bool flag3 = false;
+                //bool flag4 = false;
+                //string compareTimeline;
+
+                /*if (worldTimeline.StartsWith("before-"))
+                {
+                    flag3 = true;
+                    compareTimeline = worldTimeline.Substring(worldTimeline.IndexOf("-") + 1);
+                }
+                else if (worldTimeline.StartsWith("after-"))
+                {
+                    flag4 = true;
+                    compareTimeline = worldTimeline.Substring(worldTimeline.IndexOf("-") + 1);
+                }
+
+                if (flag3)
+                {
+                    if (SlugcatStats.AtOrBeforeTimeline(timelineString, compareTimeline)) flag = true;
+                }
+                if (flag4)
+                {
+                    if (SlugcatStats.AtOrAfterTimeline(timelineString, compareTimeline)) flag = true;
+                }*/
+
+                if (worldTimeline == timelineString || minusTimeline == timelineString) flag = true;
+            }
+            if (flag == flag2) return false;
+        }
 
         if (Conditions != null && Conditions.Count > 0)
         {
