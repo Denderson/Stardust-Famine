@@ -31,7 +31,7 @@ public readonly struct ParamKey
         Conditions = new List<string>();
         foreach (string condition in conditions)
         {
-            string normalised = Normalise(condition);
+            string normalised = string.IsNullOrWhiteSpace(condition) ? null : condition.Trim();
             if (normalised != null) Conditions.Add(normalised);
         }
     }
@@ -75,7 +75,7 @@ public readonly struct ParamKey
             {
                 if (string.IsNullOrEmpty(condition)) continue;
                 if (game == null) Log.LogMessage($"Game is null when condition {condition} is checked, skipping it!");
-                if (LSFConditions(condition, game) == false) return false;
+                if (WorldLoader.Preprocessing.PreprocessCustomConditions(condition, game) == false) return false;
             }
         }
 
