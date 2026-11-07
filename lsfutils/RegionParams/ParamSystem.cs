@@ -5,6 +5,7 @@ using System.Linq;
 using static lsfUtils.Plugin;
 using static lsfUtils.Mechanics.ConditionalLogic;
 using RWCustom;
+using UnityEngine;
 
 namespace lsfUtils.RegionParams;
 
@@ -33,7 +34,7 @@ public readonly struct ParamKey
         WorldTimelines = new List<string>();
         foreach (string timeline in timelines)
         {
-            string normalised = Normalise(timeline);
+            string normalised = string.IsNullOrWhiteSpace(timeline) ? null : timeline.Trim();
             if (normalised != null) WorldTimelines.Add(normalised);
         }
 
@@ -91,8 +92,10 @@ public readonly struct ParamKey
         }
 
         string timelineString = null; 
-        if (timeline != null) timelineString = timeline.ToString().ToLowerInvariant().Trim();
-        if (game != null && timeline == null) timelineString = game?.GetStorySession?.saveState?.currentTimelinePosition?.value?.Trim().ToLowerInvariant();
+        if (timeline != null) timelineString = timeline.ToString().Trim();
+        if (game != null && timeline == null) timelineString = game?.GetStorySession?.saveState?.currentTimelinePosition?.value?.Trim();
+        SlugcatStats.Timeline timeline1 = new(timelineString, false);
+        timelineString = timelineString.ToLowerInvariant();
 
         if (WorldTimelines != null && WorldTimelines.Count > 0)
         {
@@ -103,35 +106,59 @@ public readonly struct ParamKey
                 if (string.IsNullOrEmpty(str)) continue;
 
                 string worldTimeline = str.Trim();
-                if (worldTimeline.StartsWith("x-"))
+                if (worldTimeline.ToLower().StartsWith("x-"))
                 {
+                    //format example: (X-White)
                     reverse = true;
                     worldTimeline = worldTimeline.Substring(2);
                 }
                 if (string.IsNullOrEmpty(worldTimeline)) continue;
 
-                if (worldTimeline.StartsWith("before-"))
+                if (worldTimeline.ToLower().StartsWith("before-"))
                 {
-                    Log.LogMessage($"Before timeline: {worldTimeline}");
-                    SlugcatStats.Timeline compareTimeline = new(worldTimeline.Trim().Substring(worldTimeline.IndexOf("-") + 1), false);
+                    //format example: (Before-White)
+                    string beforeTimeline = worldTimeline.Substring(worldTimeline.IndexOf("-") + 1);
+                    Log.LogMessage($"Before timeline: {beforeTimeline}");
+                    SlugcatStats.Timeline compareTimeline = new(beforeTimeline, false);
                     if (compareTimeline.Index == -1)
                     {
-                        Log.LogWarning($"Unknown timeline! {worldTimeline}");
+                        Log.LogWarning($"Unknown timeline! {beforeTimeline}");
                         continue;
                     }
-                    if (SlugcatStats.AtOrBeforeTimeline(timeline, compareTimeline)) comparison = true;
+                    if (SlugcatStats.AtOrBeforeTimeline(timeline1, compareTimeline)) comparison = true;
+                    else Log.LogMessage($"Timeline {timeline1} is not before {compareTimeline}");
                 }
-                else if (worldTimeline.StartsWith("after-"))
+                else if (worldTimeline.ToLower().StartsWith("after-"))
                 {
-                    SlugcatStats.Timeline compareTimeline = new(worldTimeline.Trim().Substring(worldTimeline.IndexOf("-") + 1), false);
+                    //format example: (After-White)
+                    string afterTimeline = worldTimeline.Substring(worldTimeline.IndexOf("-") + 1);
+                    Log.LogMessage($"After timeline: {afterTimeline}");
+                    SlugcatStats.Timeline compareTimeline = new(afterTimeline, false);
                     if (compareTimeline.Index == -1)
                     {
-                        Log.LogWarning($"Unknown timeline! {worldTimeline}");
+                        Log.LogWarning($"Unknown timeline! {afterTimeline}");
                         continue;
                     }
-                    if (SlugcatStats.AtOrAfterTimeline(timeline, compareTimeline)) comparison = true;
+                    if (SlugcatStats.AtOrAfterTimeline(timeline1, compareTimeline)) comparison = true; 
+                    else Log.LogMessage($"Timeline {timeline1} is not after {compareTimeline}");
                 }
-                else if (worldTimeline == timelineString) comparison = true;
+                else if (worldTimeline.ToLower().StartsWith("between-")) 
+                {
+                    //format example: (Between-Red-White)
+                    string minTimeline = worldTimeline.Split('-')[1];
+                    string maxTimeline = worldTimeline.Split('-')[2];
+                    Log.LogMessage($"Between timelines: {minTimeline} and {maxTimeline}");
+                    SlugcatStats.Timeline compareMinTimeline = new(minTimeline, false);
+                    SlugcatStats.Timeline compareMaxTimeline = new(maxTimeline, false);
+                    if (compareMinTimeline.Index == -1 || compareMaxTimeline.Index == -1)
+                    {
+                        Log.LogWarning($"Unknown timelines! {minTimeline}, {maxTimeline}");
+                        continue;
+                    }
+                    if (SlugcatStats.AtOrAfterTimeline(timeline1, compareMinTimeline) && SlugcatStats.AtOrBeforeTimeline(timeline1, compareMaxTimeline)) comparison = true;
+                    else Log.LogMessage($"Timeline {timeline1} is not between {compareMinTimeline} and {compareMaxTimeline}");
+                }
+                else if (worldTimeline.ToLowerInvariant() == timelineString) comparison = true;
             }
             if (comparison == reverse) return false;
         }
