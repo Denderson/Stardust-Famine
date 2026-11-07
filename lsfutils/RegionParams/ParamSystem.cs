@@ -9,6 +9,8 @@ namespace lsfUtils.RegionParams;
 
 public readonly struct ParamKey
 {
+    public enum TimelineCheckType { Exact, Before, After } 
+
     public readonly string RegionName;
     public readonly List<string> WorldTimelines;
     public readonly List<string> Conditions;
@@ -83,45 +85,44 @@ public readonly struct ParamKey
 
         if (WorldTimelines != null && WorldTimelines.Count > 0)
         {
-            bool flag = false;
-            bool flag2 = false;
-            foreach (string worldTimeline in WorldTimelines)
+            bool comparison = false;
+            bool reverse = false;
+            foreach (string str in WorldTimelines)
             {
-                string minusTimeline = null;
+                if (string.IsNullOrEmpty(str)) continue;
+
+                string worldTimeline = str.Trim();
                 if (worldTimeline.StartsWith("x-"))
                 {
-                    flag2 = true;
-                    minusTimeline = worldTimeline.Substring(2);
+                    reverse = true;
+                    worldTimeline = worldTimeline.Substring(2);
                 }
-                if (string.IsNullOrEmpty(worldTimeline)) return flag2;
-            //this part requires converting a string to a slugcat id. i've got no clue how so if anyone does go for it it'd be really cool and nice and awesome
-                //bool flag3 = false;
-                //bool flag4 = false;
-                //string compareTimeline;
+                if (string.IsNullOrEmpty(worldTimeline)) continue;
 
-                /*if (worldTimeline.StartsWith("before-"))
+                if (worldTimeline.StartsWith("before-"))
                 {
-                    flag3 = true;
-                    compareTimeline = worldTimeline.Substring(worldTimeline.IndexOf("-") + 1);
+                    Log.LogMessage($"Before timeline: {worldTimeline}");
+                    SlugcatStats.Timeline compareTimeline = new(worldTimeline.Trim().Substring(worldTimeline.IndexOf("-") + 1), false);
+                    if (compareTimeline.Index == -1)
+                    {
+                        Log.LogWarning($"Unknown item! {worldTimeline}");
+                        continue;
+                    }
+                    if (SlugcatStats.AtOrBeforeTimeline(timeline, compareTimeline)) comparison = true;
                 }
                 else if (worldTimeline.StartsWith("after-"))
                 {
-                    flag4 = true;
-                    compareTimeline = worldTimeline.Substring(worldTimeline.IndexOf("-") + 1);
+                    SlugcatStats.Timeline compareTimeline = new(worldTimeline.Trim().Substring(worldTimeline.IndexOf("-") + 1), false);
+                    if (compareTimeline.Index == -1)
+                    {
+                        Log.LogWarning($"Unknown item! {worldTimeline}");
+                        continue;
+                    }
+                    if (SlugcatStats.AtOrAfterTimeline(timeline, compareTimeline)) comparison = true;
                 }
-
-                if (flag3)
-                {
-                    if (SlugcatStats.AtOrBeforeTimeline(timelineString, compareTimeline)) flag = true;
-                }
-                if (flag4)
-                {
-                    if (SlugcatStats.AtOrAfterTimeline(timelineString, compareTimeline)) flag = true;
-                }*/
-
-                if (worldTimeline == timelineString || minusTimeline == timelineString) flag = true;
+                else if (worldTimeline == timelineString) comparison = true;
             }
-            if (flag == flag2) return false;
+            if (comparison == reverse) return false;
         }
 
         if (Conditions != null && Conditions.Count > 0)

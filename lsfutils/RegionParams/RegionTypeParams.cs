@@ -15,7 +15,7 @@ public static class RegionTypeParams
     public static readonly string ConfigPath = "world/regionMetaParameters.txt";
     public static void CheckFile()
     {
-        if (!File.Exists(RWCustom.Custom.RootFolderDirectory() + Path.DirectorySeparatorChar.ToString() + "world/regionMetaParameters.txt"))
+        if (!File.Exists(Custom.RootFolderDirectory() + Path.DirectorySeparatorChar.ToString() + "world/regionMetaParameters.txt"))
         {
             ParamKey.CreateFile("world/regionMetaParameters.txt");
         }
