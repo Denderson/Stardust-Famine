@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using static lsfUtils.Plugin;
 using static lsfUtils.Mechanics.ConditionalLogic;
+using RWCustom;
 
 namespace lsfUtils.RegionParams;
 
@@ -77,8 +78,18 @@ public readonly struct ParamKey
         return true;
     }
 
-    public bool IsValid(RainWorldGame game, SlugcatStats.Timeline timeline = null)
+    public bool IsValid(RainWorldGame game = null, SlugcatStats.Timeline timeline = null)
     {
+        if (game == null)
+        {
+            if (Custom.rainWorld.processManager?.currentMainLoop is not RainWorldGame game1)
+            {
+                Log.LogMessage("Couldnt grab the game!");
+                return false;
+            }
+            else game = game1;
+        }
+
         string timelineString = null; 
         if (timeline != null) timelineString = timeline.ToString().ToLowerInvariant().Trim();
         if (game != null && timeline == null) timelineString = game?.GetStorySession?.saveState?.currentTimelinePosition?.value?.Trim().ToLowerInvariant();
@@ -105,7 +116,7 @@ public readonly struct ParamKey
                     SlugcatStats.Timeline compareTimeline = new(worldTimeline.Trim().Substring(worldTimeline.IndexOf("-") + 1), false);
                     if (compareTimeline.Index == -1)
                     {
-                        Log.LogWarning($"Unknown item! {worldTimeline}");
+                        Log.LogWarning($"Unknown timeline! {worldTimeline}");
                         continue;
                     }
                     if (SlugcatStats.AtOrBeforeTimeline(timeline, compareTimeline)) comparison = true;
@@ -115,7 +126,7 @@ public readonly struct ParamKey
                     SlugcatStats.Timeline compareTimeline = new(worldTimeline.Trim().Substring(worldTimeline.IndexOf("-") + 1), false);
                     if (compareTimeline.Index == -1)
                     {
-                        Log.LogWarning($"Unknown item! {worldTimeline}");
+                        Log.LogWarning($"Unknown timeline! {worldTimeline}");
                         continue;
                     }
                     if (SlugcatStats.AtOrAfterTimeline(timeline, compareTimeline)) comparison = true;

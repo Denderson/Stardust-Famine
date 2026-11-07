@@ -11,16 +11,13 @@ using static lsfUtils.Plugin;
 
 namespace lsfUtils.RegionParams;
 
-public class RegionParamsSetup
+public class CustomRegionParams
 {
     public readonly ProceduralFireUniforms uniforms = new();
 
 
     // Which looker mechanic is active in this region. Null = no override
     public string LookerMechanicOverride { get; set; } = null;
-
-    // Whenever the region can be infected by sentient rot (not counted for Prince quest if uninfectable)
-    public bool RotImmune { get; set; } = false;
 
     // How long until EvilWater accumulates 100% poison
     public int EvilWaterTimer { get; set; } = 400;
@@ -57,9 +54,9 @@ public class RegionParamsSetup
 
     public Color FireEdgeColor { get; set; } = new(1f, 0.15f, 0f);
 
-    public static RegionParamsSetup ParseFromUnrecognized(Dictionary<string, string> unrecognized, string regionName, SlugcatStats.Timeline timeline)
+    public static CustomRegionParams ParseFromUnrecognized(Dictionary<string, string> unrecognized, string regionName, SlugcatStats.Timeline timeline)
     {
-        RegionParamsSetup customRegionParams = new();
+        CustomRegionParams customRegionParams = new();
         if (unrecognized == null || unrecognized.Count == 0) return customRegionParams;
 
         ParamTable<string> table = new();
@@ -69,7 +66,6 @@ public class RegionParamsSetup
         }
 
         if (TryGet(table, "lookerMechanicOverride", timeline, out string val)) customRegionParams.LookerMechanicOverride = val;
-        if (TryGet(table, "rotImmune", timeline, out val)) customRegionParams.RotImmune = ParseBool(val);
 
         if (TryGet(table, "evilWaterTimer", timeline, out val) && TryParseInt(val, out int number)) customRegionParams.EvilWaterTimer = number;
         if (TryGet(table, "evilWaterPoisonDelayTimer", timeline, out val) && TryParseInt(val, out number)) customRegionParams.EvilWaterPoisonDelayTimer = number;
@@ -137,7 +133,7 @@ public class RegionParamsSetup
     {
         orig(self, name, firstRoomIndex, regionNumber, game, timelineIndex);
         if (self?.regionParams == null) return;
-        RegionParamsSetup customParams = ParseFromUnrecognized(self.regionParams.unrecognizedParams, name, timelineIndex);
+        CustomRegionParams customParams = ParseFromUnrecognized(self.regionParams.unrecognizedParams, name, timelineIndex);
         if (RegionCWT.TryGetData(self, out var data))
         {
             data.customRegionParams = customParams;

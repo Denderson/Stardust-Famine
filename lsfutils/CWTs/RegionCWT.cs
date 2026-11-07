@@ -18,7 +18,7 @@ namespace lsfUtils.CWTs
             return data != null;
         }
 
-        public static bool TryGetCustomRegionParams(Region key, out RegionParamsSetup customRegionParams)
+        public static bool TryGetCustomRegionParams(Region key, out CustomRegionParams customRegionParams)
         {
             customRegionParams = null;
             if (TryGetData(key, out var data) && data?.customRegionParams != null)
@@ -31,7 +31,7 @@ namespace lsfUtils.CWTs
 
         public class DataClass
         {
-            public RegionParamsSetup customRegionParams;
+            public CustomRegionParams customRegionParams;
         }
     }
 }

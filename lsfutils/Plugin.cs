@@ -182,7 +182,7 @@ public class Plugin : BaseUnityPlugin
                 ShortcutParams.ApplyHooks();
                 GateParams.ApplyHooks();
                 ScavengerGearParams.ApplyHooks();
-                On.Region.ctor_string_int_int_RainWorldGame_Timeline += RegionParamsSetup.SetupParams;
+                On.Region.ctor_string_int_int_RainWorldGame_Timeline += CustomRegionParams.SetupParams;
             }
 
             // mechanics
