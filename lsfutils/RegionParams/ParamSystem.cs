@@ -1,16 +1,139 @@
-﻿using System;
+﻿using RWCustom;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using static lsfUtils.Plugin;
-using static lsfUtils.Mechanics.ConditionalLogic;
-using RWCustom;
 using UnityEngine;
+using static lsfUtils.Mechanics.ConditionalLogic;
+using static lsfUtils.Plugin;
 
 namespace lsfUtils.RegionParams;
 
 public readonly struct ParamKey
 {
+    public static void ApplyHooks()
+    {
+        On.WorldLoader.Preprocessing.TimelineMatch += WorldLoader_Preprocessing_TimelineMatch;
+        On.WorldLoader.Preprocessing.PreprocessCustomConditions += WorldLoader_Preprocessing_PreprocessCustomConditions;
+    }
+
+    private static bool WorldLoader_Preprocessing_TimelineMatch(On.WorldLoader.Preprocessing.orig_TimelineMatch orig, string text, SlugcatStats.Timeline timeline)
+    {
+        if (text.ToLower().Contains("before-") || text.ToLower().Contains("after-") || text.ToLower().Contains("between-"))
+        {
+            Log.LogMessage("Timeline check override!");
+            bool comparison = false;
+            bool reverse = false;
+            foreach (string part in text.Split(','))
+            {
+                if (string.IsNullOrEmpty(part)) continue;
+
+                string worldTimeline = part.Trim();
+                if (worldTimeline.ToLower().StartsWith("x-"))
+                {
+                    //format example: (X-White)
+                    reverse = true;
+                    worldTimeline = worldTimeline.Substring(2);
+                }
+                if (string.IsNullOrEmpty(worldTimeline)) continue;
+                if (timeline == null) return reverse;
+
+                if (worldTimeline.ToLower().StartsWith("before-"))
+                {
+                    //format example: (Before-White)
+                    string beforeTimeline = worldTimeline.Substring(worldTimeline.IndexOf("-") + 1);
+                    Log.LogMessage($"Before timeline: {beforeTimeline}");
+                    SlugcatStats.Timeline compareTimeline = new(beforeTimeline, false);
+                    if (compareTimeline.Index == -1)
+                    {
+                        Log.LogWarning($"Unknown timeline! {beforeTimeline}");
+                        continue;
+                    }
+                    if (SlugcatStats.AtOrBeforeTimeline(timeline, compareTimeline)) comparison = true;
+                    else Log.LogMessage($"Timeline {timeline} is not before {compareTimeline}");
+                }
+                else if (worldTimeline.ToLower().StartsWith("after-"))
+                {
+                    //format example: (After-White)
+                    string afterTimeline = worldTimeline.Substring(worldTimeline.IndexOf("-") + 1);
+                    Log.LogMessage($"After timeline: {afterTimeline}");
+                    SlugcatStats.Timeline compareTimeline = new(afterTimeline, false);
+                    if (compareTimeline.Index == -1)
+                    {
+                        Log.LogWarning($"Unknown timeline! {afterTimeline}");
+                        continue;
+                    }
+                    if (SlugcatStats.AtOrAfterTimeline(timeline, compareTimeline)) comparison = true;
+                    else Log.LogMessage($"Timeline {timeline} is not after {compareTimeline}");
+                }
+                else if (worldTimeline.ToLower().StartsWith("between-"))
+                {
+                    //format example: (Between-Red-White)
+                    string minTimeline = worldTimeline.Split('-')[1];
+                    string maxTimeline = worldTimeline.Split('-')[2];
+                    Log.LogMessage($"Between timelines: {minTimeline} and {maxTimeline}");
+                    SlugcatStats.Timeline compareMinTimeline = new(minTimeline, false);
+                    SlugcatStats.Timeline compareMaxTimeline = new(maxTimeline, false);
+                    if (compareMinTimeline.Index == -1 || compareMaxTimeline.Index == -1)
+                    {
+                        Log.LogWarning($"Unknown timelines! {minTimeline}, {maxTimeline}");
+                        continue;
+                    }
+                    if (SlugcatStats.AtOrAfterTimeline(timeline, compareMinTimeline) && SlugcatStats.AtOrBeforeTimeline(timeline, compareMaxTimeline)) comparison = true;
+                    else Log.LogMessage($"Timeline {timeline} is not between {compareMinTimeline} and {compareMaxTimeline}");
+                }
+                else if (worldTimeline.ToLowerInvariant() == timeline.ToString().ToLowerInvariant()) comparison = true;
+            }
+            return comparison != reverse;
+        }
+        else return orig(text, timeline);
+    }
+
+    private static bool WorldLoader_Preprocessing_PreprocessCustomConditions(On.WorldLoader.Preprocessing.orig_PreprocessCustomConditions orig, string text, RainWorldGame game)
+    {
+        if (text.Contains('|'))
+        {
+            Log.LogMessage("Condition check override!");
+            bool group = false;
+            foreach (string section in text.Split('|'))
+            {
+                if (group) break;
+                Log.LogMessage($"New group: \"{section}\"");
+                bool all = true;
+                foreach (string part in section.Split(','))
+                {
+                    if (!all) break;
+                    string condition = part.Trim();
+                    bool reverse = false;
+                    if (condition.Contains('!'))
+                    {
+                        reverse = true;
+                        condition = condition.Replace("!", "");
+                    }
+                    foreach (WorldLoader.Preprocessing.PreprocessorCondition preprocessorCondition in WorldLoader.Preprocessing.preprocessorConditions)
+                    {
+                        bool? check = preprocessorCondition(condition, game);
+                        if (check != null)
+                        {
+                            if (check.GetValueOrDefault() == reverse)
+                            {
+                                all = false;
+                            }
+                        }
+                    }
+                }
+                if (all)
+                {
+                    group = true;
+                    Log.LogMessage($"Condition group \"{section}\" passed, returning true");
+                }
+            }
+            if (!group) Log.LogMessage("None of the groups passed, returning false");
+            return group;
+        }
+        else return orig(text, game);
+    }
+
     public enum TimelineCheckType { Exact, Before, After } 
 
     public readonly string RegionName;

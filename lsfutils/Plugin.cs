@@ -190,6 +190,10 @@ public class Plugin : BaseUnityPlugin
                 TemporaryPoison.ApplyHooks();
             }
 
+            //region params
+            {
+                ParamKey.ApplyHooks();
+            }
             // screen variants
             {
                 ScreenVariantHooks.ApplyHooks();
