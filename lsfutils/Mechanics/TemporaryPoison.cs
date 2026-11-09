@@ -10,7 +10,18 @@ public static class TemporaryPoison
     public static void ApplyHooks()
     {
         On.Creature.Update += Creature_Update;
+        On.Player.Update += Player_Update;
     }
+
+    private static void Player_Update(On.Player.orig_Update orig, Player self, bool eu)
+    {
+        orig(self, eu);
+        if (CreatureCWT.TryGetData(self, out var data) && data.cannotRecoverPoison > 0)
+        {
+            self.eyesClosedTime = Mathf.Max(20, self.eyesClosedTime);
+        }
+    }
+
     public static void Creature_Update(On.Creature.orig_Update orig, Creature self, bool eu)
     {
         if (!CreatureCWT.TryGetData(self, out var data))

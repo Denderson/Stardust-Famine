@@ -10,6 +10,7 @@ using lsfUtils.Creatures.Lizards.RaspberryLizard;
 using lsfUtils.Creatures.Lizards.StarNosedLizard;
 using lsfUtils.Creatures.Lizards.WeaverLizard;
 using lsfUtils.Creatures.Misc.ClimbGrub;
+using lsfUtils.Creatures.Misc.ToxicSponge;
 using lsfUtils.Creatures.Scavs;
 using lsfUtils.Creatures.Scavs.ScavFlank;
 using lsfUtils.Creatures.Scavs.ScavMessenger;
@@ -125,8 +126,8 @@ public class Plugin : BaseUnityPlugin
                 ScavMessengerHooks.ApplyHooks();
 
                 PoisonSpiderHooks.ApplyHooks();
-
                 ClimbGrubHooks.ApplyHooks();
+                ToxicSpongeHooks.ApplyHooks();
             }
 
             // items
@@ -339,13 +340,10 @@ public class Plugin : BaseUnityPlugin
     public static bool GetNameFromAnywhere(out SlugcatStats.Name name)
     {
         name = null;
-        if (Custom.rainWorld.processManager?.currentMainLoop is RainWorldGame game)
+        if (Custom.rainWorld.processManager?.currentMainLoop is RainWorldGame game && game.IsStorySession)
         {
-            if (game.IsStorySession)
-            {
-                name = game.StoryCharacter;
-                return true;
-            }
+            name = game.StoryCharacter;
+            return true;
         }
         return false;
     }
@@ -355,11 +353,8 @@ public class Plugin : BaseUnityPlugin
         timeline = null;
         if (Custom.rainWorld.processManager?.currentMainLoop is RainWorldGame game && game.IsStorySession)
         {
-            if (game.IsStorySession)
-            {
-                timeline = game.TimelinePoint;
-                return true;
-            }
+            timeline = game.TimelinePoint;
+            return true;
         }
         return false;
     }
