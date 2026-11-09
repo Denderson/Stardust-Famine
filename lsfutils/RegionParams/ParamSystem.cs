@@ -1,21 +1,144 @@
-﻿using System;
+﻿using RWCustom;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using static lsfUtils.Plugin;
-using static lsfUtils.Mechanics.ConditionalLogic;
-using RWCustom;
 using UnityEngine;
+using static lsfUtils.Mechanics.ConditionalLogic;
+using static lsfUtils.Plugin;
 
 namespace lsfUtils.RegionParams;
 
 public readonly struct ParamKey
 {
+    public static void ApplyHooks()
+    {
+        On.WorldLoader.Preprocessing.TimelineMatch += WorldLoader_Preprocessing_TimelineMatch;
+        On.WorldLoader.Preprocessing.PreprocessCustomConditions += WorldLoader_Preprocessing_PreprocessCustomConditions;
+    }
+
+    private static bool WorldLoader_Preprocessing_TimelineMatch(On.WorldLoader.Preprocessing.orig_TimelineMatch orig, string text, SlugcatStats.Timeline timeline)
+    {
+        if (text.ToLower().Contains("before-") || text.ToLower().Contains("after-") || text.ToLower().Contains("between-"))
+        {
+            Log.LogMessage("Timeline check override!");
+            bool comparison = false;
+            bool reverse = false;
+            foreach (string part in text.Split(','))
+            {
+                if (string.IsNullOrEmpty(part)) continue;
+
+                string worldTimeline = part.Trim();
+                if (worldTimeline.ToLower().StartsWith("x-"))
+                {
+                    //format example: (X-White)
+                    reverse = true;
+                    worldTimeline = worldTimeline.Substring(2);
+                }
+                if (string.IsNullOrEmpty(worldTimeline)) continue;
+                if (timeline == null) return reverse;
+
+                if (worldTimeline.ToLower().StartsWith("before-"))
+                {
+                    //format example: (Before-White)
+                    string beforeTimeline = worldTimeline.Substring(worldTimeline.IndexOf("-") + 1);
+                    Log.LogMessage($"Before timeline: {beforeTimeline}");
+                    SlugcatStats.Timeline compareTimeline = new(beforeTimeline, false);
+                    if (compareTimeline.Index == -1)
+                    {
+                        Log.LogWarning($"Unknown timeline! {beforeTimeline}");
+                        continue;
+                    }
+                    if (SlugcatStats.AtOrBeforeTimeline(timeline, compareTimeline)) comparison = true;
+                    else Log.LogMessage($"Timeline {timeline} is not before {compareTimeline}");
+                }
+                else if (worldTimeline.ToLower().StartsWith("after-"))
+                {
+                    //format example: (After-White)
+                    string afterTimeline = worldTimeline.Substring(worldTimeline.IndexOf("-") + 1);
+                    Log.LogMessage($"After timeline: {afterTimeline}");
+                    SlugcatStats.Timeline compareTimeline = new(afterTimeline, false);
+                    if (compareTimeline.Index == -1)
+                    {
+                        Log.LogWarning($"Unknown timeline! {afterTimeline}");
+                        continue;
+                    }
+                    if (SlugcatStats.AtOrAfterTimeline(timeline, compareTimeline)) comparison = true;
+                    else Log.LogMessage($"Timeline {timeline} is not after {compareTimeline}");
+                }
+                else if (worldTimeline.ToLower().StartsWith("between-"))
+                {
+                    //format example: (Between-Red-White)
+                    string minTimeline = worldTimeline.Split('-')[1];
+                    string maxTimeline = worldTimeline.Split('-')[2];
+                    Log.LogMessage($"Between timelines: {minTimeline} and {maxTimeline}");
+                    SlugcatStats.Timeline compareMinTimeline = new(minTimeline, false);
+                    SlugcatStats.Timeline compareMaxTimeline = new(maxTimeline, false);
+                    if (compareMinTimeline.Index == -1 || compareMaxTimeline.Index == -1)
+                    {
+                        Log.LogWarning($"Unknown timelines! {minTimeline}, {maxTimeline}");
+                        continue;
+                    }
+                    if (SlugcatStats.AtOrAfterTimeline(timeline, compareMinTimeline) && SlugcatStats.AtOrBeforeTimeline(timeline, compareMaxTimeline)) comparison = true;
+                    else Log.LogMessage($"Timeline {timeline} is not between {compareMinTimeline} and {compareMaxTimeline}");
+                }
+                else if (worldTimeline.ToLowerInvariant() == timeline.ToString().ToLowerInvariant()) comparison = true;
+            }
+            return comparison != reverse;
+        }
+        else return orig(text, timeline);
+    }
+
+    private static bool WorldLoader_Preprocessing_PreprocessCustomConditions(On.WorldLoader.Preprocessing.orig_PreprocessCustomConditions orig, string text, RainWorldGame game)
+    {
+        if (text.Contains('|'))
+        {
+            Log.LogMessage("Condition check override!");
+            bool group = false;
+            foreach (string section in text.Split('|'))
+            {
+                if (group) break;
+                Log.LogMessage($"New group: \"{section}\"");
+                bool all = true;
+                foreach (string part in section.Split(','))
+                {
+                    if (!all) break;
+                    string condition = part.Trim();
+                    bool reverse = false;
+                    if (condition.Contains('!'))
+                    {
+                        reverse = true;
+                        condition = condition.Replace("!", "");
+                    }
+                    foreach (WorldLoader.Preprocessing.PreprocessorCondition preprocessorCondition in WorldLoader.Preprocessing.preprocessorConditions)
+                    {
+                        bool? check = preprocessorCondition(condition, game);
+                        if (check != null)
+                        {
+                            if (check.GetValueOrDefault() == reverse)
+                            {
+                                all = false;
+                            }
+                        }
+                    }
+                }
+                if (all)
+                {
+                    group = true;
+                    Log.LogMessage($"Condition group \"{section}\" passed, returning true");
+                }
+            }
+            if (!group) Log.LogMessage("None of the groups passed, returning false");
+            return group;
+        }
+        else return orig(text, game);
+    }
+
     public enum TimelineCheckType { Exact, Before, After } 
 
     public readonly string RegionName;
-    public readonly List<string> WorldTimelines;
-    public readonly List<string> Conditions;
+    public readonly string WorldTimelines;
+    public readonly string Conditions;
 
     public static void CreateFile(string path)
     {
@@ -28,22 +151,11 @@ public readonly struct ParamKey
 
     public bool HasTimeline => WorldTimelines != null;
 
-    public ParamKey(string name, List<string> timelines, List<string> conditions)
+    public ParamKey(string name, string timelines, string conditions)
     {
         RegionName = Normalise(name);
-        WorldTimelines = new List<string>();
-        foreach (string timeline in timelines)
-        {
-            string normalised = string.IsNullOrWhiteSpace(timeline) ? null : timeline.Trim();
-            if (normalised != null) WorldTimelines.Add(normalised);
-        }
-
-        Conditions = new List<string>();
-        foreach (string condition in conditions)
-        {
-            string normalised = string.IsNullOrWhiteSpace(condition) ? null : condition.Trim();
-            if (normalised != null) Conditions.Add(normalised);
-        }
+        WorldTimelines = string.IsNullOrWhiteSpace(timelines) ? null : timelines.Trim();
+        Conditions = string.IsNullOrWhiteSpace(conditions) ? null : conditions.Trim();
     }
 
     public static string Normalise(string s)
@@ -57,20 +169,16 @@ public readonly struct ParamKey
         key = null;
         if (string.IsNullOrWhiteSpace(str)) return false;
 
-        List<string> timelines = [];
-        List<string> conditions = [];
+        string timelines = null;
+        string conditions = null;
         if (str[0] == '(' && str.Contains(')'))
         {
-            string timelinePart = str.Substring(1, str.IndexOf(")") - 1);
-            string[] timelineParts = timelinePart.Split(',');
-            for (int i = 0; i < timelineParts.Length; i++) timelines.Add(timelineParts[i]);
+            timelines = str.Substring(1, str.IndexOf(")") - 1);
             str = str.Substring(str.IndexOf(")") + 1);
         }
         if (str[0] == '{' && str.Contains('}'))
         {
-            string conditionPart = str.Substring(1, str.IndexOf("}") - 1);
-            string[] conditionParts = conditionPart.Split(',');
-            for (int i = 0; i < conditionParts.Length; i++) conditions.Add(conditionParts[i]);
+            conditions = str.Substring(1, str.IndexOf("}") - 1);
             str = str.Substring(str.IndexOf("}") + 1);
         }
 
@@ -95,84 +203,16 @@ public readonly struct ParamKey
         if (timeline != null) timelineString = timeline.ToString().Trim();
         if (game != null && timeline == null) timelineString = game?.GetStorySession?.saveState?.currentTimelinePosition?.value?.Trim();
         SlugcatStats.Timeline timeline1 = new(timelineString, false);
-        timelineString = timelineString.ToLowerInvariant();
 
-        if (WorldTimelines != null && WorldTimelines.Count > 0)
+        if (WorldTimelines != null)
         {
-            bool comparison = false;
-            bool reverse = false;
-            foreach (string str in WorldTimelines)
-            {
-                if (string.IsNullOrEmpty(str)) continue;
-
-                string worldTimeline = str.Trim();
-                if (worldTimeline.ToLower().StartsWith("x-"))
-                {
-                    //format example: (X-White)
-                    reverse = true;
-                    worldTimeline = worldTimeline.Substring(2);
-                }
-                if (string.IsNullOrEmpty(worldTimeline)) continue;
-
-                if (worldTimeline.ToLower().StartsWith("before-"))
-                {
-                    //format example: (Before-White)
-                    string beforeTimeline = worldTimeline.Substring(worldTimeline.IndexOf("-") + 1);
-                    Log.LogMessage($"Before timeline: {beforeTimeline}");
-                    SlugcatStats.Timeline compareTimeline = new(beforeTimeline, false);
-                    if (compareTimeline.Index == -1)
-                    {
-                        Log.LogWarning($"Unknown timeline! {beforeTimeline}");
-                        continue;
-                    }
-                    if (SlugcatStats.AtOrBeforeTimeline(timeline1, compareTimeline)) comparison = true;
-                    else Log.LogMessage($"Timeline {timeline1} is not before {compareTimeline}");
-                }
-                else if (worldTimeline.ToLower().StartsWith("after-"))
-                {
-                    //format example: (After-White)
-                    string afterTimeline = worldTimeline.Substring(worldTimeline.IndexOf("-") + 1);
-                    Log.LogMessage($"After timeline: {afterTimeline}");
-                    SlugcatStats.Timeline compareTimeline = new(afterTimeline, false);
-                    if (compareTimeline.Index == -1)
-                    {
-                        Log.LogWarning($"Unknown timeline! {afterTimeline}");
-                        continue;
-                    }
-                    if (SlugcatStats.AtOrAfterTimeline(timeline1, compareTimeline)) comparison = true; 
-                    else Log.LogMessage($"Timeline {timeline1} is not after {compareTimeline}");
-                }
-                else if (worldTimeline.ToLower().StartsWith("between-")) 
-                {
-                    //format example: (Between-Red-White)
-                    string minTimeline = worldTimeline.Split('-')[1];
-                    string maxTimeline = worldTimeline.Split('-')[2];
-                    Log.LogMessage($"Between timelines: {minTimeline} and {maxTimeline}");
-                    SlugcatStats.Timeline compareMinTimeline = new(minTimeline, false);
-                    SlugcatStats.Timeline compareMaxTimeline = new(maxTimeline, false);
-                    if (compareMinTimeline.Index == -1 || compareMaxTimeline.Index == -1)
-                    {
-                        Log.LogWarning($"Unknown timelines! {minTimeline}, {maxTimeline}");
-                        continue;
-                    }
-                    if (SlugcatStats.AtOrAfterTimeline(timeline1, compareMinTimeline) && SlugcatStats.AtOrBeforeTimeline(timeline1, compareMaxTimeline)) comparison = true;
-                    else Log.LogMessage($"Timeline {timeline1} is not between {compareMinTimeline} and {compareMaxTimeline}");
-                }
-                else if (worldTimeline.ToLowerInvariant() == timelineString) comparison = true;
-            }
-            if (comparison == reverse) return false;
+            if (!WorldLoader.Preprocessing.TimelineMatch(WorldTimelines, timeline1)) return false;
         }
 
-        if (Conditions != null && Conditions.Count > 0)
+        if (Conditions != null)
         {
-            foreach (string condition in Conditions)
-            {
-                if (string.IsNullOrEmpty(condition)) continue;
-                if (game == null) Log.LogMessage($"Game is null when condition {condition} is checked, skipping it!");
-                if (WorldLoader.Preprocessing.PreprocessCustomConditions(condition, game) == false) return false;
-            }
+            if (!WorldLoader.Preprocessing.PreprocessCustomConditions(Conditions, game)) return false;
         }
-
         return true;
     }
 }
@@ -231,7 +271,22 @@ public class ParamTable<T>
     {
         if (a.HasTimeline && !b.HasTimeline) return true;
         if (!a.HasTimeline && b.HasTimeline) return false;
-        return a.Conditions.Count > b.Conditions.Count;
+
+        //i have no idea what i'm doing send help please. it works at least so i ain't touching it
+        List<string> aCount = [], bCount = [];
+
+        if (a.Conditions != null)
+        { 
+            string[] countA = a.Conditions.Split(',');
+            for (int i = 0; i < countA.Length; i++) aCount.Add(countA[i]);
+        }
+        if (b.Conditions != null)
+        {
+            string[] countB = b.Conditions.Split(',');
+            for (int i = 0; i < countB.Length; i++) bCount.Add(countB[i]);
+        }
+
+        return aCount.Count > bCount.Count;
     }
 
     public List<T> Get(string name, RainWorldGame game, SlugcatStats.Timeline timeline = null)
