@@ -1,61 +1,66 @@
-﻿using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Schema;
+﻿using lsfUtils.CWTs;
+using System.IO;
 using UnityEngine;
-using Watcher;
-using Menu;
+using static lsfUtils.Plugin;
 
-namespace lsfUtils.RegionParams
+namespace lsfUtils.RegionParams;
+
+internal class ConditionalWorld
 {
-    internal class ConditionalWorld
+    public static void ApplyHooks()
     {
-        public static void ApplyHooks()
+        On.Watcher.WarpMap.WarpRegionIcon.AddGraphics += WarpMap_WarpRegionIcon_AddGraphics;
+        On.Watcher.WarpMap.WarpRegionIcon.ctor += WarpRegionIcon_ctor;
+    }
+
+    private static void WarpRegionIcon_ctor(On.Watcher.WarpMap.WarpRegionIcon.orig_ctor orig, Watcher.WarpMap.WarpRegionIcon self, Watcher.WarpMap map, int index, string region, bool infected, bool hasVoidWeaver, bool hasSpinningTopEncounter, bool visited)
+    {
+        orig(self, map, index, region, infected, hasVoidWeaver, hasSpinningTopEncounter, visited);
+        if (!WarpRegionIconCWT.TryGetData(self, out var data)) return;
+        data.map = map;
+    }
+
+    private static void WarpMap_WarpRegionIcon_AddGraphics(On.Watcher.WarpMap.WarpRegionIcon.orig_AddGraphics orig, Watcher.WarpMap.WarpRegionIcon self)
+    {
+        orig(self);
+        if (!WarpRegionIconCWT.TryGetData(self, out var data)) return;
+        if (data.map == null) 
         {
-            On.Watcher.WarpMap.WarpRegionIcon.AddGraphics += WarpMap_WarpRegionIcon_AddGraphics;
+            Log.LogMessage("idk what i'm doing");
+            return; 
+        }
+        SaveState state = data.map.GetSaveState();
+        if (state == null)
+        {
+            Log.LogMessage("at least it not working doesn't break anything");
+            return;
+        }
+        SlugcatStats.Timeline timeline = state.currentTimelinePosition;
+
+        string timelineIcon = "warp-" + self.region + "-" + timeline;
+        if (!self.visited)
+        {
+            timelineIcon = "warp-unknown-" + timeline;
         }
 
-        private static void WarpMap_WarpRegionIcon_AddGraphics(On.Watcher.WarpMap.WarpRegionIcon.orig_AddGraphics orig, Watcher.WarpMap.WarpRegionIcon self)
+        if (!Futile.atlasManager.DoesContainElementWithName(timelineIcon))
         {
-            orig(self);
-            if (RWCustom.Custom.rainWorld.processManager?.currentMainLoop is not RainWorldGame game) 
+            Log.LogMessage("icon not found in atlas");
+            Texture2D texture2D = new Texture2D(0, 0);
+            string path = AssetManager.ResolveFilePath("illustrations/" + timelineIcon + ".png");
+            if (File.Exists(path))
             {
-                Plugin.Log.LogMessage("idk what i'm doing");
-                return; 
+                Log.LogMessage("Loading timeline icon: " + timelineIcon);
+                texture2D.LoadImage(File.ReadAllBytes(path));
             }
-            if (game == null)
-            {
-                Plugin.Log.LogMessage("at least it not working doesn't break anything");
-                return;
-            }
-            SlugcatStats.Timeline timeline = game.GetStorySession.saveState.currentTimelinePosition;
-
-            string timelineIcon = "warp-" + self.region + "-" + timeline;
-            if (!self.visited)
-            {
-                timelineIcon = "warp-unknown-" + timeline;
-            }
-            if (!Futile.atlasManager.DoesContainElementWithName(timelineIcon))
-            {
-                Plugin.Log.LogMessage("icon not found in atlas");
-                Texture2D texture2D = new Texture2D(0, 0);
-                string path = AssetManager.ResolveFilePath("illustrations/" + timelineIcon + ".png");
-                if (File.Exists(path))
-                {
-                    Plugin.Log.LogMessage("Loading timeline icon: " + timelineIcon);
-                    texture2D.LoadImage(File.ReadAllBytes(path));
-                }
-                texture2D.filterMode = FilterMode.Point;
-                Futile.atlasManager.LoadAtlasFromTexture(timelineIcon, texture2D, false);
-            }
-            Plugin.Log.LogMessage("it's never gtten to this one lmao");
-            self.RefreshGraphics();
-            self.ClearSprites();
-            self.regionIcon = new FSprite(timelineIcon, true);
-            self.regionIcon.SetAnchor(0.5f, 0.5f);
-            self.map.container.AddChild(self.regionIcon);
+            texture2D.filterMode = FilterMode.Point;
+            Futile.atlasManager.LoadAtlasFromTexture(timelineIcon, texture2D, false);
         }
+        Log.LogMessage("it's never gtten to this one lmao");
+        self.RefreshGraphics();
+        self.ClearSprites();
+        self.regionIcon = new FSprite(timelineIcon, true);
+        self.regionIcon.SetAnchor(0.5f, 0.5f);
+        self.map.container.AddChild(self.regionIcon);
     }
 }
