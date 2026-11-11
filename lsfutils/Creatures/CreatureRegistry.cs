@@ -984,7 +984,7 @@ public static class CreatureRegistry
             RealisedCtor = (abstractCreature, world) => new Porcupine(abstractCreature, world),
             AbstractAICtor = (world, parent) => new AbstractCreatureAI(world, parent),
             AICtor = (creature, world) => new PorcupineAI(creature, world),
-            Grabability = (player, physicalObject) => Player.ObjectGrabability.CantGrab,
+            //Grabability = (player, physicalObject) => Player.ObjectGrabability.CantGrab,
             //StateCtor = (creature) => new CreatureState(creature),
             setTemplate = () =>
             {
@@ -1066,7 +1066,7 @@ public static class CreatureRegistry
         {
             mapName = "ts", // hehe
             mapColor = Colors.PoisonLizardColor,
-            symbolName = "Kill_Tubeworm",
+            symbolName = "Kill_Barnacle",
             isHostileForShelter = false,
             isBigForShelter = false,
             performanceCost = 30f,
@@ -1074,7 +1074,7 @@ public static class CreatureRegistry
             RealisedCtor = (abstractCreature, world) => new ToxicSponge(abstractCreature, world),
             AbstractAICtor = (world, parent) => new AbstractCreatureAI(world, parent),
             AICtor = (creature, world) => new ToxicSpongeAI(creature, world),
-            Grabability = (player, physicalObject) => Player.ObjectGrabability.CantGrab,
+            //Grabability = (player, physicalObject) => Player.ObjectGrabability.CantGrab,
             //StateCtor = (creature) => new CreatureState(creature),
             setTemplate = () =>
             {

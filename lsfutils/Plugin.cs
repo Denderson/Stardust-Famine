@@ -25,6 +25,7 @@ using lsfUtils.DevtoolsEffects.StardustRain;
 using lsfUtils.DevtoolsObjects.BackgroundMud;
 using lsfUtils.DevtoolsObjects.Bumper;
 using lsfUtils.DevtoolsObjects.ConditionalFilter;
+using lsfUtils.DevtoolsObjects.CreatureFlagZone;
 using lsfUtils.DevtoolsObjects.CustomPushback;
 using lsfUtils.DevtoolsObjects.EventRectangle;
 using lsfUtils.DevtoolsObjects.FloatMud;
@@ -146,6 +147,7 @@ public class Plugin : BaseUnityPlugin
             {
                 LocalGravityHooks.ApplyHooks();
                 ConditionalFilterHooks.ApplyHooks();
+                CreatureFlagZoneHooks.ApplyHooks();
                 FloatMudHooks.ApplyHooks();
                 BackgroundMudHooks.ApplyHooks();
                 WaveLightHooks.ApplyHooks();
@@ -194,6 +196,7 @@ public class Plugin : BaseUnityPlugin
             //region params
             {
                 ParamKey.ApplyHooks();
+                ConditionalWorld.ApplyHooks();
             }
             // screen variants
             {
@@ -214,6 +217,7 @@ public class Plugin : BaseUnityPlugin
 
             RegisterManagedObject<ConditionFilter, ConditionFilterData, ManagedRepresentation>("ConditionalFilter", "lsfUtils");
             RegisterManagedObject<RoomConditionFilterUAD, RoomConditionFilterData, ManagedRepresentation>("RoomConditionalFilter", "lsfUtils");
+            RegisterManagedObject<CreatureFlagZone, CreatureFlagZoneData, ManagedRepresentation>("CreatureFlagZone", "lsfUtils");
             RegisterManagedObject<LocalGravity, LocalGravityData, ManagedRepresentation>("LocalGravity", "lsfUtils");
             RegisterManagedObject<RippleZone, RippleZoneData, ManagedRepresentation>("RippleZone", "lsfUtils");
             RegisterManagedObject<EventRect, EventRectData, ManagedRepresentation>("EventRect", "lsfUtils");
