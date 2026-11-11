@@ -4,7 +4,7 @@ using static Pom.Pom;
 
 namespace lsfUtils.Items.RippleFlower;
 
-public class ManagedRippleFlower : Pom.Pom.ManagedObjectType
+public class ManagedRippleFlower : ManagedObjectType
 {
     public class RippleFlowerData : PlacedObject.ConsumableObjectData
     {

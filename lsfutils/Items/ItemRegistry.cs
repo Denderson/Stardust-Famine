@@ -2,7 +2,6 @@
 using System.Globalization;
 using UnityEngine;
 using lsfUtils.Items.BrownFruit;
-using lsfUtils.Items.KarmaMask;
 using lsfUtils.Items.RippleFlower;
 using lsfUtils.Items.Darts.Dart;
 using lsfUtils.Items.Darts.PoisonDart;
@@ -13,6 +12,7 @@ using lsfUtils.Items.Spears.CopperSpears;
 using static lsfUtils.Enums;
 using lsfUtils.Items.KnotSpawnV2;
 using lsfUtils.Items.Spears.WarpSpears;
+using lsfUtils.Items.Artefacts.KarmaMask;
 
 namespace lsfUtils.Items;
 

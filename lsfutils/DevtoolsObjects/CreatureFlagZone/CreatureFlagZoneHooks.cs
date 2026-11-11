@@ -39,7 +39,7 @@ public static class CreatureFlagZoneHooks
         {
             if (list[i].creatureFlags.IsNullOrWhiteSpace()) continue;
 
-            if (Custom.DistLess(self.abstractCreature.pos.Vec2(), list[i].owner.pos, list[i].radius.magnitude) && self.abstractCreature.spawnDen != new WorldCoordinate(-1, -1, -1, -1) && self is not Player)
+            if (Custom.DistLess(self.abstractCreature.pos.Vec2(), list[i].owner.pos, list[i].radius.magnitude) && self.abstractCreature.spawnDen == new WorldCoordinate(-1, -1, -1, -1) && self is not Player)
             {
                 string flags = list[i].creatureFlags.Trim();
                 string data = self.abstractCreature.spawnData;

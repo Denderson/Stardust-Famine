@@ -1,7 +1,7 @@
 ﻿using RWCustom;
 using System.Collections.Generic;
 
-namespace lsfUtils.Items.BasementKey;
+namespace lsfUtils.Items.Artifacts.BasementKey;
 
 public static class BasementKeyHooks
 {

@@ -216,6 +216,8 @@ public class Enums
         public static MultiplayerUnlocks.SandboxUnlockID BrownFruit = new(nameof(BrownFruit), true);
         public static MultiplayerUnlocks.SandboxUnlockID TorchSpear = new(nameof(TorchSpear), true);
         public static MultiplayerUnlocks.SandboxUnlockID CopperSpear = new(nameof(CopperSpear), true);
+        public static MultiplayerUnlocks.SandboxUnlockID BasementKey = new(nameof(BasementKey), true);
+        public static MultiplayerUnlocks.SandboxUnlockID Egg = new(nameof(Egg), true);
 
         public static MultiplayerUnlocks.SandboxUnlockID KnotSpawnV2 = new(nameof(KnotSpawnV2), true);
         public static MultiplayerUnlocks.SandboxUnlockID CustomCloak = new(nameof(CustomCloak), true);
@@ -254,6 +256,8 @@ public class Enums
             BrownFruit ??= new(nameof(BrownFruit), true);
             TorchSpear ??= new(nameof(TorchSpear), true);
             CopperSpear ??= new(nameof(CopperSpear), true);
+            BasementKey ??= new(nameof(BasementKey), true);
+            Egg ??= new(nameof(Egg), true);
 
             KnotSpawnV2 ??= new(nameof(KnotSpawnV2), true);
             CustomCloak ??= new(nameof(CustomCloak), true);
@@ -320,6 +324,10 @@ public class Enums
             TorchSpear = null;
             CopperSpear?.Unregister();
             CopperSpear = null;
+            BasementKey?.Unregister();
+            BasementKey = null;
+            Egg?.Unregister();
+            Egg = null;
 
             KnotSpawnV2?.Unregister();
             KnotSpawnV2 = null;
@@ -341,6 +349,8 @@ public class Enums
         public static AbstractPhysicalObject.AbstractObjectType CopperSpear = new(nameof(CopperSpear), true);
         public static AbstractPhysicalObject.AbstractObjectType KnotSpawnV2 = new(nameof(KnotSpawnV2), true);
         public static AbstractPhysicalObject.AbstractObjectType CustomCloak = new(nameof(CustomCloak), true);
+        public static AbstractPhysicalObject.AbstractObjectType BasementKey = new(nameof(BasementKey), true);
+        public static AbstractPhysicalObject.AbstractObjectType Egg = new(nameof(Egg), true);
 
         public static void RegisterValues()
         {
@@ -355,6 +365,8 @@ public class Enums
             CopperSpear ??= new(nameof(CopperSpear), true);
             KnotSpawnV2 ??= new(nameof(KnotSpawnV2), true);
             CustomCloak ??= new(nameof(CustomCloak), true);
+            BasementKey ??= new(nameof(BasementKey), true);
+            Egg ??= new(nameof(Egg), true);
         }
 
         public static void UnregisterValues()
@@ -381,6 +393,10 @@ public class Enums
             KnotSpawnV2 = null;
             CustomCloak?.Unregister();
             CustomCloak = null;
+            BasementKey?.Unregister();
+            BasementKey = null;
+            Egg?.Unregister();
+            Egg = null;
         }
     }
 

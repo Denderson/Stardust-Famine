@@ -3,7 +3,7 @@ using RWCustom;
 using UnityEngine;
 using static lsfUtils.Plugin;
 
-namespace lsfUtils.Items.KarmaMask
+namespace lsfUtils.Items.Artefacts.KarmaMask
 {
     public class KarmaMask : VultureMask
     {
@@ -19,7 +19,7 @@ namespace lsfUtils.Items.KarmaMask
         {
             abstractPhysicalObject = abstr;
             abstr.realizedObject = this;
-            maskGfx = new VultureMaskGraphics(this, VultureMask.MaskType.SCAVTEMPLAR, 0, "")
+            maskGfx = new VultureMaskGraphics(this, MaskType.SCAVTEMPLAR, 0, "")
             {
                 glimmer = true,
                 ignoreDarkness = true
@@ -46,7 +46,7 @@ namespace lsfUtils.Items.KarmaMask
                 lightSource.setPos = firstChunk.pos;
                 lightSource.setRad = 100f;
                 lightSource.setAlpha = 1f;
-                if (lightSource.slatedForDeletetion || lightSource.room != this.room)
+                if (lightSource.slatedForDeletetion || lightSource.room != room)
                 {
                     lightSource = null;
                 }

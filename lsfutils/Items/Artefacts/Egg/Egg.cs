@@ -6,6 +6,8 @@ using UnityEngine;
 using Watcher;
 using Random = UnityEngine.Random;
 
+namespace lsfUtils.Items.Artefacts.Egg;
+
 public class Egg : PlayerCarryableItem, IDrawable
 {
     public Vector2 rotation;

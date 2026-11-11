@@ -21,7 +21,6 @@ using System.Runtime.Remoting.Contexts;
 using System.Security.Permissions;
 using Watcher;
 
-
 namespace lsfUtils.Items.RippleFlower
 {
     public class RippleFlower : KarmaFlower
@@ -30,7 +29,7 @@ namespace lsfUtils.Items.RippleFlower
         public RippleFlower(RippleFlowerAbstract abstr) : base(abstr)
         {
             Log.LogMessage("Spawning ripple flower!!");
-            if (CWTs.KarmaFlowerCWT.TryGetData(this, out var data))
+            if (KarmaFlowerCWT.TryGetData(this, out var data))
             {
                 data.rippleFlower = true;
             }

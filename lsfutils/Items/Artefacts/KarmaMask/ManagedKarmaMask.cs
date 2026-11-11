@@ -2,7 +2,7 @@
 using static lsfUtils.Plugin;
 using static Pom.Pom;
 
-namespace lsfUtils.Items.KarmaMask;
+namespace lsfUtils.Items.Artefacts.KarmaMask;
 
 public class ManagedKarmaMask : ManagedObjectType
 {

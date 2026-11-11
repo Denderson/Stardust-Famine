@@ -6,18 +6,18 @@ using System;
 using UnityEngine;
 using static lsfUtils.Plugin;
 
-namespace lsfUtils.Items.KarmaMask;
+namespace lsfUtils.Items.Artefacts.KarmaMask;
 
 public static class KarmaMaskHooks
 {
     public static void ApplyHooks()
     {
-        new Hook(typeof(RegionGate).GetProperty(nameof(RegionGate.MeetRequirement))!.GetGetMethod(), typeof(KarmaMaskHooks).GetMethod(nameof(KarmaMaskHooks.Meet_Requirement)));
-        On.HUD.KarmaMeter.Update += KarmaMaskHooks.KarmaMeter_Update;
-        On.Player.Update += KarmaMaskHooks.Player_Update;
-        On.MoreSlugcats.VultureMaskGraphics.ctor_PhysicalObject_MaskType_int_string += KarmaMaskHooks.VultureMaskGraphics_ctor_PhysicalObject_MaskType_int_string;
-        On.MoreSlugcats.VultureMaskGraphics.DrawSprites += KarmaMaskHooks.VultureMaskGraphics_DrawSprites;
-        On.Player.Grabability += KarmaMaskHooks.Player_Grabability;
+        new Hook(typeof(RegionGate).GetProperty(nameof(RegionGate.MeetRequirement))!.GetGetMethod(), typeof(KarmaMaskHooks).GetMethod(nameof(Meet_Requirement)));
+        On.HUD.KarmaMeter.Update += KarmaMeter_Update;
+        On.Player.Update += Player_Update;
+        On.MoreSlugcats.VultureMaskGraphics.ctor_PhysicalObject_MaskType_int_string += VultureMaskGraphics_ctor_PhysicalObject_MaskType_int_string;
+        On.MoreSlugcats.VultureMaskGraphics.DrawSprites += VultureMaskGraphics_DrawSprites;
+        On.Player.Grabability += Player_Grabability;
     }
     public static bool Meet_Requirement(Func<RegionGate, bool> orig, RegionGate self)
     {

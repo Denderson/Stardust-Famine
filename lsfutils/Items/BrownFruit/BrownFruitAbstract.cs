@@ -5,7 +5,7 @@ namespace lsfUtils.Items.BrownFruit;
 public class BrownFruitAbstract : AbstractConsumable
 {
     public BrownFruitAbstract(World world, WorldCoordinate pos, EntityID ID, int originRoom, int placedObjectIndex, PlacedObject.ConsumableObjectData consumableObjectData)
-        : base(world, AbstractPhysicalObject.AbstractObjectType.DangleFruit, null, pos, ID, originRoom, placedObjectIndex, consumableObjectData)
+        : base(world, AbstractObjectType.DangleFruit, null, pos, ID, originRoom, placedObjectIndex, consumableObjectData)
     {
         Log.LogMessage("Spawning BrownFruitAbstract!");
         type = Enums.AbstractObjectType.BrownFruit;

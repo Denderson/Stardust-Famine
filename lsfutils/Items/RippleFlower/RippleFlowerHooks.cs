@@ -16,17 +16,17 @@ namespace lsfUtils.Items.RippleFlower
     {
         public static void ApplyHooks()
         {
-            On.Player.Update += RippleFlowerHooks.Player_Update;
-            On.KarmaFlower.BitByPlayer += RippleFlowerHooks.KarmaFlower_BitByPlayer;
-            On.KarmaFlower.DrawSprites += RippleFlowerHooks.KarmaFlower_DrawSprites;
-            On.KarmaFlower.ApplyPalette += RippleFlowerHooks.KarmaFlower_ApplyPalette;
-            On.KarmaFlower.InitiateSprites += RippleFlowerHooks.KarmaFlower_InitiateSprites;
-            On.PlayerGraphics.InitiateSprites += RippleFlowerHooks.PlayerGraphics_InitiateSprites;
+            On.Player.Update += Player_Update;
+            On.KarmaFlower.BitByPlayer += KarmaFlower_BitByPlayer;
+            On.KarmaFlower.DrawSprites += KarmaFlower_DrawSprites;
+            On.KarmaFlower.ApplyPalette += KarmaFlower_ApplyPalette;
+            On.KarmaFlower.InitiateSprites += KarmaFlower_InitiateSprites;
+            On.PlayerGraphics.InitiateSprites += PlayerGraphics_InitiateSprites;
 
-            On.PhysicalObject.GetLocalGravity += RippleFlowerHooks.PhysicalObject_GetLocalGravity;
+            On.PhysicalObject.GetLocalGravity += PhysicalObject_GetLocalGravity;
 
-            new Hook(typeof(Player).GetProperty(nameof(Player.rippleLevel)).GetGetMethod(), typeof(RippleFlowerHooks).GetMethod(nameof(RippleFlowerHooks.PlayerRippleLevel)));
-            new Hook(typeof(Player).GetProperty(nameof(Player.maxRippleLevel)).GetGetMethod(), typeof(RippleFlowerHooks).GetMethod(nameof(RippleFlowerHooks.PlayerMaxRippleLevel)));
+            new Hook(typeof(Player).GetProperty(nameof(Player.rippleLevel)).GetGetMethod(), typeof(RippleFlowerHooks).GetMethod(nameof(PlayerRippleLevel)));
+            new Hook(typeof(Player).GetProperty(nameof(Player.maxRippleLevel)).GetGetMethod(), typeof(RippleFlowerHooks).GetMethod(nameof(PlayerMaxRippleLevel)));
         }
 
         public const int rippleSpaceDuration = 800;
@@ -42,7 +42,7 @@ namespace lsfUtils.Items.RippleFlower
             {
                 return true;
             }
-            if (!CWTs.KarmaFlowerCWT.TryGetData(flower, out var data))
+            if (!KarmaFlowerCWT.TryGetData(flower, out var data))
             {
                 Log.LogMessage("Cannot get flower CWT!");
             }
@@ -54,7 +54,7 @@ namespace lsfUtils.Items.RippleFlower
             if (IsRippleFlower(self))
             {
                 self.bites--;
-                self.room.PlaySound((self.bites == 0) ? SoundID.Slugcat_Eat_Karma_Flower : SoundID.Slugcat_Bite_Karma_Flower, self.firstChunk);
+                self.room.PlaySound(self.bites == 0 ? SoundID.Slugcat_Eat_Karma_Flower : SoundID.Slugcat_Bite_Karma_Flower, self.firstChunk);
                 self.firstChunk.MoveFromOutsideMyUpdate(eu, grasp.grabber.mainBodyChunk.pos);
                 if (self.bites >= 1)
                 {
@@ -64,7 +64,7 @@ namespace lsfUtils.Items.RippleFlower
                 {
                     player.ObjectEaten(self);
 
-                    if (player.SlugCatClass != WatcherEnums.SlugcatStatsName.Watcher && CWTs.PlayerCWT.TryGetData(player, out var data))
+                    if (player.SlugCatClass != WatcherEnums.SlugcatStatsName.Watcher && PlayerCWT.TryGetData(player, out var data))
                     {
                         data.rippleMode = true;
                         data.startingRipple = true;
@@ -121,13 +121,13 @@ namespace lsfUtils.Items.RippleFlower
             {
                 return;
             }
-            if (self.SlugCatClass == Watcher.WatcherEnums.SlugcatStatsName.Watcher)
+            if (self.SlugCatClass == WatcherEnums.SlugcatStatsName.Watcher)
             {
                 return;
             }
             if (data.rippleTimer > 1 && self.standingInWarpPointProtectionTime < 10)
             {
-                self.watcherInstability = (float)(data.rippleTimer) / (float)rippleSpaceDuration;
+                self.watcherInstability = data.rippleTimer / (float)rippleSpaceDuration;
                 self.watcherInstability /= 2;
                 self.WatcherInstabilityUpdate();
                 data.rippleTimer--;
@@ -143,7 +143,7 @@ namespace lsfUtils.Items.RippleFlower
             {
                 if (self.startingCamoStateOnActivate == -1)
                 {
-                    self.startingCamoStateOnActivate = (self.isCamo ? 1 : 0);
+                    self.startingCamoStateOnActivate = self.isCamo ? 1 : 0;
                     self.ringsToSpiralsTarget = self.startingCamoStateOnActivate;
                 }
                 if (self.transitionRipple == null)

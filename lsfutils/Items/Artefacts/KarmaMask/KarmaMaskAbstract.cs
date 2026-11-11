@@ -1,11 +1,11 @@
 ﻿using static lsfUtils.Plugin;
 
-namespace lsfUtils.Items.KarmaMask;
+namespace lsfUtils.Items.Artefacts.KarmaMask;
 
 public class KarmaMaskAbstract : AbstractConsumable
 {
     public KarmaMaskAbstract(World world, WorldCoordinate pos, EntityID ID, int originRoom, int placedObjectIndex, PlacedObject.ConsumableObjectData consumableObjectData)
-        : base(world, AbstractPhysicalObject.AbstractObjectType.VultureMask, null, pos, ID, originRoom, placedObjectIndex, consumableObjectData)
+        : base(world, AbstractObjectType.VultureMask, null, pos, ID, originRoom, placedObjectIndex, consumableObjectData)
     {
         Log.LogMessage("Spawning karmamaskabstract!");
         type = Enums.AbstractObjectType.KarmaMask;

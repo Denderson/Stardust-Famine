@@ -1,6 +1,4 @@
-﻿
-
-namespace lsfUtils.Items.RippleFlower;
+﻿namespace lsfUtils.Items.RippleFlower;
 
 public class RippleFlowerAbstract : AbstractConsumable
 {
