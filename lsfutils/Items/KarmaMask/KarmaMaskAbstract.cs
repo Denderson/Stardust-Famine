@@ -1,6 +1,6 @@
 ﻿using static lsfUtils.Plugin;
 
-namespace lsfUtils.Items.Artefacts.KarmaMask;
+namespace lsfUtils.Items.KarmaMask;
 
 public class KarmaMaskAbstract : AbstractConsumable
 {

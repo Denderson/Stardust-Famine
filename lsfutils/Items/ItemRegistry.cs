@@ -12,7 +12,7 @@ using lsfUtils.Items.Spears.CopperSpears;
 using static lsfUtils.Enums;
 using lsfUtils.Items.KnotSpawnV2;
 using lsfUtils.Items.Spears.WarpSpears;
-using lsfUtils.Items.Artefacts.KarmaMask;
+using lsfUtils.Items.KarmaMask;
 
 namespace lsfUtils.Items;
 

@@ -36,10 +36,12 @@ using lsfUtils.DevtoolsObjects.RippleTunnel;
 using lsfUtils.DevtoolsObjects.RippleZone;
 using lsfUtils.DevtoolsObjects.WaveLight;
 using lsfUtils.Items;
-using lsfUtils.Items.Artefacts.KarmaMask;
+using lsfUtils.Items.Artefacts;
+//using lsfUtils.Items.Artefacts.KarmaMask;
 using lsfUtils.Items.Artifacts.BasementKey;
 using lsfUtils.Items.BrownFruit;
 using lsfUtils.Items.ExplosiveBoomerang;
+using lsfUtils.Items.KarmaMask;
 using lsfUtils.Items.KnotSpawnV2;
 using lsfUtils.Items.RippleFlower;
 using lsfUtils.Items.Spears;
@@ -93,6 +95,7 @@ public class Plugin : BaseUnityPlugin
             Log = Logger;
 
             On.RainWorld.OnModsInit += RainWorld_OnModsInit;
+            On.RainWorld.PostModsInit += RainWorld_PostModsInit;
 
             // save file code
             {
@@ -133,6 +136,8 @@ public class Plugin : BaseUnityPlugin
 
             // items
             {
+                ArtifactHooks.Apply();
+
                 RippleFlowerHooks.ApplyHooks();
                 DartHooks.ApplyHooks();
                 KarmaMaskHooks.ApplyHooks();
@@ -371,11 +376,6 @@ public class Plugin : BaseUnityPlugin
     private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
     {
         orig(self);
-        if (ModManager.MSC)
-        {
-            On.MoreSlugcats.GourmandCombos.InitCraftingLibrary += ItemCrafting.On_GourmandCombos_InitCraftingLibrary;
-            On.Player.SpitUpCraftedObject += ItemCrafting.On_Player_SpitUpCraftedObject;
-        }
 
         if (initialized)
         {
@@ -436,6 +436,18 @@ public class Plugin : BaseUnityPlugin
         Factions.LoadAndRegisterAllFactions();
 
         Log.LogMessage("Sprites and shaders loaded!");
+    }
+
+    private void RainWorld_PostModsInit(On.RainWorld.orig_PostModsInit orig, RainWorld self)
+    {
+        orig(self);
+        if (ModManager.MSC)
+        {
+            ItemCrafting.ResizeGourmandCombos();
+            ItemCrafting.InitGourmandCombos();
+            On.MoreSlugcats.GourmandCombos.InitCraftingLibrary += ItemCrafting.On_GourmandCombos_InitCraftingLibrary;
+            On.Player.SpitUpCraftedObject += ItemCrafting.On_Player_SpitUpCraftedObject;
+        }
     }
 
     private static void RegisterShader(RainWorld rainWorld, AssetBundle bundle, string assetPath, string shaderKey)

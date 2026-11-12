@@ -3,7 +3,7 @@ using RWCustom;
 using UnityEngine;
 using static lsfUtils.Plugin;
 
-namespace lsfUtils.Items.Artefacts.KarmaMask
+namespace lsfUtils.Items.KarmaMask
 {
     public class KarmaMask : VultureMask
     {
