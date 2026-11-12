@@ -19,6 +19,47 @@ namespace lsfUtils.Items
             On.SaveState.AbstractPhysicalObjectFromString += SaveState_AbstractPhysicalObjectFromString;
 
             On.Player.Grabability += Player_Grabability;
+            On.ScavengerAI.CollectScore_ItemRepresentation_bool += ScavengerAI_CollectScore_ItemRepresentation_bool;
+            On.ScavengerAI.CollectScore_PhysicalObject_bool += ScavengerAI_CollectScore_PhysicalObject_bool;
+            On.ScavengerAI.WeaponScore += ScavengerAI_WeaponScore;
+            On.MoreSlugcats.GourmandCombos.CraftingResults += GourmandCombos_CraftingResults;
+        }
+
+        private static AbstractPhysicalObject GourmandCombos_CraftingResults(On.MoreSlugcats.GourmandCombos.orig_CraftingResults orig, PhysicalObject crafter, Creature.Grasp graspA, Creature.Grasp graspB)
+        {
+            AbstractPhysicalObject result = orig(crafter, graspA, graspB);
+            if (result != null && ItemRegistryTemplate.TryGet(result.type, out ItemRegistryEntry entry) && entry.Ctor != null)
+            {
+                return entry.Ctor(result.world, result.pos, result.ID);
+            }
+            return result;
+        }
+
+        private static int ScavengerAI_CollectScore_ItemRepresentation_bool(On.ScavengerAI.orig_CollectScore_ItemRepresentation_bool orig, ScavengerAI self, ItemTracker.ItemRepresentation obj, bool weaponFiltered)
+        {
+            if (obj?.representedItem?.type != null && obj.representedItem.realizedObject != null && ItemRegistryTemplate.TryGet(obj.representedItem.type, out ItemRegistryEntry entry) && entry.ScavCollectScore != null)
+            {
+                return entry.ScavCollectScore(self.scavenger, obj.representedItem.realizedObject);
+            }
+            return orig(self, obj, weaponFiltered);
+        }
+
+        public static int ScavengerAI_CollectScore_PhysicalObject_bool(On.ScavengerAI.orig_CollectScore_PhysicalObject_bool orig, ScavengerAI self, PhysicalObject obj, bool weaponFiltered)
+        {
+            if (obj?.abstractPhysicalObject != null && ItemRegistryTemplate.TryGet(obj.abstractPhysicalObject.type, out ItemRegistryEntry entry) && entry.ScavCollectScore != null)
+            {
+                return entry.ScavCollectScore(self.scavenger, obj);
+            }
+            return orig(self, obj, weaponFiltered);
+        }
+
+        public static int ScavengerAI_WeaponScore(On.ScavengerAI.orig_WeaponScore orig, ScavengerAI self, PhysicalObject obj, bool pickupDropInsteadOfWeaponSelection, bool reallyWantsSpear)
+        {
+            if (obj?.abstractPhysicalObject != null && ItemRegistryTemplate.TryGet(obj.abstractPhysicalObject.type, out ItemRegistryEntry entry) && entry.ScavWeaponPickupScore != null)
+            {
+                return entry.ScavWeaponPickupScore(self.scavenger, obj);
+            }
+            return orig(self, obj, pickupDropInsteadOfWeaponSelection, reallyWantsSpear);
         }
 
         public static IconSymbol.IconSymbolData MultiplayerUnlocks_SymbolDataForSandboxUnlock(On.MultiplayerUnlocks.orig_SymbolDataForSandboxUnlock orig, MultiplayerUnlocks.SandboxUnlockID unlockID)
@@ -82,9 +123,13 @@ namespace lsfUtils.Items
         {
             AbstractPhysicalObject obj = orig(world, objString);
 
-            if (obj != null && ItemRegistryTemplate.TryGet(obj.type, out ItemRegistryEntry entry) && entry.SaveParser != null)
+            if (obj != null && ItemRegistryTemplate.TryGet(obj.type, out ItemRegistryEntry entry))
             {
-                AbstractPhysicalObject rebuilt = entry.SaveParser(world, objString, obj);
+                AbstractPhysicalObject rebuilt = null;
+
+                if (entry.SaveParser != null) rebuilt = entry.SaveParser(world, objString, obj);
+                else if (entry.Ctor != null) rebuilt = entry.Ctor(world, obj.pos, obj.ID);
+
                 if (rebuilt != null) return rebuilt;
             }
             return obj;

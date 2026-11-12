@@ -12,8 +12,8 @@ namespace lsfUtils.Items
         public Color iconColor = Color.white;
         public CreatureTemplate.Type iconCreatureType = CreatureTemplate.Type.StandardGroundCreature;
 
-        public MultiplayerUnlocks.SandboxUnlockID unlockID = MultiplayerUnlocks.SandboxUnlockID.Slugcat;
-        public MultiplayerUnlocks.SandboxUnlockID unlockParent = MultiplayerUnlocks.SandboxUnlockID.Slugcat;
+        public MultiplayerUnlocks.SandboxUnlockID unlockID = null;
+        public MultiplayerUnlocks.SandboxUnlockID unlockParent = null;
 
         public Func<World, WorldCoordinate, EntityID, AbstractPhysicalObject> Ctor;
         public Func<World, string, AbstractPhysicalObject, AbstractPhysicalObject> SaveParser;
