@@ -22,7 +22,7 @@ public static class ItemCrafting
 
     public static void On_Player_SpitUpCraftedObject(On.Player.orig_SpitUpCraftedObject orig, Player self)
     {
-        if (self.SlugCatClass == MoreSlugcats.MoreSlugcatsEnums.SlugcatStatsName.Artificer)
+        if (self.SlugCatClass == MoreSlugcatsEnums.SlugcatStatsName.Artificer)
         {
             for (int i = 0; i < self.grasps.Length; i++)
             {

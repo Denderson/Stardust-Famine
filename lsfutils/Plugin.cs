@@ -447,6 +447,7 @@ public class Plugin : BaseUnityPlugin
             ItemCrafting.InitGourmandCombos();
             On.MoreSlugcats.GourmandCombos.InitCraftingLibrary += ItemCrafting.On_GourmandCombos_InitCraftingLibrary;
             On.Player.SpitUpCraftedObject += ItemCrafting.On_Player_SpitUpCraftedObject;
+            On.MoreSlugcats.GourmandCombos.CraftingResults += ItemRegistryCore.GourmandCombos_CraftingResults;
         }
     }
 
