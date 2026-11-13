@@ -2,15 +2,10 @@
 using lsfUtils.Items.ExplosiveBoomerang;
 using lsfUtils.Items.Spears.CopperSpears;
 using lsfUtils.Items.Spears.TorchSpears;
-using lsfUtils.RegionParams;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
 using MoreSlugcats;
 using RWCustom;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using Watcher;
 using static lsfUtils.Enums;
@@ -151,9 +146,18 @@ public static class ItemCrafting
             (abstractPhysicalObject.realizedObject as SingularityBomb).Explode();
         }
     }
+
+    public static bool IsHydrogenSlugpup(Player player)
+    {
+        if (player == null) return false;
+        if (player.isSlugpup) return false;
+        if (player.abstractCreature.ID != SpecialId) return false;
+        return true;
+    }
+
     public static string On_PlayerGraphics_DefaultFaceSprite_float_int(On.PlayerGraphics.orig_DefaultFaceSprite_float_int orig, PlayerGraphics self, float eyeScale, int imgIndex)
     {
-        if (self.player.SlugCatClass == MoreSlugcatsEnums.SlugcatStatsName.Slugpup && self.player.room != null && self.player.abstractCreature.ID == SpecialId)
+        if (IsHydrogenSlugpup(self.player))
         {
             return self._cachedFaceSpriteNames[0, 4, imgIndex];
         }
@@ -161,7 +165,7 @@ public static class ItemCrafting
     }
     public static string On_PlayerGraphics_DefaultFaceSprite_float(On.PlayerGraphics.orig_DefaultFaceSprite_float orig, PlayerGraphics self, float eyeScale)
     {
-        if (self.player.SlugCatClass == MoreSlugcatsEnums.SlugcatStatsName.Slugpup && self.player.room != null && self.player.abstractCreature.ID == SpecialId)
+        if (IsHydrogenSlugpup(self.player))
         {
             return "FaceE";
         }
@@ -170,7 +174,7 @@ public static class ItemCrafting
     public static void On_PlayerGraphics_DrawSprites(On.PlayerGraphics.orig_DrawSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
     {
         orig(self, sLeaser, rCam, timeStacker, camPos);
-        if (self.player.SlugCatClass == MoreSlugcatsEnums.SlugcatStatsName.Slugpup && self.player.room != null && self.player.abstractCreature.ID == SpecialId)
+        if (IsHydrogenSlugpup(self.player))
         {
             sLeaser.sprites[9].color = Color.red;
         }
@@ -178,7 +182,7 @@ public static class ItemCrafting
     public static void On_PlayerGraphics_ApplyPalette(On.PlayerGraphics.orig_ApplyPalette orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
     {
         orig(self, sLeaser, rCam, palette);
-        if (self.player.SlugCatClass == MoreSlugcatsEnums.SlugcatStatsName.Slugpup && self.player.room != null && self.player.abstractCreature.ID == SpecialId)
+        if (IsHydrogenSlugpup(self.player))
         {
             for (int i = 0; i < sLeaser.sprites.Length; i++)
             {
@@ -191,118 +195,114 @@ public static class ItemCrafting
     }
     public static void On_AbstractRoom_RealizeRoom(On.AbstractRoom.orig_RealizeRoom orig, AbstractRoom self, World world, RainWorldGame game)
     {
-        if (RegionCWT.TryGetCustomRegionParams(self?.realizedRoom?.world?.region, out var customRegionParams) && (int)(Random.value * 100) < customRegionParams.InvedSlugpupChance)
+        bool currentlyRealising = (self != null && self.realizedRoom == null);
+        orig(self, world, game);
+        if (!game.IsStorySession) return;
+        if (game.wasAnArtificerDream) return;
+        if (!currentlyRealising || self.realizedRoom == null) return;
+        if (!RegionCWT.TryGetCustomRegionParams(self?.realizedRoom?.world?.region, out var customRegionParams)) return;
+        if ((int)(Random.value * 100) < customRegionParams.InvedSlugpupChance && self.shelter)
         {
-            if (ModManager.MMF && world.game.rainWorld.options.quality == Options.Quality.LOW)
+            int num = (game.IsStorySession && game.StoryCharacter == SlugcatStats.Name.Red) ? 5 : 25;
+            if (ModManager.MSC && game.GetStorySession.slugPupMaxCount > 0 && game.GetStorySession.saveState.miscWorldSaveData.cyclesSinceLastSlugpup >= num && self.name != game.GetStorySession.saveState.denPosition)
             {
-                self.singleRealizedRoom = true;
-            }
-            if (self.realizedRoom == null && !self.offScreenDen)
-            {
-                int num = (game.IsStorySession && game.StoryCharacter == SlugcatStats.Name.Red) ? 5 : 25;
-                if (ModManager.MSC && self.shelter && !world.singleRoomWorld && !game.rainWorld.safariMode && !game.wasAnArtificerDream && game.IsStorySession && game.GetStorySession.slugPupMaxCount > 0 && game.GetStorySession.saveState.miscWorldSaveData.cyclesSinceLastSlugpup >= num && self.name != game.GetStorySession.saveState.denPosition)
-                {
-                    AbstractCreature abstractCreature = new AbstractCreature(world, StaticWorld.GetCreatureTemplate(MoreSlugcatsEnums.CreatureTemplateType.SlugNPC), null, new WorldCoordinate(self.index, -1, -1, 0), SpecialId);
-                    self.AddEntity(abstractCreature);
-                    (abstractCreature.state as PlayerNPCState).foodInStomach = 1;
-                    game.GetStorySession.saveState.miscWorldSaveData.cyclesSinceLastSlugpup = -game.GetStorySession.saveState.miscWorldSaveData.cyclesSinceLastSlugpup;
-                }
-                Room room = new Room(game, world, self, false);
-                world.loadingRooms.Add(new RoomPreparer(room, true, !game.setupValues.bake, false));
-                self.realizedRoom = room;
-                world.activeRooms.Add(self.realizedRoom);
+                AbstractCreature abstractCreature = new(world, StaticWorld.GetCreatureTemplate(MoreSlugcatsEnums.CreatureTemplateType.SlugNPC), null, new WorldCoordinate(self.index, -1, -1, 0), SpecialId);
+                self.AddEntity(abstractCreature);
+                (abstractCreature.state as PlayerNPCState).foodInStomach = 1;
+                game.GetStorySession.saveState.miscWorldSaveData.cyclesSinceLastSlugpup = -game.GetStorySession.saveState.miscWorldSaveData.cyclesSinceLastSlugpup;
             }
         }
-        else orig(self, world, game);
     }
     public static int On_World_SpawnPupNPCs(On.World.orig_SpawnPupNPCs orig, World self)
     {
-        if (RegionCWT.TryGetCustomRegionParams(self?.region, out var customRegionParams) && (int)(Random.value * 100) < customRegionParams.InvedSlugpupChance)
+        var value = orig(self);
+        var modifiedValue = SpawnHydrogenPupNPCs(self);
+        return Mathf.Max(value, modifiedValue);
+    }
+
+    public static int SpawnHydrogenPupNPCs(World self)
+    {
+        if (self.game.world.singleRoomWorld || self.game.rainWorld.safariMode || self.game.wasAnArtificerDream || !self.game.IsStorySession || self.game.GetStorySession.Players.Count <= 0)
         {
-            if (self.game.world.singleRoomWorld || self.game.rainWorld.safariMode || self.game.wasAnArtificerDream || !self.game.IsStorySession || self.game.GetStorySession.Players.Count == 0)
+            return 0;
+        }
+        int num = 0;
+        int slugpupsSpawned = 0;
+        AbstractRoom room = self.game.GetStorySession.Players[0].Room;
+        foreach (AbstractCreature abstractCreature in room.creatures)
+        {
+            if (abstractCreature.state.alive && abstractCreature.creatureTemplate.type == MoreSlugcatsEnums.CreatureTemplateType.SlugNPC)
             {
-                return 0;
+                num++;
+                slugpupsSpawned++;
             }
-            int num = 0;
-            int num2 = 0;
-            AbstractRoom room = self.game.GetStorySession.Players[0].Room;
-            foreach (AbstractCreature abstractCreature in room.creatures)
+        }
+        Random.State state = Random.state;
+        self.game.GetStorySession.SetRandomSeedToCycleSeed(self.region.regionNumber);
+        if (Random.value >= self.region.regionParams.slugPupSpawnChance && self.game.StoryCharacter != MoreSlugcatsEnums.SlugcatStatsName.Sofanthiel && self.game.GetStorySession.saveState.forcePupsNextCycle != 1)
+        {
+            Random.state = state;
+            return num;
+        }
+        if (num < self.game.GetStorySession.slugPupMaxCount)
+        {
+            List<AbstractRoom> list = new List<AbstractRoom>();
+            foreach (AbstractRoom abstractRoom in self.abstractRooms)
             {
-                if (abstractCreature.state.alive && abstractCreature.creatureTemplate.type == MoreSlugcatsEnums.CreatureTemplateType.SlugNPC)
+                if (abstractRoom != room && abstractRoom.shelter && abstractRoom.name != "SU_S05" && !self.game.world.DisabledMapRooms.Contains(abstractRoom.name, System.StringComparer.InvariantCultureIgnoreCase))
                 {
-                    num++;
-                    num2++;
+                    list.Add(abstractRoom);
                 }
             }
-            UnityEngine.Random.State state = UnityEngine.Random.state;
-            self.game.GetStorySession.SetRandomSeedToCycleSeed(self.region.regionNumber);
-            if (UnityEngine.Random.value >= self.region.regionParams.slugPupSpawnChance && self.game.StoryCharacter != MoreSlugcatsEnums.SlugcatStatsName.Sofanthiel && self.game.GetStorySession.saveState.forcePupsNextCycle != 1)
+            int num3 = 1;
+            AbstractRoom abstractRoom2;
+            if (self.game.GetStorySession.saveState.forcePupsNextCycle == 1)
             {
-                UnityEngine.Random.state = state;
-                return num;
+                abstractRoom2 = room;
+                num3 = self.game.GetStorySession.slugPupMaxCount - num;
+                self.game.GetStorySession.saveState.forcePupsNextCycle = 2;
             }
-            if (num < self.game.GetStorySession.slugPupMaxCount)
+            else
             {
-                List<AbstractRoom> list = new List<AbstractRoom>();
-                foreach (AbstractRoom abstractRoom in self.abstractRooms)
+                if (list.Count == 0)
                 {
-                    if (abstractRoom != room && abstractRoom.shelter && abstractRoom.name != "SU_S05" && !self.game.world.DisabledMapRooms.Contains(abstractRoom.name, System.StringComparer.InvariantCultureIgnoreCase))
+                    Custom.LogWarning(new string[]
                     {
-                        list.Add(abstractRoom);
-                    }
+                        "No shelters for pup spawns"
+                    });
+                    return num;
                 }
-                int num3 = 1;
-                AbstractRoom abstractRoom2;
-                if (self.game.GetStorySession.saveState.forcePupsNextCycle == 1)
+                if (list.Count == 1)
                 {
-                    abstractRoom2 = room;
-                    num3 = self.game.GetStorySession.slugPupMaxCount - num;
-                    self.game.GetStorySession.saveState.forcePupsNextCycle = 2;
+                    Custom.LogWarning(new string[]
+                    {
+                        "only a SINGLE shelter for pup spawns"
+                    });
+                    abstractRoom2 = list[0];
                 }
                 else
                 {
-                    if (list.Count == 0)
-                    {
-                        Custom.LogWarning(new string[]
-                        {
-                        "No shelters for pup spawns"
-                        });
-                        return num;
-                    }
-                    if (list.Count == 1)
-                    {
-                        Custom.LogWarning(new string[]
-                        {
-                        "only a SINGLE shelter for pup spawns"
-                        });
-                        abstractRoom2 = list[0];
-                    }
-                    else
-                    {
-                        abstractRoom2 = list[UnityEngine.Random.Range(0, list.Count)];
-                    }
-                }
-                for (int j = 0; j < num3; j++)
-                {
-                    AbstractCreature abstractCreature2 = new AbstractCreature(self, StaticWorld.GetCreatureTemplate(MoreSlugcatsEnums.CreatureTemplateType.SlugNPC), null, new WorldCoordinate(abstractRoom2.index, -1, -1, 0), SpecialId);
-                    abstractRoom2.AddEntity(abstractCreature2);
-                    if (abstractRoom2.realizedRoom != null)
-                    {
-                        abstractCreature2.RealizeInRoom();
-                    }
-                    (abstractCreature2.state as PlayerNPCState).foodInStomach = 1;
-                    num++;
-                    Custom.Log(new string[]
-                    {
-                    string.Format("Created slugpup! {0} at {1} ({2})", abstractCreature2, abstractRoom2.name, abstractRoom2.index)
-                    });
+                    abstractRoom2 = list[Random.Range(0, list.Count)];
                 }
             }
-            UnityEngine.Random.state = state;
-            return num2;
-
+            for (int j = 0; j < num3; j++)
+            {
+                AbstractCreature abstractCreature2 = new AbstractCreature(self, StaticWorld.GetCreatureTemplate(MoreSlugcatsEnums.CreatureTemplateType.SlugNPC), null, new WorldCoordinate(abstractRoom2.index, -1, -1, 0), SpecialId);
+                abstractRoom2.AddEntity(abstractCreature2);
+                if (abstractRoom2.realizedRoom != null)
+                {
+                    abstractCreature2.RealizeInRoom();
+                }
+                (abstractCreature2.state as PlayerNPCState).foodInStomach = 1;
+                num++;
+                Custom.Log(new string[]
+                {
+                    string.Format("Created slugpup! {0} at {1} ({2})", abstractCreature2, abstractRoom2.name, abstractRoom2.index)
+                });
+            }
         }
-        else return orig(self);
+        Random.state = state;
+        return slugpupsSpawned;
     }
 
     public static void InitGourmandCombos()
