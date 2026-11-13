@@ -79,7 +79,7 @@ public class Plugin : BaseUnityPlugin
 
     public const string templarMaskIcon = "atlases/templarMaskIcon";
 
-    public static readonly EntityID SpecialId = new(1, -20);
+    public static readonly EntityID SpecialId = new(-1, -20);
 
     private void LoadResources(RainWorld rainWorld)
     {
@@ -446,7 +446,15 @@ public class Plugin : BaseUnityPlugin
             ItemCrafting.ResizeGourmandCombos();
             ItemCrafting.InitGourmandCombos();
             On.MoreSlugcats.GourmandCombos.InitCraftingLibrary += ItemCrafting.On_GourmandCombos_InitCraftingLibrary;
+            On.Player.CraftingResults += ItemCrafting.On_Player_CraftingResults;
             On.Player.SpitUpCraftedObject += ItemCrafting.On_Player_SpitUpCraftedObject;
+            On.Player.Die += ItemCrafting.On_Player_Die;
+            On.PlayerGraphics.DefaultFaceSprite_float_int += ItemCrafting.On_PlayerGraphics_DefaultFaceSprite_float_int;
+            On.PlayerGraphics.DefaultFaceSprite_float += ItemCrafting.On_PlayerGraphics_DefaultFaceSprite_float;
+            On.PlayerGraphics.DrawSprites += ItemCrafting.On_PlayerGraphics_DrawSprites;
+            On.PlayerGraphics.ApplyPalette += ItemCrafting.On_PlayerGraphics_ApplyPalette;
+            On.AbstractRoom.RealizeRoom += ItemCrafting.On_AbstractRoom_RealizeRoom;
+            On.World.SpawnPupNPCs += ItemCrafting.On_World_SpawnPupNPCs;
             On.MoreSlugcats.GourmandCombos.CraftingResults += ItemRegistryCore.GourmandCombos_CraftingResults;
         }
     }

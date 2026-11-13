@@ -54,6 +54,8 @@ public class CustomRegionParams
 
     public Color FireEdgeColor { get; set; } = new(1f, 0.15f, 0f);
 
+    public int InvedSlugpupChance { get; set; } = 0;
+
     public static CustomRegionParams ParseFromUnrecognized(Dictionary<string, string> unrecognized, string regionName, SlugcatStats.Timeline timeline)
     {
         CustomRegionParams customRegionParams = new();
@@ -82,6 +84,7 @@ public class CustomRegionParams
         if (TryGet(table, "floatMudColor", timeline, out val) && TryParseColor(val, out Color color)) customRegionParams.FloatMudColor = color;
         if (TryGet(table, "fireCoreColor", timeline, out val) && TryParseColor(val, out color)) customRegionParams.FireCoreColor = color;
         if (TryGet(table, "fireEdgeColor", timeline, out val) && TryParseColor(val, out color)) customRegionParams.FireEdgeColor = color;
+        if (ModManager.MSC && TryGet(table, "invedSlugpupChance", timeline, out val) && TryParseInt(val, out number)) customRegionParams.InvedSlugpupChance = number;
 
         return customRegionParams;
     }

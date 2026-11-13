@@ -112,7 +112,7 @@ public class CopperSpear : Spear
 
     public void Charge(float amount)
     {
-        if (timer < 120) return;
+        if (timer < 120 && timer > -1) return;
         intensity += amount;
         if (timer == -1) timer = 1320 - (int)(120 * amount);
         else timer = Mathf.Min(timer, (timer + 1320 - (int)(120 * amount)) / (charges + 3));

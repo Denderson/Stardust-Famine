@@ -1,4 +1,9 @@
-﻿using UnityEngine;
+﻿using lsfUtils.CWTs;
+using lsfUtils.Items.RippleFlower;
+using lsfUtils.Items.Spears.TorchSpears;
+using lsfUtils.Items.Spears.CopperSpears;
+using MoreSlugcats;
+using UnityEngine;
 
 namespace lsfUtils.Items;
 
@@ -30,6 +35,40 @@ public static class ItemRegistryCore
         if (result != null && ItemRegistryTemplate.TryGet(result.type, out ItemRegistryEntry entry) && entry.Ctor != null)
         {
             return entry.Ctor(result.world, result.pos, result.ID);
+        }
+        if (result.type == AbstractPhysicalObject.AbstractObjectType.Creature)
+        {
+            Plugin.Log.LogMessage("meow");
+            CreatureTemplate.Type type = GourmandCombos.CraftingResults_CreatureData(graspA, graspB);
+            if (type == MoreSlugcatsEnums.CreatureTemplateType.SlugNPC && (graspA.grabbed is Player && graspB.grabbed is SingularityBomb || graspA.grabbed is SingularityBomb && graspB.grabbed is Player))
+            {
+                Plugin.Log.LogMessage("wruff");
+                if (AbstractCreatureCWT.TryGetData(result as AbstractCreature, out var data))
+                {
+                    Plugin.Log.LogMessage("awoooo");
+                    return new AbstractCreature(crafter.room.world, StaticWorld.GetCreatureTemplate(type), null, crafter.abstractPhysicalObject.pos, Plugin.SpecialId);                }
+            }
+            Plugin.Log.LogMessage($"creature was {type}");
+        }
+        if (result.type == AbstractPhysicalObject.AbstractObjectType.Spear)
+        {
+            if (graspA.grabbed is Spear spearA && graspB.grabbed is PhysicalObject objB && objB.abstractPhysicalObject.type == Enums.AbstractObjectType.RippleFlower)
+            {
+                if (spearA.abstractSpear.explosive) result = new TorchSpearAbstract(crafter.room.world, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID());
+                else if (spearA.abstractSpear.electric) result = new CopperSpearAbstract(crafter.room.world, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID());
+                //else if (spearA.abstractSpear.hue != 0f) result = ;
+                //else if (spearA.abstractSpear.poison > 0f) result = ;
+                else result = new RippleFlowerAbstract(crafter.room.world, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID(), -1, -1, null); //just a placeholder for now
+            }
+            else if (graspB.grabbed is Spear spearB && graspA.grabbed is PhysicalObject objA && objA.abstractPhysicalObject.type == Enums.AbstractObjectType.RippleFlower)
+            {
+                if (spearB.abstractSpear.explosive) result = new TorchSpearAbstract(crafter.room.world, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID());
+                else if (spearB.abstractSpear.electric) result = new CopperSpearAbstract(crafter.room.world, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID());
+                //else if (spearB.abstractSpear.hue != 0f) result = ;
+                //else if (spearB.abstractSpear.poison > 0f) result = ;
+                else result = new RippleFlowerAbstract(crafter.room.world, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID(), -1, -1, null); //same thing
+            }
+
         }
         return result;
     }
