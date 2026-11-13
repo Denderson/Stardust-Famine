@@ -9,6 +9,7 @@ public class CopperSpear : Spear
 {
     public float intensity;
     public int timer;
+    public int rechargeTimer = 0;
     public int Oxidization => (abstractSpear as CopperSpearAbstract).oxidization;
 
     public int charges = 0;
@@ -108,12 +109,18 @@ public class CopperSpear : Spear
             room.AddObject(new UnderwaterShock(room, null, firstChunk.pos, 10, intensity * 250f, intensity * 2, (mode == Mode.Thrown) ? thrownBy : null, GetElectricityColor()));
             Discharge();
         }
+        if (rechargeTimer > 0)
+        {
+            rechargeTimer--;
+        }
     }
 
     public void Charge(float amount)
     {
+        if (rechargeTimer > 0) return;
         if (timer < 120 && timer > -1) return;
         intensity += amount;
+        rechargeTimer = intensity >= 5 ? 40 : 20;
         if (timer == -1) timer = 1320 - (int)(120 * amount);
         else timer = Mathf.Min(timer, (timer + 1320 - (int)(120 * amount)) / (charges + 3));
         charges++;
@@ -134,6 +141,7 @@ public class CopperSpear : Spear
     {
         intensity = 0f;
         timer = -1;
+        rechargeTimer = 0;
         charges = 0;
         struck = false;
     }

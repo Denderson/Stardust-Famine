@@ -4,6 +4,7 @@ using lsfUtils.Items.Spears.TorchSpears;
 using lsfUtils.Items.Spears.CopperSpears;
 using MoreSlugcats;
 using UnityEngine;
+using System.Diagnostics.Eventing.Reader;
 
 namespace lsfUtils.Items;
 
@@ -38,37 +39,54 @@ public static class ItemRegistryCore
         }
         if (result.type == AbstractPhysicalObject.AbstractObjectType.Creature)
         {
-            Plugin.Log.LogMessage("meow");
             CreatureTemplate.Type type = GourmandCombos.CraftingResults_CreatureData(graspA, graspB);
-            if (type == MoreSlugcatsEnums.CreatureTemplateType.SlugNPC && (graspA.grabbed is Player && graspB.grabbed is SingularityBomb || graspA.grabbed is SingularityBomb && graspB.grabbed is Player))
+            if (type == MoreSlugcatsEnums.CreatureTemplateType.SlugNPC)
             {
-                Plugin.Log.LogMessage("wruff");
-                if (AbstractCreatureCWT.TryGetData(result as AbstractCreature, out var data))
+                if (graspA.grabbed is Player && graspB.grabbed is SingularityBomb || graspA.grabbed is SingularityBomb && graspB.grabbed is Player)
                 {
-                    Plugin.Log.LogMessage("awoooo");
-                    return new AbstractCreature(crafter.room.world, StaticWorld.GetCreatureTemplate(type), null, crafter.abstractPhysicalObject.pos, Plugin.SpecialId);                }
+                    return new AbstractCreature(crafter.room.world, StaticWorld.GetCreatureTemplate(type), null, crafter.abstractPhysicalObject.pos, Plugin.SpecialId);
+                }  
+                else if (graspA.grabbed is Player && graspB.grabbed is ScavengerBomb || graspA.grabbed is ScavengerBomb && graspB.grabbed is Player)
+                {
+                    return new AbstractCreature(crafter.room.world, StaticWorld.GetCreatureTemplate(type), null, crafter.abstractPhysicalObject.pos, Plugin.SpecialIdElectricBoogaloo);
+                }
             }
             Plugin.Log.LogMessage($"creature was {type}");
         }
         if (result.type == AbstractPhysicalObject.AbstractObjectType.Spear)
         {
-            if (graspA.grabbed is Spear spearA && graspB.grabbed is PhysicalObject objB && objB.abstractPhysicalObject.type == Enums.AbstractObjectType.RippleFlower)
+            if (graspA.grabbed is Spear spearA && graspB.grabbed is KarmaFlower flowerA)
             {
-                if (spearA.abstractSpear.explosive) result = new TorchSpearAbstract(crafter.room.world, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID());
-                else if (spearA.abstractSpear.electric) result = new CopperSpearAbstract(crafter.room.world, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID());
-                //else if (spearA.abstractSpear.hue != 0f) result = ;
-                //else if (spearA.abstractSpear.poison > 0f) result = ;
-                else result = new RippleFlowerAbstract(crafter.room.world, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID(), -1, -1, null); //just a placeholder for now
+                if (flowerA.abstractPhysicalObject.type == Enums.AbstractObjectType.RippleFlower)
+                {
+                    if (spearA.abstractSpear.explosive) result = new TorchSpearAbstract(crafter.room.world, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID());
+                    else if (spearA.abstractSpear.electric) result = new CopperSpearAbstract(crafter.room.world, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID());
+                    //else if (spearA.abstractSpear.hue != 0f) result = ;
+                    //else if (spearA.abstractSpear.poison > 0f) result = ;
+                    else result = new RippleFlowerAbstract(crafter.room.world, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID(), -1, -1, null); //just a placeholder for now
+                }
+                else if (flowerA.abstractPhysicalObject.type == AbstractPhysicalObject.AbstractObjectType.KarmaFlower)
+                {
+                    if (spearA is TorchSpear) result = new AbstractSpear(crafter.room.world, null, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID(), false);
+                    else if (spearA is CopperSpear) result = new AbstractSpear(crafter.room.world, null, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID(), false, true);
+                }
             }
-            else if (graspB.grabbed is Spear spearB && graspA.grabbed is PhysicalObject objA && objA.abstractPhysicalObject.type == Enums.AbstractObjectType.RippleFlower)
+            else if (graspB.grabbed is Spear spearB && graspA.grabbed is KarmaFlower flowerB)
             {
-                if (spearB.abstractSpear.explosive) result = new TorchSpearAbstract(crafter.room.world, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID());
-                else if (spearB.abstractSpear.electric) result = new CopperSpearAbstract(crafter.room.world, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID());
-                //else if (spearB.abstractSpear.hue != 0f) result = ;
-                //else if (spearB.abstractSpear.poison > 0f) result = ;
-                else result = new RippleFlowerAbstract(crafter.room.world, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID(), -1, -1, null); //same thing
+                if (flowerB.abstractPhysicalObject.type == Enums.AbstractObjectType.RippleFlower)
+                {
+                    if (spearB.abstractSpear.explosive) result = new TorchSpearAbstract(crafter.room.world, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID());
+                    else if (spearB.abstractSpear.electric) result = new CopperSpearAbstract(crafter.room.world, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID());
+                    //else if (spearB.abstractSpear.hue != 0f) result = ;
+                    //else if (spearB.abstractSpear.poison > 0f) result = ;
+                    else result = new RippleFlowerAbstract(crafter.room.world, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID(), -1, -1, null); //same thing
+                }
+                else if (flowerB.abstractPhysicalObject.type == AbstractPhysicalObject.AbstractObjectType.KarmaFlower)
+                {
+                    if (spearB is TorchSpear) result = new AbstractSpear(crafter.room.world, null, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID(), true);
+                    else if (spearB is CopperSpear) result = new AbstractSpear(crafter.room.world, null, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID(), false, true);
+                }
             }
-
         }
         return result;
     }

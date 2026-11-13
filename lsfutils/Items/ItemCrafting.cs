@@ -138,26 +138,49 @@ public static class ItemCrafting
     {
         bool isDead = self.dead;
         orig(self);
-        if (self.isSlugpup && self.room != null && self.abstractCreature.ID == SpecialId && !isDead)
+        if (self.isSlugpup && self.room != null && !isDead)
         {
-            AbstractPhysicalObject abstractPhysicalObject = new AbstractPhysicalObject(self.abstractCreature.Room.world, DLCSharedEnums.AbstractObjectType.SingularityBomb, null, self.room.GetWorldCoordinate(self.mainBodyChunk.pos), self.abstractCreature.Room.world.game.GetNewID());
-            self.abstractCreature.Room.AddEntity(abstractPhysicalObject);
-            abstractPhysicalObject.RealizeInRoom();
-            (abstractPhysicalObject.realizedObject as SingularityBomb).Explode();
+            if (self.abstractCreature.ID == SpecialId)
+            {
+                AbstractPhysicalObject abstractPhysicalObject = new AbstractPhysicalObject(self.abstractCreature.Room.world, DLCSharedEnums.AbstractObjectType.SingularityBomb, null, self.room.GetWorldCoordinate(self.mainBodyChunk.pos), self.abstractCreature.Room.world.game.GetNewID());
+                self.abstractCreature.Room.AddEntity(abstractPhysicalObject);
+                abstractPhysicalObject.RealizeInRoom();
+                (abstractPhysicalObject.realizedObject as SingularityBomb).Explode();
+            }
+            else if (self.abstractCreature.ID == SpecialIdElectricBoogaloo)
+            {
+                var room = self.room;
+                var pos = self.mainBodyChunk.pos;
+                if (self?.room == null || pos == null) return;
+                room.AddObject(new Explosion(room, self, pos, 7, 250f, 6.2f, 2f, 280f, 0.25f, self, 0.7f, 160f, 1f));
+                room.AddObject(new Explosion.ExplosionLight(pos, 230f, 1f, 3, new Color(1f, 1f, 1f)));
+                room.AddObject(new ExplosionSpikes(room, pos, 14, 30f, 9f, 7f, 170f, new Color(1f, 1f, 1f)));
+
+                room.ScreenMovement(pos, default, 1.3f);
+            }
         }
+
     }
 
-    public static bool IsHydrogenSlugpup(Player player)
+    public static bool IsSingularitySlugpup(Player player)
     {
         if (player == null) return false;
-        if (player.isSlugpup) return false;
+        if (player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Slugpup) return false;
         if (player.abstractCreature.ID != SpecialId) return false;
         return true;
+    }
+    public static bool IsExplosiveSlugpup(Player player)
+    {
+        if (player == null) return false;
+        if (player.SlugCatClass != MoreSlugcatsEnums.SlugcatStatsName.Slugpup) return false;
+        if (player.abstractCreature.ID != SpecialIdElectricBoogaloo) return false;
+        return true;
+
     }
 
     public static string On_PlayerGraphics_DefaultFaceSprite_float_int(On.PlayerGraphics.orig_DefaultFaceSprite_float_int orig, PlayerGraphics self, float eyeScale, int imgIndex)
     {
-        if (IsHydrogenSlugpup(self.player))
+        if (IsSingularitySlugpup(self.player) || IsExplosiveSlugpup(self.player))
         {
             return self._cachedFaceSpriteNames[0, 4, imgIndex];
         }
@@ -165,7 +188,7 @@ public static class ItemCrafting
     }
     public static string On_PlayerGraphics_DefaultFaceSprite_float(On.PlayerGraphics.orig_DefaultFaceSprite_float orig, PlayerGraphics self, float eyeScale)
     {
-        if (IsHydrogenSlugpup(self.player))
+        if (IsSingularitySlugpup(self.player) || IsExplosiveSlugpup(self.player))
         {
             return "FaceE";
         }
@@ -174,21 +197,35 @@ public static class ItemCrafting
     public static void On_PlayerGraphics_DrawSprites(On.PlayerGraphics.orig_DrawSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
     {
         orig(self, sLeaser, rCam, timeStacker, camPos);
-        if (IsHydrogenSlugpup(self.player))
+        if (IsSingularitySlugpup(self.player))
         {
             sLeaser.sprites[9].color = Color.red;
+        }
+        else if (IsExplosiveSlugpup(self.player))
+        {
+            sLeaser.sprites[9].color = Color.white;
         }
     }
     public static void On_PlayerGraphics_ApplyPalette(On.PlayerGraphics.orig_ApplyPalette orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
     {
         orig(self, sLeaser, rCam, palette);
-        if (IsHydrogenSlugpup(self.player))
+        if (IsSingularitySlugpup(self.player))
         {
             for (int i = 0; i < sLeaser.sprites.Length; i++)
             {
                 if (i != 9)
                 {
                     sLeaser.sprites[i].color = new Color(0.01f, 0.01f, 0.01f);
+                }
+            }
+        }
+        else if (IsExplosiveSlugpup(self.player))
+        {
+            for (int i = 0; i < sLeaser.sprites.Length; i++)
+            {
+                if (i != 9)
+                {
+                    sLeaser.sprites[i].color = new Color(0.0392f, 0.0392f, 0.0392f);
                 }
             }
         }
@@ -308,7 +345,12 @@ public static class ItemCrafting
     public static void InitGourmandCombos()
     {
         Log.LogMessage("Init gourmand combos!");
-        SetCombo(AbstractPhysicalObject.AbstractObjectType.Spear, AbstractObjectType.RippleFlower, AbstractPhysicalObject.AbstractObjectType.Spear); // the result isn't actually Spear, the logic code is in ItemRegistryCore
+        SetCombo(AbstractPhysicalObject.AbstractObjectType.KarmaFlower, AbstractPhysicalObject.AbstractObjectType.DataPearl, AbstractObjectType.RippleFlower);
+        SetCombo(AbstractObjectType.RippleFlower, AbstractPhysicalObject.AbstractObjectType.DataPearl, AbstractPhysicalObject.AbstractObjectType.KarmaFlower);
+
+        SetCombo(AbstractPhysicalObject.AbstractObjectType.Spear, AbstractObjectType.RippleFlower, AbstractPhysicalObject.AbstractObjectType.Spear); //the result isn't actually Spear, the logic code is in ItemRegistryCore
+        SetCombo(AbstractObjectType.TorchSpear, AbstractPhysicalObject.AbstractObjectType.KarmaFlower, AbstractPhysicalObject.AbstractObjectType.Spear);
+        SetCombo(AbstractObjectType.CopperSpear, AbstractPhysicalObject.AbstractObjectType.KarmaFlower, AbstractPhysicalObject.AbstractObjectType.Spear);
 
         SetCombo(AbstractObjectType.RippleFlower, AbstractPhysicalObject.AbstractObjectType.VultureMask, AbstractObjectType.KarmaMask);
         SetCombo(AbstractObjectType.KarmaMask, AbstractPhysicalObject.AbstractObjectType.KarmaFlower, AbstractPhysicalObject.AbstractObjectType.VultureMask);
@@ -328,10 +370,11 @@ public static class ItemCrafting
             SetCombo(AbstractObjectType.ExplosiveBoomerang, AbstractPhysicalObject.AbstractObjectType.KarmaFlower, AbstractPhysicalObject.AbstractObjectType.ScavengerBomb);
             SetCombo(AbstractObjectType.SingularityBoomerang, AbstractPhysicalObject.AbstractObjectType.KarmaFlower, DLCSharedEnums.AbstractObjectType.SingularityBomb);
         }
-        
+
 
         SetCombo(CreatureTemplate.Type.VultureGrub, AbstractObjectType.RippleFlower, CreatureTemplateType.ClimbGrub);
-        SetCombo(MoreSlugcatsEnums.CreatureTemplateType.SlugNPC, DLCSharedEnums.AbstractObjectType.SingularityBomb, MoreSlugcatsEnums.CreatureTemplateType.SlugNPC);
+        SetCombo(MoreSlugcatsEnums.CreatureTemplateType.SlugNPC, DLCSharedEnums.AbstractObjectType.SingularityBomb, MoreSlugcatsEnums.CreatureTemplateType.SlugNPC); //extra code also at ItemRegistryCore
+        SetCombo(MoreSlugcatsEnums.CreatureTemplateType.SlugNPC, AbstractPhysicalObject.AbstractObjectType.ScavengerBomb, MoreSlugcatsEnums.CreatureTemplateType.SlugNPC);
 
         Log.LogMessage("Gourmand combos done!");
     }
@@ -351,6 +394,10 @@ public static class ItemCrafting
         GourmandCombos.objectsLibrary[AbstractObjectType.Dart] = cnt;
         ++cnt;
         GourmandCombos.objectsLibrary[AbstractObjectType.PoisonDart] = cnt;
+        ++cnt;
+        GourmandCombos.objectsLibrary[AbstractObjectType.TorchSpear] = cnt;
+        ++cnt;
+        GourmandCombos.objectsLibrary[AbstractObjectType.CopperSpear] = cnt;
         ++cnt;
         if (!GourmandCombos.objectsLibrary.ContainsKey(AbstractPhysicalObject.AbstractObjectType.Spear))
         {
@@ -388,7 +435,7 @@ public static class ItemCrafting
             for (j = 0; j < l1; j++)
                 arrayNew[i, j] = arrayOrig[i, j];
         }
-        GourmandCombos.craftingGrid_CritterObjects = arrayNew;
+        GourmandCombos.craftingGrid_CrittersOnly = arrayNew;
         arrayOrig = GourmandCombos.craftingGrid_CritterObjects;
         l0 = arrayOrig.GetLength(0);
         l1 = arrayOrig.GetLength(1);

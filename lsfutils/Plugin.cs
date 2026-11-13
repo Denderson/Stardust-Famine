@@ -79,7 +79,8 @@ public class Plugin : BaseUnityPlugin
 
     public const string templarMaskIcon = "atlases/templarMaskIcon";
 
-    public static readonly EntityID SpecialId = new(-1, -20);
+    public static readonly EntityID SpecialId = new(-1, -33);
+    public static readonly EntityID SpecialIdElectricBoogaloo = new(-1, -21);
 
     private void LoadResources(RainWorld rainWorld)
     {
