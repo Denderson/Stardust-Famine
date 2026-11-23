@@ -37,7 +37,6 @@ using lsfUtils.DevtoolsObjects.RippleZone;
 using lsfUtils.DevtoolsObjects.WaveLight;
 using lsfUtils.Items;
 using lsfUtils.Items.Artefacts;
-//using lsfUtils.Items.Artefacts.KarmaMask;
 using lsfUtils.Items.Artifacts.BasementKey;
 using lsfUtils.Items.BrownFruit;
 using lsfUtils.Items.ExplosiveBoomerang;
@@ -373,6 +372,16 @@ public class Plugin : BaseUnityPlugin
         return false;
     }
 
+    public static bool GetGameFromAnywhere(out RainWorldGame result)
+    {
+        result = null;
+        if (Custom.rainWorld.processManager?.currentMainLoop is RainWorldGame game)
+        {
+            result = game;
+            return true;
+        }
+        return false;
+    }
 
     private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
     {

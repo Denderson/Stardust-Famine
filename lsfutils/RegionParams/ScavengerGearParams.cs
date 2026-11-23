@@ -5,6 +5,7 @@ using MonoMod.Cil;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Watcher;
 using static lsfUtils.Plugin;
 using static MonoMod.Cil.RuntimeILReferenceBag.FastDelegateInvokers;
@@ -189,7 +190,7 @@ public static class ScavengerGearParams
                 items[itemID] = scavItem;
             }
         }
-        return new List<ScavItem>(items.Values);
+        return items.Values.ToList();
     }
 
     public static bool IsCorrectType(string typeString, CreatureTemplate.Type type)
