@@ -140,6 +140,7 @@ public class Plugin : BaseUnityPlugin
 
                 RippleFlowerHooks.ApplyHooks();
                 DartHooks.ApplyHooks();
+                DartDebugHooks.ApplyHooks();
                 KarmaMaskHooks.ApplyHooks();
                 ExplosiveBoomerangHooks.ApplyHooks();
                 SpearHooks.ApplyHooks();
@@ -290,27 +291,24 @@ public class Plugin : BaseUnityPlugin
             bool fire = strItem == "firespear";
             bool poison = strItem == "poisonspear";
             Log.LogMessage($"explosive: {explosive}, electric: {electric}, fire: {fire}, poison: {poison}");
-
             float hue = 0f;
             if (fire) hue = Mathf.Lerp(UnityEngine.Random.value, 1f, 0.001f);
-            AbstractSpear spear = new AbstractSpear(creature.world, null, creature.pos, creature.world.game.GetNewID(), explosive, electric);
-            AbstractSpear spearf = new AbstractSpear(creature.world, null, creature.pos, creature.world.game.GetNewID(), explosive, hue);
+
+
+            AbstractSpear spear;
+            if (hue != 0f) spear = new(creature.world, null, creature.pos, creature.world.game.GetNewID(), explosive, hue);
+            else spear = new(creature.world, null, creature.pos, creature.world.game.GetNewID(), explosive, electric);
+
+            if (addToRoom) creature.world.GetAbstractRoom(creature.pos).AddEntity(spear);
+            if (graspIndex > -1) new AbstractPhysicalObject.CreatureGripStick(creature, spear, graspIndex, true);
+            result = spear;
+
             if (poison)
             {
                 spear.poison = 1f;
                 spear.poisonHue = UnityEngine.Random.value;
             }
-            if (hue != 0f)
-            {
-                if (addToRoom) creature.world.GetAbstractRoom(creature.pos).AddEntity(spearf);
-                if (graspIndex > -1) new AbstractPhysicalObject.CreatureGripStick(creature, spearf, graspIndex, true);
-            }
-            else
-            {
-                if (addToRoom) creature.world.GetAbstractRoom(creature.pos).AddEntity(spear);
-                if (graspIndex > -1) new AbstractPhysicalObject.CreatureGripStick(creature, spear, graspIndex, true);
-            }
-            result = spear;
+
             return true;
         }
 

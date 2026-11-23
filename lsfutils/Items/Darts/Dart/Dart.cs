@@ -80,13 +80,13 @@ namespace lsfUtils.Items.Darts.Dart
 
         public override void ChangeMode(Mode newMode)
         {
-            if (mode == Mode.StuckInCreature)
+            if (mode == Mode.StuckInCreature && newMode != Mode.StuckInCreature)
             {
                 room?.PlaySound(SoundID.Spear_Dislodged_From_Creature, firstChunk);
                 PulledOutOfStuckObject();
                 ChangeOverlap(newOverlap: true);
             }
-            else if (newMode == Mode.StuckInCreature)
+            else if (mode != Mode.StuckInCreature && newMode == Mode.StuckInCreature)
             {
                 pullOutAttempts = 0;
                 pullOutTimer = 0;
@@ -164,7 +164,11 @@ namespace lsfUtils.Items.Darts.Dart
             }
             else if (mode == Mode.StuckInCreature)
             {
-                if (stuckInChunk?.owner is Creature)
+                if (stuckInObject == null || stuckInObject.bodyChunks == null)
+                {
+                    ChangeMode(Mode.Free);
+                }
+                else if (stuckInChunk?.owner is Creature)
                 {
                     if (stuckInAppendage != null)
                     {
@@ -324,9 +328,10 @@ namespace lsfUtils.Items.Darts.Dart
                 return false;
             }
             bool flag2 = false;
+            bool spearStick = (result.obj as Creature).SpearStick(this, Mathf.Lerp(0.55f, 0.62f, UnityEngine.Random.value), result.chunk, result.onAppendagePos, firstChunk.vel);
             if (result.obj is Creature)
             {
-                if (!(result.obj is Player) || (result.obj as Creature).SpearStick(this, Mathf.Lerp(0.55f, 0.62f, UnityEngine.Random.value), result.chunk, result.onAppendagePos, firstChunk.vel))
+                if (result.obj is not Player || spearStick)
                 {
                     (result.obj as Creature).Violence(firstChunk, firstChunk.vel * (firstChunk.mass * 2f), result.chunk, result.onAppendagePos, Creature.DamageType.Stab, 0.1f, 20f);
                 }
@@ -339,7 +344,7 @@ namespace lsfUtils.Items.Darts.Dart
             {
                 (result.obj as IHaveAppendages).ApplyForceOnAppendage(result.onAppendagePos, firstChunk.vel * firstChunk.mass);
             }
-            if (result.obj is Creature && (result.obj as Creature).SpearStick(this, Mathf.Lerp(0.55f, 0.62f, UnityEngine.Random.value), result.chunk, result.onAppendagePos, firstChunk.vel))
+            if (result.obj is Creature && spearStick)
             {
                 Creature creature = result.obj as Creature;
                 room.PlaySound(SoundID.Spear_Stick_In_Creature, firstChunk);
@@ -372,6 +377,9 @@ namespace lsfUtils.Items.Darts.Dart
             switch (abstractDart.dartType)
             {
                 case Enums.DartType.Poison: dartSprite = "atlases/PoisonDart"; break;
+                case Enums.DartType.Default: dartSprite = "atlases/Dart";  break;
+                case Enums.DartType.Quill: dartSprite = "atlases/Dart"; break;
+                case Enums.DartType.Sharpnel: dartSprite = "atlases/Dart"; break;
                 default: dartSprite = "atlases/Dart"; break;
             }
             if (abstractDart.poison > 0f)
