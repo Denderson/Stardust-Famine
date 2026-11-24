@@ -13,8 +13,10 @@ namespace lsfUtils.Creatures;
 
 public static class CreatureRegistry
 {
+    private static bool registered = false;
     public static void RegisterAll()
     {
+        if (registered) return;
         RegisterAirplaneLizard();
         RegisterFlameLizard();
         RegisterMonitorLizard();
@@ -22,16 +24,21 @@ public static class CreatureRegistry
         RegisterRaspberryLizard();
         RegisterStarnosedLizard();
         RegisterWeaverLizard();
-        //RegisterScavFlank();
-        //RegisterScavMessenger();
-        //RegisterScavSeer();
         RegisterStarSpawn();
         RegisterStarNoodles();
         RegisterStarJelly();
         RegisterPoisonSpider();
         RegisterClimbGrub();
         RegisterPorcupine();
-        RegisterToxicSponge();
+
+        if (ModManager.Watcher)
+        {
+            //RegisterScavFlank();
+            //RegisterScavMessenger();
+            //RegisterScavSeer();
+            RegisterToxicSponge();
+        }
+        registered = true;
     }
 
     public static CreatureTemplate LizardTemplate(CreatureTemplate.Type type)

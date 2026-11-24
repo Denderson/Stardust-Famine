@@ -28,6 +28,8 @@ namespace lsfUtils.CWTs
             public float flammability = 2f;
             public bool canSpreadFire = false;
             public int fireLoss = 0;
+
+            public float fireBuildupAmount = 0f;
         }
     }
 }

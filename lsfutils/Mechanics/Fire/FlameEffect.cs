@@ -1,19 +1,19 @@
 ﻿using lsfUtils.Creatures.Lizards.FlameLizard;
 using lsfUtils.Creatures.Lizards.MonitorLizard;
 using lsfUtils.Creatures.Lizards.WeaverLizard;
-using lsfUtils.Creatures.Scavs.ScavSeer;
 using lsfUtils.CreatureTags;
 using lsfUtils.CWTs;
+using lsfUtils.DevtoolsEffects.Sunburn;
 using lsfUtils.Items.ExplosiveBoomerang;
 using MoreSlugcats;
 using RWCustom;
-using SlugBase.Features;
 using Smoke;
 using System;
-using System.Diagnostics.Eventing.Reader;
+using HUD;
 using UnityEngine;
 using Watcher;
 using static lsfUtils.Plugin;
+using System.Drawing.Imaging;
 
 namespace lsfUtils.Mechanics.Fire;
 
@@ -140,10 +140,14 @@ public class FlameEffect : UpdatableAndDeletable, IProvideWarmth // patoma fire 
                 lightSource.Destroy();
                 lightSource = null;
             }
-            if (CreatureCWT.TryGetData(targetCreature, out var creatureData2)) creatureData2.onFire = false;
-            if (PhysicalObjectCWT.TryGetData(targetObject, out var objectData2)) objectData2.onFire = false;
+            if (CreatureCWT.TryGetData(targetCreature, out var creatureData2)) { creatureData2.onFire = false; creatureData2.fireBuildupAmount = Math.Max(creatureData2.fireBuildupAmount, 0.5f); }
+            if (PhysicalObjectCWT.TryGetData(targetObject, out var objectData2)) { objectData2.onFire = false; objectData2.fireBuildupAmount = Math.Max(objectData2.fireBuildupAmount, 0.5f); }
             Destroy();
-            while (burnAmount > 0f) burnAmount -= 1 / 200f;
+            while (burnAmount > 0f)
+            {
+                burnAmount -= 1 / 400f;
+                if (targetCreature != null) creatureData2?.fireAmount = burnAmount;
+            }
             scareObj = null;
             return;
         }
@@ -151,7 +155,9 @@ public class FlameEffect : UpdatableAndDeletable, IProvideWarmth // patoma fire 
         int decayRate = attachedChunk.vel.magnitude > 2.5f ? 2 : 1;
         if ((room.roomSettings.DangerType == DLCSharedEnums.RoomRainDangerType.Blizzard && room.world.rainCycle.CycleProgression > 0.7f) || Math.Max(room.roomSettings.GetEffectAmount(WatcherEnums.RoomEffectType.SurfaceSandstorm) - Mathf.InverseLerp((float)Sandstorm.lethalMaxTime, 0f, (float)(this.room.world.rainCycle.timer - this.room.world.rainCycle.cycleLength)), 0f) >= 0.3f) decayRate += 1;
         if (targetObject?.grabbedBy.Count > 0 && targetObject.grabbedBy[0].grabber is Player && (targetObject.grabbedBy[0].grabber as Player).SlugCatClass == MoreSlugcats.MoreSlugcatsEnums.SlugcatStatsName.Rivulet) decayRate += 1;
-        burnDuration -= decayRate;
+        if ((targetObject != null && Sunburn.InSunlight(targetObject) || targetCreature != null && Sunburn.InSunlight(targetCreature)) && burnDuration < 400) decayRate -= 2;
+        if (burnDuration <= 400) burnDuration = Math.Min(burnDuration - decayRate, 400);
+        else burnDuration -= decayRate;
         if (targetObject != null && objectData.fireLoss > 0)
         {
             Log.LogMessage($"{targetObject} lost {objectData.fireLoss} fire. new time: {burnDuration / 40f} seconds");
@@ -244,6 +250,7 @@ public class FlameEffect : UpdatableAndDeletable, IProvideWarmth // patoma fire 
             creatureData.onFire = true;
             creatureData.fireDuration = burnDuration;
             creatureData.permanentFireAmount = permanentBurnAmount;
+            creatureData.fireAmount = burnAmount;
             if (targetCreature?.grabbedBy.Count > 0 && targetCreature.grabbedBy[0].grabber is Creature otherCreature && tickCounter % 80 == 0 && CreatureCWT.TryGetData(otherCreature, out var otherData) && !otherData.onFire && UnityEngine.Random.value < (creatureData.flammability + otherData.flammability + 1) / 10) targetCreature.room.AddObject(new FlameEffect(otherCreature, otherCreature.mainBodyChunk, null, 2 * creatureData.fireDuration / 3));
         }
         if (targetObject != null)
@@ -254,7 +261,7 @@ public class FlameEffect : UpdatableAndDeletable, IProvideWarmth // patoma fire 
             objectData.permanentFireAmount = permanentBurnAmount;
             if (targetObject?.grabbedBy.Count > 0 && targetObject.grabbedBy[0].grabber is Creature otherCreature && tickCounter % 80 == 0 && CreatureCWT.TryGetData(otherCreature, out var otherData) && !otherData.onFire && UnityEngine.Random.value < (objectData.flammability + otherData.flammability + 1) / 10) targetObject.room.AddObject(new FlameEffect(otherCreature, otherCreature.mainBodyChunk, null, 2 * objectData.fireDuration / 3));
         }
-
+        if (targetCreature != null && targetCreature is Player play && play.slugcatStats.name != MoreSlugcatsEnums.SlugcatStatsName.Artificer) burnAmount += 1 / 800f * currentFlammability;
         if (tickCounter % 20 == 0 && targetCreature != null && !targetCreature.dead)
         {
             creatureData.canSpreadFire = true;
@@ -315,7 +322,6 @@ public class FlameEffect : UpdatableAndDeletable, IProvideWarmth // patoma fire 
 
                 if (pla.slugcatStats.name != MoreSlugcatsEnums.SlugcatStatsName.Artificer)
                 {
-                    burnAmount += 1 / 40f * currentFlammability;
                     permanentBurnAmount += 1 / 160f * currentFlammability;
                     if (burnAmount > 1f || permanentBurnAmount > 1f)
                     {
@@ -412,6 +418,87 @@ public class FlameEffect : UpdatableAndDeletable, IProvideWarmth // patoma fire 
         get
         {
             return 150f + 60f * burnDuration / 1600f;
+        }
+    }
+}
+
+public class FireMeter : HudPart
+{
+    public Vector2 pos;
+    public Vector2 lastPos;
+    public int remainVisibleCounter;
+    public float fade;
+    public float lastFade;
+    public HUDCircle[] circles;
+
+    public FireMeter(HUD.HUD hud, FContainer fContainer) : base(hud)
+    {
+        this.pos = new Vector2(80f, 20f);
+        this.lastPos = this.pos;
+        this.circles = new HUDCircle[10];
+        this.fade = 0f;
+        this.lastFade = 0f;
+        for (int i = 0; i < this.circles.Length; i++)
+        {
+            this.circles[i] = new HUDCircle(hud, HUDCircle.SnapToGraphic.smallEmptyCircle, fContainer, 1); //pure red as a placeholder while the custom color doesn't work
+            this.circles[i].fade = 0f;
+            this.circles[i].lastFade = 0f;
+            //this.circles[i].forceColor = new(1f, 0.56f, 0.39f);
+        }
+    }
+    private bool Show
+    {
+        get
+        {
+            return this.hud.showKarmaFoodRain || this.hud.owner.RevealMap;
+        }
+    }
+    public override void Update()
+    {
+        if (!CreatureCWT.TryGetData(this.hud.owner as Player, out var playerData)) return;
+        float fire = playerData.fireAmount;
+        if (this.hud.foodMeter != null)
+        {
+            this.pos.x = this.hud.foodMeter.pos.x;
+            this.pos.y = this.hud.foodMeter.pos.y - 27f;
+            if (fire <= 0.05f && this.hud.rainWorld.processManager.currentMainLoop is RainWorldGame && (this.hud.rainWorld.processManager.currentMainLoop as RainWorldGame).cameras[0].room != null && !playerData.onFire)
+            {
+                this.fade = Mathf.Lerp(this.fade, 0f, 0.1f);
+            }
+            else
+            {
+                this.fade = Mathf.Lerp(this.fade, this.Show ? this.hud.foodMeter.fade : 0f, ((this.Show && this.fade < this.hud.foodMeter.fade) || (!this.Show && this.fade > this.hud.foodMeter.fade)) ? 0.15f : 0.005f);
+            }
+        }
+        this.lastPos = this.pos;
+        this.lastFade = this.fade;
+        if (this.hud.HideGeneralHud)
+        {
+            this.fade = 0f;
+        }
+        float num = 1f / (float)this.circles.Length;
+        for (int i = 0; i < this.circles.Length; i++)
+        {
+            float value = fire - num * (float)i;
+            this.circles[i].Update();
+            this.circles[i].thickness = Mathf.Lerp(6f, 1f, Mathf.InverseLerp(num, 0f, value));
+            this.circles[i].fade = Mathf.Lerp(this.circles[i].fade, Mathf.InverseLerp(num * (float)i, num * ((float)i + 1f), this.fade), 0.1f);
+            this.circles[i].snapGraphic = HUDCircle.SnapToGraphic.smallEmptyCircle;
+            this.circles[i].snapRad = 0.45f;
+            this.circles[i].snapThickness = 0.45f;
+            this.circles[i].rad = Mathf.Lerp(0.1f, 5f, this.circles[i].fade);
+        }
+    }
+    public Vector2 DrawPos(float timeStacker)
+    {
+        return Vector2.Lerp(this.lastPos, this.pos, timeStacker);
+    }
+    public override void Draw(float timeStacker)
+    {
+        for (int i = 0; i < this.circles.Length; i++)
+        {
+            this.circles[i].pos = this.pos + new Vector2((float)i * 21.6f, 0f);
+            this.circles[i].Draw(timeStacker);
         }
     }
 }
