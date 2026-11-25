@@ -22,6 +22,7 @@ using lsfUtils.CWTs;
 using lsfUtils.DevtoolsEffects.CreepingDarkness;
 using lsfUtils.DevtoolsEffects.EvilWater;
 using lsfUtils.DevtoolsEffects.StardustRain;
+using lsfUtils.DevtoolsEffects.Sunburn;
 using lsfUtils.DevtoolsObjects.BackgroundMud;
 using lsfUtils.DevtoolsObjects.Bumper;
 using lsfUtils.DevtoolsObjects.ConditionalFilter;
@@ -47,6 +48,7 @@ using lsfUtils.Items.Spears;
 using lsfUtils.Items.Spears.CopperSpears;
 using lsfUtils.Items.Spears.TorchSpears;
 using lsfUtils.Mechanics;
+using lsfUtils.Mechanics.Fire;
 using lsfUtils.RegionParams;
 using lsfUtils.SaveFile;
 using lsfUtils.ScreenVariants;
@@ -82,6 +84,7 @@ public class Plugin : BaseUnityPlugin
     public static readonly EntityID SpecialId = new(-1, -33);
     public static readonly EntityID SpecialIdElectricBoogaloo = new(-1, -21);
 
+
     private void LoadResources(RainWorld rainWorld)
     {
 
@@ -104,14 +107,6 @@ public class Plugin : BaseUnityPlugin
                 On.RainWorldGame.Win += SaveFileMain.RainWorldGame_Win;
             }
 
-            // fisobs
-            {
-                ItemRegistryCore.ApplyHooks();
-                ItemRegistry.RegisterAll();
-
-                CreatureRegistryCore.ApplyHooks();
-                CreatureRegistry.RegisterAll();
-            }
 
             // creatures
             {
@@ -169,6 +164,9 @@ public class Plugin : BaseUnityPlugin
                 EvilWater.RegisterEvilWater();
                 EvilWaterHooks.ApplyHooks();
 
+                Sunburn.RegisterSunburn();
+                SunburnHooks.ApplyHooks();
+
                 StardustEnums.RegisterValues();
                 StardustRainHooks.Apply();
             }
@@ -198,6 +196,7 @@ public class Plugin : BaseUnityPlugin
             // mechanics
             {
                 TemporaryPoison.ApplyHooks();
+                FireMeterHooks.ApplyHooks();
             }
 
             //region params
@@ -314,7 +313,7 @@ public class Plugin : BaseUnityPlugin
                 spear.poison = 1f;
                 spear.poisonHue = UnityEngine.Random.value;
             }
-
+            
             return true;
         }
 
@@ -455,6 +454,13 @@ public class Plugin : BaseUnityPlugin
     private void RainWorld_PostModsInit(On.RainWorld.orig_PostModsInit orig, RainWorld self)
     {
         orig(self);
+        ItemRegistryCore.ApplyHooks();
+        ItemRegistry.RegisterAll();
+
+        CreatureRegistryCore.ApplyHooks();
+        CreatureRegistry.RegisterAll();
+
+        FireMeterHooks.UpdateHUDColors();
         if (ModManager.MSC)
         {
             ItemCrafting.ResizeGourmandCombos();

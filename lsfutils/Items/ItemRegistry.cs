@@ -23,13 +23,20 @@ public static class ItemRegistry
         RegisterDart();
         RegisterPoisonDart();
         RegisterBrownFruit();
-        RegisterExplosiveBoomerang();
-        RegisterSingularityBoomerang();
         RegisterKarmaMask();
         RegisterRippleFlower();
         RegisterTorchSpear();
         RegisterCopperSpear();
         RegisterKnotSpawnV2();
+        if (ModManager.MSC)
+        {
+            //custom cloak goes here
+        }
+        if (ModManager.Watcher)
+        {
+            RegisterExplosiveBoomerang();
+            RegisterSingularityBoomerang();
+        }
     }
 
     public static void RegisterDart()

@@ -43,6 +43,12 @@ public class CustomRegionParams
     // Is CreepingDarkness using the "complex" (retract/expand based on a timer) or "simple" (expand until player reaches a lightsource, then dissapear) version
     public bool CreepingDarknessSimpleVersion { get; set; } = false;
 
+    // How long until things get Burned from sunlight
+    public int SunburnBurnTimer { get; set; } = 0;
+
+    // How long it takes for things to cool off completely in the shade
+    public int SunburnRecoveryTimer { get; set; } = 0;
+
     //Chance for a Dart to replace a spear
     public int DartFrequency { get; set; } = 10;
 
@@ -54,7 +60,10 @@ public class CustomRegionParams
 
     public Color FireEdgeColor { get; set; } = new(1f, 0.15f, 0f);
 
+
+    //MSC params
     public int InvedSlugpupChance { get; set; } = 0;
+    public int ExplosiveSlugpupChance { get; set; } = 0;
 
     public static CustomRegionParams ParseFromUnrecognized(Dictionary<string, string> unrecognized, string regionName, SlugcatStats.Timeline timeline)
     {
@@ -78,13 +87,21 @@ public class CustomRegionParams
         if (TryGet(table, "creepingDarknessExpandIdleTimer", timeline, out val) && TryParseInt(val, out number)) customRegionParams.CreepingDarknessExpandIdleTimer = number;
         if (TryGet(table, "creepingDarknessRetractIdleTimer", timeline, out val) && TryParseInt(val, out number)) customRegionParams.CreepingDarknessRetractIdleTimer = number;
         if (TryGet(table, "creepingDarknessSimpleVersion", timeline, out val)) customRegionParams.CreepingDarknessSimpleVersion = ParseBool(val);
+        if (TryGet(table, "sunburnBurnTimer", timeline, out val) && TryParseInt (val, out number)) customRegionParams.SunburnBurnTimer = number;
+        if (TryGet(table, "sunburnRecoveryTimer", timeline, out val) && TryParseInt(val, out number)) customRegionParams.SunburnRecoveryTimer = number;
 
         if (TryGet(table, "dartFrequency", timeline, out val) && TryParseInt(val, out number)) customRegionParams.DartFrequency = number;
 
         if (TryGet(table, "floatMudColor", timeline, out val) && TryParseColor(val, out Color color)) customRegionParams.FloatMudColor = color;
         if (TryGet(table, "fireCoreColor", timeline, out val) && TryParseColor(val, out color)) customRegionParams.FireCoreColor = color;
         if (TryGet(table, "fireEdgeColor", timeline, out val) && TryParseColor(val, out color)) customRegionParams.FireEdgeColor = color;
-        if (ModManager.MSC && TryGet(table, "invedSlugpupChance", timeline, out val) && TryParseInt(val, out number)) customRegionParams.InvedSlugpupChance = number;
+
+        if (ModManager.MSC) 
+        {
+            if (TryGet(table, "invedSlugpupChance", timeline, out val) && TryParseInt(val, out number)) customRegionParams.InvedSlugpupChance = number;
+            if (TryGet(table, "explosiveSlugpupChance", timeline, out val) && TryParseInt(val, out number)) customRegionParams.ExplosiveSlugpupChance = number;
+        }
+
 
         return customRegionParams;
     }

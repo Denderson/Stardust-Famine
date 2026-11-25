@@ -67,7 +67,7 @@ public static class ItemRegistryCore
                 }
                 else if (flowerA.abstractPhysicalObject.type == AbstractPhysicalObject.AbstractObjectType.KarmaFlower)
                 {
-                    if (spearA is TorchSpear) result = new AbstractSpear(crafter.room.world, null, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID(), false);
+                    if (spearA is TorchSpear) result = new AbstractSpear(crafter.room.world, null, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID(), true);
                     else if (spearA is CopperSpear) result = new AbstractSpear(crafter.room.world, null, crafter.abstractPhysicalObject.pos, crafter.room.game.GetNewID(), false, true);
                 }
             }

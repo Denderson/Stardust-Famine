@@ -26,7 +26,7 @@ namespace lsfUtils.DevtoolsEffects.CreepingDarkness
         {
             orig(self);
 
-            if (!HasEffect(self)) return;
+            if (self?.roomSettings?.effects == null || self.roomSettings.GetEffect(Enums.EffectTypes.CreepingDarkness) == null) return;
             if (self.world == null) return;
             if (!WorldCWT.TryGetData(self.world, out var worldData)) return;
             if (worldData.creepingDarkness != null) return;
