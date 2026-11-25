@@ -58,6 +58,7 @@ using System.IO;
 using System.Security.Permissions;
 using UnityEngine;
 using static Pom.Pom;
+using Random = UnityEngine.Random;
 
 #pragma warning disable CS0618
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -275,6 +276,11 @@ public class Plugin : BaseUnityPlugin
         ScavengerGearParams.LoadParams();
 
         Log.LogMessage("Finished loading params!");
+    }
+
+    public static float GetRandomNumber(float min, float max)
+    {
+        return Mathf.Lerp(min, max, (float)Random.value);
     }
 
     public static bool TryAddItem(AbstractCreature creature, string itemName, int graspIndex, bool addToRoom, out AbstractPhysicalObject result)

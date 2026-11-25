@@ -1,4 +1,5 @@
-﻿using RWCustom;
+﻿using lsfUtils.Items.Darts.Dart;
+using RWCustom;
 using UnityEngine;
 
 namespace lsfUtils.Creatures.Misc.Porcupine;
@@ -26,17 +27,17 @@ public class Porcupine : Creature
     public const float bodyTailDistance = 13f;
 
     public const float lookSpeed = 0.45f;
-    
+
     public const int footingThreshold = 20;
     public const int maxFooting = 35;
-    public const int specialMoveTime = 30;
+    public const int specialMoveTime = 60;
     public const float walkPower = 6.2f;
     public const float walkRecoil = 1f;
     public const float spearReachDistance = 10f;
 
     public PorcupineAI AI;
 
-    public float runSpeed = 1f;
+    public float runSpeed = 0.5f;
     public float runCycle;
     public Vector2 travelDir;
     public bool sitting;
@@ -69,7 +70,7 @@ public class Porcupine : Creature
             new BodyChunkConnection(bodyChunks[upperBodyIndex], bodyChunks[lowerBodyIndex], bodyDistance, BodyChunkConnection.Type.Normal, 1f, 0.5f),
             new BodyChunkConnection(bodyChunks[lowerBodyIndex], bodyChunks[tailIndex], bodyTailDistance, BodyChunkConnection.Type.Normal, 1f, 0.5f)
         ];
-        
+
         airFriction = 0.999f;
         gravity = 0.9f;
         bounce = 0f;
@@ -130,8 +131,74 @@ public class Porcupine : Creature
             runCycle += runSpeed / 10f;
         }
 
+        UpdateSpikeStabs();
         CheckSpearReach(AI.spearToGrab);
         UpdateLook();
+    }
+
+    public void UpdateSpikeStabs()
+    {
+        if (dead) return;
+        if (graphicsModule is not PorcupineGraphics graphics) return;
+
+        foreach (PorcupineGraphics.Spike spike in graphics.spikes)
+        {
+            if (!spike.onBody) continue;
+
+            graphics.GetSpikePos(spike, 1f, out Vector2 pos, out Vector2 direction, out Vector2 curlDirection);
+            Vector2 tip = pos + direction * spike.length + curlDirection * (spike.baseCurve + spike.temCurve) * spike.length;
+
+            BodyChunk hitChunk = null;
+
+            foreach (AbstractCreature abstractCreature in room.abstractRoom.creatures)
+            {
+                if (hitChunk != null) break;
+
+                Creature other = abstractCreature?.realizedCreature;
+                if (other == null || other is Porcupine || other.room != room) continue;
+
+                foreach (BodyChunk chunk in other.bodyChunks)
+                {
+                    if (!Custom.DistLess(tip, chunk.pos, chunk.rad * 0.3f)) continue;
+
+                    if (other is Player && Vector2.Dot(chunk.vel, Custom.DirVec(chunk.pos, pos)) < PorcupineGraphics.speedLimitForAttach) continue;
+
+                    hitChunk = chunk;
+                    break;
+                }
+            }
+            if (hitChunk == null || hitChunk.owner == null) continue;
+
+            Creature creature = hitChunk.owner as Creature;
+
+            float curlSide = Vector2.Dot(Custom.PerpendicularVector(direction), curlDirection) >= 0f ? 1f : -1f;
+            var abstractSpike = new AbstractPorcupineSpike(room.world, abstractCreature.pos, room.game.GetNewID(), spike.length, (spike.baseCurve + spike.temCurve) * curlSide);
+            room.abstractRoom.AddEntity(abstractSpike);
+            abstractSpike.RealizeInRoom();
+            Dart dart = abstractSpike.realisedDart;
+
+            Vector2 dir = Custom.DirVec(pos, tip);
+            dart.rotation = dir;
+
+            Vector2 curveDir = Custom.PerpendicularVector(dir) * Mathf.Sign(abstractSpike.curve);
+            Vector2 targetPos = tip + dir * 3f;
+            Vector2 spikeBasePos = targetPos - dir * spike.length - (curveDir * Mathf.Abs(abstractSpike.curve) * spike.length);
+            dart.firstChunk.HardSetPosition(spikeBasePos + dir * spike.length * 0.5f);
+
+            dart.stuckInObject = creature;
+            dart.stuckInChunkIndex = hitChunk.index;
+            dart.stuckBodyPart = -1;
+            dart.stuckRotation = Custom.Angle(dir, hitChunk.Rotation);
+            dart.ChangeMode(Weapon.Mode.StuckInCreature);
+            new AbstractPhysicalObject.AbstractSpearStick(abstractSpike, creature.abstractCreature, hitChunk.index, -1, dart.stuckRotation);
+
+            creature.Violence(mainBodyChunk, dir, hitChunk, null, Creature.DamageType.Stab, 0.1f, 40);
+            hitChunk.vel /= 2;
+            hitChunk.vel += Custom.DirVec(mainBodyChunk.pos, hitChunk.pos) * 3f;
+            room.PlaySound(SoundID.Spear_Stick_In_Creature, tip);
+
+            spike.onBody = false;
+        }
     }
 
     public void PullBodyTowardsLegs()
@@ -177,7 +244,7 @@ public class Porcupine : Creature
             }
             return;
         }
-        
+
         if (!room.aimap.TileAccessibleToCreature(mainBodyChunk.pos, Template) && !room.aimap.TileAccessibleToCreature(bodyChunks[upperBodyIndex].pos, Template))
         {
             footingCounter = Custom.IntClamp(footingCounter - 3, 0, maxFooting);
@@ -235,24 +302,24 @@ public class Porcupine : Creature
 
             if (lastFollowedConnection.type == MovementConnection.MovementType.ReachUp)
             {
-                mainBodyChunk.vel += Custom.DirVec(mainBodyChunk.pos, target) * 4f;
+                mainBodyChunk.vel += Custom.DirVec(mainBodyChunk.pos, target) * 4f * runSpeed;
             }
-            
+
             if (Footing)
             {
                 for (int i = 0; i < bodyChunks.Length; i++)
                 {
                     if (connection.startCoord.x == connection.destinationCoord.x)
                     {
-                        bodyChunks[i].vel.x += Mathf.Min((target.x - bodyChunks[i].pos.x) / 8f, 1.2f);
+                        bodyChunks[i].vel.x += Mathf.Min((target.x - bodyChunks[i].pos.x) / 8f, 1.2f) * runSpeed;
                     }
                     else if (connection.startCoord.y == connection.destinationCoord.y)
                     {
-                        bodyChunks[i].vel.y += Mathf.Min((target.y - bodyChunks[i].pos.y) / 8f, 1.2f);
+                        bodyChunks[i].vel.y += Mathf.Min((target.y - bodyChunks[i].pos.y) / 8f, 1.2f) * runSpeed;
                     }
                 }
             }
-            
+
             bool turnedHorizontal = connection.startCoord.x != connection.destinationCoord.x && lastFollowedConnection.startCoord.x == lastFollowedConnection.destinationCoord.x;
             bool turnedVertical = connection.startCoord.y != connection.destinationCoord.y && lastFollowedConnection.startCoord.y == lastFollowedConnection.destinationCoord.y;
             if ((Footing || room.aimap.TileAccessibleToCreature(mainBodyChunk.pos, Template)) && (turnedHorizontal || turnedVertical))
@@ -282,7 +349,7 @@ public class Porcupine : Creature
 
         BodyChunk head = mainBodyChunk;
         BodyChunk upper = bodyChunks[upperBodyIndex];
-        
+
         if (IsTileSolid(upperBodyIndex, 0, -1) && ((dir.x < -0.5f && head.pos.x > upper.pos.x + 5f) || (dir.x > 0.5f && head.pos.x < upper.pos.x - 5f)))
         {
             float sign = dir.x < 0f ? -1f : 1f;
@@ -293,7 +360,7 @@ public class Porcupine : Creature
                 head.vel.y += 3.2f;
             }
         }
-        
+
         float power = 0.85f;
         if (graphicsModule is PorcupineGraphics graphics)
         {
