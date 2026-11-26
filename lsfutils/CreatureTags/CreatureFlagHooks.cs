@@ -1,5 +1,8 @@
-﻿using System;
+﻿using lsfUtils.CWTs;
+using MoreSlugcats;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +22,7 @@ namespace lsfUtils.CreatureTags
             foreach (string unrecognisedFlags in self.unrecognizedFlags)
             {
                 Log.LogMessage("Reading unrecognised flags!");
+                Log.LogMessage(unrecognisedFlags);
                 string value = unrecognisedFlags?.ToLowerInvariant();
 
                 if (value == null)
@@ -100,6 +104,19 @@ namespace lsfUtils.CreatureTags
                     flammability = RWCustom.Custom.IntClamp(flammability, 0, 4);
 
                     Flammability.SetupCustomFlammability(self, flammability, sign);
+                }
+                if (self.realizedCreature is StowawayBug stowaway)
+                {
+                    float num;
+                    if (float.TryParse(unrecognisedFlags, NumberStyles.Any, CultureInfo.InvariantCulture, out num))
+                    {
+                        Plugin.Log.LogMessage("Attempting stowaway force awakening");
+                        if (UnityEngine.Random.value < num)
+                        {
+                            Log.LogMessage("Success!");
+                            stowaway.Stun(0); //this calls for the stun code, which forcibly awakens them, without actually stunning them
+                        }
+                    }
                 }
             }
         }

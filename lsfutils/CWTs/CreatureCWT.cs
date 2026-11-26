@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using Watcher;
+using System.Runtime.CompilerServices;
 
 namespace lsfUtils.CWTs
 {
@@ -39,6 +40,8 @@ namespace lsfUtils.CWTs
             public bool starveInit = false;
 
             public int floatingMudTimer = 0;
+
+            public FlameJet boxWormFlameJet;
         }
     }
 }

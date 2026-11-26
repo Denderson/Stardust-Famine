@@ -1,9 +1,12 @@
-﻿using UnityEngine;
-using Watcher;
+﻿using lsfUtils.CWTs;
+using lsfUtils.Items.Spears.TorchSpears;
+using lsfUtils.Mechanics.Fire;
+using MoreSlugcats;
 using RWCustom;
 using System;
 using Unity.Mathematics;
-using MoreSlugcats;
+using UnityEngine;
+using Watcher;
 
 namespace lsfUtils.Creatures.Lizards.FlameLizard;
 
@@ -71,10 +74,11 @@ public class FlameLizard : Lizard, IProvideWarmth
             flameJetData.intensityAnimOffset = 0f;
             flameJetData.linkTempToIntens = true;
             flameJetData.pos = bodyChunks[0].pos;
+            if (this.abstractCreature.superSizeMe) flameJetData.lethality = 0;
             flameJet = new FlameJet(room, flameJetData);
             room.AddObject(flameJet);
         }
-
+        
         if (flameJet != null)
         {
             flameJet.pos = bodyChunks[0].pos + Custom.DirVec(bodyChunks[1].pos, bodyChunks[0].pos) * 25;
@@ -83,6 +87,7 @@ public class FlameLizard : Lizard, IProvideWarmth
             {
                 flameJet.intensity = Mathf.Min(flameJet.intensity + 0.04f, jawOpen);
             }
+            
             else
             {
                 flameJet.intensity = Mathf.Max(flameJet.intensity - 0.04f, 0);
@@ -92,6 +97,40 @@ public class FlameLizard : Lizard, IProvideWarmth
                     flameJet = null;
                 }
             }
+            if (flameJet != null && flameJet.lethality == 0)
+            {
+                for (int i = 0; i < room.physicalObjects.Length; i++)
+                {
+                    foreach (PhysicalObject physicalObject in room.physicalObjects[i])
+                    {
+                        Vector2 vector = physicalObject.firstChunk.pos - flameJet.pos;
+                        if (flameJet.bounds.Vector2Inside(vector))
+                        {
+                            for (int j = 0; j < flameJet.jetPos.Length - 1; j++)
+                            {
+                                float t = (float)(Time.frameCount % 10) * 0.1f;
+                                Vector2 b = Vector2.Lerp(flameJet.jetPos[j], flameJet.jetPos[j + 1], t);
+                                float num = Mathf.Lerp(flameJet.jetScale[j], flameJet.jetScale[j + 1], t);
+                                float num2 = Mathf.Clamp((float)j / 3f, 0.5f, 1f);
+                                num2 *= Mathf.Clamp((float)(flameJet.jetPos.Length - 1 - j) / 5f, 0.5f, 1f);
+                                float num3 = Vector2.Distance(vector, b);
+                                float num4 = num * 0.5f * num2;
+                                if (num3 <= num4)
+                                {
+                                    if (physicalObject is Creature creature && creature is not FlameLizard && CreatureCWT.TryGetData(creature, out var creatureData) && !creatureData.onFire)
+                                    {
+                                        room.AddObject(new FlameEffect(creature, creature.firstChunk, null, (int)(flameJet.intensity * 1600)));
+                                    }
+                                    else if (physicalObject is not Creature && PhysicalObjectCWT.TryGetData(physicalObject, out var objectData) && !objectData.onFire)
+                                    {
+                                        room.AddObject(new FlameEffect(physicalObject, physicalObject.firstChunk, null, (int)(flameJet.intensity * 1600)));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }        
         }
     }
 
