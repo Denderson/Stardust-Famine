@@ -1,121 +1,115 @@
-﻿using lsfUtils.CWTs;
-using MoreSlugcats;
-using System;
-using System.Collections.Generic;
+﻿using MoreSlugcats;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static lsfUtils.Plugin;
 
-namespace lsfUtils.CreatureTags
+namespace lsfUtils.CreatureTags;
+
+public static class CreatureFlagHooks
 {
-    public static class CreatureFlagHooks
+    public static void ApplyHooks()
     {
-        public static void ApplyHooks()
+        On.AbstractCreature.setCustomFlags += AbstractCreature_setCustomFlags;
+    }
+    public static void AbstractCreature_setCustomFlags(On.AbstractCreature.orig_setCustomFlags orig, AbstractCreature self)
+    {
+        orig(self);
+        foreach (string unrecognisedFlags in self.unrecognizedFlags)
         {
-            On.AbstractCreature.setCustomFlags += CreatureFlagHooks.AbstractCreature_setCustomFlags;
-        }
-        public static void AbstractCreature_setCustomFlags(On.AbstractCreature.orig_setCustomFlags orig, AbstractCreature self)
-        {
-            orig(self);
-            foreach (string unrecognisedFlags in self.unrecognizedFlags)
+            Log.LogMessage("Reading unrecognised flags!");
+            Log.LogMessage(unrecognisedFlags);
+            string value = unrecognisedFlags?.ToLowerInvariant();
+
+            if (value == null)
             {
-                Log.LogMessage("Reading unrecognised flags!");
-                Log.LogMessage(unrecognisedFlags);
-                string value = unrecognisedFlags?.ToLowerInvariant();
+                continue;
+            }
 
-                if (value == null)
+            if (value.Contains("ripplehybrid"))
+            {
+                Log.LogMessage("Ripplehybrid check!");
+                int rippleLayer = 1;
+                bool rippleBoth = false;
+                if (value.Contains(':') && value.Split(':').Length > 1 && int.TryParse(value.Split(':')[1], out rippleLayer))
                 {
-                    continue;
-                }
-
-                if (value.Contains("ripplehybrid"))
-                {
-                    Log.LogMessage("Ripplehybrid check!");
-                    int rippleLayer = 1;
-                    bool rippleBoth = false;
-                    if (value.Contains(':') && value.Split(':').Length > 1 && int.TryParse(value.Split(':')[1], out rippleLayer))
+                    Log.LogMessage("Ripplehybrid layer override!");
+                    if (rippleLayer == -1)
                     {
-                        Log.LogMessage("Ripplehybrid layer override!");
-                        if (rippleLayer == -1)
-                        {
-                            rippleBoth = true;
-                            rippleLayer = 0;
-                        }
-                    }
-                    RippleHybridHooks.RipplifyAbstractObject(self, rippleLayer, rippleBoth);
-                }
-
-                if (value.Contains("poisonimmune"))
-                {
-                    Log.LogMessage("PoisonImmuneHooks check!");
-                    PoisonImmuneHooks.SetupPoisonImmune(self);
-                }
-
-                if (value.Contains("echoimmune"))
-                {
-                    Log.LogMessage("EchoImmuneHooks check!");
-                    EchoImmuneHooks.SetupEchoImmune(self);
-                }
-
-                if (value.Contains("starving"))
-                {
-                    Log.LogMessage("StarveTag check!");
-                    EchoImmuneHooks.SetupEchoImmune(self);
-                }
-
-                if (value.Contains("faction"))
-                {
-                    if (value.Contains(':') && value.Split(':').Length > 1)
-                    {
-                        string faction = value.Split(':')[1];
-                        if (!string.IsNullOrEmpty(faction))
-                        {
-                            Factions.SetupFaction(self, value.Split(':')[1]);
-                        }
-                        else Log.LogMessage("Invalid faction!");
+                        rippleBoth = true;
+                        rippleLayer = 0;
                     }
                 }
-                if (value.Contains("flammability"))
+                RippleHybridHooks.RipplifyAbstractObject(self, rippleLayer, rippleBoth);
+            }
+
+            if (value.Contains("poisonimmune"))
+            {
+                Log.LogMessage("PoisonImmuneHooks check!");
+                PoisonImmuneHooks.SetupPoisonImmune(self);
+            }
+
+            if (value.Contains("echoimmune"))
+            {
+                Log.LogMessage("EchoImmuneHooks check!");
+                EchoImmuneHooks.SetupEchoImmune(self);
+            }
+
+            if (value.Contains("starving"))
+            {
+                Log.LogMessage("StarveTag check!");
+                EchoImmuneHooks.SetupEchoImmune(self);
+            }
+
+            if (value.Contains("faction"))
+            {
+                if (value.Contains(':') && value.Split(':').Length > 1)
                 {
-                    Log.LogMessage("Flammability check!");
-                    int flammability = 2;
-                    char? sign = null;
-                    if (value.Contains('='))
+                    string faction = value.Split(':')[1];
+                    if (!string.IsNullOrEmpty(faction))
                     {
-                        sign = '=';
-                        Log.LogMessage("Override flammability!");
+                        Factions.SetupFaction(self, value.Split(':')[1]);
                     }
-                    else if (value.Contains('+'))
-                    {
-                        sign = '+';
-                        Log.LogMessage("Add flammability!");
-                    }
-                    else if (value.Contains('-'))
-                    {
-                        sign = '-';
-                        Log.LogMessage("Subtract flammbility!");
-                    }
-
-                    if (sign == null) return;
-                    if (value.Split(sign.Value).Length > 1)
-                    int.TryParse(value.Split(sign.Value)[1], out flammability);
-                    flammability = RWCustom.Custom.IntClamp(flammability, 0, 4);
-
-                    Flammability.SetupCustomFlammability(self, flammability, sign);
+                    else Log.LogMessage("Invalid faction!");
                 }
-                if (self.realizedCreature is StowawayBug stowaway)
+            }
+            if (value.Contains("flammability"))
+            {
+                Log.LogMessage("Flammability check!");
+                int flammability = 2;
+                char? sign = null;
+                if (value.Contains('='))
                 {
-                    float num;
-                    if (float.TryParse(unrecognisedFlags, NumberStyles.Any, CultureInfo.InvariantCulture, out num))
+                    sign = '=';
+                    Log.LogMessage("Override flammability!");
+                }
+                else if (value.Contains('+'))
+                {
+                    sign = '+';
+                    Log.LogMessage("Add flammability!");
+                }
+                else if (value.Contains('-'))
+                {
+                    sign = '-';
+                    Log.LogMessage("Subtract flammbility!");
+                }
+
+                if (sign == null) return;
+                if (value.Split(sign.Value).Length > 1)
+                int.TryParse(value.Split(sign.Value)[1], out flammability);
+                flammability = RWCustom.Custom.IntClamp(flammability, 0, 4);
+
+                Flammability.SetupCustomFlammability(self, flammability, sign);
+            }
+            if (self.realizedCreature is StowawayBug stowaway)
+            {
+                float num;
+                if (float.TryParse(unrecognisedFlags, NumberStyles.Any, CultureInfo.InvariantCulture, out num))
+                {
+                    Plugin.Log.LogMessage("Attempting stowaway force awakening");
+                    if (UnityEngine.Random.value < num)
                     {
-                        Plugin.Log.LogMessage("Attempting stowaway force awakening");
-                        if (UnityEngine.Random.value < num)
-                        {
-                            Log.LogMessage("Success!");
-                            stowaway.Stun(0); //this calls for the stun code, which forcibly awakens them, without actually stunning them
-                        }
+                        Log.LogMessage("Success!");
+                        stowaway.Stun(0); //this calls for the stun code, which forcibly awakens them, without actually stunning them
                     }
                 }
             }

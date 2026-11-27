@@ -1,5 +1,5 @@
 ﻿using lsfUtils.CWTs;
-using lsfUtils.Mechanics.Fire;
+using lsfUtils.ShaderUniforms;
 using RWCustom;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,9 @@ namespace lsfUtils.RegionParams;
 
 public class CustomRegionParams
 {
-    public readonly ProceduralFireUniforms uniforms = new();
+    public readonly ProceduralFireUniforms proceduralFireUniforms = new();
+
+    public readonly AltBoxWormBodyUniforms altBoxWormBodyUniforms = new();
 
 
     // Which looker mechanic is active in this region. Null = no override
@@ -79,6 +81,8 @@ public class CustomRegionParams
             if (ParamKey.TryParse(keyvalue.Key, out ParamKey? key)) table.Add(key.Value, keyvalue.Value.Trim());
         }
 
+        Color color = new();
+
         if (TryGet(table, "lookerMechanicOverride", timeline, out string val)) customRegionParams.LookerMechanicOverride = val;
 
         if (TryGet(table, "evilWaterTimer", timeline, out val) && TryParseInt(val, out int number)) customRegionParams.EvilWaterTimer = number;
@@ -95,7 +99,7 @@ public class CustomRegionParams
 
         if (TryGet(table, "dartFrequency", timeline, out val) && TryParseInt(val, out number)) customRegionParams.DartFrequency = number;
 
-        if (TryGet(table, "floatMudColor", timeline, out val) && TryParseColor(val, out Color color)) customRegionParams.FloatMudColor = color;
+        if (TryGet(table, "floatMudColor", timeline, out val) && TryParseColor(val, out color)) customRegionParams.FloatMudColor = color;
         if (TryGet(table, "fireCoreColor", timeline, out val) && TryParseColor(val, out color)) customRegionParams.FireCoreColor = color;
         if (TryGet(table, "fireEdgeColor", timeline, out val) && TryParseColor(val, out color)) customRegionParams.FireEdgeColor = color;
 
@@ -164,8 +168,11 @@ public class CustomRegionParams
         {
             data.customRegionParams = customParams;
 
-            data.customRegionParams.uniforms.SetColors(data.customRegionParams.FireCoreColor, data.customRegionParams.FireEdgeColor);
-            data.customRegionParams.uniforms.PushGlobals();
+            data.customRegionParams.proceduralFireUniforms.SetColors(data.customRegionParams.FireCoreColor, data.customRegionParams.FireEdgeColor);
+            data.customRegionParams.proceduralFireUniforms.PushGlobals();
+
+            data.customRegionParams.altBoxWormBodyUniforms.SetColors(data.customRegionParams.FireBoxWormColor);
+            data.customRegionParams.altBoxWormBodyUniforms.PushGlobals();
         }
     }
 }

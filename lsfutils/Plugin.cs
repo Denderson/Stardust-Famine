@@ -438,6 +438,8 @@ public class Plugin : BaseUnityPlugin
             RegisterShader(self, bundle, "Assets/Shaders/ProceduralFireShader.shader", "ProceduralFireShader");
             RegisterShader(self, bundle, "Assets/Shaders/ScorchBurnShader.shader", "ScorchBurnShader");
             RegisterShader(self, bundle, "Assets/Shaders/CustomStardust.shader", "CustomStardust");
+            RegisterShader(self, bundle, "Assets/Shaders/AltBoxWorm.shader", "AltFireSpriteBody", "FireSpriteBody");
+            RegisterShader(self, bundle, "Assets/Shaders/AltBoxWorm.shader", "AltFireSpriteWing", "FireSpriteWing");
 
             bundle.Unload(false);
         }
@@ -488,6 +490,17 @@ public class Plugin : BaseUnityPlugin
             return;
         }
         rainWorld.Shaders[shaderKey] = FShader.CreateShader(shaderKey, unityShader);
+    }
+
+    private static void RegisterShader(RainWorld rainWorld, AssetBundle bundle, string assetPath, string shaderKey, string keyword)
+    {
+        Shader unityShader = bundle.LoadAsset<Shader>(assetPath);
+        if (unityShader == null)
+        {
+            Log.LogMessage($"Shader at {assetPath} not found in bundle!");
+            return;
+        }
+        rainWorld.Shaders[shaderKey] = FShader.CreateShader(shaderKey, unityShader, new string[1] { keyword });
     }
 
     public void OnDisable()

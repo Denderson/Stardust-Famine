@@ -1,4 +1,5 @@
-﻿using ScavengerCosmetic;
+﻿using lsfUtils.ShaderUniforms;
+using ScavengerCosmetic;
 using UnityEngine;
 using static lsfUtils.Plugin;
 
